@@ -4,12 +4,22 @@
 
 #include "frontend/parser.h"
 
-
-using namespace tao::pegtl;
+namespace pegtl = tao::pegtl;
+using namespace pegtl;
 
 namespace frontend {
+    struct grammar
+        : pegtl::star<pegtl::any> {};
+
+    template<typename Rule>
+    struct action
+        : pegtl::nothing<Rule> {};
+
     AST parse(const std::string &input_file) {
+        file_input<> in(input_file);
+
         AST ast;
+        tao::pegtl::parse<grammar, action>(in, ast);
         return ast;
     }
 }
