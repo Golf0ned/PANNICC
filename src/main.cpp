@@ -12,5 +12,8 @@ int main(int argc, char *argv[]) {
 
     std::string input_file = argv[1];
 
+    frontend::AST ast = frontend::parse(input_file);
+    std::cout << "Parsed AST: " << ast.toString() << std::endl;
+
     return 0;
 }
