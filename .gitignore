@@ -1,1 +1,6 @@
+# Build output
 build/
+
+# Clangd
+.clangd/
+.cache
