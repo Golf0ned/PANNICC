@@ -10,6 +10,7 @@ namespace frontend {
     class Atom {
         public:
             virtual void accept(AtomVisitor* visitor) = 0;
+            virtual ~Atom() = default;
     };
 
     class AtomIdentifier : public Atom {

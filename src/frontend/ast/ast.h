@@ -13,6 +13,7 @@ namespace frontend {
             // not set on this being public yet
             std::vector<Instruction*> instructions;
             std::string toString();
+            ~AST();
     };
 
     class ToStringVisitor : public InstructionVisitor, public AtomVisitor {

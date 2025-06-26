@@ -28,6 +28,7 @@ namespace frontend {
     class Instruction {
         public:
             virtual void accept(InstructionVisitor* visitor) = 0;
+            virtual ~Instruction() = default;
     };
 
     class InstructionDeclaration : public Instruction {
@@ -36,6 +37,7 @@ namespace frontend {
             Type getType();
             AtomIdentifier* getVariable();
             void accept(InstructionVisitor* visitor);
+            ~InstructionDeclaration() { delete variable; }
 
         private:
             Type type;
@@ -48,6 +50,7 @@ namespace frontend {
             AtomIdentifier* getVariable();
             Atom* getValue();
             void accept(InstructionVisitor* visitor);
+            ~InstructionAssignValue() { delete variable; delete value; }
 
         private:
             AtomIdentifier* variable;
@@ -62,6 +65,7 @@ namespace frontend {
             Atom* getLeft();
             Atom* getRight();
             void accept(InstructionVisitor* visitor);
+            ~InstructionAssignBinaryOp() { delete variable; delete left; delete right; }
 
         private:
             AtomIdentifier* variable;
@@ -75,6 +79,7 @@ namespace frontend {
             InstructionReturn(Atom* value);
             Atom* getValue();
             void accept(InstructionVisitor* visitor);
+            ~InstructionReturn() { delete value; }
 
         private:
             Atom* value;

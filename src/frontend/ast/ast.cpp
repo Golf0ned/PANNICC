@@ -16,6 +16,12 @@ namespace frontend {
         return res;
     }
 
+    AST::~AST() {
+        for (Instruction* i : instructions) {
+            delete i;
+        }
+    }
+
     ToStringVisitor::ToStringVisitor() : res("") {}
 
     std::string ToStringVisitor::getResult() {

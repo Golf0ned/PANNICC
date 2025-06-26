@@ -272,6 +272,12 @@ namespace frontend {
         AST ast;
         pegtl::parse<grammar, action>(in, ast);
 
+        for (Atom* a : parsed_atoms) {
+            delete a;
+        }
+        parsed_atoms.clear();
+        parsed_tokens.clear();
+
         return ast;
     }
 }
