@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "frontend/ast.h"
+#include "frontend/ast/ast.h"
 
 
 namespace frontend {

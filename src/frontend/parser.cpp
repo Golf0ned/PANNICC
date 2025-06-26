@@ -5,6 +5,9 @@
 #include <tao/pegtl/contrib/raw_string.hpp>
 
 #include "frontend/parser.h"
+#include "frontend/ast/atom.h"
+#include "frontend/ast/instruction.h"
+#include "frontend/type.h"
 
 namespace pegtl = tao::pegtl;
 using namespace pegtl;
@@ -13,6 +16,9 @@ template<typename Rule>
 using pegtl_apply_if_match = pegtl::seq<pegtl::at<Rule>, Rule>;
 
 namespace frontend {
+
+    std::vector<std::string> parsed_tokens;
+    std::vector<Atom*> parsed_atoms;
 
     //
     // Grammar
@@ -158,11 +164,54 @@ namespace frontend {
     struct action
         : pegtl::nothing<Rule> {};
 
+    // Value token actions
+    template<>
+    struct action<number> {
+        template <typename Input>
+        static void apply(const Input &in, AST &ast) {
+            AtomLiteral *a = new AtomLiteral(in.string());
+            parsed_atoms.push_back(a);
+        }
+    };
+
+    template<>
+    struct action<identifier> {
+        template <typename Input>
+        static void apply(const Input &in, AST &ast) {
+            AtomIdentifier* a = new AtomIdentifier(in.string());
+            parsed_atoms.push_back(a);
+        }
+    };
+
+    template<>
+    struct action<binary_op> {
+        template <typename Input>
+        static void apply(const Input &in, AST &ast) {
+            parsed_tokens.push_back(in.string());
+        }
+    };
+
+    template<>
+    struct action<type> {
+        template <typename Input>
+        static void apply(const Input &in, AST &ast) {
+            parsed_tokens.push_back(in.string());
+        }
+    };
+
+    // Instruction actions
     template<>
     struct action<instruction_declaration> {
         template<typename Input>
         static void apply(const Input &in, AST &ast) {
-            ast.instructions.emplace_back(new InstructionDeclaration());
+            AtomIdentifier* variable = dynamic_cast<AtomIdentifier*>(parsed_atoms.back());
+            parsed_atoms.pop_back();
+
+            Type type = strToType.at(parsed_tokens.back());
+            parsed_tokens.pop_back();
+
+            InstructionDeclaration* i = new InstructionDeclaration(type, variable);
+            ast.instructions.push_back(i);
         }
     };
 
@@ -170,7 +219,14 @@ namespace frontend {
     struct action<instruction_assign_value> {
         template<typename Input>
         static void apply(const Input &in, AST &ast) {
-            ast.instructions.emplace_back(new InstructionAssignValue());
+            Atom* value = parsed_atoms.back();
+            parsed_atoms.pop_back();
+
+            AtomIdentifier* variable = dynamic_cast<AtomIdentifier*>(parsed_atoms.back());
+            parsed_atoms.pop_back();
+
+            InstructionAssignValue* i = new InstructionAssignValue(variable, value);
+            ast.instructions.push_back(i);
         }
     };
 
@@ -178,7 +234,20 @@ namespace frontend {
     struct action<instruction_assign_binary_op> {
         template<typename Input>
         static void apply(const Input &in, AST &ast) {
-            ast.instructions.emplace_back(new InstructionAssignBinaryOp());
+            Atom* right = parsed_atoms.back();
+            parsed_atoms.pop_back();
+
+            BinaryOp op = strToBinaryOp.at(parsed_tokens.back());
+            parsed_tokens.pop_back();
+
+            Atom* left = parsed_atoms.back();
+            parsed_atoms.pop_back();
+
+            AtomIdentifier* variable = dynamic_cast<AtomIdentifier*>(parsed_atoms.back());
+            parsed_atoms.pop_back();
+
+            InstructionAssignBinaryOp* i = new InstructionAssignBinaryOp(variable, op, left, right);
+            ast.instructions.push_back(i);
         }
     };
 
@@ -186,7 +255,11 @@ namespace frontend {
     struct action<instruction_return> {
         template<typename Input>
         static void apply(const Input &in, AST &ast) {
-            ast.instructions.emplace_back(new InstructionReturn());
+            Atom* value = parsed_atoms.back();
+            parsed_atoms.pop_back();
+            
+            InstructionReturn* i = new InstructionReturn(value);
+            ast.instructions.push_back(i);
         }
     };
 

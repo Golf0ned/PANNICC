@@ -16,7 +16,10 @@ FetchContent_MakeAvailable(pegtl)
 add_executable(pannicc
     src/main.cpp
     src/frontend/parser.cpp
-    src/frontend/ast.cpp
+    src/frontend/type.cpp
+    src/frontend/ast/ast.cpp
+    src/frontend/ast/atom.cpp
+    src/frontend/ast/instruction.cpp
 )
 
 target_include_directories(pannicc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
