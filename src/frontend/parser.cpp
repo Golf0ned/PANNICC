@@ -85,7 +85,7 @@ namespace frontend {
     struct type
         : pegtl::sor<keyword_int64_t> {};
 
-    // AST::Instructions
+    // Instructions
     struct instruction_declaration
         : pegtl::seq<type,
                      ignorable,
@@ -199,7 +199,7 @@ namespace frontend {
         }
     };
 
-    // AST::Instruction actions
+    // Instruction actions
     template<>
     struct action<instruction_declaration> {
         template<typename Input>
@@ -211,7 +211,7 @@ namespace frontend {
             parsed_tokens.pop_back();
 
             AST::InstructionDeclaration* i = new AST::InstructionDeclaration(type, variable);
-            ast.instructions.push_back(i);
+            ast.addInstruction(i);
         }
     };
 
@@ -226,7 +226,7 @@ namespace frontend {
             parsed_atoms.pop_back();
 
             AST::InstructionAssignValue* i = new AST::InstructionAssignValue(variable, value);
-            ast.instructions.push_back(i);
+            ast.addInstruction(i);
         }
     };
 
@@ -247,7 +247,7 @@ namespace frontend {
             parsed_atoms.pop_back();
 
             AST::InstructionAssignBinaryOp* i = new AST::InstructionAssignBinaryOp(variable, op, left, right);
-            ast.instructions.push_back(i);
+            ast.addInstruction(i);
         }
     };
 
@@ -259,7 +259,7 @@ namespace frontend {
             parsed_atoms.pop_back();
             
             AST::InstructionReturn* i = new AST::InstructionReturn(value);
-            ast.instructions.push_back(i);
+            ast.addInstruction(i);
         }
     };
 

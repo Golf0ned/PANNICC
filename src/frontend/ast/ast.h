@@ -10,10 +10,11 @@
 namespace frontend::AST {
     class Program {
         public:
-            // not set on this being public yet
-            std::vector<Instruction*> instructions;
+            void addInstruction(Instruction* i);
             std::string toString();
             ~Program();
+        private:
+            std::vector<Instruction*> instructions;
     };
 
     class ToStringVisitor : public InstructionVisitor, public AtomVisitor {

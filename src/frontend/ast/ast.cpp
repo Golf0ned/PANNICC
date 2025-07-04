@@ -5,6 +5,10 @@
 
 
 namespace frontend::AST {
+    void Program::addInstruction(Instruction* i) {
+        instructions.push_back(i);
+    }
+
     std::string Program::toString() {
         std::string res = "";
 
