@@ -6,7 +6,7 @@
 #include "frontend/ast/atom.h"
 
 
-namespace frontend {
+namespace frontend::AST {
     class InstructionVisitor;
 
     enum class BinaryOp {

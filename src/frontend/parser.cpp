@@ -18,7 +18,7 @@ using pegtl_apply_if_match = pegtl::seq<pegtl::at<Rule>, Rule>;
 namespace frontend {
 
     std::vector<std::string> parsed_tokens;
-    std::vector<Atom*> parsed_atoms;
+    std::vector<AST::Atom*> parsed_atoms;
 
     //
     // Grammar
@@ -85,7 +85,7 @@ namespace frontend {
     struct type
         : pegtl::sor<keyword_int64_t> {};
 
-    // Instructions
+    // AST::Instructions
     struct instruction_declaration
         : pegtl::seq<type,
                      ignorable,
@@ -168,8 +168,8 @@ namespace frontend {
     template<>
     struct action<number> {
         template <typename Input>
-        static void apply(const Input &in, AST &ast) {
-            AtomLiteral *a = new AtomLiteral(in.string());
+        static void apply(const Input &in, AST::Program &ast) {
+            AST::AtomLiteral *a = new AST::AtomLiteral(in.string());
             parsed_atoms.push_back(a);
         }
     };
@@ -177,8 +177,8 @@ namespace frontend {
     template<>
     struct action<identifier> {
         template <typename Input>
-        static void apply(const Input &in, AST &ast) {
-            AtomIdentifier* a = new AtomIdentifier(in.string());
+        static void apply(const Input &in, AST::Program &ast) {
+            AST::AtomIdentifier* a = new AST::AtomIdentifier(in.string());
             parsed_atoms.push_back(a);
         }
     };
@@ -186,7 +186,7 @@ namespace frontend {
     template<>
     struct action<binary_op> {
         template <typename Input>
-        static void apply(const Input &in, AST &ast) {
+        static void apply(const Input &in, AST::Program &ast) {
             parsed_tokens.push_back(in.string());
         }
     };
@@ -194,23 +194,23 @@ namespace frontend {
     template<>
     struct action<type> {
         template <typename Input>
-        static void apply(const Input &in, AST &ast) {
+        static void apply(const Input &in, AST::Program &ast) {
             parsed_tokens.push_back(in.string());
         }
     };
 
-    // Instruction actions
+    // AST::Instruction actions
     template<>
     struct action<instruction_declaration> {
         template<typename Input>
-        static void apply(const Input &in, AST &ast) {
-            AtomIdentifier* variable = dynamic_cast<AtomIdentifier*>(parsed_atoms.back());
+        static void apply(const Input &in, AST::Program &ast) {
+            AST::AtomIdentifier* variable = dynamic_cast<AST::AtomIdentifier*>(parsed_atoms.back());
             parsed_atoms.pop_back();
 
             Type type = strToType.at(parsed_tokens.back());
             parsed_tokens.pop_back();
 
-            InstructionDeclaration* i = new InstructionDeclaration(type, variable);
+            AST::InstructionDeclaration* i = new AST::InstructionDeclaration(type, variable);
             ast.instructions.push_back(i);
         }
     };
@@ -218,14 +218,14 @@ namespace frontend {
     template<>
     struct action<instruction_assign_value> {
         template<typename Input>
-        static void apply(const Input &in, AST &ast) {
-            Atom* value = parsed_atoms.back();
+        static void apply(const Input &in, AST::Program &ast) {
+            AST::Atom* value = parsed_atoms.back();
             parsed_atoms.pop_back();
 
-            AtomIdentifier* variable = dynamic_cast<AtomIdentifier*>(parsed_atoms.back());
+            AST::AtomIdentifier* variable = dynamic_cast<AST::AtomIdentifier*>(parsed_atoms.back());
             parsed_atoms.pop_back();
 
-            InstructionAssignValue* i = new InstructionAssignValue(variable, value);
+            AST::InstructionAssignValue* i = new AST::InstructionAssignValue(variable, value);
             ast.instructions.push_back(i);
         }
     };
@@ -233,20 +233,20 @@ namespace frontend {
     template<>
     struct action<instruction_assign_binary_op> {
         template<typename Input>
-        static void apply(const Input &in, AST &ast) {
-            Atom* right = parsed_atoms.back();
+        static void apply(const Input &in, AST::Program &ast) {
+            AST::Atom* right = parsed_atoms.back();
             parsed_atoms.pop_back();
 
-            BinaryOp op = strToBinaryOp.at(parsed_tokens.back());
+            AST::BinaryOp op = AST::strToBinaryOp.at(parsed_tokens.back());
             parsed_tokens.pop_back();
 
-            Atom* left = parsed_atoms.back();
+            AST::Atom* left = parsed_atoms.back();
             parsed_atoms.pop_back();
 
-            AtomIdentifier* variable = dynamic_cast<AtomIdentifier*>(parsed_atoms.back());
+            AST::AtomIdentifier* variable = dynamic_cast<AST::AtomIdentifier*>(parsed_atoms.back());
             parsed_atoms.pop_back();
 
-            InstructionAssignBinaryOp* i = new InstructionAssignBinaryOp(variable, op, left, right);
+            AST::InstructionAssignBinaryOp* i = new AST::InstructionAssignBinaryOp(variable, op, left, right);
             ast.instructions.push_back(i);
         }
     };
@@ -254,11 +254,11 @@ namespace frontend {
     template<>
     struct action<instruction_return> {
         template<typename Input>
-        static void apply(const Input &in, AST &ast) {
-            Atom* value = parsed_atoms.back();
+        static void apply(const Input &in, AST::Program &ast) {
+            AST::Atom* value = parsed_atoms.back();
             parsed_atoms.pop_back();
             
-            InstructionReturn* i = new InstructionReturn(value);
+            AST::InstructionReturn* i = new AST::InstructionReturn(value);
             ast.instructions.push_back(i);
         }
     };
@@ -266,13 +266,13 @@ namespace frontend {
     //
     // Parse function
     //
-    AST parse(const std::string &input_file) {
+    AST::Program parse(const std::string &input_file) {
         file_input in(input_file);
 
-        AST ast;
+        AST::Program ast;
         pegtl::parse<grammar, action>(in, ast);
 
-        for (Atom* a : parsed_atoms) {
+        for (AST::Atom* a : parsed_atoms) {
             delete a;
         }
         parsed_atoms.clear();

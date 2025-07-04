@@ -4,8 +4,8 @@
 #include "frontend/ast/instruction.h"
 
 
-namespace frontend {
-    std::string AST::toString() {
+namespace frontend::AST {
+    std::string Program::toString() {
         std::string res = "";
 
         ToStringVisitor visitor = ToStringVisitor();
@@ -16,7 +16,7 @@ namespace frontend {
         return res;
     }
 
-    AST::~AST() {
+    Program::~Program() {
         for (Instruction* i : instructions) {
             delete i;
         }

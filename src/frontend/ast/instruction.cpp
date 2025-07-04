@@ -1,7 +1,7 @@
 #include "frontend/ast/instruction.h"
 
 
-namespace frontend {
+namespace frontend::AST {
     std::string toString(BinaryOp op) {
         switch (op) {
             case BinaryOp::ADD: return "+";

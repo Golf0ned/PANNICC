@@ -7,13 +7,13 @@
 #include "frontend/ast/instruction.h"
 
 
-namespace frontend {
-    class AST {
+namespace frontend::AST {
+    class Program {
         public:
             // not set on this being public yet
             std::vector<Instruction*> instructions;
             std::string toString();
-            ~AST();
+            ~Program();
     };
 
     class ToStringVisitor : public InstructionVisitor, public AtomVisitor {

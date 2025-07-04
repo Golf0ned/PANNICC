@@ -2,7 +2,7 @@
 #include <string>
 
 
-namespace frontend {
+namespace frontend::AST {
     AtomIdentifier::AtomIdentifier(std::string value) {
         this->value = value;
     }

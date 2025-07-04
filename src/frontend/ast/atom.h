@@ -4,7 +4,7 @@
 #include <string>
 
 
-namespace frontend {
+namespace frontend::AST {
     class AtomVisitor;
 
     class Atom {
