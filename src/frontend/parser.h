@@ -6,5 +6,5 @@
 
 
 namespace frontend {
-    frontend::AST::Program parse(const std::string &input_file);
+    frontend::ast::Program parse(const std::string &input_file);
 }

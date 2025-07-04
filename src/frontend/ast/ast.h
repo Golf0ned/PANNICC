@@ -7,7 +7,7 @@
 #include "frontend/ast/instruction.h"
 
 
-namespace frontend::AST {
+namespace frontend::ast {
     class Program {
         public:
             void addInstruction(Instruction* i);

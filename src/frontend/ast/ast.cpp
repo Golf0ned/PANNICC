@@ -4,7 +4,7 @@
 #include "frontend/ast/instruction.h"
 
 
-namespace frontend::AST {
+namespace frontend::ast {
     void Program::addInstruction(Instruction* i) {
         instructions.push_back(i);
     }
