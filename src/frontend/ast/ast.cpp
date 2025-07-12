@@ -50,7 +50,7 @@ namespace frontend::ast {
     }
 
 
-    ToStringVisitor::ToStringVisitor() : res("") {}
+    ToStringVisitor::ToStringVisitor() : res(""), prefix("") {}
 
     std::string ToStringVisitor::getResult() {
         return res;
@@ -73,17 +73,21 @@ namespace frontend::ast {
     }
 
     void ToStringVisitor::visit(Instruction* i) {
-        res = "[UNKNOWN INSTRUCTION]";
+        res = prefix + "[UNKNOWN INSTRUCTION]";
     }
 
     void ToStringVisitor::visit(Scope* s) {
         std::string scope_res = "{\n";
+
+        this->prefix += "    ";
         for (Instruction* i : s->getInstructions()) {
             i->accept(this);
             scope_res += this->getResult() + "\n";
         }
-        scope_res += "}";
-        res = scope_res;
+        this->prefix = this->prefix.substr(0, this->prefix.size() - 4);
+
+        scope_res += prefix + "}";
+        res = prefix + scope_res;
     }
 
     void ToStringVisitor::visit(InstructionDeclaration* i) {
@@ -92,7 +96,7 @@ namespace frontend::ast {
         i->getVariable()->accept(this);
         const std::string variable = this->getResult();
 
-        res = "DECLARE " + type + " " + variable;
+        res = prefix + "DECLARE " + type + " " + variable;
     }
 
     void ToStringVisitor::visit(InstructionAssignValue* i) {
@@ -102,7 +106,7 @@ namespace frontend::ast {
         i->getValue()->accept(this);
         const std::string value = this->getResult();
 
-        res = "ASSIGN " + variable + " = " + value;
+        res = prefix + "ASSIGN " + variable + " = " + value;
     }
 
     void ToStringVisitor::visit(InstructionAssignBinaryOp* i) {
@@ -117,13 +121,13 @@ namespace frontend::ast {
         i->getRight()->accept(this);
         const std::string right = this->getResult();
 
-        res = "ASSIGN " + variable + " = " + left + " " + op + " " + right;
+        res = prefix + "ASSIGN " + variable + " = " + left + " " + op + " " + right;
     }
 
     void ToStringVisitor::visit(InstructionReturn* i) {
         i->getValue()->accept(this);
         const std::string value = this->getResult();
 
-        res = "RETURN " + value;
+        res = prefix + "RETURN " + value;
     }
 }

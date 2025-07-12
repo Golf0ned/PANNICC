@@ -49,6 +49,7 @@ namespace frontend::ast {
             void visit(InstructionReturn* i) override;
 
         private:
+            std::string prefix;
             std::string res;
     };
 }
