@@ -16,9 +16,10 @@ template<typename Rule>
 using pegtl_apply_if_match = pegtl::seq<pegtl::at<Rule>, Rule>;
 
 namespace frontend {
-
     std::vector<std::string> parsed_tokens;
     std::vector<ast::Atom*> parsed_atoms;
+
+    std::vector<ast::Scope*> active_scopes;
 
     //
     // Grammar
@@ -122,14 +123,24 @@ namespace frontend {
                      ignorable,
                      semicolon> {};
 
+    struct scope; // (Forward declaring scope)
+
     struct instruction_any
-        : pegtl::sor<pegtl_apply_if_match<instruction_declaration>,
+        : pegtl::sor<pegtl_apply_if_match<scope>,
+                     pegtl_apply_if_match<instruction_declaration>,
                      pegtl_apply_if_match<instruction_assign_value>,
                      pegtl_apply_if_match<instruction_assign_binary_op>,
                      pegtl_apply_if_match<instruction_return>> {};
 
 
     // Program structure
+    struct scope
+        : pegtl::seq<left_brace,
+                     ignorable,
+                     pegtl::star<pegtl::seq<instruction_any,
+                                            ignorable>>,
+                     right_brace> {};
+
     struct function
         : pegtl::seq<type,
                      ignorable,
@@ -140,11 +151,7 @@ namespace frontend {
                      // TODO: parameter list
                      right_paren,
                      ignorable,
-                     left_brace,
-                     ignorable,
-                     pegtl::star<pegtl::seq<instruction_any,
-                                            ignorable>>,
-                     right_brace,
+                     scope,
                      ignorable> {};
 
 
@@ -201,6 +208,30 @@ namespace frontend {
 
     // Instruction actions
     template<>
+    struct action<left_brace> {
+        template<typename Input>
+        static void apply(const Input &in, ast::Program &ast) {
+            ast::Scope* scope = new ast::Scope();
+            active_scopes.push_back(scope);
+        }
+    };
+
+    template<>
+    struct action<right_brace> {
+        template<typename Input>
+        static void apply(const Input &in, ast::Program &ast) {
+            ast::Scope* scope = active_scopes.back();
+            active_scopes.pop_back();
+            if (active_scopes.empty()) {
+                // Hold scope for function parse
+                active_scopes.push_back(scope);
+            } else {
+                active_scopes.back()->addInstruction(scope);
+            }
+        }
+    };
+
+    template<>
     struct action<instruction_declaration> {
         template<typename Input>
         static void apply(const Input &in, ast::Program &ast) {
@@ -211,7 +242,7 @@ namespace frontend {
             parsed_tokens.pop_back();
 
             ast::InstructionDeclaration* i = new ast::InstructionDeclaration(type, variable);
-            ast.addInstruction(i);
+            active_scopes.back()->addInstruction(i);
         }
     };
 
@@ -226,7 +257,7 @@ namespace frontend {
             parsed_atoms.pop_back();
 
             ast::InstructionAssignValue* i = new ast::InstructionAssignValue(variable, value);
-            ast.addInstruction(i);
+            active_scopes.back()->addInstruction(i);
         }
     };
 
@@ -247,7 +278,7 @@ namespace frontend {
             parsed_atoms.pop_back();
 
             ast::InstructionAssignBinaryOp* i = new ast::InstructionAssignBinaryOp(variable, op, left, right);
-            ast.addInstruction(i);
+            active_scopes.back()->addInstruction(i);
         }
     };
 
@@ -259,7 +290,25 @@ namespace frontend {
             parsed_atoms.pop_back();
             
             ast::InstructionReturn* i = new ast::InstructionReturn(value);
-            ast.addInstruction(i);
+            active_scopes.back()->addInstruction(i);
+        }
+    };
+
+    // Function
+    template<>
+    struct action<function> {
+        template<typename Input>
+        static void apply(const Input &in, ast::Program &ast) {
+            ast::AtomIdentifier* name = dynamic_cast<ast::AtomIdentifier*>(parsed_atoms.back());
+            parsed_atoms.pop_back();
+
+            Type type = strToType.at(parsed_tokens.back());
+            parsed_tokens.pop_back();
+
+            ast::Scope* body = active_scopes.back();
+            active_scopes.pop_back();
+
+            ast.addFunction(ast::Function(type, name, body));
         }
     };
 
@@ -272,11 +321,11 @@ namespace frontend {
         ast::Program ast;
         pegtl::parse<grammar, action>(in, ast);
 
-        for (ast::Atom* a : parsed_atoms) {
-            delete a;
-        }
-        parsed_atoms.clear();
-        parsed_tokens.clear();
+        // for (ast::Atom* a : parsed_atoms) {
+        //     delete a;
+        // }
+        // parsed_atoms.clear();
+        // parsed_tokens.clear();
 
         return ast;
     }

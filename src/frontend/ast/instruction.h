@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <vector>
 
 #include "frontend/type.h"
 #include "frontend/ast/atom.h"
@@ -29,6 +30,17 @@ namespace frontend::ast {
         public:
             virtual void accept(InstructionVisitor* visitor) = 0;
             virtual ~Instruction() = default;
+    };
+
+    class Scope : public Instruction {
+        public:
+            // TODO: figure out if getters or just constructor
+            void addInstruction(Instruction* i);
+            std::vector<Instruction*> getInstructions();
+            void accept(InstructionVisitor* visitor);
+            ~Scope();
+        private:
+            std::vector<Instruction*> instructions;
     };
 
     class InstructionDeclaration : public Instruction {
@@ -88,6 +100,7 @@ namespace frontend::ast {
     class InstructionVisitor {
         public:
             virtual void visit(Instruction* i) = 0;
+            virtual void visit(Scope* s) = 0;
             virtual void visit(InstructionDeclaration* i) = 0;
             virtual void visit(InstructionAssignValue* i) = 0;
             virtual void visit(InstructionAssignBinaryOp* i) = 0;

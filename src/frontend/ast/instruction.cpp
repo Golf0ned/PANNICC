@@ -13,6 +13,25 @@ namespace frontend::ast {
     }
 
 
+    void Scope::addInstruction(Instruction* i) {
+        instructions.push_back(i);
+    }
+
+    std::vector<Instruction*> Scope::getInstructions() {
+        return instructions;
+    }
+
+    void Scope::accept(InstructionVisitor* visitor) {
+        visitor->visit(this);
+    }
+
+    Scope::~Scope() {
+        for (Instruction* i : instructions) {
+            delete i;
+        }
+    }
+
+
     InstructionDeclaration::InstructionDeclaration(Type type, AtomIdentifier* variable)
         : type(type), variable(variable) {}
 

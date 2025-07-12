@@ -5,26 +5,50 @@
 
 
 namespace frontend::ast {
-    void Program::addInstruction(Instruction* i) {
-        instructions.push_back(i);
+    Function::Function(Type type, AtomIdentifier* name, Scope* body)
+        : type(type), name(name), body(body) {}
+
+    Type Function::getType() {
+        return type;
+    }
+
+    AtomIdentifier* Function::getName() {
+        return name;
+    }
+
+    Scope* Function::getBody() {
+        return body;
+    }
+
+    std::string Function::toString() {
+        std::string res = ::frontend::toString(type) + " " + name->getValue() + "()";
+        ToStringVisitor visitor = ToStringVisitor();
+        body->accept(&visitor);
+        res += " " + visitor.getResult();
+        return res;
+    }
+
+
+    void Program::addFunction(Function f) {
+        functions.push_back(f);
     }
 
     std::string Program::toString() {
         std::string res = "";
 
-        ToStringVisitor visitor = ToStringVisitor();
-        for (Instruction* i : instructions) {
-            i->accept(&visitor);
-            res += visitor.getResult() + "\n";
+        for (Function& f : functions) {
+            res += f.toString() + "\n";
         }
         return res;
     }
 
     Program::~Program() {
-        for (Instruction* i : instructions) {
-            delete i;
+        for (Function& f : functions) {
+            delete f.getBody();
+            delete f.getName();
         }
     }
+
 
     ToStringVisitor::ToStringVisitor() : res("") {}
 
@@ -50,6 +74,16 @@ namespace frontend::ast {
 
     void ToStringVisitor::visit(Instruction* i) {
         res = "[UNKNOWN INSTRUCTION]";
+    }
+
+    void ToStringVisitor::visit(Scope* s) {
+        std::string scope_res = "{\n";
+        for (Instruction* i : s->getInstructions()) {
+            i->accept(this);
+            scope_res += this->getResult() + "\n";
+        }
+        scope_res += "}";
+        res = scope_res;
     }
 
     void ToStringVisitor::visit(InstructionDeclaration* i) {
