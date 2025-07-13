@@ -320,13 +320,6 @@ namespace frontend {
 
         ast::Program ast;
         pegtl::parse<grammar, action>(in, ast);
-
-        // for (ast::Atom* a : parsed_atoms) {
-        //     delete a;
-        // }
-        // parsed_atoms.clear();
-        // parsed_tokens.clear();
-
         return ast;
     }
 }
