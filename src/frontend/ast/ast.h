@@ -15,7 +15,7 @@ namespace frontend::ast {
             Type getType();
             ast::AtomIdentifier* getName();
             ast::Scope* getBody();
-            std::string toString();
+            std::string toString(std::unordered_map<uint64_t, std::string>& symbol_table);
         private:
             Type type;
             ast::AtomIdentifier* name;
@@ -26,15 +26,17 @@ namespace frontend::ast {
     class Program {
         public:
             void addFunction(Function f);
+            void addSymbol(uint64_t id, const std::string& symbol);
             std::string toString();
             ~Program();
         private:
             std::vector<Function> functions;
+            std::unordered_map<uint64_t, std::string> symbol_table;
     };
 
     class ToStringVisitor : public InstructionVisitor, public AtomVisitor {
         public:
-            ToStringVisitor();
+            ToStringVisitor(std::unordered_map<uint64_t, std::string>& symbol_table);
             std::string getResult();
 
             void visit(Atom* a) override;
@@ -49,6 +51,7 @@ namespace frontend::ast {
             void visit(InstructionReturn* i) override;
 
         private:
+            std::unordered_map<uint64_t, std::string>& symbol_table;
             std::string prefix;
             std::string res;
     };

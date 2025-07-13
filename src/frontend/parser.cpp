@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <string>
 
 #include <tao/pegtl.hpp>
@@ -18,7 +19,7 @@ using pegtl_apply_if_match = pegtl::seq<pegtl::at<Rule>, Rule>;
 namespace frontend {
     std::vector<std::string> parsed_tokens;
     std::vector<ast::Atom*> parsed_atoms;
-
+    std::unordered_map<std::string, uint64_t> mapped_symbols;
     std::vector<ast::Scope*> active_scopes;
 
     //
@@ -176,7 +177,7 @@ namespace frontend {
     struct action<number> {
         template <typename Input>
         static void apply(const Input &in, ast::Program &ast) {
-            ast::AtomLiteral *a = new ast::AtomLiteral(in.string());
+            ast::AtomLiteral *a = new ast::AtomLiteral(std::stoull(in.string()));
             parsed_atoms.push_back(a);
         }
     };
@@ -185,7 +186,18 @@ namespace frontend {
     struct action<identifier> {
         template <typename Input>
         static void apply(const Input &in, ast::Program &ast) {
-            ast::AtomIdentifier* a = new ast::AtomIdentifier(in.string());
+            uint64_t id;
+            std::string identifier = in.string();
+         
+            if (mapped_symbols.find(identifier) == mapped_symbols.end()) {
+                id = mapped_symbols.size();
+                ast.addSymbol(id, identifier);
+                mapped_symbols[identifier] = id;
+            } else {
+                id = mapped_symbols[identifier];
+            }
+
+            ast::AtomIdentifier *a = new ast::AtomIdentifier(id);
             parsed_atoms.push_back(a);
         }
     };
@@ -317,6 +329,11 @@ namespace frontend {
     //
     ast::Program parse(const std::string &input_file) {
         file_input in(input_file);
+
+        parsed_tokens.clear();
+        parsed_atoms.clear();
+        mapped_symbols.clear();
+        active_scopes.clear();
 
         ast::Program ast;
         pegtl::parse<grammar, action>(in, ast);

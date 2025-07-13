@@ -1,13 +1,13 @@
 #include "frontend/ast/atom.h"
-#include <string>
-
-
 namespace frontend::ast {
-    AtomIdentifier::AtomIdentifier(std::string value) {
-        this->value = value;
+    AtomIdentifier::AtomIdentifier(uint64_t value)
+        : value(value), identifier(true) {}
+
+    bool AtomIdentifier::isIdentifier() {
+        return identifier;
     }
 
-    std::string AtomIdentifier::getValue() {
+    uint64_t AtomIdentifier::getValue() {
         return value;
     }
 
@@ -16,8 +16,11 @@ namespace frontend::ast {
     }
 
 
-    AtomLiteral::AtomLiteral(std::string value) {
-        this->value = std::stoull(value);
+    AtomLiteral::AtomLiteral(uint64_t value)
+        : value(value), identifier(false) {}
+
+    bool AtomLiteral::isIdentifier() {
+        return identifier;
     }
 
     uint64_t AtomLiteral::getValue() {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <string>
 
 
 namespace frontend::ast {
@@ -9,27 +8,31 @@ namespace frontend::ast {
 
     class Atom {
         public:
+            virtual bool isIdentifier() = 0;
+            virtual uint64_t getValue() = 0;
             virtual void accept(AtomVisitor* visitor) = 0;
             virtual ~Atom() = default;
     };
 
     class AtomIdentifier : public Atom {
         public:
-            AtomIdentifier(std::string identifier);
-            std::string getValue();
+            AtomIdentifier(uint64_t value);
+            bool isIdentifier() override;
+            uint64_t getValue() override;
             void accept(AtomVisitor* visitor) override;
-
         private:
-            std::string value;
+            bool identifier;
+            uint64_t value;
     };
 
     class AtomLiteral : public Atom {
         public:
-            AtomLiteral(std::string value);
-            uint64_t getValue();
+            AtomLiteral(uint64_t value);
+            bool isIdentifier() override;
+            uint64_t getValue() override;
             void accept(AtomVisitor* visitor) override;
-
         private:
+            bool identifier;
             uint64_t value;
     };
 

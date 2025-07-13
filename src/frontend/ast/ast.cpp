@@ -20,11 +20,15 @@ namespace frontend::ast {
         return body;
     }
 
-    std::string Function::toString() {
-        std::string res = ::frontend::toString(type) + " " + name->getValue() + "()";
-        ToStringVisitor visitor = ToStringVisitor();
+    std::string Function::toString(std::unordered_map<uint64_t, std::string>& symbol_table) {
+        std::string type_str = ::frontend::toString(type);
+        std::string name_str = symbol_table.at(name->getValue());
+
+        std::string res = type_str + " " + name_str + "()";
+        ToStringVisitor visitor = ToStringVisitor(symbol_table);
         body->accept(&visitor);
         res += " " + visitor.getResult();
+
         return res;
     }
 
@@ -33,12 +37,26 @@ namespace frontend::ast {
         functions.push_back(f);
     }
 
+    void Program::addSymbol(uint64_t id, const std::string& symbol) {
+        if (symbol_table.find(id) != symbol_table.end()) {
+            // TODO: handle error if symbol exists and mismatches?
+            return;
+        }
+        symbol_table[id] = symbol;
+    }
+
     std::string Program::toString() {
         std::string res = "";
 
         for (Function& f : functions) {
-            res += f.toString() + "\n";
+            res += f.toString(symbol_table) + "\n";
         }
+
+        res += "Symbols:\n";
+        for (const auto& [id, symbol] : symbol_table) {
+            res += "  " + std::to_string(id) + ": " + symbol + "\n";
+        }
+
         return res;
     }
 
@@ -50,7 +68,8 @@ namespace frontend::ast {
     }
 
 
-    ToStringVisitor::ToStringVisitor() : res(""), prefix("") {}
+    ToStringVisitor::ToStringVisitor(std::unordered_map<uint64_t, std::string>& symbol_table)
+        : symbol_table(symbol_table), prefix(""), res("") {}
 
     std::string ToStringVisitor::getResult() {
         return res;
@@ -61,7 +80,7 @@ namespace frontend::ast {
     }
 
     void ToStringVisitor::visit(AtomIdentifier* a) {
-        std::string value = a->getValue();
+        std::string value = symbol_table.at(a->getValue());
 
         res = value;
     }
