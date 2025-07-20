@@ -45,6 +45,10 @@ namespace frontend::ast {
         symbol_table[id] = symbol;
     }
 
+    std::vector<Function>& Program::getFunctions() {
+        return functions;
+    }
+
     std::string Program::toString() {
         std::string res = "";
 

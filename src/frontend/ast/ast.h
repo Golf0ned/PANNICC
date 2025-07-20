@@ -27,6 +27,7 @@ namespace frontend::ast {
         public:
             void addFunction(Function f);
             void addSymbol(uint64_t id, const std::string& symbol);
+            std::vector<Function>& getFunctions();
             std::string toString();
             ~Program();
         private:

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.11)
 
 project(PANNICC)
 
@@ -16,10 +16,12 @@ FetchContent_MakeAvailable(pegtl)
 add_executable(pannicc
     src/main.cpp
     src/frontend/parser.cpp
+    src/frontend/ast_to_hir.cpp
     src/frontend/type.cpp
     src/frontend/ast/ast.cpp
     src/frontend/ast/atom.cpp
     src/frontend/ast/instruction.cpp
+    src/frontend/hir/hir.cpp
 )
 
 target_include_directories(pannicc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
