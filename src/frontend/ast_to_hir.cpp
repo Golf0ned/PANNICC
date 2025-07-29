@@ -27,5 +27,40 @@ namespace frontend {
         return result;
     }
 
-    // TODO: visit methods
+    void ASTToHIRVisitor::visit(ast::Atom* a) {
+        // TODO: visit methods
+    }
+
+    void ASTToHIRVisitor::visit(ast::AtomIdentifier* a) {
+        // TODO: visit methods
+    }
+
+    void ASTToHIRVisitor::visit(ast::AtomLiteral* a) {
+        // TODO: visit methods
+    }
+
+
+    void ASTToHIRVisitor::visit(ast::Instruction* i) {
+        // TODO: visit methods
+    }
+
+    void ASTToHIRVisitor::visit(ast::Scope* s) {
+        // TODO: visit methods
+    }
+
+    void ASTToHIRVisitor::visit(ast::InstructionDeclaration* i) {
+        // TODO: visit methods
+    }
+
+    void ASTToHIRVisitor::visit(ast::InstructionAssignValue* i) {
+        // TODO: visit methods
+    }
+
+    void ASTToHIRVisitor::visit(ast::InstructionAssignBinaryOp* i) {
+        // TODO: visit methods
+    }
+
+    void ASTToHIRVisitor::visit(ast::InstructionReturn* i) {
+        // TODO: visit methods
+    }
 }
