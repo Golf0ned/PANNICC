@@ -11,16 +11,16 @@
 namespace frontend::ast {
     class Function {
         public:
-            Function(Type type, ast::AtomIdentifier* name, ast::Scope* body);
+            Function(Type type, AtomIdentifier* name, Scope* body);
             Type getType();
-            ast::AtomIdentifier* getName();
-            ast::Scope* getBody();
+            AtomIdentifier* getName();
+            Scope* getBody();
             std::string toString(std::unordered_map<uint64_t, std::string>& symbol_table);
         private:
             Type type;
-            ast::AtomIdentifier* name;
+            AtomIdentifier* name;
             // TODO: params
-            ast::Scope* body;
+            Scope* body;
     };
 
     class Program {

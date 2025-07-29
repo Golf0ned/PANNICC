@@ -1,4 +1,6 @@
 #include "frontend/ast/atom.h"
+
+
 namespace frontend::ast {
     AtomIdentifier::AtomIdentifier(uint64_t value)
         : value(value), identifier(true) {}
