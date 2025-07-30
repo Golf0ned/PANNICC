@@ -3,6 +3,7 @@
 #include <cstdint>
 
 
+// TODO: generalize to frontend
 namespace frontend::ast {
     class AtomVisitor;
 

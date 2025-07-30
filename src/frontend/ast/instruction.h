@@ -106,5 +106,4 @@ namespace frontend::ast {
             virtual void visit(InstructionAssignBinaryOp* i) = 0;
             virtual void visit(InstructionReturn* i) = 0;
     };
-
 }
