@@ -22,6 +22,8 @@ add_executable(pannicc
     src/frontend/ast/atom.cpp
     src/frontend/ast/instruction.cpp
     src/frontend/hir/hir.cpp
+    src/frontend/hir/atom.cpp
+    src/frontend/hir/instruction.cpp
 )
 
 target_include_directories(pannicc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
