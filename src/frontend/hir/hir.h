@@ -5,6 +5,7 @@
 
 #include "frontend/utils/atom.h"
 #include "frontend/utils/symbol_table.h"
+#include "frontend/utils/type.h"
 #include "frontend/hir/instruction.h"
 
 
@@ -25,6 +26,7 @@ namespace frontend::hir {
 
     class Program {
         public:
+            Program(std::vector<Function> functions, SymbolTable& symbol_table);
             std::vector<Function>& getFunctions();
             SymbolTable& getSymbolTable();
             std::string toString();

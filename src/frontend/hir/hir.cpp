@@ -33,6 +33,9 @@ namespace frontend::hir {
     }
 
 
+    Program::Program(std::vector<Function> functions, SymbolTable& symbol_table)
+        : functions(functions), symbol_table(symbol_table) {}
+
     std::vector<Function>& Program::getFunctions() {
         return functions;
     }
