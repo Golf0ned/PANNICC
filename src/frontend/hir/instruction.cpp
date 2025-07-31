@@ -1,18 +1,10 @@
+#include "frontend/utils/atom.h"
+#include "frontend/utils/operator.h"
+#include "frontend/utils/type.h"
 #include "frontend/hir/instruction.h"
 
 
 namespace frontend::hir {
-    std::string toString(BinaryOp op) {
-        switch (op) {
-            case BinaryOp::ADD: return "+";
-            case BinaryOp::SUB: return "-";
-            case BinaryOp::MUL: return "*";
-            case BinaryOp::AND: return "&";
-            default:            return "UNKNOWN";
-        }
-    }
-
-
     InstructionDeclaration::InstructionDeclaration(Type type, AtomIdentifier* variable)
         : type(type), variable(variable) {}
 

@@ -1,29 +1,12 @@
 #pragma once
 
-#include <unordered_map>
-
-#include "frontend/type.h"
-#include "frontend/hir/atom.h"
+#include "frontend/utils/atom.h"
+#include "frontend/utils/operator.h"
+#include "frontend/utils/type.h"
 
 
 namespace frontend::hir {
     class InstructionVisitor;
-
-    enum class BinaryOp {
-        ADD,
-        SUB,
-        MUL,
-        AND,
-    };
-
-    const std::unordered_map<std::string, BinaryOp> strToBinaryOp = {
-        {"+", BinaryOp::ADD},
-        {"-", BinaryOp::SUB},
-        {"*", BinaryOp::MUL},
-        {"&", BinaryOp::AND},
-    };
-
-    std::string toString(BinaryOp op);
 
     class Instruction {
         public:
