@@ -10,22 +10,96 @@
 
 
 namespace frontend {
-    AtomIdentifier* descopeIdentifier(AtomIdentifier* a, uint64_t scope,
-            SymbolTable old_table, SymbolTable& new_table) {
-        std::string symbol = a->toString(old_table);
-        std::string descoped_symbol = symbol + "_" + std::to_string(scope);
-        uint64_t id = new_table.addSymbol(descoped_symbol);
+    ASTToHIRVisitor::ASTToHIRVisitor(SymbolTable old_table, SymbolTable& new_table)
+        : cur_scope(0), old_table(old_table), new_table(new_table) {
+            scope_mappings.emplace_back();
+        };
+
+    std::vector<hir::Instruction*> ASTToHIRVisitor::getResult() {
+        return result;
+    }
+
+    void ASTToHIRVisitor::visit(ast::Instruction* i) {
+    }
+
+    void ASTToHIRVisitor::visit(ast::Scope* s) {
+        cur_scope++;
+        scope_mappings.emplace_back();
+        for (auto i : s->getInstructions()) {
+            i->accept(this);
+        }
+        scope_mappings.pop_back();
+        cur_scope--;
+    }
+
+    void ASTToHIRVisitor::visit(ast::InstructionDeclaration* i) {
+        Type type = i->getType();
+        AtomIdentifier* variable = resolveDeclarationScope(i->getVariable());
+
+        hir::InstructionDeclaration* new_i = new hir::InstructionDeclaration(type, variable);
+        result.push_back(new_i);
+    }
+
+    void ASTToHIRVisitor::visit(ast::InstructionAssignValue* i) {
+        AtomIdentifier* variable = resolveUseScope(i->getVariable());
+        Atom* value = resolveUseScope(i->getValue());
+
+        hir::InstructionAssignValue* new_i = new hir::InstructionAssignValue(variable, value);
+        result.push_back(new_i);
+    }
+
+    void ASTToHIRVisitor::visit(ast::InstructionAssignBinaryOp* i) {
+        AtomIdentifier* variable = resolveUseScope(i->getVariable());
+        BinaryOp op = i->getOp();
+        Atom* left = resolveUseScope(i->getLeft());
+        Atom* right = resolveUseScope(i->getRight());
+
+        hir::InstructionAssignBinaryOp* new_i = new hir::InstructionAssignBinaryOp(variable, op, left, right);
+        result.push_back(new_i);
+    }
+
+    void ASTToHIRVisitor::visit(ast::InstructionReturn* i) {
+        Atom* value = resolveUseScope(i->getValue());
+
+        hir::InstructionReturn* new_i = new hir::InstructionReturn(value);
+        result.push_back(new_i);
+    }
+
+    AtomIdentifier* ASTToHIRVisitor::createScopedIdentifier(std::string symbol, uint64_t scope, SymbolTable& new_table) {
+        std::string scoped_symbol = symbol + "_" + std::to_string(scope);
+
+        uint64_t id = new_table.addSymbol(scoped_symbol);
+        scope_mappings.back().insert(symbol);
         return new AtomIdentifier(id);
     }
-
-    Atom* descopeIfIdentifier(Atom* a, uint64_t scope, SymbolTable old_table, SymbolTable& new_table) {
-        return a->isIdentifier()
-            ? (Atom*)descopeIdentifier((AtomIdentifier*)a, scope, old_table, new_table)
-            : (Atom*)new AtomLiteral(a->getValue());
+    
+    AtomIdentifier* ASTToHIRVisitor::resolveDeclarationScope(AtomIdentifier* a) {
+        return createScopedIdentifier(a->toString(old_table), cur_scope, new_table);
     }
 
-    ASTToHIRVisitor::ASTToHIRVisitor(SymbolTable old_table, SymbolTable& new_table)
-        : scope_level(0), old_table(old_table), new_table(new_table) {};
+    AtomIdentifier* ASTToHIRVisitor::resolveUseScope(AtomIdentifier* a) {
+        uint64_t scope = -1;
+        for (int i = scope_mappings.size() - 1; i >= 0; i--) {
+            if (scope_mappings[i].count(a->toString(old_table))) {
+                scope = i;
+                break;
+            }
+        }
+        return createScopedIdentifier(a->toString(old_table), scope, new_table);
+    }
+
+    Atom* ASTToHIRVisitor::resolveDeclarationScope(Atom* a) {
+        return a->isIdentifier()
+            ? (Atom*)resolveDeclarationScope((AtomIdentifier*)a)
+            : new AtomLiteral(a->getValue());
+    }
+
+    Atom* ASTToHIRVisitor::resolveUseScope(Atom* a) {
+        return a->isIdentifier()
+            ? (Atom*)resolveUseScope((AtomIdentifier*)a)
+            : new AtomLiteral(a->getValue());
+    }
+
 
     hir::Program astToHir(ast::Program& ast) {
         SymbolTable old_table = ast.getSymbolTable();
@@ -35,7 +109,7 @@ namespace frontend {
         ASTToHIRVisitor visitor(old_table, new_table);
         for (ast::Function& f : ast.getFunctions()) {
             Type type = f.getType();
-            AtomIdentifier* name = descopeIdentifier(f.getName(), 0, old_table, new_table);
+            AtomIdentifier* name = visitor.resolveDeclarationScope(f.getName());
             // TODO: params
 
             visitor.visit(f.getBody());
@@ -47,58 +121,5 @@ namespace frontend {
 
         hir::Program hir_program(functions, new_table);
         return hir_program;
-    }
-
-
-    std::vector<hir::Instruction*> ASTToHIRVisitor::getResult() {
-        return result;
-    }
-
-    void ASTToHIRVisitor::visit(ast::Instruction* i) {
-        // TODO: visit methods
-        // TODO: scope-aware identifiers
-    }
-
-    void ASTToHIRVisitor::visit(ast::Scope* s) {
-        // TODO: visit methods
-        // TODO: scope-aware identifiers
-        scope_level++;
-        for (auto i : s->getInstructions()) {
-            i->accept(this);
-        }
-        scope_level--;
-    }
-
-    void ASTToHIRVisitor::visit(ast::InstructionDeclaration* i) {
-        Type type = i->getType();
-        AtomIdentifier* variable = descopeIdentifier(i->getVariable(), scope_level, old_table, new_table);
-
-        hir::InstructionDeclaration* new_i = new hir::InstructionDeclaration(type, variable);
-        result.push_back(new_i);
-    }
-
-    void ASTToHIRVisitor::visit(ast::InstructionAssignValue* i) {
-        AtomIdentifier* variable = descopeIdentifier(i->getVariable(), scope_level, old_table, new_table);
-        Atom* value = descopeIfIdentifier(i->getValue(), scope_level, old_table, new_table);
-
-        hir::InstructionAssignValue* new_i = new hir::InstructionAssignValue(variable, value);
-        result.push_back(new_i);
-    }
-
-    void ASTToHIRVisitor::visit(ast::InstructionAssignBinaryOp* i) {
-        AtomIdentifier* variable = descopeIdentifier(i->getVariable(), scope_level, old_table, new_table);
-        BinaryOp op = i->getOp();
-        Atom* left = descopeIfIdentifier(i->getLeft(), scope_level, old_table, new_table);
-        Atom* right = descopeIfIdentifier(i->getRight(), scope_level, old_table, new_table);
-
-        hir::InstructionAssignBinaryOp* new_i = new hir::InstructionAssignBinaryOp(variable, op, left, right);
-        result.push_back(new_i);
-    }
-
-    void ASTToHIRVisitor::visit(ast::InstructionReturn* i) {
-        Atom* value = descopeIfIdentifier(i->getValue(), scope_level, old_table, new_table);
-
-        hir::InstructionReturn* new_i = new hir::InstructionReturn(value);
-        result.push_back(new_i);
     }
 }

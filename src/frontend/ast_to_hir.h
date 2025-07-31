@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <unordered_set>
 #include <vector>
 
 #include "frontend/utils/symbol_table.h"
@@ -24,9 +25,16 @@ namespace frontend {
             void visit(ast::InstructionAssignBinaryOp* i) override;
             void visit(ast::InstructionReturn* i) override;
 
+            AtomIdentifier* createScopedIdentifier(std::string symbol, uint64_t scope, SymbolTable& new_table);
+            AtomIdentifier* resolveDeclarationScope(AtomIdentifier* a);
+            AtomIdentifier* resolveUseScope(AtomIdentifier* a);
+            Atom* resolveDeclarationScope(Atom* a);
+            Atom* resolveUseScope(Atom* a);
+
         private:
             std::vector<hir::Instruction*> result;
-            uint64_t scope_level;
+            uint64_t cur_scope;
+            std::vector<std::unordered_set<std::string>> scope_mappings;
             SymbolTable old_table;
             SymbolTable& new_table;
     };
