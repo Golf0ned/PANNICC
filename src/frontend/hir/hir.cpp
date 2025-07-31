@@ -65,28 +65,28 @@ namespace frontend::hir {
 
 
     ToStringVisitor::ToStringVisitor(SymbolTable& symbol_table)
-        : symbol_table(symbol_table), prefix(""), res("") {}
+        : symbol_table(symbol_table), res("") {}
 
     std::string ToStringVisitor::getResult() {
         return res;
     }
 
     void ToStringVisitor::visit(Instruction* i) {
-        res = prefix + "[UNKNOWN INSTRUCTION]";
+        res = "    [UNKNOWN INSTRUCTION]";
     }
 
     void ToStringVisitor::visit(InstructionDeclaration* i) {
         const std::string type = toString(i->getType());
         const std::string variable = i->getVariable()->toString(symbol_table);
 
-        res = prefix + "DECLARE " + type + " " + variable;
+        res = "    DECLARE " + type + " " + variable;
     }
 
     void ToStringVisitor::visit(InstructionAssignValue* i) {
         const std::string variable = i->getVariable()->toString(symbol_table);
         const std::string value = i->getValue()->toString(symbol_table);
 
-        res = prefix + "ASSIGN " + variable + " = " + value;
+        res = "    ASSIGN " + variable + " = " + value;
     }
 
     void ToStringVisitor::visit(InstructionAssignBinaryOp* i) {
@@ -95,12 +95,12 @@ namespace frontend::hir {
         const std::string left = i->getLeft()->toString(symbol_table);
         const std::string right = i->getRight()->toString(symbol_table);
 
-        res = prefix + "ASSIGN " + variable + " = " + left + " " + op + " " + right;
+        res = "    ASSIGN " + variable + " = " + left + " " + op + " " + right;
     }
 
     void ToStringVisitor::visit(InstructionReturn* i) {
         const std::string value = i->getValue()->toString(symbol_table);
 
-        res = prefix + "RETURN " + value;
+        res = "    RETURN " + value;
     }
 }

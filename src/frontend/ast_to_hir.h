@@ -1,7 +1,9 @@
 #pragma once
 
+#include <cstdint>
 #include <vector>
 
+#include "frontend/utils/symbol_table.h"
 #include "frontend/ast/ast.h"
 #include "frontend/hir/hir.h"
 
@@ -9,13 +11,11 @@
 namespace frontend {
     hir::Program astToHir(ast::Program& ast);
 
-    class ASTToHIRVisitor : public ast::InstructionVisitor, public ast::AtomVisitor {
+    class ASTToHIRVisitor : public ast::InstructionVisitor {
         public:
+            ASTToHIRVisitor(SymbolTable old_table, SymbolTable& new_table);
+            
             std::vector<hir::Instruction*> getResult();
-
-            void visit(ast::Atom* a) override;
-            void visit(ast::AtomIdentifier* a) override;
-            void visit(ast::AtomLiteral* a) override;
 
             void visit(ast::Instruction* i) override;
             void visit(ast::Scope* s) override;
@@ -26,5 +26,8 @@ namespace frontend {
 
         private:
             std::vector<hir::Instruction*> result;
+            uint64_t scope_level;
+            SymbolTable old_table;
+            SymbolTable& new_table;
     };
 }
