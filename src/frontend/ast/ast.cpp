@@ -1,5 +1,7 @@
 #include <string>
 
+#include "frontend/utils/symbol_table.h"
+#include "frontend/utils/type.h"
 #include "frontend/ast/ast.h"
 #include "frontend/ast/instruction.h"
 
@@ -20,9 +22,9 @@ namespace frontend::ast {
         return body;
     }
 
-    std::string Function::toString(std::unordered_map<uint64_t, std::string>& symbol_table) {
+    std::string Function::toString(SymbolTable& symbol_table) {
         std::string type_str = ::frontend::toString(type);
-        std::string name_str = symbol_table.at(name->getValue());
+        std::string name_str = name->toString(symbol_table);
 
         std::string res = type_str + " " + name_str + "()";
         ToStringVisitor visitor = ToStringVisitor(symbol_table);
@@ -33,20 +35,15 @@ namespace frontend::ast {
     }
 
 
-    void Program::addFunction(Function f) {
-        functions.push_back(f);
-    }
-
-    void Program::addSymbol(uint64_t id, const std::string& symbol) {
-        if (symbol_table.find(id) != symbol_table.end()) {
-            // TODO: handle error if symbol exists and mismatches?
-            return;
-        }
-        symbol_table[id] = symbol;
-    }
+    Program::Program(std::vector<Function> functions, SymbolTable& symbol_table)
+        : functions(functions), symbol_table(symbol_table) {}
 
     std::vector<Function>& Program::getFunctions() {
         return functions;
+    }
+
+    SymbolTable& Program::getSymbolTable() {
+        return symbol_table;
     }
 
     std::string Program::toString() {
@@ -57,9 +54,7 @@ namespace frontend::ast {
         }
 
         res += "Symbols:\n";
-        for (const auto& [id, symbol] : symbol_table) {
-            res += "  " + std::to_string(id) + ": " + symbol + "\n";
-        }
+        res += symbol_table.toString();
 
         return res;
     }
@@ -72,27 +67,11 @@ namespace frontend::ast {
     }
 
 
-    ToStringVisitor::ToStringVisitor(std::unordered_map<uint64_t, std::string>& symbol_table)
+    ToStringVisitor::ToStringVisitor(SymbolTable& symbol_table)
         : symbol_table(symbol_table), prefix(""), res("") {}
 
     std::string ToStringVisitor::getResult() {
         return res;
-    }
-
-    void ToStringVisitor::visit(Atom* a) {
-        res = "[UNKNOWN ATOM]";
-    }
-
-    void ToStringVisitor::visit(AtomIdentifier* a) {
-        std::string value = symbol_table.at(a->getValue());
-
-        res = value;
-    }
-
-    void ToStringVisitor::visit(AtomLiteral* a) {
-        uint64_t value = a->getValue();
-
-        res = std::to_string(value);
     }
 
     void ToStringVisitor::visit(Instruction* i) {
@@ -102,12 +81,13 @@ namespace frontend::ast {
     void ToStringVisitor::visit(Scope* s) {
         std::string scope_res = "{\n";
 
-        this->prefix += "    ";
+        std::string old_prefix = prefix;
+        prefix += "    ";
         for (Instruction* i : s->getInstructions()) {
             i->accept(this);
-            scope_res += this->getResult() + "\n";
+            scope_res += getResult() + "\n";
         }
-        this->prefix = this->prefix.substr(0, this->prefix.size() - 4);
+        prefix = old_prefix;
 
         scope_res += prefix + "}";
         res = prefix + scope_res;
@@ -115,41 +95,29 @@ namespace frontend::ast {
 
     void ToStringVisitor::visit(InstructionDeclaration* i) {
         const std::string type = toString(i->getType());
-        
-        i->getVariable()->accept(this);
-        const std::string variable = this->getResult();
+        const std::string variable = i->getVariable()->toString(symbol_table);
 
         res = prefix + "DECLARE " + type + " " + variable;
     }
 
     void ToStringVisitor::visit(InstructionAssignValue* i) {
-        i->getVariable()->accept(this);
-        const std::string variable = this->getResult();
-
-        i->getValue()->accept(this);
-        const std::string value = this->getResult();
+        const std::string variable = i->getVariable()->toString(symbol_table);
+        const std::string value = i->getValue()->toString(symbol_table);
 
         res = prefix + "ASSIGN " + variable + " = " + value;
     }
 
     void ToStringVisitor::visit(InstructionAssignBinaryOp* i) {
-        i->getVariable()->accept(this);
-        const std::string variable = this->getResult();
-
+        const std::string variable = i->getVariable()->toString(symbol_table);
         const std::string op = toString(i->getOp());
-
-        i->getLeft()->accept(this);
-        const std::string left = this->getResult();
-
-        i->getRight()->accept(this);
-        const std::string right = this->getResult();
+        const std::string left = i->getLeft()->toString(symbol_table);
+        const std::string right = i->getRight()->toString(symbol_table);
 
         res = prefix + "ASSIGN " + variable + " = " + left + " " + op + " " + right;
     }
 
     void ToStringVisitor::visit(InstructionReturn* i) {
-        i->getValue()->accept(this);
-        const std::string value = this->getResult();
+        const std::string value = i->getValue()->toString(symbol_table);
 
         res = prefix + "RETURN " + value;
     }

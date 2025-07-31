@@ -3,9 +3,10 @@
 #include <vector>
 #include <string>
 
-#include "frontend/ast/atom.h"
+#include "frontend/utils/atom.h"
+#include "frontend/utils/symbol_table.h"
+#include "frontend/utils/type.h"
 #include "frontend/ast/instruction.h"
-#include "frontend/type.h"
 
 
 namespace frontend::ast {
@@ -15,7 +16,7 @@ namespace frontend::ast {
             Type getType();
             AtomIdentifier* getName();
             Scope* getBody();
-            std::string toString(std::unordered_map<uint64_t, std::string>& symbol_table);
+            std::string toString(SymbolTable& symbol_table);
         private:
             Type type;
             AtomIdentifier* name;
@@ -25,24 +26,20 @@ namespace frontend::ast {
 
     class Program {
         public:
-            void addFunction(Function f);
-            void addSymbol(uint64_t id, const std::string& symbol);
+            Program(std::vector<Function> functions, SymbolTable& symbol_table);
             std::vector<Function>& getFunctions();
+            SymbolTable& getSymbolTable();
             std::string toString();
             ~Program();
         private:
             std::vector<Function> functions;
-            std::unordered_map<uint64_t, std::string> symbol_table;
+            SymbolTable symbol_table;
     };
 
-    class ToStringVisitor : public InstructionVisitor, public AtomVisitor {
+    class ToStringVisitor : public InstructionVisitor {
         public:
-            ToStringVisitor(std::unordered_map<uint64_t, std::string>& symbol_table);
+            ToStringVisitor(SymbolTable& symbol_table);
             std::string getResult();
-
-            void visit(Atom* a) override;
-            void visit(AtomIdentifier* a) override;
-            void visit(AtomLiteral* a) override;
 
             void visit(Instruction* i) override;
             void visit(Scope* s) override;
@@ -52,7 +49,7 @@ namespace frontend::ast {
             void visit(InstructionReturn* i) override;
 
         private:
-            std::unordered_map<uint64_t, std::string>& symbol_table;
+            SymbolTable symbol_table;
             std::string prefix;
             std::string res;
     };

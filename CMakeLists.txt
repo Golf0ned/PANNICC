@@ -16,14 +16,15 @@ FetchContent_MakeAvailable(pegtl)
 add_executable(pannicc
     src/main.cpp
     src/frontend/parser.cpp
-    src/frontend/ast_to_hir.cpp
-    src/frontend/type.cpp
+    # src/frontend/ast_to_hir.cpp
+    src/frontend/utils/atom.cpp
+    src/frontend/utils/operator.cpp
+    src/frontend/utils/symbol_table.cpp
+    src/frontend/utils/type.cpp
     src/frontend/ast/ast.cpp
-    src/frontend/ast/atom.cpp
     src/frontend/ast/instruction.cpp
-    src/frontend/hir/hir.cpp
-    src/frontend/hir/atom.cpp
-    src/frontend/hir/instruction.cpp
+    # src/frontend/hir/hir.cpp
+    # src/frontend/hir/instruction.cpp
 )
 
 target_include_directories(pannicc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
