@@ -26,6 +26,16 @@ namespace frontend {
     }
 
     bool SymbolTable::hasSymbol(std::string symbol) {
-        return symbol_to_id.find(symbol) == symbol_to_id.end();
+        return symbol_to_id.find(symbol) != symbol_to_id.end();
+    }
+
+    std::string SymbolTable::toString() {
+        std::string res = "";
+
+        for (const auto [id, symbol] : id_to_symbol) {
+            res += "  " + std::to_string(id) + ": " + symbol + "\n";
+        }
+
+        return res;
     }
 }
