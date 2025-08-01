@@ -101,6 +101,17 @@ namespace frontend {
                      ignorable,
                      semicolon> {};
 
+    struct instruction_declaration_assign_value
+        : pegtl::seq<type,
+                     ignorable,
+                     identifier,
+                     ignorable,
+                     equal,
+                     ignorable,
+                     value,
+                     ignorable,
+                     semicolon> {};
+
     struct instruction_assign_value
         : pegtl::seq<identifier,
                      ignorable,
@@ -134,6 +145,7 @@ namespace frontend {
 
     struct instruction_any
         : pegtl::sor<pegtl_apply_if_match<scope>,
+                     pegtl_apply_if_match<instruction_declaration_assign_value>,
                      pegtl_apply_if_match<instruction_declaration>,
                      pegtl_apply_if_match<instruction_assign_value>,
                      pegtl_apply_if_match<instruction_assign_binary_op>,
@@ -252,6 +264,24 @@ namespace frontend {
             parsed_tokens.pop_back();
 
             ast::InstructionDeclaration* i = new ast::InstructionDeclaration(type, variable);
+            active_scopes.back()->addInstruction(i);
+        }
+    };
+
+    template<>
+    struct action<instruction_declaration_assign_value> {
+        template<typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            Atom* value = parsed_atoms.back();
+            parsed_atoms.pop_back();
+
+            AtomIdentifier* variable = dynamic_cast<AtomIdentifier*>(parsed_atoms.back());
+            parsed_atoms.pop_back();
+
+            Type type = strToType.at(parsed_tokens.back());
+            parsed_tokens.pop_back();
+
+            ast::InstructionDeclarationAssignValue* i = new ast::InstructionDeclarationAssignValue(type, variable, value);
             active_scopes.back()->addInstruction(i);
         }
     };

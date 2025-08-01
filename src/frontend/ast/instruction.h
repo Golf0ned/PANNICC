@@ -39,6 +39,21 @@ namespace frontend::ast {
             AtomIdentifier* variable;
     };
 
+    class InstructionDeclarationAssignValue : public Instruction {
+        public:
+            InstructionDeclarationAssignValue(Type type, AtomIdentifier* variable, Atom* value);
+            Type getType();
+            AtomIdentifier* getVariable();
+            Atom* getValue();
+            void accept(InstructionVisitor* visitor);
+            ~InstructionDeclarationAssignValue() { delete variable; delete value; }
+
+        private:
+            Type type;
+            AtomIdentifier* variable;
+            Atom* value;
+    };
+
     class InstructionAssignValue : public Instruction {
         public:
             InstructionAssignValue(AtomIdentifier* variable, Atom* value);
@@ -85,6 +100,7 @@ namespace frontend::ast {
             virtual void visit(Instruction* i) = 0;
             virtual void visit(Scope* s) = 0;
             virtual void visit(InstructionDeclaration* i) = 0;
+            virtual void visit(InstructionDeclarationAssignValue* i) = 0;
             virtual void visit(InstructionAssignValue* i) = 0;
             virtual void visit(InstructionAssignBinaryOp* i) = 0;
             virtual void visit(InstructionReturn* i) = 0;

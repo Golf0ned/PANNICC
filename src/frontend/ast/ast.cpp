@@ -100,6 +100,14 @@ namespace frontend::ast {
         res = prefix + "DECLARE " + type + " " + variable;
     }
 
+    void ToStringVisitor::visit(InstructionDeclarationAssignValue* i) {
+        const std::string type = toString(i->getType());
+        const std::string variable = i->getVariable()->toString(symbol_table);
+        const std::string value = i->getValue()->toString(symbol_table);
+
+        res = prefix + "DECLARE " + type + " " + variable + ", ASSIGN = " + value;
+    }
+
     void ToStringVisitor::visit(InstructionAssignValue* i) {
         const std::string variable = i->getVariable()->toString(symbol_table);
         const std::string value = i->getValue()->toString(symbol_table);

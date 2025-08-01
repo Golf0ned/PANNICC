@@ -21,6 +21,7 @@ namespace frontend {
             void visit(ast::Instruction* i) override;
             void visit(ast::Scope* s) override;
             void visit(ast::InstructionDeclaration* i) override;
+            void visit(ast::InstructionDeclarationAssignValue* i) override;
             void visit(ast::InstructionAssignValue* i) override;
             void visit(ast::InstructionAssignBinaryOp* i) override;
             void visit(ast::InstructionReturn* i) override;

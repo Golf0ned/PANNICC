@@ -40,6 +40,20 @@ namespace frontend {
         result.push_back(new_i);
     }
 
+    void ASTToHIRVisitor::visit(ast::InstructionDeclarationAssignValue* i) {
+        Type type = i->getType();
+        AtomIdentifier* variable1 = resolveDeclarationScope(i->getVariable());
+
+        hir::InstructionDeclaration* new_declare = new hir::InstructionDeclaration(type, variable1);
+        result.push_back(new_declare);
+
+        AtomIdentifier* variable2 = resolveUseScope(i->getVariable());
+        Atom* value = resolveUseScope(i->getValue());
+
+        hir::InstructionAssignValue* new_assign = new hir::InstructionAssignValue(variable2, value);
+        result.push_back(new_assign);
+    }
+
     void ASTToHIRVisitor::visit(ast::InstructionAssignValue* i) {
         AtomIdentifier* variable = resolveUseScope(i->getVariable());
         Atom* value = resolveUseScope(i->getValue());

@@ -37,6 +37,26 @@ namespace frontend::ast {
     }
 
 
+    InstructionDeclarationAssignValue::InstructionDeclarationAssignValue(Type type, AtomIdentifier* variable, Atom* value)
+        : type(type), variable(variable), value(value) {}
+
+    Type InstructionDeclarationAssignValue::getType() {
+        return type;
+    }
+
+    AtomIdentifier* InstructionDeclarationAssignValue::getVariable() {
+        return variable;
+    }
+
+    Atom* InstructionDeclarationAssignValue::getValue() {
+        return value;
+    }
+
+    void InstructionDeclarationAssignValue::accept(InstructionVisitor* visitor) {
+        visitor->visit(this);
+    }
+
+
     InstructionAssignValue::InstructionAssignValue(AtomIdentifier* variable, Atom* value)
         : variable(variable), value(value) {}
 

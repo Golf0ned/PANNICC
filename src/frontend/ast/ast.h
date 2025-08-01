@@ -44,6 +44,7 @@ namespace frontend::ast {
             void visit(Instruction* i) override;
             void visit(Scope* s) override;
             void visit(InstructionDeclaration* i) override;
+            void visit(InstructionDeclarationAssignValue* i) override;
             void visit(InstructionAssignValue* i) override;
             void visit(InstructionAssignBinaryOp* i) override;
             void visit(InstructionReturn* i) override;
