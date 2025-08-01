@@ -59,6 +59,9 @@ namespace frontend::hir {
 
     Program::~Program() {
         for (Function& f : functions) {
+            for (auto i : f.getBody()) {
+                delete i;
+            }
             delete f.getName();
         }
     }
