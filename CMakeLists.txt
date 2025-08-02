@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.11)
 
 project(PANNICC)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
@@ -14,7 +14,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(pegtl)
 
 add_executable(pannicc
-    src/main.cpp
+    src/driver/compiler.cpp
     src/frontend/parser.cpp
     src/frontend/ast_to_hir.cpp
     src/frontend/utils/atom.cpp
