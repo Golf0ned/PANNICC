@@ -51,9 +51,6 @@ namespace frontend::hir {
             res += f.toString(symbol_table) + "\n";
         }
 
-        res += "Symbols:\n";
-        res += symbol_table.toString();
-        
         return res;
     }
 

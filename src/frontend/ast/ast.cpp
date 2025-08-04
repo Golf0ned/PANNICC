@@ -53,9 +53,6 @@ namespace frontend::ast {
             res += f.toString(symbol_table) + "\n";
         }
 
-        res += "Symbols:\n";
-        res += symbol_table.toString();
-
         return res;
     }
 
@@ -97,7 +94,7 @@ namespace frontend::ast {
         const std::string type = toString(i->getType());
         const std::string variable = i->getVariable()->toString(symbol_table);
 
-        res = prefix + "DECLARE " + type + " " + variable;
+        res = prefix + type + " " + variable + ";";
     }
 
     void ToStringVisitor::visit(InstructionDeclarationAssignValue* i) {
@@ -105,14 +102,14 @@ namespace frontend::ast {
         const std::string variable = i->getVariable()->toString(symbol_table);
         const std::string value = i->getValue()->toString(symbol_table);
 
-        res = prefix + "DECLARE " + type + " " + variable + ", ASSIGN = " + value;
+        res = prefix + type + " " + variable + " = " + value + ";";
     }
 
     void ToStringVisitor::visit(InstructionAssignValue* i) {
         const std::string variable = i->getVariable()->toString(symbol_table);
         const std::string value = i->getValue()->toString(symbol_table);
 
-        res = prefix + "ASSIGN " + variable + " = " + value;
+        res = prefix + variable + " = " + value + ";";
     }
 
     void ToStringVisitor::visit(InstructionAssignBinaryOp* i) {
@@ -121,12 +118,12 @@ namespace frontend::ast {
         const std::string left = i->getLeft()->toString(symbol_table);
         const std::string right = i->getRight()->toString(symbol_table);
 
-        res = prefix + "ASSIGN " + variable + " = " + left + " " + op + " " + right;
+        res = prefix + variable + " = " + left + " " + op + " " + right + ";";
     }
 
     void ToStringVisitor::visit(InstructionReturn* i) {
         const std::string value = i->getValue()->toString(symbol_table);
 
-        res = prefix + "RETURN " + value;
+        res = prefix + "return " + value + ";";
     }
 }
