@@ -95,6 +95,30 @@ namespace frontend::ast {
             Atom* value;
     };
 
+    class InstructionCall : public Instruction {
+        public:
+            InstructionCall(AtomIdentifier* target);
+            AtomIdentifier* getTarget();
+            void accept(InstructionVisitor* visitor);
+            ~InstructionCall() { delete target; }
+
+        private:
+            AtomIdentifier* target;
+    };
+
+    class InstructionCallAssign : public Instruction {
+        public:
+            InstructionCallAssign(AtomIdentifier* variable, AtomIdentifier* target);
+            AtomIdentifier* getVariable();
+            AtomIdentifier* getTarget();
+            void accept(InstructionVisitor* visitor);
+            ~InstructionCallAssign() { delete variable; delete target; }
+
+        private:
+            AtomIdentifier* variable;
+            AtomIdentifier* target;
+    };
+
     class InstructionVisitor {
         public:
             virtual void visit(Instruction* i) = 0;
@@ -104,5 +128,7 @@ namespace frontend::ast {
             virtual void visit(InstructionAssignValue* i) = 0;
             virtual void visit(InstructionAssignBinaryOp* i) = 0;
             virtual void visit(InstructionReturn* i) = 0;
+            virtual void visit(InstructionCall* i) = 0;
+            virtual void visit(InstructionCallAssign* i) = 0;
     };
 }

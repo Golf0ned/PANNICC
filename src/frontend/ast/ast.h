@@ -48,6 +48,8 @@ namespace frontend::ast {
             void visit(InstructionAssignValue* i) override;
             void visit(InstructionAssignBinaryOp* i) override;
             void visit(InstructionReturn* i) override;
+            void visit(InstructionCall* i) override;
+            void visit(InstructionCallAssign* i) override;
 
         private:
             SymbolTable symbol_table;

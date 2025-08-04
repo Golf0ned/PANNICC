@@ -17,6 +17,7 @@ namespace frontend {
             ASTToHIRVisitor(SymbolTable old_table, SymbolTable& new_table);
             
             std::vector<hir::Instruction*> getResult();
+            void clearResult();
 
             void visit(ast::Instruction* i) override;
             void visit(ast::Scope* s) override;
@@ -25,6 +26,8 @@ namespace frontend {
             void visit(ast::InstructionAssignValue* i) override;
             void visit(ast::InstructionAssignBinaryOp* i) override;
             void visit(ast::InstructionReturn* i) override;
+            void visit(ast::InstructionCall* i) override;
+            void visit(ast::InstructionCallAssign* i) override;
 
             AtomIdentifier* createScopedIdentifier(std::string symbol, uint64_t scope, SymbolTable& new_table);
             AtomIdentifier* resolveDeclarationScope(AtomIdentifier* a);

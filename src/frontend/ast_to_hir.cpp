@@ -1,5 +1,4 @@
 #include <cstdint>
-#include <vector>
 
 #include "frontend/hir/instruction.h"
 #include "frontend/utils/atom.h"
@@ -17,6 +16,10 @@ namespace frontend {
 
     std::vector<hir::Instruction*> ASTToHIRVisitor::getResult() {
         return result;
+    }
+
+    void ASTToHIRVisitor::clearResult() {
+        result.clear();
     }
 
     void ASTToHIRVisitor::visit(ast::Instruction* i) {
@@ -79,6 +82,21 @@ namespace frontend {
         result.push_back(new_i);
     }
 
+    void ASTToHIRVisitor::visit(ast::InstructionCall* i) {
+        AtomIdentifier* target = resolveUseScope(i->getTarget());
+
+        hir::InstructionCall* new_i = new hir::InstructionCall(target);
+        result.push_back(new_i);
+    }
+
+    void ASTToHIRVisitor::visit(ast::InstructionCallAssign* i) {
+        AtomIdentifier* variable = resolveUseScope(i->getVariable());
+        AtomIdentifier* target = resolveUseScope(i->getTarget());
+
+        hir::InstructionCallAssign* new_i = new hir::InstructionCallAssign(variable, target);
+        result.push_back(new_i);
+    }
+
     AtomIdentifier* ASTToHIRVisitor::createScopedIdentifier(std::string symbol, uint64_t scope, SymbolTable& new_table) {
         std::string scoped_symbol = symbol + "_" + std::to_string(scope);
 
@@ -131,6 +149,7 @@ namespace frontend {
 
             hir::Function hir_function(type, name, body);
             functions.push_back(hir_function);
+            visitor.clearResult();
         }
 
         hir::Program hir_program(functions, new_table);

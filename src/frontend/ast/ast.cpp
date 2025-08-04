@@ -126,4 +126,17 @@ namespace frontend::ast {
 
         res = prefix + "return " + value + ";";
     }
+
+    void ToStringVisitor::visit(InstructionCall* i) {
+        const std::string target = i->getTarget()->toString(symbol_table);
+
+        res = prefix + "CALL " + target + "();";
+    }
+
+    void ToStringVisitor::visit(InstructionCallAssign* i) {
+        const std::string variable = i->getVariable()->toString(symbol_table);
+        const std::string target = i->getTarget()->toString(symbol_table);
+
+        res = prefix + variable + " = CALL " + target + "();";
+    }
 }

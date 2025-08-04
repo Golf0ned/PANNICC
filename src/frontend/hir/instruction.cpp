@@ -70,4 +70,32 @@ namespace frontend::hir {
     void InstructionReturn::accept(InstructionVisitor* visitor) {
         visitor->visit(this);
     }
+
+
+    InstructionCall::InstructionCall(AtomIdentifier* target)
+        : target(target) {}
+
+    AtomIdentifier* InstructionCall::getTarget() {
+        return target;
+    }
+
+    void InstructionCall::accept(InstructionVisitor* visitor) {
+        visitor->visit(this);
+    }
+
+
+    InstructionCallAssign::InstructionCallAssign(AtomIdentifier* variable, AtomIdentifier* target)
+        : variable(variable), target(target) {}
+
+    AtomIdentifier* InstructionCallAssign::getVariable() {
+        return variable;
+    }
+
+    AtomIdentifier* InstructionCallAssign::getTarget() {
+        return target;
+    }
+
+    void InstructionCallAssign::accept(InstructionVisitor* visitor) {
+        visitor->visit(this);
+    }
 }

@@ -141,15 +141,43 @@ namespace frontend {
                      ignorable,
                      semicolon> {};
 
+    struct instruction_call
+        : pegtl::seq<identifier,
+                     ignorable,
+                     left_paren,
+                     ignorable,
+                     // TODO: parameter list
+                     right_paren,
+                     ignorable,
+                     semicolon>{};
+                     
+
+    struct instruction_call_assign
+        : pegtl::seq<identifier,
+                     ignorable,
+                     equal,
+                     ignorable,
+                     identifier,
+                     ignorable,
+                     left_paren,
+                     ignorable,
+                     // TODO: parameter list
+                     right_paren,
+                     ignorable,
+                     semicolon>{};
+                     
+
     struct scope; // (Forward declaring scope)
 
     struct instruction_any
         : pegtl::sor<pegtl_apply_if_match<scope>,
+                     pegtl_apply_if_match<instruction_return>,
+                     pegtl_apply_if_match<instruction_call>,
+                     pegtl_apply_if_match<instruction_call_assign>,
                      pegtl_apply_if_match<instruction_declaration_assign_value>,
                      pegtl_apply_if_match<instruction_declaration>,
                      pegtl_apply_if_match<instruction_assign_value>,
-                     pegtl_apply_if_match<instruction_assign_binary_op>,
-                     pegtl_apply_if_match<instruction_return>> {};
+                     pegtl_apply_if_match<instruction_assign_binary_op>> {};
 
 
     // Program structure
@@ -330,6 +358,33 @@ namespace frontend {
             parsed_atoms.pop_back();
             
             ast::InstructionReturn* i = new ast::InstructionReturn(value);
+            active_scopes.back()->addInstruction(i);
+        }
+    };
+
+    template<>
+    struct action<instruction_call> {
+        template<typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            AtomIdentifier* target = dynamic_cast<AtomIdentifier*>(parsed_atoms.back());
+            parsed_atoms.pop_back();
+            
+            ast::InstructionCall* i = new ast::InstructionCall(target);
+            active_scopes.back()->addInstruction(i);
+        }
+    };
+
+    template<>
+    struct action<instruction_call_assign> {
+        template<typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            AtomIdentifier* target = dynamic_cast<AtomIdentifier*>(parsed_atoms.back());
+            parsed_atoms.pop_back();
+
+            AtomIdentifier* variable = dynamic_cast<AtomIdentifier*>(parsed_atoms.back());
+            parsed_atoms.pop_back();
+            
+            ast::InstructionCallAssign* i = new ast::InstructionCallAssign(variable, target);
             active_scopes.back()->addInstruction(i);
         }
     };
