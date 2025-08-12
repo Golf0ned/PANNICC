@@ -1,7 +1,7 @@
 #include "middleend/mir/operator.h"
 
 
-namespace frontend {
+namespace middleend {
     std::string toString(BinaryOp op) {
         switch (op) {
             case BinaryOp::ADD: return "add";

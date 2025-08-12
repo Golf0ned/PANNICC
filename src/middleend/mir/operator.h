@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 
-namespace frontend {
+namespace middleend {
     enum class BinaryOp {
         ADD,
         SUB,
