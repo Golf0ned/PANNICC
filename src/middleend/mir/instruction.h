@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+#include "middleend/mir/operator.h"
 #include "middleend/mir/type.h"
 
 
@@ -34,6 +35,7 @@ namespace middleend::mir {
             uint64_t variable;
             uint64_t left;
             bool leftIsLiteral;
+            BinaryOp op;           
             uint64_t right;
             bool rightIsLiteral;
     };
