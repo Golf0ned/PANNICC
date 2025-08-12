@@ -72,11 +72,11 @@ namespace frontend::hir {
     }
 
 
-    InstructionCall::InstructionCall(AtomIdentifier* target)
-        : target(target) {}
+    InstructionCall::InstructionCall(AtomIdentifier* callee)
+        : callee(callee) {}
 
-    AtomIdentifier* InstructionCall::getTarget() {
-        return target;
+    AtomIdentifier* InstructionCall::getCallee() {
+        return callee;
     }
 
     void InstructionCall::accept(InstructionVisitor* visitor) {
@@ -84,15 +84,15 @@ namespace frontend::hir {
     }
 
 
-    InstructionCallAssign::InstructionCallAssign(AtomIdentifier* variable, AtomIdentifier* target)
-        : variable(variable), target(target) {}
+    InstructionCallAssign::InstructionCallAssign(AtomIdentifier* variable, AtomIdentifier* callee)
+        : variable(variable), callee(callee) {}
 
     AtomIdentifier* InstructionCallAssign::getVariable() {
         return variable;
     }
 
-    AtomIdentifier* InstructionCallAssign::getTarget() {
-        return target;
+    AtomIdentifier* InstructionCallAssign::getCallee() {
+        return callee;
     }
 
     void InstructionCallAssign::accept(InstructionVisitor* visitor) {

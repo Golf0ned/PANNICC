@@ -105,15 +105,15 @@ namespace frontend::hir {
     }
 
     void ToStringVisitor::visit(InstructionCall* i) {
-        const std::string target = i->getTarget()->toString(symbol_table);
+        const std::string callee = i->getCallee()->toString(symbol_table);
 
-        res = "    CALL " + target;
+        res = "    CALL " + callee;
     }
 
     void ToStringVisitor::visit(InstructionCallAssign* i) {
         const std::string variable = i->getVariable()->toString(symbol_table);
-        const std::string target = i->getTarget()->toString(symbol_table);
+        const std::string callee = i->getCallee()->toString(symbol_table);
 
-        res = "    ASSIGN " + variable + " = CALL " + target;
+        res = "    ASSIGN " + variable + " = CALL " + callee;
     }
 }

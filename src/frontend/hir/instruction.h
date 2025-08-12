@@ -70,26 +70,26 @@ namespace frontend::hir {
 
     class InstructionCall : public Instruction {
         public:
-            InstructionCall(AtomIdentifier* target);
-            AtomIdentifier* getTarget();
+            InstructionCall(AtomIdentifier* callee);
+            AtomIdentifier* getCallee();
             void accept(InstructionVisitor* visitor);
-            ~InstructionCall() { delete target; }
+            ~InstructionCall() { delete callee; }
 
         private:
-            AtomIdentifier* target;
+            AtomIdentifier* callee;
     };
 
     class InstructionCallAssign : public Instruction {
         public:
-            InstructionCallAssign(AtomIdentifier* variable, AtomIdentifier* target);
+            InstructionCallAssign(AtomIdentifier* variable, AtomIdentifier* callee);
             AtomIdentifier* getVariable();
-            AtomIdentifier* getTarget();
+            AtomIdentifier* getCallee();
             void accept(InstructionVisitor* visitor);
-            ~InstructionCallAssign() { delete variable; delete target; }
+            ~InstructionCallAssign() { delete variable; delete callee; }
 
         private:
             AtomIdentifier* variable;
-            AtomIdentifier* target;
+            AtomIdentifier* callee;
     };
 
     class InstructionVisitor {
