@@ -4,11 +4,10 @@
 #include <vector>
 
 #include <middleend/mir/instruction.h>
+#include <middleend/mir/type.h>
 
 
 namespace middleend::mir {
-    class Type {};
-
     class BasicBlock {
         private:
             uint64_t id;
