@@ -1,5 +1,12 @@
 #pragma once
 
+#include <cstdint>
+
+#include "middleend/mir/type.h"
+
+
+// TODO: figure out this valueIsLiteral slop
+
 namespace middleend::mir {
     class InstructionVisitor;
 
@@ -9,14 +16,52 @@ namespace middleend::mir {
             virtual ~Instruction() = default;
     };
 
-    // TODO: standard instructions
+    class InstructionDeclaration : public Instruction {
+        private:
+            Type type;
+            uint64_t variable;
+    };
 
-    class Terminator : Instruction {
+    class InstructionAssignValue : public Instruction {
+        private:
+            uint64_t variable;
+            uint64_t value;
+            bool valueIsLiteral;
+    };
+
+    class InstructionAssignBinaryOp : public Instruction {
+        private:
+            uint64_t variable;
+            uint64_t left;
+            bool leftIsLiteral;
+            uint64_t right;
+            bool rightIsLiteral;
+    };
+
+    class InstructionCall : public Instruction {
+        private:
+            uint64_t callee;
+    };
+
+    class InstructionCallAssign : public Instruction {
+        private:
+            uint64_t variable;
+            uint64_t callee;
+    };
+
+    class Terminator : public Instruction {
         public:
             virtual void accept(InstructionVisitor* visitor);
             virtual ~Terminator() = default;
     };
 
-    // TODO: terminators
+    class TerminatorReturn : public Terminator {
+        public:
+            void accept(InstructionVisitor* visitor);
+            ~TerminatorReturn();
+        private:
+            uint64_t value;
+            bool valueIsLiteral;
+    };
 }
 
