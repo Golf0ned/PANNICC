@@ -3,7 +3,6 @@
 #include <string>
 #include <unordered_map>
 
-
 namespace frontend {
     enum class BinaryOp {
         ADD,
@@ -20,4 +19,4 @@ namespace frontend {
     };
 
     std::string toString(BinaryOp op);
-}
+} // namespace frontend

@@ -6,7 +6,6 @@
 #include "middleend/mir/instruction.h"
 #include "middleend/mir/type.h"
 
-
 namespace middleend::mir {
     class BasicBlock {
         private:
@@ -27,4 +26,4 @@ namespace middleend::mir {
             std::vector<Function> functions;
             // symbol table for function names
     };
-}
+} // namespace middleend::mir

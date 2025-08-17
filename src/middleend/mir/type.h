@@ -3,7 +3,6 @@
 #include <string>
 #include <unordered_map>
 
-
 namespace middleend {
     enum class Type {
         I64,
@@ -14,4 +13,4 @@ namespace middleend {
     };
 
     std::string toString(Type type);
-}
+} // namespace middleend

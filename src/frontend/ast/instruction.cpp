@@ -1,137 +1,102 @@
 #include "frontend/ast/instruction.h"
 
-
 namespace frontend::ast {
-    void Scope::addInstruction(Instruction* i) {
-        instructions.push_back(i);
-    }
+    void Scope::addInstruction(Instruction *i) { instructions.push_back(i); }
 
-    std::vector<Instruction*> Scope::getInstructions() {
-        return instructions;
-    }
+    std::vector<Instruction *> Scope::getInstructions() { return instructions; }
 
-    void Scope::accept(InstructionVisitor* visitor) {
-        visitor->visit(this);
-    }
+    void Scope::accept(InstructionVisitor *visitor) { visitor->visit(this); }
 
     Scope::~Scope() {
-        for (Instruction* i : instructions) {
+        for (Instruction *i : instructions) {
             delete i;
         }
     }
 
-
-    InstructionDeclaration::InstructionDeclaration(Type type, AtomIdentifier* variable)
+    InstructionDeclaration::InstructionDeclaration(Type type,
+                                                   AtomIdentifier *variable)
         : type(type), variable(variable) {}
 
-    Type InstructionDeclaration::getType() {
-        return type;
-    }
+    Type InstructionDeclaration::getType() { return type; }
 
-    AtomIdentifier* InstructionDeclaration::getVariable() {
-        return variable;
-    }
+    AtomIdentifier *InstructionDeclaration::getVariable() { return variable; }
 
-    void InstructionDeclaration::accept(InstructionVisitor* visitor) {
+    void InstructionDeclaration::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
-
-    InstructionDeclarationAssignValue::InstructionDeclarationAssignValue(Type type, AtomIdentifier* variable, Atom* value)
+    InstructionDeclarationAssignValue::InstructionDeclarationAssignValue(
+        Type type, AtomIdentifier *variable, Atom *value)
         : type(type), variable(variable), value(value) {}
 
-    Type InstructionDeclarationAssignValue::getType() {
-        return type;
-    }
+    Type InstructionDeclarationAssignValue::getType() { return type; }
 
-    AtomIdentifier* InstructionDeclarationAssignValue::getVariable() {
+    AtomIdentifier *InstructionDeclarationAssignValue::getVariable() {
         return variable;
     }
 
-    Atom* InstructionDeclarationAssignValue::getValue() {
-        return value;
-    }
+    Atom *InstructionDeclarationAssignValue::getValue() { return value; }
 
-    void InstructionDeclarationAssignValue::accept(InstructionVisitor* visitor) {
+    void
+    InstructionDeclarationAssignValue::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
-
-    InstructionAssignValue::InstructionAssignValue(AtomIdentifier* variable, Atom* value)
+    InstructionAssignValue::InstructionAssignValue(AtomIdentifier *variable,
+                                                   Atom *value)
         : variable(variable), value(value) {}
 
-    AtomIdentifier* InstructionAssignValue::getVariable() {
-        return variable;
-    }
+    AtomIdentifier *InstructionAssignValue::getVariable() { return variable; }
 
-    Atom* InstructionAssignValue::getValue() {
-        return value;
-    }
+    Atom *InstructionAssignValue::getValue() { return value; }
 
-    void InstructionAssignValue::accept(InstructionVisitor* visitor) {
+    void InstructionAssignValue::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
-
-    InstructionAssignBinaryOp::InstructionAssignBinaryOp(AtomIdentifier* variable, BinaryOp op, Atom* left, Atom* right)
+    InstructionAssignBinaryOp::InstructionAssignBinaryOp(
+        AtomIdentifier *variable, BinaryOp op, Atom *left, Atom *right)
         : variable(variable), op(op), left(left), right(right) {}
-    
-    AtomIdentifier* InstructionAssignBinaryOp::getVariable() {
+
+    AtomIdentifier *InstructionAssignBinaryOp::getVariable() {
         return variable;
     }
 
-    BinaryOp InstructionAssignBinaryOp::getOp() {
-        return op;
-    }
+    BinaryOp InstructionAssignBinaryOp::getOp() { return op; }
 
-    Atom* InstructionAssignBinaryOp::getRight() {
-        return right;
-    }
+    Atom *InstructionAssignBinaryOp::getRight() { return right; }
 
-    Atom* InstructionAssignBinaryOp::getLeft() {
-        return left;
-    }
+    Atom *InstructionAssignBinaryOp::getLeft() { return left; }
 
-    void InstructionAssignBinaryOp::accept(InstructionVisitor* visitor) {
+    void InstructionAssignBinaryOp::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
+    InstructionReturn::InstructionReturn(Atom *value) : value(value) {}
 
-    InstructionReturn::InstructionReturn(Atom* value) : value(value) {}
+    Atom *InstructionReturn::getValue() { return value; }
 
-    Atom* InstructionReturn::getValue() {
-        return value;
-    }
-
-    void InstructionReturn::accept(InstructionVisitor* visitor) {
+    void InstructionReturn::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
+    InstructionCall::InstructionCall(AtomIdentifier *target) : target(target) {}
 
-    InstructionCall::InstructionCall(AtomIdentifier* target)
-        : target(target) {}
+    AtomIdentifier *InstructionCall::getTarget() { return target; }
 
-    AtomIdentifier* InstructionCall::getTarget() {
-        return target;
-    }
-
-    void InstructionCall::accept(InstructionVisitor* visitor) {
+    void InstructionCall::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
-
-    InstructionCallAssign::InstructionCallAssign(AtomIdentifier* variable, AtomIdentifier* target)
+    InstructionCallAssign::InstructionCallAssign(AtomIdentifier *variable,
+                                                 AtomIdentifier *target)
         : variable(variable), target(target) {}
 
-    AtomIdentifier* InstructionCallAssign::getVariable() {
-        return variable;
-    }
+    AtomIdentifier *InstructionCallAssign::getVariable() { return variable; }
 
-    AtomIdentifier* InstructionCallAssign::getTarget() {
-        return target;
-    }
+    AtomIdentifier *InstructionCallAssign::getTarget() { return target; }
 
-    void InstructionCallAssign::accept(InstructionVisitor* visitor) {
+    void InstructionCallAssign::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
-}
+} // namespace frontend::ast

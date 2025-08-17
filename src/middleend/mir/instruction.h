@@ -5,7 +5,6 @@
 #include "middleend/mir/operator.h"
 #include "middleend/mir/type.h"
 
-
 // TODO: figure out this valueIsLiteral slop
 
 namespace middleend::mir {
@@ -13,7 +12,7 @@ namespace middleend::mir {
 
     class Instruction {
         public:
-            virtual void accept(InstructionVisitor* visitor);
+            virtual void accept(InstructionVisitor *visitor);
             virtual ~Instruction() = default;
     };
 
@@ -35,7 +34,7 @@ namespace middleend::mir {
             uint64_t variable;
             uint64_t left;
             bool leftIsLiteral;
-            BinaryOp op;           
+            BinaryOp op;
             uint64_t right;
             bool rightIsLiteral;
     };
@@ -53,17 +52,17 @@ namespace middleend::mir {
 
     class Terminator : public Instruction {
         public:
-            virtual void accept(InstructionVisitor* visitor);
+            virtual void accept(InstructionVisitor *visitor);
             virtual ~Terminator() = default;
     };
 
     class TerminatorReturn : public Terminator {
         public:
-            void accept(InstructionVisitor* visitor);
+            void accept(InstructionVisitor *visitor);
             ~TerminatorReturn();
+
         private:
             uint64_t value;
             bool valueIsLiteral;
     };
-}
-
+} // namespace middleend::mir
