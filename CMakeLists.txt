@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.11)
-
 project(PANNICC)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -13,23 +13,4 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(pegtl)
 
-add_executable(pannicc
-    src/driver/compiler.cpp
-    src/frontend/parser.cpp
-    src/frontend/ast_to_hir.cpp
-    src/frontend/utils/atom.cpp
-    src/frontend/utils/operator.cpp
-    src/frontend/utils/symbol_table.cpp
-    src/frontend/utils/type.cpp
-    src/frontend/ast/ast.cpp
-    src/frontend/ast/instruction.cpp
-    src/frontend/hir/hir.cpp
-    src/frontend/hir/instruction.cpp
-    src/middleend/mir/instruction.cpp
-    src/middleend/mir/mir.cpp
-    src/middleend/mir/operator.cpp
-    src/middleend/mir/type.cpp
-)
-
-target_include_directories(pannicc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_link_libraries(pannicc PRIVATE taocpp::pegtl)
+add_subdirectory(src)

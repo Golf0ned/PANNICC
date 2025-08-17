@@ -1,6 +1,6 @@
 BUILD_DIR := build
 
-.PHONY: all build clean
+.PHONY: all build clean distclean
 
 all: build
 
@@ -10,4 +10,7 @@ build:
 	cmake --build $(BUILD_DIR)
 
 clean:
+	cmake --build $(BUILD_DIR) --target clean
+
+distclean:
 	rm -rf $(BUILD_DIR)
