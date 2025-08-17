@@ -3,12 +3,10 @@
 
 #include "frontend/utils/symbol_table.h"
 
-
 namespace frontend {
     std::string toScopedSymbol(std::string symbol, uint64_t scope) {
         return symbol + '_' + std::to_string(scope);
     }
-
 
     uint64_t SymbolTable::addSymbol(std::string symbol) {
         if (hasSymbol(symbol)) {
@@ -38,4 +36,4 @@ namespace frontend {
 
         return res;
     }
-}
+} // namespace frontend
