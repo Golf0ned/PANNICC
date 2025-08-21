@@ -7,7 +7,7 @@
 #include "frontend/ast_to_hir.h"
 #include "frontend/parser.h"
 
-void print_help(const std::string &program_name) {
+void printHelp(const std::string &program_name) {
     std::cerr << "USAGE: " << program_name << " [options] <file>" << std::endl;
     std::cerr << std::endl;
     std::cerr << "OPTIONS:" << std::endl;
@@ -20,7 +20,7 @@ void print_help(const std::string &program_name) {
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
-        print_help(argv[0]);
+        printHelp(argv[0]);
         return 1;
     }
 
@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
         if (!arg.starts_with("-")) {
             input_file = argv[i];
         } else if (arg == "--help") {
-            print_help(argv[0]);
+            printHelp(argv[0]);
             return 1;
         } else if (arg == "--dump-ast") {
             ast_only = true;
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
         else {
             std::cerr << "Error: invalid option \"" << argv[i] << "\""
                       << std::endl;
-            print_help(argv[0]);
+            printHelp(argv[0]);
             return 1;
         }
     }
