@@ -4,3 +4,4 @@ TabWidth: 4
 UseTab: Never
 NamespaceIndentation: All
 IndentAccessModifiers: true
+IndentCaseLabels: true
