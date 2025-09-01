@@ -1,0 +1,32 @@
+#!/bin/bash
+# Pre-commit hook to enforce clang-format on C++ files
+# Thanks chatgpt!
+
+# Get list of staged files (added, copied, modified, renamed)
+FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(cpp|hpp|h)$')
+
+if [ -z "$FILES" ]; then
+    exit 0
+fi
+
+UNFORMATTED=()
+
+for FILE in $FILES; do
+    # Check if clang-format changes the file
+    if ! diff -q <(clang-format "$FILE") "$FILE" >/dev/null; then
+        UNFORMATTED+=("$FILE")
+    fi
+done
+
+if [ ${#UNFORMATTED[@]} -ne 0 ]; then
+    echo "Commit blocked: the following files are not formatted:"
+    for f in "${UNFORMATTED[@]}"; do
+        echo "  - $f"
+    done
+    echo ""
+    echo "Run: clang-format -i ${UNFORMATTED[*]}"
+    exit 1
+fi
+
+exit 0
+
