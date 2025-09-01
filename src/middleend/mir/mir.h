@@ -8,22 +8,22 @@
 
 namespace middleend::mir {
     class BasicBlock {
-        private:
-            uint64_t id;
-            std::vector<Instruction> instructions;
-            Terminator terminator;
+    private:
+        uint64_t id;
+        std::vector<Instruction> instructions;
+        Terminator terminator;
     };
 
     class Function {
-        private:
-            Type type;
-            uint64_t id;
-            std::vector<BasicBlock> basic_blocks;
+    private:
+        Type type;
+        uint64_t id;
+        std::vector<BasicBlock> basic_blocks;
     };
 
     class Program {
-        private:
-            std::vector<Function> functions;
-            // symbol table for function names
+    private:
+        std::vector<Function> functions;
+        // symbol table for function names
     };
 } // namespace middleend::mir
