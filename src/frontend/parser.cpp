@@ -141,192 +141,191 @@ namespace frontend {
 
     // Value token actions
     template <> struct action<number> {
-            template <typename Input>
-            static void apply(const Input &in, parsing_results &res) {
-                AtomLiteral *a = new AtomLiteral(std::stoull(in.string()));
-                parsed_atoms.push_back(a);
-            }
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            AtomLiteral *a = new AtomLiteral(std::stoull(in.string()));
+            parsed_atoms.push_back(a);
+        }
     };
 
     template <> struct action<identifier> {
-            template <typename Input>
-            static void apply(const Input &in, parsing_results &res) {
-                std::string identifier = in.string();
-                uint64_t id = res.second.addSymbol(identifier);
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            std::string identifier = in.string();
+            uint64_t id = res.second.addSymbol(identifier);
 
-                AtomIdentifier *a = new AtomIdentifier(id);
-                parsed_atoms.push_back(a);
-            }
+            AtomIdentifier *a = new AtomIdentifier(id);
+            parsed_atoms.push_back(a);
+        }
     };
 
     template <> struct action<binary_op> {
-            template <typename Input>
-            static void apply(const Input &in, parsing_results &res) {
-                parsed_tokens.push_back(in.string());
-            }
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            parsed_tokens.push_back(in.string());
+        }
     };
 
     template <> struct action<type> {
-            template <typename Input>
-            static void apply(const Input &in, parsing_results &res) {
-                parsed_tokens.push_back(in.string());
-            }
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            parsed_tokens.push_back(in.string());
+        }
     };
 
     // Instruction actions
     template <> struct action<left_brace> {
-            template <typename Input>
-            static void apply(const Input &in, parsing_results &res) {
-                ast::Scope *scope = new ast::Scope();
-                active_scopes.push_back(scope);
-            }
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            ast::Scope *scope = new ast::Scope();
+            active_scopes.push_back(scope);
+        }
     };
 
     template <> struct action<right_brace> {
-            template <typename Input>
-            static void apply(const Input &in, parsing_results &res) {
-                ast::Scope *scope = active_scopes.back();
-                active_scopes.pop_back();
-                if (active_scopes.empty()) {
-                    // Hold scope for function parse
-                    active_scopes.push_back(scope);
-                } else {
-                    active_scopes.back()->addInstruction(scope);
-                }
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            ast::Scope *scope = active_scopes.back();
+            active_scopes.pop_back();
+            if (active_scopes.empty()) {
+                // Hold scope for function parse
+                active_scopes.push_back(scope);
+            } else {
+                active_scopes.back()->addInstruction(scope);
             }
+        }
     };
 
     template <> struct action<instruction_declaration> {
-            template <typename Input>
-            static void apply(const Input &in, parsing_results &res) {
-                AtomIdentifier *variable =
-                    dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
-                parsed_atoms.pop_back();
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            AtomIdentifier *variable =
+                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            parsed_atoms.pop_back();
 
-                Type type = strToType.at(parsed_tokens.back());
-                parsed_tokens.pop_back();
+            Type type = strToType.at(parsed_tokens.back());
+            parsed_tokens.pop_back();
 
-                ast::InstructionDeclaration *i =
-                    new ast::InstructionDeclaration(type, variable);
-                active_scopes.back()->addInstruction(i);
-            }
+            ast::InstructionDeclaration *i =
+                new ast::InstructionDeclaration(type, variable);
+            active_scopes.back()->addInstruction(i);
+        }
     };
 
     template <> struct action<instruction_declaration_assign_value> {
-            template <typename Input>
-            static void apply(const Input &in, parsing_results &res) {
-                Atom *value = parsed_atoms.back();
-                parsed_atoms.pop_back();
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            Atom *value = parsed_atoms.back();
+            parsed_atoms.pop_back();
 
-                AtomIdentifier *variable =
-                    dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
-                parsed_atoms.pop_back();
+            AtomIdentifier *variable =
+                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            parsed_atoms.pop_back();
 
-                Type type = strToType.at(parsed_tokens.back());
-                parsed_tokens.pop_back();
+            Type type = strToType.at(parsed_tokens.back());
+            parsed_tokens.pop_back();
 
-                ast::InstructionDeclarationAssignValue *i =
-                    new ast::InstructionDeclarationAssignValue(type, variable,
-                                                               value);
-                active_scopes.back()->addInstruction(i);
-            }
+            ast::InstructionDeclarationAssignValue *i =
+                new ast::InstructionDeclarationAssignValue(type, variable,
+                                                           value);
+            active_scopes.back()->addInstruction(i);
+        }
     };
 
     template <> struct action<instruction_assign_value> {
-            template <typename Input>
-            static void apply(const Input &in, parsing_results &res) {
-                Atom *value = parsed_atoms.back();
-                parsed_atoms.pop_back();
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            Atom *value = parsed_atoms.back();
+            parsed_atoms.pop_back();
 
-                AtomIdentifier *variable =
-                    dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
-                parsed_atoms.pop_back();
+            AtomIdentifier *variable =
+                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            parsed_atoms.pop_back();
 
-                ast::InstructionAssignValue *i =
-                    new ast::InstructionAssignValue(variable, value);
-                active_scopes.back()->addInstruction(i);
-            }
+            ast::InstructionAssignValue *i =
+                new ast::InstructionAssignValue(variable, value);
+            active_scopes.back()->addInstruction(i);
+        }
     };
 
     template <> struct action<instruction_assign_binary_op> {
-            template <typename Input>
-            static void apply(const Input &in, parsing_results &res) {
-                Atom *right = parsed_atoms.back();
-                parsed_atoms.pop_back();
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            Atom *right = parsed_atoms.back();
+            parsed_atoms.pop_back();
 
-                BinaryOp op = strToBinaryOp.at(parsed_tokens.back());
-                parsed_tokens.pop_back();
+            BinaryOp op = strToBinaryOp.at(parsed_tokens.back());
+            parsed_tokens.pop_back();
 
-                Atom *left = parsed_atoms.back();
-                parsed_atoms.pop_back();
+            Atom *left = parsed_atoms.back();
+            parsed_atoms.pop_back();
 
-                AtomIdentifier *variable =
-                    dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
-                parsed_atoms.pop_back();
+            AtomIdentifier *variable =
+                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            parsed_atoms.pop_back();
 
-                ast::InstructionAssignBinaryOp *i =
-                    new ast::InstructionAssignBinaryOp(variable, op, left,
-                                                       right);
-                active_scopes.back()->addInstruction(i);
-            }
+            ast::InstructionAssignBinaryOp *i =
+                new ast::InstructionAssignBinaryOp(variable, op, left, right);
+            active_scopes.back()->addInstruction(i);
+        }
     };
 
     template <> struct action<instruction_return> {
-            template <typename Input>
-            static void apply(const Input &in, parsing_results &res) {
-                Atom *value = parsed_atoms.back();
-                parsed_atoms.pop_back();
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            Atom *value = parsed_atoms.back();
+            parsed_atoms.pop_back();
 
-                ast::InstructionReturn *i = new ast::InstructionReturn(value);
-                active_scopes.back()->addInstruction(i);
-            }
+            ast::InstructionReturn *i = new ast::InstructionReturn(value);
+            active_scopes.back()->addInstruction(i);
+        }
     };
 
     template <> struct action<instruction_call> {
-            template <typename Input>
-            static void apply(const Input &in, parsing_results &res) {
-                AtomIdentifier *target =
-                    dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
-                parsed_atoms.pop_back();
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            AtomIdentifier *target =
+                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            parsed_atoms.pop_back();
 
-                ast::InstructionCall *i = new ast::InstructionCall(target);
-                active_scopes.back()->addInstruction(i);
-            }
+            ast::InstructionCall *i = new ast::InstructionCall(target);
+            active_scopes.back()->addInstruction(i);
+        }
     };
 
     template <> struct action<instruction_call_assign> {
-            template <typename Input>
-            static void apply(const Input &in, parsing_results &res) {
-                AtomIdentifier *target =
-                    dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
-                parsed_atoms.pop_back();
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            AtomIdentifier *target =
+                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            parsed_atoms.pop_back();
 
-                AtomIdentifier *variable =
-                    dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
-                parsed_atoms.pop_back();
+            AtomIdentifier *variable =
+                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            parsed_atoms.pop_back();
 
-                ast::InstructionCallAssign *i =
-                    new ast::InstructionCallAssign(variable, target);
-                active_scopes.back()->addInstruction(i);
-            }
+            ast::InstructionCallAssign *i =
+                new ast::InstructionCallAssign(variable, target);
+            active_scopes.back()->addInstruction(i);
+        }
     };
 
     // Function
     template <> struct action<function> {
-            template <typename Input>
-            static void apply(const Input &in, parsing_results &res) {
-                AtomIdentifier *name =
-                    dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
-                parsed_atoms.pop_back();
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            AtomIdentifier *name =
+                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            parsed_atoms.pop_back();
 
-                Type type = strToType.at(parsed_tokens.back());
-                parsed_tokens.pop_back();
+            Type type = strToType.at(parsed_tokens.back());
+            parsed_tokens.pop_back();
 
-                ast::Scope *body = active_scopes.back();
-                active_scopes.pop_back();
+            ast::Scope *body = active_scopes.back();
+            active_scopes.pop_back();
 
-                res.first.push_back(ast::Function(type, name, body));
-            }
+            res.first.push_back(ast::Function(type, name, body));
+        }
     };
 
     //
