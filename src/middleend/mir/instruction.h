@@ -4,6 +4,7 @@
 
 #include "middleend/mir/operator.h"
 #include "middleend/mir/type.h"
+#include "middleend/mir/value.h"
 
 // TODO: figure out this valueIsLiteral slop
 
@@ -16,27 +17,11 @@ namespace middleend::mir {
         virtual ~Instruction() = default;
     };
 
-    class InstructionDeclaration : public Instruction {
+    class InstructionAssignBinaryOp : public Instruction, public Value {
     private:
-        Type type;
-        uint64_t variable;
-    };
-
-    class InstructionAssignValue : public Instruction {
-    private:
-        uint64_t variable;
-        uint64_t value;
-        bool valueIsLiteral;
-    };
-
-    class InstructionAssignBinaryOp : public Instruction {
-    private:
-        uint64_t variable;
-        uint64_t left;
-        bool leftIsLiteral;
         BinaryOp op;
-        uint64_t right;
-        bool rightIsLiteral;
+        Value left;
+        Value right;
     };
 
     class InstructionCall : public Instruction {
@@ -44,9 +29,8 @@ namespace middleend::mir {
         uint64_t callee;
     };
 
-    class InstructionCallAssign : public Instruction {
+    class InstructionCallAssign : public Instruction, public Value {
     private:
-        uint64_t variable;
         uint64_t callee;
     };
 
@@ -62,7 +46,6 @@ namespace middleend::mir {
         ~TerminatorReturn();
 
     private:
-        uint64_t value;
-        bool valueIsLiteral;
+        Value value;
     };
 } // namespace middleend::mir
