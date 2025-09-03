@@ -3,10 +3,7 @@
 #include <cstdint>
 
 #include "middleend/mir/operator.h"
-#include "middleend/mir/type.h"
 #include "middleend/mir/value.h"
-
-// TODO: figure out this valueIsLiteral slop
 
 namespace middleend::mir {
     class InstructionVisitor;
@@ -17,24 +14,31 @@ namespace middleend::mir {
         virtual ~Instruction() = default;
     };
 
-    class InstructionAssignBinaryOp : public Instruction, public Value {
+    class InstructionBinaryOp : public Instruction, public Value {
+    public:
+        InstructionBinaryOp(BinaryOp op, Value *left, Value *right);
+        BinaryOp getOp();
+        Value *getLeft();
+        Value *getRight();
+        void accept(InstructionVisitor *visitor);
+
     private:
         BinaryOp op;
-        Value left;
-        Value right;
+        Value *left;
+        Value *right;
     };
 
-    class InstructionCall : public Instruction {
+    class InstructionCall : public Instruction, public Value {
+    public:
+        InstructionCall(uint64_t callee);
+        uint64_t getCallee();
+        void accept(InstructionVisitor *visitor);
+
     private:
         uint64_t callee;
     };
 
-    class InstructionCallAssign : public Instruction, public Value {
-    private:
-        uint64_t callee;
-    };
-
-    class Terminator : public Instruction {
+    class Terminator : public Instruction, public Value {
     public:
         virtual void accept(InstructionVisitor *visitor);
         virtual ~Terminator() = default;
@@ -42,10 +46,11 @@ namespace middleend::mir {
 
     class TerminatorReturn : public Terminator {
     public:
+        TerminatorReturn(Value *value);
+        Value *getValue();
         void accept(InstructionVisitor *visitor);
-        ~TerminatorReturn();
 
     private:
-        Value value;
+        Value *value;
     };
 } // namespace middleend::mir
