@@ -6,6 +6,7 @@ namespace middleend::mir {
     // TODO: function params
     class Value {
     public:
+        Value(Type type);
         Type getType();
 
     private:
@@ -14,6 +15,7 @@ namespace middleend::mir {
 
     class Literal : public Value {
     public:
+        Literal(Type type, int64_t value);
         int64_t getValue();
 
     private:
