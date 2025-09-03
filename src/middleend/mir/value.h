@@ -3,8 +3,8 @@
 #include "middleend/mir/type.h"
 
 namespace middleend::mir {
+    // TODO: function params
     class Value {
-        // TODO: build out more
     public:
         Type getType();
 
