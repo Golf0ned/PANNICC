@@ -38,6 +38,38 @@ namespace middleend::mir {
         uint64_t callee;
     };
 
+    class InstructionAlloca : public Instruction, public Value {
+    public:
+        InstructionAlloca(Type allocType);
+        Type getAllocType();
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        Type allocType;
+    };
+
+    class InstructionLoad : public Instruction, public Value {
+    public:
+        InstructionLoad(Type type, Value *ptr);
+        Value *getPtr();
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        Value *ptr;
+    };
+
+    class InstructionStore : public Instruction {
+    public:
+        InstructionStore(Value *value, Value *ptr);
+        Value *getValue();
+        Value *getPtr();
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        Value *value;
+        Value *ptr;
+    };
+
     class Terminator : public Instruction {
     public:
         virtual void accept(InstructionVisitor *visitor);
@@ -58,6 +90,9 @@ namespace middleend::mir {
     public:
         virtual void visit(InstructionBinaryOp *i) = 0;
         virtual void visit(InstructionCall *i) = 0;
+        virtual void visit(InstructionAlloca *i) = 0;
+        virtual void visit(InstructionLoad *i) = 0;
+        virtual void visit(InstructionStore *i) = 0;
 
         virtual void visit(TerminatorReturn *t) = 0;
     };

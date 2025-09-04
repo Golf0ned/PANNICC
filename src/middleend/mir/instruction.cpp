@@ -28,6 +28,35 @@ namespace middleend::mir {
         visitor->visit(this);
     }
 
+    InstructionAlloca::InstructionAlloca(Type allocType)
+        : Value(Type::PTR), allocType(allocType) {}
+
+    Type InstructionAlloca::getAllocType() { return allocType; }
+
+    void InstructionAlloca::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
+
+    InstructionLoad::InstructionLoad(Type type, Value *ptr)
+        : Value(type), ptr(ptr) {}
+
+    Value *InstructionLoad::getPtr() { return ptr; }
+
+    void InstructionLoad::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
+
+    InstructionStore::InstructionStore(Value *value, Value *ptr)
+        : value(value), ptr(ptr) {}
+
+    Value *InstructionStore::getValue() { return value; }
+
+    Value *InstructionStore::getPtr() { return ptr; }
+
+    void InstructionStore::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
+
     TerminatorReturn::TerminatorReturn(Value *value) : value(value) {}
 
     Value *TerminatorReturn::getValue() { return value; }
