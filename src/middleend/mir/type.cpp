@@ -5,6 +5,8 @@ namespace middleend {
         switch (type) {
         case Type::I64:
             return "i64";
+        case Type::PTR:
+            return "ptr";
         default:
             return "UNKNOWN";
         }
