@@ -9,4 +9,11 @@ namespace frontend {
             return "UNKNOWN";
         }
     }
+
+    middleend::mir::Type toMIRType(Type type) {
+        switch (type) {
+        case Type::INT64:
+            return middleend::mir::Type::I64;
+        }
+    }
 } // namespace frontend
