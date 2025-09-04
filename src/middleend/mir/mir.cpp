@@ -6,8 +6,8 @@
 #include "middleend/mir/type.h"
 
 namespace middleend::mir {
-    BasicBlock::BasicBlock(uint64_t id, std::vector<Instruction> body,
-                           Terminator terminator)
+    BasicBlock::BasicBlock(uint64_t id, std::vector<Instruction *> body,
+                           Terminator *terminator)
         : id(id), body(body), terminator(terminator) {}
 
     Function::Function(Type type, uint64_t id,
