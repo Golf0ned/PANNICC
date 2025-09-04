@@ -10,7 +10,7 @@ namespace middleend::mir {
 
     class Instruction {
     public:
-        virtual void accept(InstructionVisitor *visitor);
+        virtual void accept(InstructionVisitor *visitor) = 0;
         virtual ~Instruction() = default;
     };
 
@@ -72,7 +72,7 @@ namespace middleend::mir {
 
     class Terminator : public Instruction {
     public:
-        virtual void accept(InstructionVisitor *visitor);
+        virtual void accept(InstructionVisitor *visitor) = 0;
         virtual ~Terminator() = default;
     };
 
