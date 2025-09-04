@@ -29,6 +29,7 @@ namespace middleend::mir {
     };
 
     class Program {
+    public:
         Program(std::vector<Function> functions);
 
     private:
