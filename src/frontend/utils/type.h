@@ -3,6 +3,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "middleend/mir/type.h"
+
 namespace frontend {
     enum class Type { INT64 };
 
@@ -11,4 +13,6 @@ namespace frontend {
     };
 
     std::string toString(Type type);
+
+    middleend::mir::Type toMIRType(Type type);
 } // namespace frontend
