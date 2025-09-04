@@ -1,6 +1,6 @@
 #include "middleend/mir/type.h"
 
-namespace middleend {
+namespace middleend::mir {
     std::string toString(Type type) {
         switch (type) {
         case Type::I64:
@@ -11,4 +11,4 @@ namespace middleend {
             return "UNKNOWN";
         }
     }
-} // namespace middleend
+} // namespace middleend::mir

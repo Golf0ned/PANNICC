@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace middleend {
+namespace middleend::mir {
     enum class Type {
         I64,
         PTR,
@@ -15,4 +15,4 @@ namespace middleend {
     };
 
     std::string toString(Type type);
-} // namespace middleend
+} // namespace middleend::mir
