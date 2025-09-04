@@ -9,13 +9,13 @@
 namespace middleend::mir {
     class BasicBlock {
     public:
-        BasicBlock(uint64_t id, std::vector<Instruction> body,
-                   Terminator terminator);
+        BasicBlock(uint64_t id, std::vector<Instruction *> body,
+                   Terminator *terminator);
 
     private:
         uint64_t id;
-        std::vector<Instruction> body;
-        Terminator terminator;
+        std::vector<Instruction *> body;
+        Terminator *terminator;
     };
 
     class Function {
