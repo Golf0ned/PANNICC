@@ -10,7 +10,7 @@ namespace frontend {
         }
     }
 
-    middleend::mir::Type toMIRType(Type type) {
+    middleend::mir::Type toMIR(Type type) {
         switch (type) {
         case Type::INT64:
             return middleend::mir::Type::I64;
