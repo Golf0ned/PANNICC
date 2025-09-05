@@ -3,6 +3,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "middleend/mir/operator.h"
+
 namespace frontend {
     enum class BinaryOp {
         ADD,
@@ -19,4 +21,6 @@ namespace frontend {
     };
 
     std::string toString(BinaryOp op);
+
+    middleend::mir::BinaryOp toMIR(BinaryOp op);
 } // namespace frontend
