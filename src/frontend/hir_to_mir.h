@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cstdint>
+#include <unordered_map>
+
 #include "frontend/hir/hir.h"
 #include "middleend/mir/mir.h"
 
@@ -11,6 +14,7 @@ namespace frontend {
     class HIRToMIRVisitor : public hir::InstructionVisitor {
     public:
         std::vector<mir::BasicBlock> getResult();
+        mir::Value *resolveAtom(Atom *a);
 
         void visit(hir::InstructionDeclaration *i) override;
         void visit(hir::InstructionAssignValue *i) override;
@@ -20,6 +24,8 @@ namespace frontend {
         void visit(hir::InstructionCallAssign *i) override;
 
     private:
+        std::vector<mir::Instruction *> cur_instructions;
         std::vector<mir::BasicBlock> basic_blocks;
+        std::unordered_map<uint64_t, mir::Value *> value_mappings;
     };
 } // namespace frontend
