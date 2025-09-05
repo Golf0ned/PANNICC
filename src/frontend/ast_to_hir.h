@@ -16,7 +16,6 @@ namespace frontend {
         ASTToHIRVisitor(SymbolTable old_table, SymbolTable &new_table);
 
         std::vector<hir::Instruction *> getResult();
-        void clearResult();
 
         void visit(ast::Instruction *i) override;
         void visit(ast::Scope *s) override;
