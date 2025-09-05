@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace middleend {
+namespace middleend::mir {
     enum class BinaryOp {
         ADD,
         SUB,
@@ -19,4 +19,4 @@ namespace middleend {
     };
 
     std::string toString(BinaryOp op);
-} // namespace middleend
+} // namespace middleend::mir

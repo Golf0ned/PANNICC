@@ -15,4 +15,6 @@ namespace frontend {
             return "UNKNOWN";
         }
     }
+
+    std::string toString(BinaryOp op);
 } // namespace frontend
