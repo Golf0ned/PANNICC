@@ -10,21 +10,24 @@
 namespace mir = middleend::mir;
 
 namespace frontend {
-    static uint64_t counter = 0;
+    std::unordered_map<uint64_t, mir::Function *> lowered_functions;
 
     mir::Program hirToMir(hir::Program &hir) {
         std::vector<mir::Function> functions;
+        functions.reserve(hir.getFunctions().size());
 
         for (auto &f : hir.getFunctions()) {
             mir::Type function_type = toMIR(f.getType());
-            uint64_t function_id = counter++;
 
             HIRToMIRVisitor *visitor;
             for (auto i : f.getBody())
                 i->accept(visitor);
             std::vector<mir::BasicBlock> basic_blocks = visitor->getResult();
 
-            functions.emplace_back(function_type, function_id, basic_blocks);
+            auto nameAtom = f.getName();
+            std::string name = nameAtom->toString(hir.getSymbolTable());
+            functions.emplace_back(function_type, name, basic_blocks);
+            lowered_functions[nameAtom->getValue()] = &functions.back();
         }
         // TODO: figure out function name mapping
         return mir::Program(functions);
@@ -73,9 +76,30 @@ namespace frontend {
         cur_instructions.push_back(store);
     }
 
-    void HIRToMIRVisitor::visit(hir::InstructionReturn *i) {}
+    void HIRToMIRVisitor::visit(hir::InstructionReturn *i) {
+        mir::Value *retVal = resolveAtom(i->getValue());
+        mir::TerminatorReturn *ret = new mir::TerminatorReturn(retVal);
+        basic_blocks.emplace_back(std::move(cur_instructions), ret);
+    }
 
-    void HIRToMIRVisitor::visit(hir::InstructionCall *i) {}
+    void HIRToMIRVisitor::visit(hir::InstructionCall *i) {
+        mir::Function *callee =
+            lowered_functions.at(i->getCallee()->getValue());
+        mir::InstructionCall *call =
+            new mir::InstructionCall(mir::Type::I64, callee);
+        cur_instructions.push_back(call);
+    }
 
-    void HIRToMIRVisitor::visit(hir::InstructionCallAssign *i) {}
+    void HIRToMIRVisitor::visit(hir::InstructionCallAssign *i) {
+        mir::Function *callee =
+            lowered_functions.at(i->getCallee()->getValue());
+        mir::InstructionCall *call =
+            new mir::InstructionCall(mir::Type::I64, callee);
+        cur_instructions.push_back(call);
+
+        mir::Value *ptr = value_mappings.at(i->getVariable()->getValue());
+        mir::Value *value = resolveAtom(i->getVariable());
+        mir::InstructionStore *store = new mir::InstructionStore(value, ptr);
+        cur_instructions.push_back(store);
+    }
 } // namespace frontend
