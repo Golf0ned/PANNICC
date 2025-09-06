@@ -11,9 +11,12 @@ namespace frontend {
 
     class HIRToMIRVisitor : public hir::InstructionVisitor {
     public:
+        HIRToMIRVisitor() = default;
+
         std::vector<mir::BasicBlock> getResult();
         mir::Value *resolveAtom(Atom *a);
 
+        void visit(hir::Instruction *i) override;
         void visit(hir::InstructionDeclaration *i) override;
         void visit(hir::InstructionAssignValue *i) override;
         void visit(hir::InstructionAssignBinaryOp *i) override;
