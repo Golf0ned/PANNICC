@@ -19,17 +19,17 @@ namespace frontend {
         for (auto &f : hir.getFunctions()) {
             mir::Type function_type = toMIR(f.getType());
 
-            HIRToMIRVisitor *visitor;
-            for (auto i : f.getBody())
-                i->accept(visitor);
-            std::vector<mir::BasicBlock> basic_blocks = visitor->getResult();
+            HIRToMIRVisitor visitor;
+            for (auto i : f.getBody()) {
+                visitor.visit(i);
+            }
+            std::vector<mir::BasicBlock> basic_blocks = visitor.getResult();
 
             auto nameAtom = f.getName();
             std::string name = nameAtom->toString(hir.getSymbolTable());
             functions.emplace_back(function_type, name, basic_blocks);
             lowered_functions[nameAtom->getValue()] = &functions.back();
         }
-        // TODO: figure out function name mapping
         return mir::Program(functions);
     }
 
@@ -49,6 +49,8 @@ namespace frontend {
             return value;
         }
     }
+
+    void HIRToMIRVisitor::visit(hir::Instruction *i) {}
 
     void HIRToMIRVisitor::visit(hir::InstructionDeclaration *i) {
         mir::Type t = toMIR(i->getType());
@@ -79,7 +81,8 @@ namespace frontend {
     void HIRToMIRVisitor::visit(hir::InstructionReturn *i) {
         mir::Value *retVal = resolveAtom(i->getValue());
         mir::TerminatorReturn *ret = new mir::TerminatorReturn(retVal);
-        basic_blocks.emplace_back(std::move(cur_instructions), ret);
+        basic_blocks.emplace_back(cur_instructions, ret);
+        cur_instructions.clear();
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionCall *i) {
