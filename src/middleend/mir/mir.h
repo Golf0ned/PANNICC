@@ -1,30 +1,30 @@
 #pragma once
 
-#include <cstdint>
 #include <vector>
 
-#include "middleend/mir/instruction.h"
 #include "middleend/mir/type.h"
 
 namespace middleend::mir {
+    class Instruction;
+    class Terminator;
+
     class BasicBlock {
     public:
-        BasicBlock(uint64_t id, std::vector<Instruction *> body,
-                   Terminator *terminator);
+        BasicBlock(std::vector<Instruction *> body, Terminator *terminator);
 
     private:
-        uint64_t id;
         std::vector<Instruction *> body;
         Terminator *terminator;
     };
 
     class Function {
     public:
-        Function(Type type, uint64_t id, std::vector<BasicBlock> basic_blocks);
+        Function(Type type, std::string name,
+                 std::vector<BasicBlock> basic_blocks);
 
     private:
         Type type;
-        uint64_t id;
+        std::string name;
         std::vector<BasicBlock> basic_blocks;
     };
 
@@ -34,6 +34,5 @@ namespace middleend::mir {
 
     private:
         std::vector<Function> functions;
-        // symbol table for function names
     };
 } // namespace middleend::mir

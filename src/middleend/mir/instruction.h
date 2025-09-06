@@ -1,7 +1,6 @@
 #pragma once
 
-#include <cstdint>
-
+#include "middleend/mir/mir.h"
 #include "middleend/mir/operator.h"
 #include "middleend/mir/value.h"
 
@@ -30,12 +29,12 @@ namespace middleend::mir {
 
     class InstructionCall : public Instruction, public Value {
     public:
-        InstructionCall(Type type, uint64_t callee);
-        uint64_t getCallee();
+        InstructionCall(Type type, Function *callee);
+        Function *getCallee();
         void accept(InstructionVisitor *visitor);
 
     private:
-        uint64_t callee;
+        Function *callee;
     };
 
     class InstructionAlloca : public Instruction, public Value {

@@ -1,10 +1,8 @@
 #pragma once
 
-#include <cstdint>
-#include <unordered_map>
-
 #include "frontend/hir/hir.h"
 #include "middleend/mir/mir.h"
+#include "middleend/mir/value.h"
 
 namespace mir = middleend::mir;
 

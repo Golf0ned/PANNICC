@@ -1,5 +1,3 @@
-#include <cstdint>
-
 #include "middleend/mir/instruction.h"
 #include "middleend/mir/operator.h"
 #include "middleend/mir/value.h"
@@ -19,10 +17,10 @@ namespace middleend::mir {
         visitor->visit(this);
     }
 
-    InstructionCall::InstructionCall(Type type, uint64_t callee)
+    InstructionCall::InstructionCall(Type type, Function *callee)
         : Value(type), callee(callee) {}
 
-    uint64_t InstructionCall::getCallee() { return callee; }
+    Function *InstructionCall::getCallee() { return callee; }
 
     void InstructionCall::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
