@@ -18,6 +18,8 @@ namespace frontend {
         return result;
     }
 
+    void ASTToHIRVisitor::clearResult() { result.clear(); }
+
     void ASTToHIRVisitor::visit(ast::Instruction *i) {}
 
     void ASTToHIRVisitor::visit(ast::Scope *s) {
@@ -150,8 +152,9 @@ namespace frontend {
             visitor.visit(f.getBody());
             auto body = visitor.getResult();
 
-            hir::Function hir_function(type, name, std::move(body));
+            hir::Function hir_function(type, name, body);
             functions.push_back(hir_function);
+            visitor.clearResult();
         }
 
         hir::Program hir_program(functions, new_table);
