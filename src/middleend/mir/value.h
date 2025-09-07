@@ -8,6 +8,7 @@ namespace middleend::mir {
     public:
         Value(Type type);
         Type getType();
+        virtual ~Value() = default;
 
     private:
         Type type;

@@ -68,6 +68,7 @@ int main(int argc, char *argv[]) {
     }
 
     middleend::mir::Program mir = frontend::hirToMir(hir);
+    std::cout << mir.toString() << std::endl;
 
     return 0;
 }

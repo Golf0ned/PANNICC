@@ -1,11 +1,11 @@
 #pragma once
 
-#include "middleend/mir/mir.h"
 #include "middleend/mir/operator.h"
 #include "middleend/mir/value.h"
 
 namespace middleend::mir {
     class InstructionVisitor;
+    class Function;
 
     class Instruction {
     public:
