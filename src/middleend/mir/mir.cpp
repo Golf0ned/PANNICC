@@ -6,9 +6,11 @@
 #include "middleend/mir/value.h"
 
 namespace middleend::mir {
-    BasicBlock::BasicBlock(std::vector<Instruction *> body,
-                           Terminator *terminator)
-        : body(body), terminator(terminator) {}
+    BasicBlock::BasicBlock(std::vector<std::unique_ptr<Instruction>> body,
+                           std::unique_ptr<Terminator> terminator,
+                           std::vector<std::unique_ptr<Literal>> literals)
+        : body(std::move(body)), terminator(std::move(terminator)),
+          literals(std::move(literals)) {}
 
     std::string BasicBlock::toString(bool isEntry) {
         ToStringVisitor visitor;
@@ -17,7 +19,7 @@ namespace middleend::mir {
             isEntry ? "entry" : std::to_string(visitor.getNextIdentifier());
         std::string res = name + ":\n";
 
-        for (auto i : body) {
+        for (auto &i : body) {
             i->accept(&visitor);
             res += "  " + visitor.getResult() + '\n';
         }
@@ -28,15 +30,9 @@ namespace middleend::mir {
         return res;
     }
 
-    BasicBlock::~BasicBlock() {
-        for (auto i : body)
-            delete i;
-        delete terminator;
-    }
-
     Function::Function(Type type, std::string name,
                        std::vector<BasicBlock> basic_blocks)
-        : type(type), name(name), basic_blocks(basic_blocks) {}
+        : type(type), name(name), basic_blocks(std::move(basic_blocks)) {}
 
     Type Function::getType() { return type; }
 
@@ -55,7 +51,8 @@ namespace middleend::mir {
         return res;
     }
 
-    Program::Program(std::vector<Function> functions) : functions(functions) {}
+    Program::Program(std::vector<Function> functions)
+        : functions(std::move(functions)) {}
 
     std::string Program::toString() {
         if (functions.empty())

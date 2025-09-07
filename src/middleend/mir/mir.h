@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <vector>
 
 #include "middleend/mir/instruction.h"
@@ -10,13 +11,15 @@ namespace middleend::mir {
 
     class BasicBlock {
     public:
-        BasicBlock(std::vector<Instruction *> body, Terminator *terminator);
+        BasicBlock(std::vector<std::unique_ptr<Instruction>> body,
+                   std::unique_ptr<Terminator> terminator,
+                   std::vector<std::unique_ptr<Literal>> literals);
         std::string toString(bool isEntry = false);
-        ~BasicBlock();
 
     private:
-        std::vector<Instruction *> body;
-        Terminator *terminator;
+        std::vector<std::unique_ptr<Instruction>> body;
+        std::vector<std::unique_ptr<Literal>> literals;
+        std::unique_ptr<Terminator> terminator;
     };
 
     class Function {
