@@ -53,7 +53,6 @@ namespace frontend::hir {
 
     private:
         SymbolTable &symbol_table;
-        std::string prefix;
         std::string res;
     };
 } // namespace frontend::hir
