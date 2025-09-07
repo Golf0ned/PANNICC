@@ -21,7 +21,7 @@ namespace frontend {
 
             HIRToMIRVisitor visitor;
             for (auto i : f.getBody()) {
-                visitor.visit(i);
+                i->accept(&visitor);
             }
             std::vector<mir::BasicBlock> basic_blocks = visitor.getResult();
 
