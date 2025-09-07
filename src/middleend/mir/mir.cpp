@@ -12,8 +12,8 @@ namespace middleend::mir {
         : body(std::move(body)), terminator(std::move(terminator)),
           literals(std::move(literals)) {}
 
-    std::string BasicBlock::toString(bool isEntry) {
-        ToStringVisitor visitor;
+    std::string BasicBlock::toString(uint64_t &counter, bool isEntry) {
+        ToStringVisitor visitor(counter);
 
         std::string name =
             isEntry ? "entry" : std::to_string(visitor.getNextIdentifier());
@@ -25,7 +25,7 @@ namespace middleend::mir {
         }
 
         terminator->accept(&visitor);
-        res += "  " + visitor.getResult() + '\n';
+        res += "  " + visitor.getResult();
 
         return res;
     }
@@ -42,10 +42,12 @@ namespace middleend::mir {
         // TODO: function params
         std::string res = "define " + ::middleend::mir::toString(type) + " @" +
                           name + "() {\n";
-        res += basic_blocks[0].toString();
+
+        uint64_t counter = 0;
+        res += basic_blocks[0].toString(counter, true);
         for (auto iter = ++basic_blocks.begin(); iter != basic_blocks.end();
              iter++) {
-            res += "\n\n" + iter->toString();
+            res += "\n\n" + iter->toString(counter);
         }
         res += "\n}";
         return res;
@@ -64,6 +66,9 @@ namespace middleend::mir {
 
         return res;
     }
+
+    ToStringVisitor::ToStringVisitor(uint64_t &counter)
+        : result(), counter(counter) {}
 
     std::string ToStringVisitor::getResult() { return result; }
 

@@ -14,7 +14,7 @@ namespace middleend::mir {
         BasicBlock(std::vector<std::unique_ptr<Instruction>> body,
                    std::unique_ptr<Terminator> terminator,
                    std::vector<std::unique_ptr<Literal>> literals);
-        std::string toString(bool isEntry = false);
+        std::string toString(uint64_t &counter, bool isEntry = false);
 
     private:
         std::vector<std::unique_ptr<Instruction>> body;
@@ -47,7 +47,7 @@ namespace middleend::mir {
 
     class ToStringVisitor : public InstructionVisitor {
     public:
-        ToStringVisitor() = default;
+        ToStringVisitor(uint64_t &counter);
         std::string getResult();
 
         uint64_t resolveBasicBlock(BasicBlock *basic_block);
@@ -65,7 +65,7 @@ namespace middleend::mir {
 
     private:
         std::string result;
-        uint64_t counter;
+        uint64_t &counter;
         std::unordered_map<BasicBlock *, uint64_t> basic_block_ids;
         std::unordered_map<Instruction *, uint64_t> instruction_ids;
     };

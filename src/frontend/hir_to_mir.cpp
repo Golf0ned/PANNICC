@@ -94,6 +94,7 @@ namespace frontend {
         basic_blocks.emplace_back(std::move(cur_instructions), std::move(ret),
                                   std::move(cur_literals));
         cur_instructions.clear();
+        cur_literals.clear();
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionCall *i) {
