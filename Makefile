@@ -14,3 +14,6 @@ clean:
 
 distclean:
 	rm -rf $(BUILD_DIR)
+
+test: build
+	cd $(BUILD_DIR) && ctest --output-on-failure
