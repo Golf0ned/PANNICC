@@ -6,10 +6,5 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-enable_testing()
-
-add_executable(tests runner.cpp)
-target_link_libraries(tests PRIVATE gtest_main frontend middleend)
-
-include(GoogleTest)
-gtest_discover_tests(tests)
+add_subdirectory(regression)
+add_subdirectory(unit)
