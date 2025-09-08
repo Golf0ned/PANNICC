@@ -14,3 +14,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(pegtl)
 
 add_subdirectory(src)
+
+include(CTest)
+if (BUILD_TESTING)
+    add_subdirectory(test)
+endif()
