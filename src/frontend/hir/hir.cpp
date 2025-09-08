@@ -36,8 +36,10 @@ namespace frontend::hir {
     std::string Program::toString() {
         std::string res = "";
 
-        for (Function f : functions) {
-            res += f.toString(symbol_table) + "\n";
+        for (auto iter = functions.begin(); iter != functions.end(); iter++) {
+            if (iter != functions.begin())
+                res += "\n\n";
+            res += iter->toString(symbol_table);
         }
 
         return res;
