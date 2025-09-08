@@ -47,8 +47,9 @@ namespace middleend::mir {
         for (auto iter = basic_blocks.begin(); iter != basic_blocks.end();
              iter++) {
             if (iter != basic_blocks.begin())
-                res += "\n\n";
-            res += iter->toString(counter);
+                res += "\n\n" + iter->toString(counter);
+            else
+                res += iter->toString(counter, true);
         }
         res += "\n}";
         return res;
