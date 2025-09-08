@@ -44,10 +44,11 @@ namespace middleend::mir {
                           name + "() {\n";
 
         uint64_t counter = 0;
-        res += basic_blocks[0].toString(counter, true);
-        for (auto iter = ++basic_blocks.begin(); iter != basic_blocks.end();
+        for (auto iter = basic_blocks.begin(); iter != basic_blocks.end();
              iter++) {
-            res += "\n\n" + iter->toString(counter);
+            if (iter != basic_blocks.begin())
+                res += "\n\n";
+            res += iter->toString(counter);
         }
         res += "\n}";
         return res;
@@ -57,12 +58,12 @@ namespace middleend::mir {
         : functions(std::move(functions)) {}
 
     std::string Program::toString() {
-        if (functions.empty())
-            return "";
-
-        std::string res = functions[0].toString();
-        for (auto iter = ++functions.begin(); iter != functions.end(); iter++)
-            res += "\n\n" + iter->toString();
+        std::string res = "";
+        for (auto iter = functions.begin(); iter != functions.end(); iter++) {
+            if (iter != functions.begin())
+                res += "\n\n";
+            res += iter->toString();
+        }
 
         return res;
     }
