@@ -10,40 +10,51 @@
 
 namespace fs = std::filesystem;
 
-void compareIfFileExists(std::string expected, std::string actual_path) {
-    if (fs::exists(actual_path)) {
-        std::ifstream file(actual_path);
-        std::stringstream buffer;
-        buffer << file.rdbuf();
+void compareIfFileExists(std::string actual, std::string expected_path,
+                         std::string ir_name) {
+    if (!fs::exists(expected_path))
+        GTEST_SKIP() << "Missing comparison output for " << ir_name;
 
-        std::string actual = buffer.str();
-        if (!actual.empty() && actual.back() == '\n')
-            actual.pop_back();
-        if (expected != actual) {
-            FAIL() << "Mismatch with " << actual_path;
-        }
-    }
+    std::ifstream file(expected_path);
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+
+    std::string expected = buffer.str();
+    EXPECT_EQ(expected, actual + '\n');
 }
 
 std::string test_dir = fs::path(REGRESSION_TEST_DIR);
 
-class RegressionTest : public ::testing::TestWithParam<std::string> {};
+class RegressionTest : public ::testing::TestWithParam<std::string> {
+protected:
+    std::string test_name;
+    std::string input_path, ast_path, hir_path, mir_path;
 
-TEST_P(RegressionTest, FullPipeline) {
-    auto test_name = GetParam();
-    std::string input_path = test_dir + "/input/" + test_name + ".c";
-    std::string ast_path = test_dir + "/expected/" + test_name + ".ast";
-    std::string hir_path = test_dir + "/expected/" + test_name + ".hir";
-    std::string mir_path = test_dir + "/expected/" + test_name + ".mir";
+    void SetUp() override {
+        test_name = GetParam();
+        input_path = test_dir + "/input/" + test_name + ".c";
+        ast_path = test_dir + "/expected/" + test_name + ".ast";
+        hir_path = test_dir + "/expected/" + test_name + ".hir";
+        mir_path = test_dir + "/expected/" + test_name + ".mir";
+    }
+};
 
-    frontend::ast::Program ast = frontend::parse(input_path);
-    compareIfFileExists(ast.toString(), ast_path);
+TEST_P(RegressionTest, AST) {
+    auto ast = frontend::parse(input_path);
+    compareIfFileExists(ast.toString(), ast_path, "ast");
+}
 
-    frontend::hir::Program hir = frontend::astToHir(ast);
-    compareIfFileExists(hir.toString(), hir_path);
+TEST_P(RegressionTest, HIR) {
+    auto ast = frontend::parse(input_path);
+    auto hir = frontend::astToHir(ast);
+    compareIfFileExists(hir.toString(), hir_path, "hir");
+}
 
-    middleend::mir::Program mir = frontend::hirToMir(hir);
-    compareIfFileExists(mir.toString(), mir_path);
+TEST_P(RegressionTest, MIR) {
+    auto ast = frontend::parse(input_path);
+    auto hir = frontend::astToHir(ast);
+    auto mir = frontend::hirToMir(hir);
+    compareIfFileExists(mir.toString(), mir_path, "mir");
 }
 
 std::vector<std::string> discoverTests(std::string input_dir) {
