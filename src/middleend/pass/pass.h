@@ -8,12 +8,13 @@ namespace middleend {
         virtual void run(mir::Program &p) = 0;
         // virtual void run(mir::Function &f) = 0;
         // virtual void run(mir::BasicBlock &b) = 0;
+        virtual ~Pass() = default;
     };
 
     class AnalysisPass : public Pass {
     public:
         void invalidate();
-        void rerunIfInvalid();
+        void rerunIfInvalid(mir::Program &p);
         // type getResult();
 
     private:
