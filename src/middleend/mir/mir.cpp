@@ -12,6 +12,10 @@ namespace middleend::mir {
         : body(std::move(body)), terminator(std::move(terminator)),
           literals(std::move(literals)) {}
 
+    std::vector<std::unique_ptr<Instruction>> &BasicBlock::getInstructions() {
+        return body;
+    }
+
     std::string BasicBlock::toString(uint64_t &counter, bool isEntry) {
         ToStringVisitor visitor(counter);
 
@@ -38,6 +42,8 @@ namespace middleend::mir {
 
     std::string Function::getName() { return name; }
 
+    std::vector<BasicBlock> &Function::getBasicBlocks() { return basic_blocks; }
+
     std::string Function::toString() {
         // TODO: function params
         std::string res = "define " + ::middleend::mir::toString(type) + " @" +
@@ -57,6 +63,8 @@ namespace middleend::mir {
 
     Program::Program(std::vector<Function> functions)
         : functions(std::move(functions)) {}
+
+    std::vector<Function> &Program::getFunctions() { return functions; }
 
     std::string Program::toString() {
         std::string res = "";

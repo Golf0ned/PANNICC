@@ -14,6 +14,7 @@ namespace middleend::mir {
         BasicBlock(std::vector<std::unique_ptr<Instruction>> body,
                    std::unique_ptr<Terminator> terminator,
                    std::vector<std::unique_ptr<Literal>> literals);
+        std::vector<std::unique_ptr<Instruction>> &getInstructions();
         std::string toString(uint64_t &counter, bool isEntry = false);
 
     private:
@@ -28,6 +29,7 @@ namespace middleend::mir {
                  std::vector<BasicBlock> basic_blocks);
         Type getType();
         std::string getName();
+        std::vector<BasicBlock> &getBasicBlocks();
         std::string toString();
 
     private:
@@ -39,6 +41,7 @@ namespace middleend::mir {
     class Program {
     public:
         Program(std::vector<Function> functions);
+        std::vector<Function> &getFunctions();
         std::string toString();
 
     private:
