@@ -28,6 +28,6 @@ namespace frontend {
         std::vector<std::unique_ptr<mir::Instruction>> cur_instructions;
         std::vector<std::unique_ptr<mir::Literal>> cur_literals;
         std::vector<mir::BasicBlock> basic_blocks;
-        std::unordered_map<uint64_t, mir::Value *> value_mappings;
+        std::unordered_map<uint64_t, mir::InstructionAlloca *> value_mappings;
     };
 } // namespace frontend
