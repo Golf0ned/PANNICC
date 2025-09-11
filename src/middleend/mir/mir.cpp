@@ -16,6 +16,10 @@ namespace middleend::mir {
         return body;
     }
 
+    std::vector<BasicBlock *> &BasicBlock::getDescendants() {
+        return descendants;
+    }
+
     std::string BasicBlock::toString(uint64_t &counter, bool isEntry) {
         ToStringVisitor visitor(counter);
 
