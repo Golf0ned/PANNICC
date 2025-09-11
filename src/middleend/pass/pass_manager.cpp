@@ -9,7 +9,7 @@ namespace middleend {
     void PassManager::runPasses(mir::Program &mir) {
         for (auto &p : passes) {
             for (auto &a : p->getAnalyses())
-                a->rerunIfInvalid();
+                a->rerunIfInvalid(mir);
             p->run(mir);
         }
     }
