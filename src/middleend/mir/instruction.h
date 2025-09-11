@@ -49,24 +49,24 @@ namespace middleend::mir {
 
     class InstructionLoad : public Instruction, public Value {
     public:
-        InstructionLoad(Type type, Value *ptr);
-        Value *getPtr();
+        InstructionLoad(Type type, InstructionAlloca *ptr);
+        InstructionAlloca *getPtr();
         void accept(InstructionVisitor *visitor);
 
     private:
-        Value *ptr;
+        InstructionAlloca *ptr;
     };
 
     class InstructionStore : public Instruction {
     public:
-        InstructionStore(Value *value, Value *ptr);
+        InstructionStore(Value *value, InstructionAlloca *ptr);
         Value *getValue();
-        Value *getPtr();
+        InstructionAlloca *getPtr();
         void accept(InstructionVisitor *visitor);
 
     private:
         Value *value;
-        Value *ptr;
+        InstructionAlloca *ptr;
     };
 
     class Terminator : public Instruction {

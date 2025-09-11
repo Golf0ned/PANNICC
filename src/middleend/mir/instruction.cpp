@@ -35,21 +35,21 @@ namespace middleend::mir {
         visitor->visit(this);
     }
 
-    InstructionLoad::InstructionLoad(Type type, Value *ptr)
+    InstructionLoad::InstructionLoad(Type type, InstructionAlloca *ptr)
         : Value(type), ptr(ptr) {}
 
-    Value *InstructionLoad::getPtr() { return ptr; }
+    InstructionAlloca *InstructionLoad::getPtr() { return ptr; }
 
     void InstructionLoad::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
-    InstructionStore::InstructionStore(Value *value, Value *ptr)
+    InstructionStore::InstructionStore(Value *value, InstructionAlloca *ptr)
         : value(value), ptr(ptr) {}
 
     Value *InstructionStore::getValue() { return value; }
 
-    Value *InstructionStore::getPtr() { return ptr; }
+    InstructionAlloca *InstructionStore::getPtr() { return ptr; }
 
     void InstructionStore::accept(InstructionVisitor *visitor) {
         visitor->visit(this);

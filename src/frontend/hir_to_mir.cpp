@@ -66,7 +66,8 @@ namespace frontend {
 
     void HIRToMIRVisitor::visit(hir::InstructionAssignValue *i) {
         mir::Value *value = resolveAtom(i->getValue());
-        mir::Value *ptr = value_mappings.at(i->getVariable()->getValue());
+        mir::InstructionAlloca *ptr =
+            value_mappings.at(i->getVariable()->getValue());
         auto store = std::make_unique<mir::InstructionStore>(value, ptr);
 
         cur_instructions.push_back(std::move(store));
@@ -79,7 +80,8 @@ namespace frontend {
         auto binOp = std::make_unique<mir::InstructionBinaryOp>(
             mir::Type::I64, op, left, right);
 
-        mir::Value *ptr = value_mappings.at(i->getVariable()->getValue());
+        mir::InstructionAlloca *ptr =
+            value_mappings.at(i->getVariable()->getValue());
         auto store = std::make_unique<mir::InstructionStore>(binOp.get(), ptr);
 
         cur_instructions.push_back(std::move(binOp));
@@ -112,7 +114,8 @@ namespace frontend {
         auto call =
             std::make_unique<mir::InstructionCall>(mir::Type::I64, callee);
 
-        mir::Value *ptr = value_mappings.at(i->getVariable()->getValue());
+        mir::InstructionAlloca *ptr =
+            value_mappings.at(i->getVariable()->getValue());
         mir::Value *value = resolveAtom(i->getVariable());
         auto store = std::make_unique<mir::InstructionStore>(value, ptr);
 
