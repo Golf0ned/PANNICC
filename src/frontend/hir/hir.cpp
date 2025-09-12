@@ -67,14 +67,14 @@ namespace frontend::hir {
         const std::string type = toString(i->getType());
         const std::string variable = i->getVariable()->toString(symbol_table);
 
-        res = "    DECLARE " + type + " " + variable;
+        res = "    " + type + ' ' + variable + ';';
     }
 
     void ToStringVisitor::visit(InstructionAssignValue *i) {
         const std::string variable = i->getVariable()->toString(symbol_table);
         const std::string value = i->getValue()->toString(symbol_table);
 
-        res = "    ASSIGN " + variable + " = " + value;
+        res = "    " + variable + " = " + value + ';';
     }
 
     void ToStringVisitor::visit(InstructionAssignBinaryOp *i) {
@@ -83,25 +83,25 @@ namespace frontend::hir {
         const std::string left = i->getLeft()->toString(symbol_table);
         const std::string right = i->getRight()->toString(symbol_table);
 
-        res = "    ASSIGN " + variable + " = " + left + " " + op + " " + right;
+        res = "    " + variable + " = " + left + ' ' + op + ' ' + right + ';';
     }
 
     void ToStringVisitor::visit(InstructionReturn *i) {
         const std::string value = i->getValue()->toString(symbol_table);
 
-        res = "    RETURN " + value;
+        res = "    return " + value + ';';
     }
 
     void ToStringVisitor::visit(InstructionCall *i) {
         const std::string callee = i->getCallee()->toString(symbol_table);
 
-        res = "    CALL " + callee;
+        res = "    " + callee + '(' + ");";
     }
 
     void ToStringVisitor::visit(InstructionCallAssign *i) {
         const std::string variable = i->getVariable()->toString(symbol_table);
         const std::string callee = i->getCallee()->toString(symbol_table);
 
-        res = "    ASSIGN " + variable + " = CALL " + callee;
+        res = "    " + variable + " = " + callee + '(' + ");";
     }
 } // namespace frontend::hir
