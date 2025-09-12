@@ -133,7 +133,7 @@ namespace middleend::mir {
         std::string f_type = toString(i->getCallee()->getType());
         std::string f_name = i->getCallee()->getName();
 
-        result = var + " = call " + f_type + ' ' + f_name;
+        result = var + " = call " + f_type + " @" + f_name;
     }
     void ToStringVisitor::visit(InstructionAlloca *i) {
         std::string var = valueToString(i);
