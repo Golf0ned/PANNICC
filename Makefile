@@ -16,4 +16,4 @@ distclean:
 	rm -rf $(BUILD_DIR)
 
 test: build
-	cd $(BUILD_DIR) && GTEST_COLOR=1 ctest --output-on-failure
+	cd $(BUILD_DIR) && ./bin/regression_tests --gtest_brief=1 | grep . | grep -vE "Skipped"
