@@ -9,50 +9,112 @@ namespace middleend {
     void Mem2Reg::run(mir::Program &p) {
         for (auto &f : p.getFunctions()) {
             // TODO: phi insertion
-            // follow the algorithm, generate phis with store Value ptr
+            // follow the algorithm, insert phis
 
-            // variable renaming
-            // allocas are the initial variables
+            //
+            // Variable renaming
+            //
+            std::vector<std::unique_ptr<mir::Instruction>> toPromote;
+            std::unordered_map<mir::InstructionAlloca *, mir::Value *> curVal;
 
-            // just look at pg 29 of ssa book man
             std::unordered_set<mir::BasicBlock *> visited;
             std::deque<mir::BasicBlock *> worklist;
-            std::unordered_map<mir::InstructionAlloca *, mir::Value *> curVal;
             worklist.push_back(&f.getBasicBlocks()[0]);
+            bool isEntry = true;
+
             while (!worklist.empty()) {
                 auto cur = worklist.back();
                 worklist.pop_back();
 
+                // Visited before: only update phis
                 if (visited.contains(cur)) {
                     // TODO: update phis
                     continue;
                 }
 
-                for (auto &i : cur->getInstructions()) {
-                    // auto *alloca =
-                    //     dynamic_cast<mir::InstructionAlloca *>(i.get());
-                    // if (alloca)
-                    //     curVal[alloca] = nullptr;
-                    auto *load = dynamic_cast<mir::InstructionLoad *>(i.get());
-                    if (load) {
-                        // updateReachingDefinition(alloca, i)
-                        // replace use of alloca in next instruction with i;
+                visited.insert(cur);
+
+                // Not visited: update phis and rename in instructions
+                auto &instructions = cur->getInstructions();
+                for (int ind = 0, end = instructions.size(); ind < end; ind++) {
+                    auto &i = instructions[ind];
+
+                    // phi: add value from previous basic block
+                    // TODO: update phis
+
+                    // alloca: if promotable (lives in entry block),
+                    // steal from instructions
+                    auto *alloca =
+                        dynamic_cast<mir::InstructionAlloca *>(i.get());
+                    if (isEntry && alloca) {
+                        toPromote.push_back(std::move(i));
+                        instructions.erase(instructions.begin() + ind);
+                        ind--;
+                        end--;
+                        continue;
                     }
+
+                    // store: update current value mapping
+                    // remove store from instructions
                     auto *store =
                         dynamic_cast<mir::InstructionStore *>(i.get());
                     if (store) {
-                        // updateReachingDefinition(alloca, i)
-                        // create fresh variable v???? (done)
-                        // replace defn of alloca w/ v in i (done)
-                        // reaching definition[v] = reaching definition[alloca]
-                        // reaching definition[alloca] = v
+                        curVal[store->getPtr()] = store->getValue();
+                        instructions.erase(instructions.begin() + ind);
+                        ind--;
+                        end--;
+                        continue;
+                    }
+
+                    // load: replace all uses of the load with current value
+                    // remove load from instructions
+                    auto *load = dynamic_cast<mir::InstructionLoad *>(i.get());
+                    if (load) {
+                        ReplaceUseVisitor visitor(load, curVal[load->getPtr()]);
+                        for (auto &use : load->getUses()) {
+                            use->accept(&visitor);
+                        }
+                        instructions.erase(instructions.begin() + ind);
+                        ind--;
+                        end--;
+                        continue;
                     }
                 }
 
                 for (auto &next : cur->getDescendants()) {
                     worklist.push_back(next);
                 }
+
+                isEntry = false;
             }
+        }
+    }
+
+    ReplaceUseVisitor::ReplaceUseVisitor(mir::Value *oldValue,
+                                         mir::Value *newValue)
+        : oldValue(oldValue), newValue(newValue) {}
+
+    void ReplaceUseVisitor::visit(mir::InstructionBinaryOp *i) {
+        if (i->getLeft() == oldValue)
+            i->setLeft(newValue);
+        if (i->getRight() == oldValue)
+            i->setRight(newValue);
+    }
+
+    void ReplaceUseVisitor::visit(mir::InstructionCall *i) {}
+
+    void ReplaceUseVisitor::visit(mir::InstructionAlloca *i) {}
+
+    void ReplaceUseVisitor::visit(mir::InstructionLoad *i) {}
+
+    void ReplaceUseVisitor::visit(mir::InstructionStore *i) {
+        if (i->getValue() == oldValue)
+            i->setValue(newValue);
+    }
+
+    void ReplaceUseVisitor::visit(mir::TerminatorReturn *t) {
+        if (t->getValue() == oldValue) {
+            t->setValue(newValue);
         }
     }
 } // namespace middleend
