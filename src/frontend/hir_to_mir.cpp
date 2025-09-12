@@ -17,7 +17,7 @@ namespace frontend {
         functions.reserve(hir.getFunctions().size());
 
         for (auto &f : hir.getFunctions()) {
-            mir::Type function_type = toMIR(f.getType());
+            mir::Type function_type = toMir(f.getType());
 
             HIRToMIRVisitor visitor;
             for (auto i : f.getBody()) {
@@ -57,7 +57,7 @@ namespace frontend {
     void HIRToMIRVisitor::visit(hir::Instruction *i) {}
 
     void HIRToMIRVisitor::visit(hir::InstructionDeclaration *i) {
-        mir::Type t = toMIR(i->getType());
+        mir::Type t = toMir(i->getType());
         auto alloca = std::make_unique<mir::InstructionAlloca>(t);
         value_mappings[i->getVariable()->getValue()] = alloca.get();
 
@@ -76,7 +76,7 @@ namespace frontend {
     void HIRToMIRVisitor::visit(hir::InstructionAssignBinaryOp *i) {
         mir::Value *left = resolveAtom(i->getLeft());
         mir::Value *right = resolveAtom(i->getRight());
-        mir::BinaryOp op = toMIR(i->getOp());
+        mir::BinaryOp op = toMir(i->getOp());
         auto binOp = std::make_unique<mir::InstructionBinaryOp>(
             mir::Type::I64, op, left, right);
 

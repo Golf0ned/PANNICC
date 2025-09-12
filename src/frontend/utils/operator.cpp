@@ -17,7 +17,7 @@ namespace frontend {
         std::unreachable();
     }
 
-    middleend::mir::BinaryOp toMIR(BinaryOp op) {
+    middleend::mir::BinaryOp toMir(BinaryOp op) {
         switch (op) {
         case BinaryOp::ADD:
             return middleend::mir::BinaryOp::ADD;
