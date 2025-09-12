@@ -10,10 +10,9 @@
 
 namespace fs = std::filesystem;
 
-void compareIfFileExists(std::string actual, std::string expected_path,
-                         std::string ir_name) {
+void compareIfFileExists(std::string actual, std::string expected_path) {
     if (!fs::exists(expected_path))
-        GTEST_SKIP() << "Missing comparison output for " << ir_name;
+        GTEST_SKIP();
 
     std::ifstream file(expected_path);
     std::stringstream buffer;
@@ -41,20 +40,20 @@ protected:
 
 TEST_P(RegressionTest, AST) {
     auto ast = frontend::parse(input_path);
-    compareIfFileExists(ast.toString(), ast_path, "ast");
+    compareIfFileExists(ast.toString(), ast_path);
 }
 
 TEST_P(RegressionTest, HIR) {
     auto ast = frontend::parse(input_path);
     auto hir = frontend::astToHir(ast);
-    compareIfFileExists(hir.toString(), hir_path, "hir");
+    compareIfFileExists(hir.toString(), hir_path);
 }
 
 TEST_P(RegressionTest, MIR) {
     auto ast = frontend::parse(input_path);
     auto hir = frontend::astToHir(ast);
     auto mir = frontend::hirToMir(hir);
-    compareIfFileExists(mir.toString(), mir_path, "mir");
+    compareIfFileExists(mir.toString(), mir_path);
 }
 
 std::vector<std::string> discoverTests(std::string input_dir) {
