@@ -1,0 +1,18 @@
+int64_t scope_0() {
+    int64_t before_1;
+    before_1 = 0;
+    int64_t before_2;
+    before_2 = 1;
+    int64_t before_3;
+    before_3 = 2;
+    int64_t in_4;
+    in_4 = before_3 + 3;
+    int64_t after_3;
+    after_3 = 4;
+    int64_t after_2;
+    after_2 = 5;
+    after_2 = after_2 + before_2;
+    int64_t after_1;
+    after_1 = 6;
+    return 0;
+}
