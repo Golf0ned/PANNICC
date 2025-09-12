@@ -3,12 +3,24 @@
 #include <fstream>
 
 #include "gtest/gtest.h"
+#include <memory>
 
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"
+#include "middleend/pass/mem2reg.h"
+#include "middleend/pass/pass_manager.h"
 
 namespace fs = std::filesystem;
+
+std::unique_ptr<middleend::PassManager>
+buildPassesFromFile(std::string passes_path) {
+    //
+
+    std::unique_ptr<middleend::PassManager> pm;
+
+    return std::move(pm);
+}
 
 void compareIfFileExists(std::string actual, std::string expected_path) {
     if (!fs::exists(expected_path))
@@ -27,11 +39,15 @@ std::string test_dir = fs::path(REGRESSION_TEST_DIR);
 class RegressionTest : public ::testing::TestWithParam<std::string> {
 protected:
     std::string test_name;
-    std::string input_path, ast_path, hir_path, mir_path;
+    std::string input_path, passes_path;
+    std::string ast_path, hir_path, mir_path;
 
     void SetUp() override {
         test_name = GetParam();
+
         input_path = test_dir + "/input/" + test_name + ".c";
+        passes_path = test_dir + "/input/" + test_name + ".passes";
+
         ast_path = test_dir + "/expected/" + test_name + ".ast";
         hir_path = test_dir + "/expected/" + test_name + ".hir";
         mir_path = test_dir + "/expected/" + test_name + ".mir";
@@ -53,6 +69,18 @@ TEST_P(RegressionTest, MIR) {
     auto ast = frontend::parse(input_path);
     auto hir = frontend::astToHir(ast);
     auto mir = frontend::hirToMir(hir);
+    compareIfFileExists(mir.toString(), mir_path);
+}
+
+TEST_P(RegressionTest, MIRWithPasses) {
+    auto pm = buildPassesFromFile(passes_path);
+    if (!pm)
+        GTEST_SKIP();
+
+    auto ast = frontend::parse(input_path);
+    auto hir = frontend::astToHir(ast);
+    auto mir = frontend::hirToMir(hir);
+    pm->runPasses(mir);
     compareIfFileExists(mir.toString(), mir_path);
 }
 
