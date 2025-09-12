@@ -14,5 +14,5 @@ namespace frontend {
 
     std::string toString(Type type);
 
-    middleend::mir::Type toMIR(Type type);
+    middleend::mir::Type toMir(Type type);
 } // namespace frontend

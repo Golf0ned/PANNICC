@@ -22,5 +22,5 @@ namespace frontend {
 
     std::string toString(BinaryOp op);
 
-    middleend::mir::BinaryOp toMIR(BinaryOp op);
+    middleend::mir::BinaryOp toMir(BinaryOp op);
 } // namespace frontend
