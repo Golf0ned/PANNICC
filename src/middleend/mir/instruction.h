@@ -19,6 +19,8 @@ namespace middleend::mir {
         BinaryOp getOp();
         Value *getLeft();
         Value *getRight();
+        void setLeft(Value *newVal);
+        void setRight(Value *newVal);
         void accept(InstructionVisitor *visitor);
 
     private:
@@ -62,6 +64,7 @@ namespace middleend::mir {
         InstructionStore(Value *value, InstructionAlloca *ptr);
         Value *getValue();
         InstructionAlloca *getPtr();
+        void setValue(Value *newVal);
         void accept(InstructionVisitor *visitor);
 
     private:
@@ -79,6 +82,7 @@ namespace middleend::mir {
     public:
         TerminatorReturn(Value *value);
         Value *getValue();
+        void setValue(Value *newVal);
         void accept(InstructionVisitor *visitor);
 
     private:

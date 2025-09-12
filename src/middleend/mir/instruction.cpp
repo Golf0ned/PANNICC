@@ -16,6 +16,10 @@ namespace middleend::mir {
 
     Value *InstructionBinaryOp::getRight() { return right; }
 
+    void InstructionBinaryOp::setLeft(Value *newVal) { left = newVal; }
+
+    void InstructionBinaryOp::setRight(Value *newVal) { right = newVal; }
+
     void InstructionBinaryOp::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
@@ -59,6 +63,8 @@ namespace middleend::mir {
 
     InstructionAlloca *InstructionStore::getPtr() { return ptr; }
 
+    void InstructionStore::setValue(Value *newVal) { value = newVal; }
+
     void InstructionStore::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
@@ -68,6 +74,8 @@ namespace middleend::mir {
     }
 
     Value *TerminatorReturn::getValue() { return value; }
+
+    void TerminatorReturn::setValue(Value *newVal) { value = newVal; }
 
     void TerminatorReturn::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
