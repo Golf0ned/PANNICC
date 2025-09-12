@@ -1,12 +1,12 @@
 #include <filesystem>
 #include <iostream>
 
-#include "frontend/ast/ast.h"
-#include "frontend/hir/hir.h"
-
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"
+#include "middleend/pass/mem2reg.h"
+#include "middleend/pass/pass.h"
+#include "middleend/pass/pass_manager.h"
 
 void printHelp(const std::string &program_name) {
     std::cerr << "USAGE: " << program_name << " [options] <file>" << std::endl;
@@ -68,6 +68,13 @@ int main(int argc, char *argv[]) {
     }
 
     middleend::mir::Program mir = frontend::hirToMir(hir);
+
+    middleend::PassManager pm;
+    std::unique_ptr<middleend::TransformPass> mem2reg =
+        std::make_unique<middleend::Mem2Reg>();
+    pm.addPass(std::move(mem2reg));
+    pm.runPasses(mir);
+
     std::cout << mir.toString() << std::endl;
 
     return 0;
