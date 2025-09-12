@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "frontend/utils/type.h"
 
 namespace frontend {
@@ -5,9 +7,8 @@ namespace frontend {
         switch (type) {
         case Type::INT64:
             return "int64_t";
-        default:
-            return "UNKNOWN";
         }
+        std::unreachable();
     }
 
     middleend::mir::Type toMIR(Type type) {
@@ -15,5 +16,6 @@ namespace frontend {
         case Type::INT64:
             return middleend::mir::Type::I64;
         }
+        std::unreachable();
     }
 } // namespace frontend
