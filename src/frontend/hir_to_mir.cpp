@@ -116,8 +116,7 @@ namespace frontend {
 
         mir::InstructionAlloca *ptr =
             value_mappings.at(i->getVariable()->getValue());
-        mir::Value *value = resolveAtom(i->getVariable());
-        auto store = std::make_unique<mir::InstructionStore>(value, ptr);
+        auto store = std::make_unique<mir::InstructionStore>(call.get(), ptr);
 
         cur_instructions.push_back(std::move(call));
         cur_instructions.push_back(std::move(store));
