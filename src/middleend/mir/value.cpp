@@ -6,6 +6,8 @@ namespace middleend::mir {
 
     Type Value::getType() { return type; }
 
+    std::vector<Instruction *> &Value::getUses() { return uses; }
+
     Literal::Literal(Type type, int64_t value) : Value(type), value(value) {}
 
     int64_t Literal::getValue() { return value; }

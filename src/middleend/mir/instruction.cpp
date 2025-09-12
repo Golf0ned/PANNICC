@@ -5,7 +5,10 @@
 namespace middleend::mir {
     InstructionBinaryOp::InstructionBinaryOp(Type type, BinaryOp op,
                                              Value *left, Value *right)
-        : Value(type), op(op), left(left), right(right) {}
+        : Value(type), op(op), left(left), right(right) {
+        left->getUses().push_back(this);
+        right->getUses().push_back(this);
+    }
 
     BinaryOp InstructionBinaryOp::getOp() { return op; }
 
@@ -36,7 +39,9 @@ namespace middleend::mir {
     }
 
     InstructionLoad::InstructionLoad(Type type, InstructionAlloca *ptr)
-        : Value(type), ptr(ptr) {}
+        : Value(type), ptr(ptr) {
+        ptr->getUses().push_back(this);
+    }
 
     InstructionAlloca *InstructionLoad::getPtr() { return ptr; }
 
@@ -45,7 +50,10 @@ namespace middleend::mir {
     }
 
     InstructionStore::InstructionStore(Value *value, InstructionAlloca *ptr)
-        : value(value), ptr(ptr) {}
+        : value(value), ptr(ptr) {
+        value->getUses().push_back(this);
+        ptr->getUses().push_back(this);
+    }
 
     Value *InstructionStore::getValue() { return value; }
 
@@ -55,7 +63,9 @@ namespace middleend::mir {
         visitor->visit(this);
     }
 
-    TerminatorReturn::TerminatorReturn(Value *value) : value(value) {}
+    TerminatorReturn::TerminatorReturn(Value *value) : value(value) {
+        value->getUses().push_back(this);
+    }
 
     Value *TerminatorReturn::getValue() { return value; }
 
