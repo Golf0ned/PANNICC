@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "middleend/mir/operator.h"
 
 namespace middleend::mir {
@@ -11,8 +13,7 @@ namespace middleend::mir {
             return "mul";
         case BinaryOp::AND:
             return "and";
-        default:
-            return "UNKNOWN";
         }
+        std::unreachable();
     }
 } // namespace middleend::mir

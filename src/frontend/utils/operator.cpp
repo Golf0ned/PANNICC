@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "frontend/utils/operator.h"
 
 namespace frontend {
@@ -11,9 +13,8 @@ namespace frontend {
             return "*";
         case BinaryOp::AND:
             return "&";
-        default:
-            return "UNKNOWN";
         }
+        std::unreachable();
     }
 
     middleend::mir::BinaryOp toMIR(BinaryOp op) {
@@ -27,5 +28,6 @@ namespace frontend {
         case BinaryOp::AND:
             return middleend::mir::BinaryOp::AND;
         }
+        std::unreachable();
     }
 } // namespace frontend

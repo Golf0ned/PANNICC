@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "middleend/mir/type.h"
 
 namespace middleend::mir {
@@ -7,8 +9,7 @@ namespace middleend::mir {
             return "i64";
         case Type::PTR:
             return "ptr";
-        default:
-            return "UNKNOWN";
         }
+        std::unreachable();
     }
 } // namespace middleend::mir
