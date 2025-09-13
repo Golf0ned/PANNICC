@@ -1,9 +1,9 @@
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
+#include <memory>
 
 #include "gtest/gtest.h"
-#include <memory>
 
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
@@ -15,9 +15,23 @@ namespace fs = std::filesystem;
 
 std::unique_ptr<middleend::PassManager>
 buildPassesFromFile(std::string passes_path) {
-    //
+    if (!fs::exists(passes_path))
+        return nullptr;
 
-    std::unique_ptr<middleend::PassManager> pm;
+    std::ifstream file(passes_path);
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    file.close();
+
+    auto pm = std::make_unique<middleend::PassManager>();
+
+    std::string pass_str;
+    while (buffer >> pass_str) {
+        if (pass_str == "mem2reg")
+            pm->addPass(std::make_unique<middleend::Mem2Reg>());
+        else
+            continue;
+    }
 
     return std::move(pm);
 }
@@ -29,6 +43,7 @@ void compareIfFileExists(std::string actual, std::string expected_path) {
     std::ifstream file(expected_path);
     std::stringstream buffer;
     buffer << file.rdbuf();
+    file.close();
 
     std::string expected = buffer.str();
     EXPECT_EQ(expected, actual + '\n');
@@ -40,7 +55,8 @@ class RegressionTest : public ::testing::TestWithParam<std::string> {
 protected:
     std::string test_name;
     std::string input_path, passes_path;
-    std::string ast_path, hir_path, mir_path;
+    std::string ast_path, hir_path;
+    std::string mir_path, mir_opt_path;
 
     void SetUp() override {
         test_name = GetParam();
@@ -50,7 +66,9 @@ protected:
 
         ast_path = test_dir + "/expected/" + test_name + ".ast";
         hir_path = test_dir + "/expected/" + test_name + ".hir";
+
         mir_path = test_dir + "/expected/" + test_name + ".mir";
+        mir_opt_path = test_dir + "/expected/" + test_name + "_opt.mir";
     }
 };
 
@@ -81,7 +99,7 @@ TEST_P(RegressionTest, MIRWithPasses) {
     auto hir = frontend::astToHir(ast);
     auto mir = frontend::hirToMir(hir);
     pm->runPasses(mir);
-    compareIfFileExists(mir.toString(), mir_path);
+    compareIfFileExists(mir.toString(), mir_opt_path);
 }
 
 std::vector<std::string> discoverTests(std::string input_dir) {
