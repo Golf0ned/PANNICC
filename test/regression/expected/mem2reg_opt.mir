@@ -1,0 +1,20 @@
+define i64 @fun_call_0() {
+entry:
+  ret i64 0
+}
+
+define i64 @mem2reg_basic_0() {
+entry:
+  i64 %0 = add i64 1, i64 2
+  i64 %1 = sub i64 3, i64 1
+  i64 %2 = mul i64 %0, i64 %1
+  i64 %3 = and i64 %0, i64 1
+  i64 %4 = call i64 @fun_call_0
+  ret i64 %3
+}
+
+define i64 @mem2reg_negative_0() {
+entry:
+  i64 %0 = add i64 6, i64 7
+  ret i64 %0
+}
