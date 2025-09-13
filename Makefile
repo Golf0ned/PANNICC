@@ -16,4 +16,4 @@ distclean:
 	rm -rf $(BUILD_DIR)
 
 test: build
-	cd $(BUILD_DIR) && ./bin/regression_tests --gtest_brief=1 | grep . | grep -vE "Skipped"
+	cd $(BUILD_DIR) && ./bin/regression_tests | grep . | grep -vE "Skipped|SKIPPED"
