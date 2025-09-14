@@ -138,6 +138,23 @@ namespace frontend {
                                  : new AtomLiteral(a->getValue());
     }
 
+    void ASTToHIRVisitor::addReturnIfMissing(ast::Function f) {
+        // if f is main with return type i32, implicit return 0
+        // if f is void type, implicit return
+        //
+        // we have neither rn, so check main with ui64
+        if (!result.empty() &&
+            dynamic_cast<hir::InstructionReturn *>(result.back()))
+            return;
+
+        if (f.getName()->toString(old_table) == "main") {
+            AtomLiteral *zero = new AtomLiteral(0);
+            hir::InstructionReturn *ret = new hir::InstructionReturn(zero);
+            result.push_back(ret);
+            return;
+        }
+    }
+
     hir::Program astToHir(ast::Program &ast) {
         SymbolTable old_table = ast.getSymbolTable();
         SymbolTable new_table;
@@ -150,6 +167,7 @@ namespace frontend {
             // TODO: params
 
             visitor.visit(f.getBody());
+            visitor.addReturnIfMissing(f);
             auto body = visitor.getResult();
 
             hir::Function hir_function(type, name, body);

@@ -35,6 +35,7 @@ namespace frontend {
         AtomIdentifier *resolveUseScope(AtomIdentifier *a);
         Atom *resolveDeclarationScope(Atom *a);
         Atom *resolveUseScope(Atom *a);
+        void addReturnIfMissing(ast::Function f);
 
     private:
         std::vector<hir::Instruction *> result;
