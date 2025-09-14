@@ -1,4 +1,4 @@
-define i64 @main_0() {
+define i64 @main() {
 entry:
   ret i64 0
 }
