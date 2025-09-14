@@ -1,8 +1,8 @@
-int64_t fun_call_0() {
+int64_t fun_call() {
     return 0;
 }
 
-int64_t mem2reg_basic_0() {
+int64_t mem2reg_basic() {
     int64_t a_1;
     a_1 = 1;
     int64_t b_1;
@@ -18,11 +18,11 @@ int64_t mem2reg_basic_0() {
     int64_t bit_and_1;
     bit_and_1 = add_1 & 1;
     int64_t call_1;
-    call_1 = fun_call_0();
+    call_1 = fun_call();
     return bit_and_1;
 }
 
-int64_t mem2reg_negative_0() {
+int64_t mem2reg_negative() {
     int64_t a_1;
     a_1 = 6 + 7;
     return a_1;

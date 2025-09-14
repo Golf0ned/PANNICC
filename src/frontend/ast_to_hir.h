@@ -29,8 +29,8 @@ namespace frontend {
         void visit(ast::InstructionCallAssign *i) override;
 
         AtomIdentifier *createScopedIdentifier(std::string symbol,
-                                               uint64_t scope,
-                                               SymbolTable &new_table);
+                                               uint64_t scope);
+        AtomIdentifier *createUnscopedIdentifier(std::string symbol);
         AtomIdentifier *resolveDeclarationScope(AtomIdentifier *a);
         AtomIdentifier *resolveUseScope(AtomIdentifier *a);
         Atom *resolveDeclarationScope(Atom *a);

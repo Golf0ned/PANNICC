@@ -1,4 +1,4 @@
-define i64 @scope_0() {
+define i64 @scope() {
 entry:
   ptr %0 = alloca i64
   store i64 0, ptr %0

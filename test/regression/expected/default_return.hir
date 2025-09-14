@@ -1,3 +1,3 @@
-int64_t main_0() {
+int64_t main() {
     return 0;
 }

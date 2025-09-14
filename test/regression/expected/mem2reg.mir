@@ -1,9 +1,9 @@
-define i64 @fun_call_0() {
+define i64 @fun_call() {
 entry:
   ret i64 0
 }
 
-define i64 @mem2reg_basic_0() {
+define i64 @mem2reg_basic() {
 entry:
   ptr %0 = alloca i64
   store i64 1, ptr %0
@@ -31,13 +31,13 @@ entry:
   i64 %17 = and i64 %16, i64 1
   store i64 %17, ptr %15
   ptr %18 = alloca i64
-  i64 %19 = call i64 @fun_call_0
+  i64 %19 = call i64 @fun_call
   store i64 %19, ptr %18
   i64 %20 = load ptr %15
   ret i64 %20
 }
 
-define i64 @mem2reg_negative_0() {
+define i64 @mem2reg_negative() {
 entry:
   ptr %0 = alloca i64
   i64 %1 = add i64 6, i64 7

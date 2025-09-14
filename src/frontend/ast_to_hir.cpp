@@ -85,7 +85,8 @@ namespace frontend {
     }
 
     void ASTToHIRVisitor::visit(ast::InstructionCall *i) {
-        AtomIdentifier *target = resolveUseScope(i->getTarget());
+        AtomIdentifier *target =
+            createUnscopedIdentifier(i->getTarget()->toString(old_table));
 
         hir::InstructionCall *new_i = new hir::InstructionCall(target);
         result.push_back(new_i);
@@ -93,16 +94,16 @@ namespace frontend {
 
     void ASTToHIRVisitor::visit(ast::InstructionCallAssign *i) {
         AtomIdentifier *variable = resolveUseScope(i->getVariable());
-        AtomIdentifier *target = resolveUseScope(i->getTarget());
+        AtomIdentifier *target =
+            createUnscopedIdentifier(i->getTarget()->toString(old_table));
 
         hir::InstructionCallAssign *new_i =
             new hir::InstructionCallAssign(variable, target);
         result.push_back(new_i);
     }
 
-    AtomIdentifier *
-    ASTToHIRVisitor::createScopedIdentifier(std::string symbol, uint64_t scope,
-                                            SymbolTable &new_table) {
+    AtomIdentifier *ASTToHIRVisitor::createScopedIdentifier(std::string symbol,
+                                                            uint64_t scope) {
         std::string scoped_symbol = symbol + "_" + std::to_string(scope);
 
         uint64_t id = new_table.addSymbol(scoped_symbol);
@@ -111,9 +112,15 @@ namespace frontend {
     }
 
     AtomIdentifier *
+    ASTToHIRVisitor::createUnscopedIdentifier(std::string symbol) {
+        uint64_t id = new_table.addSymbol(symbol);
+        scope_mappings.back().insert(symbol);
+        return new AtomIdentifier(id);
+    }
+
+    AtomIdentifier *
     ASTToHIRVisitor::resolveDeclarationScope(AtomIdentifier *a) {
-        return createScopedIdentifier(a->toString(old_table), cur_scope,
-                                      new_table);
+        return createScopedIdentifier(a->toString(old_table), cur_scope);
     }
 
     AtomIdentifier *ASTToHIRVisitor::resolveUseScope(AtomIdentifier *a) {
@@ -124,7 +131,7 @@ namespace frontend {
                 break;
             }
         }
-        return createScopedIdentifier(a->toString(old_table), scope, new_table);
+        return createScopedIdentifier(a->toString(old_table), scope);
     }
 
     Atom *ASTToHIRVisitor::resolveDeclarationScope(Atom *a) {
@@ -163,7 +170,10 @@ namespace frontend {
         ASTToHIRVisitor visitor(old_table, new_table);
         for (ast::Function &f : ast.getFunctions()) {
             Type type = f.getType();
-            AtomIdentifier *name = visitor.resolveDeclarationScope(f.getName());
+
+            AtomIdentifier *name = visitor.createUnscopedIdentifier(
+                f.getName()->toString(old_table));
+
             // TODO: params
 
             visitor.visit(f.getBody());
