@@ -11,17 +11,18 @@
 namespace frontend::ast {
     class Function {
     public:
-        Function(Type type, AtomIdentifier *name, Scope *body);
+        Function(Type type, std::unique_ptr<AtomIdentifier> name,
+                 std::unique_ptr<Scope> body);
         Type getType();
-        AtomIdentifier *getName();
-        Scope *getBody();
+        std::unique_ptr<AtomIdentifier> &getName();
+        std::unique_ptr<Scope> &getBody();
         std::string toString(SymbolTable &symbol_table);
 
     private:
         Type type;
-        AtomIdentifier *name;
+        std::unique_ptr<AtomIdentifier> name;
         // TODO: params
-        Scope *body;
+        std::unique_ptr<Scope> body;
     };
 
     class Program {
@@ -30,7 +31,6 @@ namespace frontend::ast {
         std::vector<Function> &getFunctions();
         SymbolTable &getSymbolTable();
         std::string toString();
-        ~Program();
 
     private:
         std::vector<Function> functions;

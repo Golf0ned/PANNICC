@@ -1,100 +1,119 @@
 #include "frontend/ast/instruction.h"
 
 namespace frontend::ast {
-    void Scope::addInstruction(Instruction *i) { instructions.push_back(i); }
+    void Scope::addInstruction(std::unique_ptr<Instruction> i) {
+        instructions.push_back(std::move(i));
+    }
 
-    std::vector<Instruction *> Scope::getInstructions() { return instructions; }
+    std::vector<std::unique_ptr<Instruction>> &Scope::getInstructions() {
+        return instructions;
+    }
 
     void Scope::accept(InstructionVisitor *visitor) { visitor->visit(this); }
 
-    Scope::~Scope() {
-        for (Instruction *i : instructions) {
-            delete i;
-        }
-    }
-
-    InstructionDeclaration::InstructionDeclaration(Type type,
-                                                   AtomIdentifier *variable)
-        : type(type), variable(variable) {}
+    InstructionDeclaration::InstructionDeclaration(
+        Type type, std::unique_ptr<AtomIdentifier> variable)
+        : type(type), variable(std::move(variable)) {}
 
     Type InstructionDeclaration::getType() { return type; }
 
-    AtomIdentifier *InstructionDeclaration::getVariable() { return variable; }
+    std::unique_ptr<AtomIdentifier> &InstructionDeclaration::getVariable() {
+        return variable;
+    }
 
     void InstructionDeclaration::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
     InstructionDeclarationAssignValue::InstructionDeclarationAssignValue(
-        Type type, AtomIdentifier *variable, Atom *value)
-        : type(type), variable(variable), value(value) {}
+        Type type, std::unique_ptr<AtomIdentifier> variable,
+        std::unique_ptr<Atom> value)
+        : type(type), variable(std::move(variable)), value(std::move(value)) {}
 
     Type InstructionDeclarationAssignValue::getType() { return type; }
 
-    AtomIdentifier *InstructionDeclarationAssignValue::getVariable() {
+    std::unique_ptr<AtomIdentifier> &
+    InstructionDeclarationAssignValue::getVariable() {
         return variable;
     }
 
-    Atom *InstructionDeclarationAssignValue::getValue() { return value; }
+    std::unique_ptr<Atom> &InstructionDeclarationAssignValue::getValue() {
+        return value;
+    }
 
     void
     InstructionDeclarationAssignValue::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
-    InstructionAssignValue::InstructionAssignValue(AtomIdentifier *variable,
-                                                   Atom *value)
-        : variable(variable), value(value) {}
+    InstructionAssignValue::InstructionAssignValue(
+        std::unique_ptr<AtomIdentifier> variable, std::unique_ptr<Atom> value)
+        : variable(std::move(variable)), value(std::move(value)) {}
 
-    AtomIdentifier *InstructionAssignValue::getVariable() { return variable; }
+    std::unique_ptr<AtomIdentifier> &InstructionAssignValue::getVariable() {
+        return variable;
+    }
 
-    Atom *InstructionAssignValue::getValue() { return value; }
+    std::unique_ptr<Atom> &InstructionAssignValue::getValue() { return value; }
 
     void InstructionAssignValue::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
     InstructionAssignBinaryOp::InstructionAssignBinaryOp(
-        AtomIdentifier *variable, BinaryOp op, Atom *left, Atom *right)
-        : variable(variable), op(op), left(left), right(right) {}
+        std::unique_ptr<AtomIdentifier> variable, BinaryOp op,
+        std::unique_ptr<Atom> left, std::unique_ptr<Atom> right)
+        : variable(std::move(variable)), op(op), left(std::move(left)),
+          right(std::move(right)) {}
 
-    AtomIdentifier *InstructionAssignBinaryOp::getVariable() {
+    std::unique_ptr<AtomIdentifier> &InstructionAssignBinaryOp::getVariable() {
         return variable;
     }
 
     BinaryOp InstructionAssignBinaryOp::getOp() { return op; }
 
-    Atom *InstructionAssignBinaryOp::getRight() { return right; }
+    std::unique_ptr<Atom> &InstructionAssignBinaryOp::getRight() {
+        return right;
+    }
 
-    Atom *InstructionAssignBinaryOp::getLeft() { return left; }
+    std::unique_ptr<Atom> &InstructionAssignBinaryOp::getLeft() { return left; }
 
     void InstructionAssignBinaryOp::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
-    InstructionReturn::InstructionReturn(Atom *value) : value(value) {}
+    InstructionReturn::InstructionReturn(std::unique_ptr<Atom> value)
+        : value(std::move(value)) {}
 
-    Atom *InstructionReturn::getValue() { return value; }
+    std::unique_ptr<Atom> &InstructionReturn::getValue() { return value; }
 
     void InstructionReturn::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
-    InstructionCall::InstructionCall(AtomIdentifier *target) : target(target) {}
+    InstructionCall::InstructionCall(std::unique_ptr<AtomIdentifier> target)
+        : target(std::move(target)) {}
 
-    AtomIdentifier *InstructionCall::getTarget() { return target; }
+    std::unique_ptr<AtomIdentifier> &InstructionCall::getTarget() {
+        return target;
+    }
 
     void InstructionCall::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
-    InstructionCallAssign::InstructionCallAssign(AtomIdentifier *variable,
-                                                 AtomIdentifier *target)
-        : variable(variable), target(target) {}
+    InstructionCallAssign::InstructionCallAssign(
+        std::unique_ptr<AtomIdentifier> variable,
+        std::unique_ptr<AtomIdentifier> target)
+        : variable(std::move(variable)), target(std::move(target)) {}
 
-    AtomIdentifier *InstructionCallAssign::getVariable() { return variable; }
+    std::unique_ptr<AtomIdentifier> &InstructionCallAssign::getVariable() {
+        return variable;
+    }
 
-    AtomIdentifier *InstructionCallAssign::getTarget() { return target; }
+    std::unique_ptr<AtomIdentifier> &InstructionCallAssign::getTarget() {
+        return target;
+    }
 
     void InstructionCallAssign::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
