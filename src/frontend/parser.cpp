@@ -24,8 +24,8 @@ namespace frontend {
     typedef std::pair<std::vector<ast::Function>, SymbolTable> parsing_results;
 
     std::vector<std::string> parsed_tokens;
-    std::vector<Atom *> parsed_atoms;
-    std::vector<ast::Scope *> active_scopes;
+    std::vector<std::unique_ptr<Atom>> parsed_atoms;
+    std::vector<std::unique_ptr<ast::Scope>> active_scopes;
 
     //
     // Grammar
@@ -143,19 +143,17 @@ namespace frontend {
     template <> struct action<number> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            AtomLiteral *a = new AtomLiteral(std::stoull(in.string()));
-            parsed_atoms.push_back(a);
+            auto a = std::make_unique<AtomLiteral>(std::stoull(in.string()));
+            parsed_atoms.push_back(std::move(a));
         }
     };
 
     template <> struct action<identifier> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            std::string identifier = in.string();
-            uint64_t id = res.second.addSymbol(identifier);
-
-            AtomIdentifier *a = new AtomIdentifier(id);
-            parsed_atoms.push_back(a);
+            uint64_t id = res.second.addSymbol(in.string());
+            auto a = std::make_unique<AtomIdentifier>(id);
+            parsed_atoms.push_back(std::move(a));
         }
     };
 
@@ -177,136 +175,140 @@ namespace frontend {
     template <> struct action<left_brace> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            ast::Scope *scope = new ast::Scope();
-            active_scopes.push_back(scope);
+            auto scope = std::make_unique<ast::Scope>();
+            active_scopes.push_back(std::move(scope));
         }
     };
 
     template <> struct action<right_brace> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            ast::Scope *scope = active_scopes.back();
+            if (active_scopes.size() == 1) // function
+                return;
+
+            auto scope = std::move(active_scopes.back());
             active_scopes.pop_back();
-            if (active_scopes.empty()) {
-                // Hold scope for function parse
-                active_scopes.push_back(scope);
-            } else {
-                active_scopes.back()->addInstruction(scope);
-            }
+            active_scopes.back()->addInstruction(std::move(scope));
         }
     };
 
     template <> struct action<instruction_declaration> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            AtomIdentifier *variable =
-                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            auto back = std::move(parsed_atoms.back());
             parsed_atoms.pop_back();
+            AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
+            std::unique_ptr<AtomIdentifier> variable(ptr);
 
             Type type = strToType.at(parsed_tokens.back());
             parsed_tokens.pop_back();
 
-            ast::InstructionDeclaration *i =
-                new ast::InstructionDeclaration(type, variable);
-            active_scopes.back()->addInstruction(i);
+            auto i = std::make_unique<ast::InstructionDeclaration>(
+                type, std::move(variable));
+            active_scopes.back()->addInstruction(std::move(i));
         }
     };
 
     template <> struct action<instruction_declaration_assign_value> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            Atom *value = parsed_atoms.back();
+            auto value = std::move(parsed_atoms.back());
             parsed_atoms.pop_back();
 
-            AtomIdentifier *variable =
-                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            auto back = std::move(parsed_atoms.back());
             parsed_atoms.pop_back();
+            AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
+            std::unique_ptr<AtomIdentifier> variable(ptr);
 
             Type type = strToType.at(parsed_tokens.back());
             parsed_tokens.pop_back();
 
-            ast::InstructionDeclarationAssignValue *i =
-                new ast::InstructionDeclarationAssignValue(type, variable,
-                                                           value);
-            active_scopes.back()->addInstruction(i);
+            auto i = std::make_unique<ast::InstructionDeclarationAssignValue>(
+                type, std::move(variable), std::move(value));
+            active_scopes.back()->addInstruction(std::move(i));
         }
     };
 
     template <> struct action<instruction_assign_value> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            Atom *value = parsed_atoms.back();
+            auto value = std::move(parsed_atoms.back());
             parsed_atoms.pop_back();
 
-            AtomIdentifier *variable =
-                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            auto back = std::move(parsed_atoms.back());
             parsed_atoms.pop_back();
+            AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
+            std::unique_ptr<AtomIdentifier> variable(ptr);
 
-            ast::InstructionAssignValue *i =
-                new ast::InstructionAssignValue(variable, value);
-            active_scopes.back()->addInstruction(i);
+            auto i = std::make_unique<ast::InstructionAssignValue>(
+                std::move(variable), std::move(value));
+            active_scopes.back()->addInstruction(std::move(i));
         }
     };
 
     template <> struct action<instruction_assign_binary_op> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            Atom *right = parsed_atoms.back();
+            auto right = std::move(parsed_atoms.back());
             parsed_atoms.pop_back();
 
             BinaryOp op = strToBinaryOp.at(parsed_tokens.back());
             parsed_tokens.pop_back();
 
-            Atom *left = parsed_atoms.back();
+            auto left = std::move(parsed_atoms.back());
             parsed_atoms.pop_back();
 
-            AtomIdentifier *variable =
-                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            auto back = std::move(parsed_atoms.back());
             parsed_atoms.pop_back();
+            AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
+            std::unique_ptr<AtomIdentifier> variable(ptr);
 
-            ast::InstructionAssignBinaryOp *i =
-                new ast::InstructionAssignBinaryOp(variable, op, left, right);
-            active_scopes.back()->addInstruction(i);
+            auto i = std::make_unique<ast::InstructionAssignBinaryOp>(
+                std::move(variable), op, std::move(left), std::move(right));
+            active_scopes.back()->addInstruction(std::move(i));
         }
     };
 
     template <> struct action<instruction_return> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            Atom *value = parsed_atoms.back();
+            auto value = std::move(parsed_atoms.back());
             parsed_atoms.pop_back();
 
-            ast::InstructionReturn *i = new ast::InstructionReturn(value);
-            active_scopes.back()->addInstruction(i);
+            auto i = std::make_unique<ast::InstructionReturn>(std::move(value));
+            active_scopes.back()->addInstruction(std::move(i));
         }
     };
 
     template <> struct action<instruction_call> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            AtomIdentifier *target =
-                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            auto back = std::move(parsed_atoms.back());
             parsed_atoms.pop_back();
+            AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
+            std::unique_ptr<AtomIdentifier> target(ptr);
 
-            ast::InstructionCall *i = new ast::InstructionCall(target);
-            active_scopes.back()->addInstruction(i);
+            auto i = std::make_unique<ast::InstructionCall>(std::move(target));
+            active_scopes.back()->addInstruction(std::move(i));
         }
     };
 
     template <> struct action<instruction_call_assign> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            AtomIdentifier *target =
-                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            auto back = std::move(parsed_atoms.back());
             parsed_atoms.pop_back();
+            AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
+            std::unique_ptr<AtomIdentifier> target(ptr);
 
-            AtomIdentifier *variable =
-                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            back = std::move(parsed_atoms.back());
             parsed_atoms.pop_back();
+            ptr = static_cast<AtomIdentifier *>(back.release());
+            std::unique_ptr<AtomIdentifier> variable(ptr);
 
-            ast::InstructionCallAssign *i =
-                new ast::InstructionCallAssign(variable, target);
-            active_scopes.back()->addInstruction(i);
+            auto i = std::make_unique<ast::InstructionCallAssign>(
+                std::move(variable), std::move(target));
+            active_scopes.back()->addInstruction(std::move(i));
         }
     };
 
@@ -314,17 +316,19 @@ namespace frontend {
     template <> struct action<function> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            AtomIdentifier *name =
-                dynamic_cast<AtomIdentifier *>(parsed_atoms.back());
+            auto back = std::move(parsed_atoms.back());
             parsed_atoms.pop_back();
+            AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
+            std::unique_ptr<AtomIdentifier> name(ptr);
 
             Type type = strToType.at(parsed_tokens.back());
             parsed_tokens.pop_back();
 
-            ast::Scope *body = active_scopes.back();
+            auto body = std::move(active_scopes.back());
             active_scopes.pop_back();
 
-            res.first.push_back(ast::Function(type, name, body));
+            res.first.push_back(
+                ast::Function(type, std::move(name), std::move(body)));
         }
     };
 
@@ -341,7 +345,7 @@ namespace frontend {
         parsing_results res;
         pegtl::parse<grammar, action>(in, res);
 
-        ast::Program ast(res.first, res.second);
+        ast::Program ast(std::move(res.first), res.second);
         return ast;
     }
 } // namespace frontend
