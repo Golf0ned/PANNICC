@@ -6,14 +6,15 @@
 #include "frontend/utils/type.h"
 
 namespace frontend::ast {
-    Function::Function(Type type, AtomIdentifier *name, Scope *body)
-        : type(type), name(name), body(body) {}
+    Function::Function(Type type, std::unique_ptr<AtomIdentifier> name,
+                       std::unique_ptr<Scope> body)
+        : type(type), name(std::move(name)), body(std::move(body)) {}
 
     Type Function::getType() { return type; }
 
-    AtomIdentifier *Function::getName() { return name; }
+    std::unique_ptr<AtomIdentifier> &Function::getName() { return name; }
 
-    Scope *Function::getBody() { return body; }
+    std::unique_ptr<Scope> &Function::getBody() { return body; }
 
     std::string Function::toString(SymbolTable &symbol_table) {
         std::string type_str = ::frontend::toString(type);
@@ -28,7 +29,7 @@ namespace frontend::ast {
     }
 
     Program::Program(std::vector<Function> functions, SymbolTable &symbol_table)
-        : functions(functions), symbol_table(symbol_table) {}
+        : functions(std::move(functions)), symbol_table(symbol_table) {}
 
     std::vector<Function> &Program::getFunctions() { return functions; }
 
@@ -46,13 +47,6 @@ namespace frontend::ast {
         return res;
     }
 
-    Program::~Program() {
-        for (Function &f : functions) {
-            delete f.getBody();
-            delete f.getName();
-        }
-    }
-
     ToStringVisitor::ToStringVisitor(SymbolTable &symbol_table)
         : symbol_table(symbol_table), prefix(""), res("") {}
 
@@ -67,7 +61,7 @@ namespace frontend::ast {
 
         std::string old_prefix = prefix;
         prefix += "    ";
-        for (Instruction *i : s->getInstructions()) {
+        for (auto &i : s->getInstructions()) {
             i->accept(this);
             scope_res += getResult() + "\n";
         }

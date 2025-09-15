@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "frontend/utils/atom.h"
@@ -17,121 +18,105 @@ namespace frontend::ast {
 
     class Scope : public Instruction {
     public:
-        void addInstruction(Instruction *i);
-        std::vector<Instruction *> getInstructions();
+        void addInstruction(std::unique_ptr<Instruction> i);
+        std::vector<std::unique_ptr<Instruction>> &getInstructions();
         void accept(InstructionVisitor *visitor);
-        ~Scope();
 
     private:
-        std::vector<Instruction *> instructions;
+        std::vector<std::unique_ptr<Instruction>> instructions;
     };
 
     class InstructionDeclaration : public Instruction {
     public:
-        InstructionDeclaration(Type type, AtomIdentifier *variable);
+        InstructionDeclaration(Type type,
+                               std::unique_ptr<AtomIdentifier> variable);
         Type getType();
-        AtomIdentifier *getVariable();
+        std::unique_ptr<AtomIdentifier> &getVariable();
         void accept(InstructionVisitor *visitor);
-        ~InstructionDeclaration() { delete variable; }
 
     private:
         Type type;
-        AtomIdentifier *variable;
+        std::unique_ptr<AtomIdentifier> variable;
     };
 
     class InstructionDeclarationAssignValue : public Instruction {
     public:
-        InstructionDeclarationAssignValue(Type type, AtomIdentifier *variable,
-                                          Atom *value);
+        InstructionDeclarationAssignValue(
+            Type type, std::unique_ptr<AtomIdentifier> variable,
+            std::unique_ptr<Atom> value);
         Type getType();
-        AtomIdentifier *getVariable();
-        Atom *getValue();
+        std::unique_ptr<AtomIdentifier> &getVariable();
+        std::unique_ptr<Atom> &getValue();
         void accept(InstructionVisitor *visitor);
-        ~InstructionDeclarationAssignValue() {
-            delete variable;
-            delete value;
-        }
 
     private:
         Type type;
-        AtomIdentifier *variable;
-        Atom *value;
+        std::unique_ptr<AtomIdentifier> variable;
+        std::unique_ptr<Atom> value;
     };
 
     class InstructionAssignValue : public Instruction {
     public:
-        InstructionAssignValue(AtomIdentifier *variable, Atom *value);
-        AtomIdentifier *getVariable();
-        Atom *getValue();
+        InstructionAssignValue(std::unique_ptr<AtomIdentifier> variable,
+                               std::unique_ptr<Atom> value);
+        std::unique_ptr<AtomIdentifier> &getVariable();
+        std::unique_ptr<Atom> &getValue();
         void accept(InstructionVisitor *visitor);
-        ~InstructionAssignValue() {
-            delete variable;
-            delete value;
-        }
 
     private:
-        AtomIdentifier *variable;
-        Atom *value;
+        std::unique_ptr<AtomIdentifier> variable;
+        std::unique_ptr<Atom> value;
     };
 
     class InstructionAssignBinaryOp : public Instruction {
     public:
-        InstructionAssignBinaryOp(AtomIdentifier *variable, BinaryOp op,
-                                  Atom *left, Atom *right);
-        AtomIdentifier *getVariable();
+        InstructionAssignBinaryOp(std::unique_ptr<AtomIdentifier> variable,
+                                  BinaryOp op, std::unique_ptr<Atom> left,
+                                  std::unique_ptr<Atom> right);
+        std::unique_ptr<AtomIdentifier> &getVariable();
         BinaryOp getOp();
-        Atom *getLeft();
-        Atom *getRight();
+        std::unique_ptr<Atom> &getLeft();
+        std::unique_ptr<Atom> &getRight();
         void accept(InstructionVisitor *visitor);
-        ~InstructionAssignBinaryOp() {
-            delete variable;
-            delete left;
-            delete right;
-        }
 
     private:
-        AtomIdentifier *variable;
+        std::unique_ptr<AtomIdentifier> variable;
         BinaryOp op;
-        Atom *left;
-        Atom *right;
+        std::unique_ptr<Atom> left;
+        std::unique_ptr<Atom> right;
     };
 
     class InstructionReturn : public Instruction {
     public:
-        InstructionReturn(Atom *value);
-        Atom *getValue();
+        InstructionReturn(std::unique_ptr<Atom> value);
+        std::unique_ptr<Atom> &getValue();
         void accept(InstructionVisitor *visitor);
-        ~InstructionReturn() { delete value; }
 
     private:
-        Atom *value;
+        std::unique_ptr<Atom> value;
     };
 
     class InstructionCall : public Instruction {
     public:
-        InstructionCall(AtomIdentifier *target);
-        AtomIdentifier *getTarget();
+        InstructionCall(std::unique_ptr<AtomIdentifier> target);
+        std::unique_ptr<AtomIdentifier> &getTarget();
         void accept(InstructionVisitor *visitor);
-        ~InstructionCall() { delete target; }
 
     private:
-        AtomIdentifier *target;
+        std::unique_ptr<AtomIdentifier> target;
     };
 
     class InstructionCallAssign : public Instruction {
     public:
-        InstructionCallAssign(AtomIdentifier *variable, AtomIdentifier *target);
-        AtomIdentifier *getVariable();
-        AtomIdentifier *getTarget();
+        InstructionCallAssign(std::unique_ptr<AtomIdentifier> variable,
+                              std::unique_ptr<AtomIdentifier> target);
+        std::unique_ptr<AtomIdentifier> &getVariable();
+        std::unique_ptr<AtomIdentifier> &getTarget();
         void accept(InstructionVisitor *visitor);
-        ~InstructionCallAssign() {
-            delete variable;
-            delete target;
-        }
 
     private:
-        AtomIdentifier *variable;
-        AtomIdentifier *target;
+        std::unique_ptr<AtomIdentifier> variable;
+        std::unique_ptr<AtomIdentifier> target;
     };
 
     class InstructionVisitor {
