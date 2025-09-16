@@ -1,15 +1,17 @@
 #include "frontend/hir/hir.h"
 
 namespace frontend::hir {
-    Function::Function(Type type, AtomIdentifier *name,
-                       std::vector<Instruction *> body)
-        : type(type), name(name), body(body) {}
+    Function::Function(Type type, std::unique_ptr<AtomIdentifier> name,
+                       std::vector<std::unique_ptr<Instruction>> body)
+        : type(type), name(std::move(name)), body(std::move(body)) {}
 
     Type Function::getType() { return type; }
 
-    AtomIdentifier *Function::getName() { return name; }
+    std::unique_ptr<AtomIdentifier> &Function::getName() { return name; }
 
-    std::vector<Instruction *> Function::getBody() { return body; }
+    std::vector<std::unique_ptr<Instruction>> &Function::getBody() {
+        return body;
+    }
 
     std::string Function::toString(SymbolTable &symbol_table) {
         std::string type_str = ::frontend::toString(type);
@@ -17,7 +19,7 @@ namespace frontend::hir {
 
         std::string res = type_str + " " + name_str + "() {\n";
         ToStringVisitor visitor = ToStringVisitor(symbol_table);
-        for (Instruction *i : body) {
+        for (auto &i : body) {
             i->accept(&visitor);
             res += visitor.getResult() + '\n';
         }
@@ -27,7 +29,7 @@ namespace frontend::hir {
     }
 
     Program::Program(std::vector<Function> functions, SymbolTable &symbol_table)
-        : functions(functions), symbol_table(symbol_table) {}
+        : functions(std::move(functions)), symbol_table(symbol_table) {}
 
     std::vector<Function> &Program::getFunctions() { return functions; }
 
@@ -43,15 +45,6 @@ namespace frontend::hir {
         }
 
         return res;
-    }
-
-    Program::~Program() {
-        for (Function &f : functions) {
-            for (auto i : f.getBody()) {
-                delete i;
-            }
-            delete f.getName();
-        }
     }
 
     ToStringVisitor::ToStringVisitor(SymbolTable &symbol_table)
