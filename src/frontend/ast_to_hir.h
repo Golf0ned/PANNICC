@@ -15,7 +15,7 @@ namespace frontend {
     public:
         ASTToHIRVisitor(SymbolTable old_table, SymbolTable &new_table);
 
-        std::vector<hir::Instruction *> getResult();
+        std::vector<std::unique_ptr<hir::Instruction>> getResult();
         void clearResult();
 
         void visit(ast::Instruction *i) override;
@@ -28,17 +28,19 @@ namespace frontend {
         void visit(ast::InstructionCall *i) override;
         void visit(ast::InstructionCallAssign *i) override;
 
-        AtomIdentifier *createScopedIdentifier(std::string symbol,
-                                               uint64_t scope);
-        AtomIdentifier *createUnscopedIdentifier(std::string symbol);
-        AtomIdentifier *resolveDeclarationScope(AtomIdentifier *a);
-        AtomIdentifier *resolveUseScope(AtomIdentifier *a);
-        Atom *resolveDeclarationScope(Atom *a);
-        Atom *resolveUseScope(Atom *a);
-        void addReturnIfMissing(ast::Function f);
+        std::unique_ptr<AtomIdentifier>
+        createScopedIdentifier(std::string symbol, uint64_t scope);
+        std::unique_ptr<AtomIdentifier>
+        createUnscopedIdentifier(std::string symbol);
+        std::unique_ptr<AtomIdentifier>
+        resolveDeclarationScope(AtomIdentifier *a);
+        std::unique_ptr<Atom> resolveDeclarationScope(Atom *a);
+        std::unique_ptr<AtomIdentifier> resolveUseScope(AtomIdentifier *a);
+        std::unique_ptr<Atom> resolveUseScope(Atom *a);
+        void addReturnIfMissing(ast::Function &f);
 
     private:
-        std::vector<hir::Instruction *> result;
+        std::vector<std::unique_ptr<hir::Instruction>> result;
         uint64_t cur_scope;
         std::vector<std::unordered_set<std::string>> scope_mappings;
         SymbolTable old_table;
