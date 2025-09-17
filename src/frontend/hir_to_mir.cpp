@@ -20,12 +20,12 @@ namespace frontend {
             mir::Type function_type = toMir(f.getType());
 
             HIRToMIRVisitor visitor;
-            for (auto i : f.getBody()) {
+            for (auto &i : f.getBody()) {
                 i->accept(&visitor);
             }
             std::vector<mir::BasicBlock> basic_blocks = visitor.getResult();
 
-            auto nameAtom = f.getName();
+            auto &nameAtom = f.getName();
             std::string name = nameAtom->toString(hir.getSymbolTable());
             functions.emplace_back(function_type, name,
                                    std::move(basic_blocks));
@@ -65,7 +65,7 @@ namespace frontend {
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionAssignValue *i) {
-        mir::Value *value = resolveAtom(i->getValue());
+        auto value = resolveAtom(i->getValue().get());
         mir::InstructionAlloca *ptr =
             value_mappings.at(i->getVariable()->getValue());
         auto store = std::make_unique<mir::InstructionStore>(value, ptr);
@@ -74,8 +74,8 @@ namespace frontend {
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionAssignBinaryOp *i) {
-        mir::Value *left = resolveAtom(i->getLeft());
-        mir::Value *right = resolveAtom(i->getRight());
+        mir::Value *left = resolveAtom(i->getLeft().get());
+        mir::Value *right = resolveAtom(i->getRight().get());
         mir::BinaryOp op = toMir(i->getOp());
         auto binOp = std::make_unique<mir::InstructionBinaryOp>(
             mir::Type::I64, op, left, right);
@@ -89,7 +89,7 @@ namespace frontend {
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionReturn *i) {
-        mir::Value *retVal = resolveAtom(i->getValue());
+        mir::Value *retVal = resolveAtom(i->getValue().get());
         std::unique_ptr<mir::TerminatorReturn> ret =
             std::make_unique<mir::TerminatorReturn>(retVal);
 
