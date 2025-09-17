@@ -6,6 +6,7 @@
 namespace middleend::mir {
     class InstructionVisitor;
     class Function;
+    class BasicBlock;
 
     class Instruction {
     public:
@@ -72,6 +73,15 @@ namespace middleend::mir {
         InstructionAlloca *ptr;
     };
 
+    class InstructionPhi : public Instruction, public Value {
+    public:
+        void addPredecessor(BasicBlock *bb, Value *v);
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        std::unordered_map<BasicBlock *, Value *> predecessors;
+    };
+
     class Terminator : public Instruction {
     public:
         virtual void accept(InstructionVisitor *visitor) = 0;
@@ -89,6 +99,27 @@ namespace middleend::mir {
         Value *value;
     };
 
+    class TerminatorBranch : public Terminator {
+    public:
+        TerminatorBranch(BasicBlock *successor);
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        BasicBlock *successor;
+    };
+
+    class TerminatorCondBranch : public Terminator {
+    public:
+        TerminatorCondBranch(Value *cond, BasicBlock *t_successor,
+                             BasicBlock *f_successor);
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        Value *cond;
+        BasicBlock *t_successor;
+        BasicBlock *f_successor;
+    };
+
     class InstructionVisitor {
     public:
         virtual void visit(InstructionBinaryOp *i) = 0;
@@ -96,7 +127,10 @@ namespace middleend::mir {
         virtual void visit(InstructionAlloca *i) = 0;
         virtual void visit(InstructionLoad *i) = 0;
         virtual void visit(InstructionStore *i) = 0;
+        virtual void visit(InstructionPhi *i) = 0;
 
         virtual void visit(TerminatorReturn *t) = 0;
+        virtual void visit(TerminatorBranch *t) = 0;
+        virtual void visit(TerminatorCondBranch *t) = 0;
     };
 } // namespace middleend::mir
