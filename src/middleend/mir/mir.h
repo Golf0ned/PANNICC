@@ -65,8 +65,11 @@ namespace middleend::mir {
         virtual void visit(InstructionAlloca *i);
         virtual void visit(InstructionLoad *i);
         virtual void visit(InstructionStore *i);
+        virtual void visit(InstructionPhi *i);
 
         virtual void visit(TerminatorReturn *t);
+        virtual void visit(TerminatorBranch *t);
+        virtual void visit(TerminatorCondBranch *t);
 
     private:
         std::string result;
