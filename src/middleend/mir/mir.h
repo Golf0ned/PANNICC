@@ -15,14 +15,16 @@ namespace middleend::mir {
                    std::unique_ptr<Terminator> terminator,
                    std::vector<std::unique_ptr<Literal>> literals);
         std::vector<std::unique_ptr<Instruction>> &getInstructions();
-        std::vector<BasicBlock *> &getDescendants();
+        std::vector<BasicBlock *> &getPredecessors();
+        std::vector<BasicBlock *> &getSuccessors();
         std::string toString(uint64_t &counter, bool isEntry = false);
 
     private:
         std::vector<std::unique_ptr<Instruction>> body;
         std::vector<std::unique_ptr<Literal>> literals;
         std::unique_ptr<Terminator> terminator;
-        std::vector<BasicBlock *> descendants;
+        std::vector<BasicBlock *> predecessors;
+        std::vector<BasicBlock *> successors;
     };
 
     class Function {
