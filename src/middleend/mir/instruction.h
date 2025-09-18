@@ -75,7 +75,7 @@ namespace middleend::mir {
 
     class InstructionPhi : public Instruction, public Value {
     public:
-        void addPredecessor(BasicBlock *bb, Value *v);
+        std::unordered_map<BasicBlock *, Value *> &getPredecessors();
         void accept(InstructionVisitor *visitor);
 
     private:

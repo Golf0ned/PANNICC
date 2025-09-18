@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "middleend/mir/instruction.h"
 #include "middleend/mir/operator.h"
 #include "middleend/mir/value.h"
@@ -69,6 +71,15 @@ namespace middleend::mir {
         visitor->visit(this);
     }
 
+    std::unordered_map<BasicBlock *, Value *> &
+    InstructionPhi::getPredecessors() {
+        return predecessors;
+    }
+
+    void InstructionPhi::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
+
     TerminatorReturn::TerminatorReturn(Value *value) : value(value) {
         value->getUses().push_back(this);
     }
@@ -78,6 +89,26 @@ namespace middleend::mir {
     void TerminatorReturn::setValue(Value *newVal) { value = newVal; }
 
     void TerminatorReturn::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
+
+    TerminatorBranch::TerminatorBranch(BasicBlock *successor)
+        : successor(successor) {}
+
+    void TerminatorBranch::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
+
+    TerminatorCondBranch::TerminatorCondBranch(Value *cond,
+                                               BasicBlock *t_successor,
+                                               BasicBlock *f_successor)
+        : t_successor(t_successor), f_successor(f_successor) {
+        if (cond->getType() != Type::I1)
+            throw std::invalid_argument("TerminatorCondBranch cond must be i1");
+        this->cond = cond;
+    }
+
+    void TerminatorCondBranch::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 } // namespace middleend::mir
