@@ -165,7 +165,21 @@ namespace middleend::mir {
         result = "store " + value + ", " + ptr;
     }
 
-    void ToStringVisitor::visit(InstructionPhi *i) {}
+    void ToStringVisitor::visit(InstructionPhi *i) {
+        std::string var = valueToString(i);
+        std::string type = toString(i->getType());
+
+        result = var + " = phi " + type + ' ';
+        auto pairs = i->getPredecessors();
+        for (auto iter = pairs.begin(); iter != pairs.end(); iter++) {
+            if (iter != pairs.begin())
+                result += ", ";
+            std::string value = valueToString(iter->second);
+            std::string bb_name =
+                std::to_string(basic_block_ids.at(iter->first));
+            result += "[ " + value + ", " + bb_name + " ]";
+        }
+    }
 
     void ToStringVisitor::visit(TerminatorReturn *t) {
         std::string value = valueToTypedString(t->getValue());
@@ -173,7 +187,17 @@ namespace middleend::mir {
         result = "ret " + value;
     }
 
-    void ToStringVisitor::visit(TerminatorBranch *t) {}
+    void ToStringVisitor::visit(TerminatorBranch *t) {
+        std::string bb = std::to_string(basic_block_ids.at(t->getSuccessor()));
+        result = "br label " + bb;
+    }
 
-    void ToStringVisitor::visit(TerminatorCondBranch *t) {}
+    void ToStringVisitor::visit(TerminatorCondBranch *t) {
+        std::string cond = valueToTypedString(t->getCond());
+        std::string bb_true =
+            std::to_string(basic_block_ids.at(t->getTSuccessor()));
+        std::string bb_false =
+            std::to_string(basic_block_ids.at(t->getFSuccessor()));
+        result = "br " + cond + ", label " + bb_true + ", label " + bb_false;
+    }
 } // namespace middleend::mir
