@@ -135,18 +135,21 @@ namespace middleend::mir {
 
         result = var + " = call " + f_type + " @" + f_name;
     }
+
     void ToStringVisitor::visit(InstructionAlloca *i) {
         std::string var = valueToString(i);
         std::string alloc_type = toString(i->getAllocType());
 
         result = var + " = alloca " + alloc_type;
     }
+
     void ToStringVisitor::visit(InstructionLoad *i) {
         std::string var = valueToString(i);
         std::string ptr = valueToString(i->getPtr());
 
         result = var + " = load " + ptr;
     }
+
     void ToStringVisitor::visit(InstructionStore *i) {
         std::string value = valueToString(i->getValue());
         std::string ptr = valueToString(i->getPtr());
@@ -154,9 +157,15 @@ namespace middleend::mir {
         result = "store " + value + ", " + ptr;
     }
 
+    void ToStringVisitor::visit(InstructionPhi *i) {}
+
     void ToStringVisitor::visit(TerminatorReturn *t) {
         std::string value = valueToString(t->getValue());
 
         result = "ret " + value;
     }
+
+    void ToStringVisitor::visit(TerminatorBranch *t) {}
+
+    void ToStringVisitor::visit(TerminatorCondBranch *t) {}
 } // namespace middleend::mir

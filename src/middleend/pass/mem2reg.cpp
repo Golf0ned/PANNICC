@@ -112,9 +112,15 @@ namespace middleend {
             i->setValue(newValue);
     }
 
+    void ReplaceUseVisitor::visit(mir::InstructionPhi *i) {}
+
     void ReplaceUseVisitor::visit(mir::TerminatorReturn *t) {
         if (t->getValue() == oldValue) {
             t->setValue(newValue);
         }
     }
+
+    void ReplaceUseVisitor::visit(mir::TerminatorBranch *t) {}
+
+    void ReplaceUseVisitor::visit(mir::TerminatorCondBranch *t) {}
 } // namespace middleend
