@@ -16,6 +16,10 @@ namespace middleend::mir {
         return body;
     }
 
+    std::unique_ptr<Terminator> &BasicBlock::getTerminator() {
+        return terminator;
+    }
+
     std::vector<BasicBlock *> &BasicBlock::getPredecessors() {
         return predecessors;
     }
@@ -24,13 +28,16 @@ namespace middleend::mir {
         return successors;
     }
 
-    std::string BasicBlock::toString(uint64_t &counter, bool isEntry) {
-        ToStringVisitor visitor(counter);
+    std::string BasicBlock::toString(
+        const std::unordered_map<BasicBlock *, uint64_t> &basic_block_ids,
+        const std::unordered_map<Value *, uint64_t> &instruction_ids) {
+        std::string name = basic_block_ids.at(this) == -1
+                               ? "entry"
+                               : std::to_string(basic_block_ids.at(this));
 
-        std::string name =
-            isEntry ? "entry" : std::to_string(visitor.getNextIdentifier());
         std::string res = name + ":\n";
 
+        ToStringVisitor visitor(basic_block_ids, instruction_ids);
         for (auto &i : body) {
             i->accept(&visitor);
             res += "  " + visitor.getResult() + '\n';
@@ -58,12 +65,27 @@ namespace middleend::mir {
                           name + "() {\n";
 
         uint64_t counter = 0;
+        std::unordered_map<BasicBlock *, uint64_t> basic_block_ids;
+        std::unordered_map<Value *, uint64_t> instruction_ids;
+        for (auto &bb : basic_blocks) {
+            basic_block_ids[&bb] =
+                bb.getPredecessors().empty() ? -1 : counter++;
+
+            for (auto &i : bb.getInstructions()) {
+                auto v = dynamic_cast<Value *>(i.get());
+                if (v)
+                    instruction_ids[v] = counter++;
+            }
+
+            auto t = dynamic_cast<Value *>(bb.getTerminator().get());
+            instruction_ids[t] = counter++;
+        }
+
         for (auto iter = basic_blocks.begin(); iter != basic_blocks.end();
              iter++) {
             if (iter != basic_blocks.begin())
-                res += "\n\n" + iter->toString(counter);
-            else
-                res += iter->toString(counter, true);
+                res += "\n\n";
+            res += iter->toString(basic_block_ids, instruction_ids);
         }
         res += "\n}";
         return res;
@@ -85,32 +107,12 @@ namespace middleend::mir {
         return res;
     }
 
-    ToStringVisitor::ToStringVisitor(uint64_t &counter)
-        : result(), counter(counter) {}
+    ToStringVisitor::ToStringVisitor(
+        const std::unordered_map<BasicBlock *, uint64_t> &basic_block_ids,
+        const std::unordered_map<Value *, uint64_t> &instruction_ids)
+        : basic_block_ids(basic_block_ids), instruction_ids(instruction_ids) {}
 
     std::string ToStringVisitor::getResult() { return result; }
-
-    uint64_t ToStringVisitor::resolveBasicBlock(BasicBlock *basic_block) {
-        auto iter = basic_block_ids.find(basic_block);
-        if (iter != basic_block_ids.end())
-            return iter->second;
-
-        uint64_t new_id = counter++;
-        basic_block_ids[basic_block] = new_id;
-        return new_id;
-    }
-
-    uint64_t ToStringVisitor::resolveInstruction(Instruction *instruction) {
-        auto iter = instruction_ids.find(instruction);
-        if (iter != instruction_ids.end())
-            return iter->second;
-
-        uint64_t new_id = counter++;
-        instruction_ids[instruction] = new_id;
-        return new_id;
-    }
-
-    uint64_t ToStringVisitor::getNextIdentifier() { return counter++; }
 
     std::string ToStringVisitor::valueToString(Value *v) {
         std::string v_type = toString(v->getType());
@@ -118,8 +120,7 @@ namespace middleend::mir {
         if (l)
             return std::to_string(l->getValue());
         // TODO: function params
-        return "%" + std::to_string(resolveInstruction(
-                         reinterpret_cast<Instruction *>(v)));
+        return "%" + std::to_string(instruction_ids.at(v));
     }
 
     std::string ToStringVisitor::valueToTypedString(Value *v) {
