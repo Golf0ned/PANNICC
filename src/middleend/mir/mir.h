@@ -59,6 +59,7 @@ namespace middleend::mir {
         uint64_t resolveInstruction(Instruction *instruction);
         uint64_t getNextIdentifier();
         std::string valueToString(Value *v);
+        std::string valueToTypedString(Value *v);
 
         virtual void visit(InstructionBinaryOp *i);
         virtual void visit(InstructionCall *i);

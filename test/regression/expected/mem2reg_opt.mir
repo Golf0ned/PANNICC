@@ -5,16 +5,16 @@ entry:
 
 define i64 @mem2reg_basic() {
 entry:
-  i64 %0 = add i64 1, i64 2
-  i64 %1 = sub i64 3, i64 1
-  i64 %2 = mul i64 %0, i64 %1
-  i64 %3 = and i64 %0, i64 1
-  i64 %4 = call i64 @fun_call
+  %0 = add i64 1, i64 2
+  %1 = sub i64 3, i64 1
+  %2 = mul i64 %0, i64 %1
+  %3 = and i64 %0, i64 1
+  %4 = call i64 @fun_call
   ret i64 %3
 }
 
 define i64 @mem2reg_negative() {
 entry:
-  i64 %0 = add i64 6, i64 7
+  %0 = add i64 6, i64 7
   ret i64 %0
 }

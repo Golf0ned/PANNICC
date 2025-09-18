@@ -5,43 +5,43 @@ entry:
 
 define i64 @mem2reg_basic() {
 entry:
-  ptr %0 = alloca i64
+  %0 = alloca i64
   store i64 1, ptr %0
-  ptr %1 = alloca i64
+  %1 = alloca i64
   store i64 2, ptr %1
-  ptr %2 = alloca i64
+  %2 = alloca i64
   store i64 3, ptr %2
-  ptr %3 = alloca i64
-  i64 %4 = load ptr %0
-  i64 %5 = load ptr %1
-  i64 %6 = add i64 %4, i64 %5
+  %3 = alloca i64
+  %4 = load ptr %0
+  %5 = load ptr %1
+  %6 = add i64 %4, i64 %5
   store i64 %6, ptr %3
-  ptr %7 = alloca i64
-  i64 %8 = load ptr %2
-  i64 %9 = load ptr %0
-  i64 %10 = sub i64 %8, i64 %9
+  %7 = alloca i64
+  %8 = load ptr %2
+  %9 = load ptr %0
+  %10 = sub i64 %8, i64 %9
   store i64 %10, ptr %7
-  ptr %11 = alloca i64
-  i64 %12 = load ptr %3
-  i64 %13 = load ptr %7
-  i64 %14 = mul i64 %12, i64 %13
+  %11 = alloca i64
+  %12 = load ptr %3
+  %13 = load ptr %7
+  %14 = mul i64 %12, i64 %13
   store i64 %14, ptr %11
-  ptr %15 = alloca i64
-  i64 %16 = load ptr %3
-  i64 %17 = and i64 %16, i64 1
+  %15 = alloca i64
+  %16 = load ptr %3
+  %17 = and i64 %16, i64 1
   store i64 %17, ptr %15
-  ptr %18 = alloca i64
-  i64 %19 = call i64 @fun_call
+  %18 = alloca i64
+  %19 = call i64 @fun_call
   store i64 %19, ptr %18
-  i64 %20 = load ptr %15
+  %20 = load ptr %15
   ret i64 %20
 }
 
 define i64 @mem2reg_negative() {
 entry:
-  ptr %0 = alloca i64
-  i64 %1 = add i64 6, i64 7
+  %0 = alloca i64
+  %1 = add i64 6, i64 7
   store i64 %1, ptr %0
-  i64 %2 = load ptr %0
+  %2 = load ptr %0
   ret i64 %2
 }
