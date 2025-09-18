@@ -81,7 +81,7 @@ namespace middleend {
                     }
                 }
 
-                for (auto &next : cur->getDescendants()) {
+                for (auto &next : cur->getSuccessors()) {
                     worklist.push_back(next);
                 }
 
