@@ -15,9 +15,12 @@ namespace middleend::mir {
                    std::unique_ptr<Terminator> terminator,
                    std::vector<std::unique_ptr<Literal>> literals);
         std::vector<std::unique_ptr<Instruction>> &getInstructions();
+        std::unique_ptr<Terminator> &getTerminator();
         std::vector<BasicBlock *> &getPredecessors();
         std::vector<BasicBlock *> &getSuccessors();
-        std::string toString(uint64_t &counter, bool isEntry = false);
+        std::string toString(
+            const std::unordered_map<BasicBlock *, uint64_t> &basic_block_ids,
+            const std::unordered_map<Value *, uint64_t> &instruction_ids);
 
     private:
         std::vector<std::unique_ptr<Instruction>> body;
@@ -54,12 +57,11 @@ namespace middleend::mir {
 
     class ToStringVisitor : public InstructionVisitor {
     public:
-        ToStringVisitor(uint64_t &counter);
+        ToStringVisitor(
+            const std::unordered_map<BasicBlock *, uint64_t> &basic_block_ids,
+            const std::unordered_map<Value *, uint64_t> &instruction_ids);
         std::string getResult();
 
-        uint64_t resolveBasicBlock(BasicBlock *basic_block);
-        uint64_t resolveInstruction(Instruction *instruction);
-        uint64_t getNextIdentifier();
         std::string valueToString(Value *v);
         std::string valueToTypedString(Value *v);
 
@@ -76,8 +78,7 @@ namespace middleend::mir {
 
     private:
         std::string result;
-        uint64_t &counter;
         std::unordered_map<BasicBlock *, uint64_t> basic_block_ids;
-        std::unordered_map<Instruction *, uint64_t> instruction_ids;
+        std::unordered_map<Value *, uint64_t> instruction_ids;
     };
 } // namespace middleend::mir
