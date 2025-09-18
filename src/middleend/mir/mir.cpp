@@ -112,18 +112,21 @@ namespace middleend::mir {
         std::string v_type = toString(v->getType());
         Literal *l = dynamic_cast<Literal *>(v);
         if (l)
-            return v_type + ' ' + std::to_string(l->getValue());
+            return std::to_string(l->getValue());
         // TODO: function params
-        return v_type + " %" +
-               std::to_string(
-                   resolveInstruction(reinterpret_cast<Instruction *>(v)));
+        return "%" + std::to_string(resolveInstruction(
+                         reinterpret_cast<Instruction *>(v)));
+    }
+
+    std::string ToStringVisitor::valueToTypedString(Value *v) {
+        return toString(v->getType()) + ' ' + valueToString(v);
     }
 
     void ToStringVisitor::visit(InstructionBinaryOp *i) {
         std::string var = valueToString(i);
         std::string op = toString(i->getOp());
-        std::string left = valueToString(i->getLeft());
-        std::string right = valueToString(i->getRight());
+        std::string left = valueToTypedString(i->getLeft());
+        std::string right = valueToTypedString(i->getRight());
 
         result = var + " = " + op + ' ' + left + ", " + right;
     }
@@ -145,14 +148,14 @@ namespace middleend::mir {
 
     void ToStringVisitor::visit(InstructionLoad *i) {
         std::string var = valueToString(i);
-        std::string ptr = valueToString(i->getPtr());
+        std::string ptr = valueToTypedString(i->getPtr());
 
         result = var + " = load " + ptr;
     }
 
     void ToStringVisitor::visit(InstructionStore *i) {
-        std::string value = valueToString(i->getValue());
-        std::string ptr = valueToString(i->getPtr());
+        std::string value = valueToTypedString(i->getValue());
+        std::string ptr = valueToTypedString(i->getPtr());
 
         result = "store " + value + ", " + ptr;
     }
@@ -160,7 +163,7 @@ namespace middleend::mir {
     void ToStringVisitor::visit(InstructionPhi *i) {}
 
     void ToStringVisitor::visit(TerminatorReturn *t) {
-        std::string value = valueToString(t->getValue());
+        std::string value = valueToTypedString(t->getValue());
 
         result = "ret " + value;
     }
