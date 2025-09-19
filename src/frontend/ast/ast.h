@@ -42,6 +42,8 @@ namespace frontend::ast {
         ToStringVisitor(SymbolTable &symbol_table);
         std::string getResult();
 
+        void convertSubexpression(Instruction *i);
+
         void visit(Instruction *i) override;
         void visit(Scope *s) override;
         void visit(InstructionDeclaration *i) override;
@@ -51,6 +53,7 @@ namespace frontend::ast {
         void visit(InstructionReturn *i) override;
         void visit(InstructionCall *i) override;
         void visit(InstructionCallAssign *i) override;
+        void visit(InstructionIf *i) override;
 
     private:
         SymbolTable symbol_table;

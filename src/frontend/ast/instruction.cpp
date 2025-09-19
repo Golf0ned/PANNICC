@@ -118,4 +118,24 @@ namespace frontend::ast {
     void InstructionCallAssign::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
+
+    InstructionIf::InstructionIf(std::unique_ptr<Atom> cond,
+                                 std::unique_ptr<Instruction> t_branch,
+                                 std::unique_ptr<Instruction> f_branch)
+        : cond(std::move(cond)), t_branch(std::move(t_branch)),
+          f_branch(std::move(f_branch)) {}
+
+    std::unique_ptr<Atom> &InstructionIf::getCond() { return cond; }
+
+    std::unique_ptr<Instruction> &InstructionIf::getTBranch() {
+        return t_branch;
+    }
+
+    std::unique_ptr<Instruction> &InstructionIf::getFBranch() {
+        return f_branch;
+    }
+
+    void InstructionIf::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
 } // namespace frontend::ast
