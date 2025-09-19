@@ -36,6 +36,8 @@ namespace frontend {
 
     // Tokens
     struct keyword_return : TAO_PEGTL_STRING("return") {};
+    struct keyword_if : TAO_PEGTL_STRING("if") {};
+    struct keyword_else : TAO_PEGTL_STRING("else") {};
 
     struct keyword_int64_t : TAO_PEGTL_STRING("int64_t") {};
 
@@ -77,6 +79,9 @@ namespace frontend {
     struct type : pegtl::sor<keyword_int64_t> {};
 
     // Instructions
+    struct instruction_any;
+    struct scope;
+
     struct instruction_declaration
         : pegtl::seq<type, ignorable, identifier, ignorable, semicolon> {};
 
@@ -106,10 +111,20 @@ namespace frontend {
                      // TODO: parameter list
                      right_paren, ignorable, semicolon> {};
 
-    struct scope; // (Forward declaring scope)
+    // TODO: do this properly
+    struct instruction_if
+        : pegtl::seq<keyword_if, ignorable, left_paren, ignorable, value,
+                     ignorable, right_paren, ignorable, instruction_any> {};
+
+    struct instruction_if_else
+        : pegtl::seq<keyword_if, ignorable, left_paren, ignorable, value,
+                     ignorable, right_paren, ignorable, instruction_any,
+                     ignorable, keyword_else, ignorable, instruction_any> {};
 
     struct instruction_any
         : pegtl::sor<pegtl_apply_if_match<scope>,
+                     pegtl_apply_if_match<instruction_if_else>,
+                     pegtl_apply_if_match<instruction_if>,
                      pegtl_apply_if_match<instruction_return>,
                      pegtl_apply_if_match<instruction_call>,
                      pegtl_apply_if_match<instruction_call_assign>,
@@ -308,6 +323,42 @@ namespace frontend {
 
             auto i = std::make_unique<ast::InstructionCallAssign>(
                 std::move(variable), std::move(target));
+            active_scopes.back()->addInstruction(std::move(i));
+        }
+    };
+
+    template <> struct action<instruction_if> {
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            auto cond = std::move(parsed_atoms.back());
+            parsed_atoms.pop_back();
+
+            auto t_branch =
+                std::move(active_scopes.back()->getInstructions().back());
+            active_scopes.back()->getInstructions().pop_back();
+
+            auto i = std::make_unique<ast::InstructionIf>(
+                std::move(cond), std::move(t_branch), nullptr);
+            active_scopes.back()->addInstruction(std::move(i));
+        }
+    };
+
+    template <> struct action<instruction_if_else> {
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            auto cond = std::move(parsed_atoms.back());
+            parsed_atoms.pop_back();
+
+            auto f_branch =
+                std::move(active_scopes.back()->getInstructions().back());
+            active_scopes.back()->getInstructions().pop_back();
+
+            auto t_branch =
+                std::move(active_scopes.back()->getInstructions().back());
+            active_scopes.back()->getInstructions().pop_back();
+
+            auto i = std::make_unique<ast::InstructionIf>(
+                std::move(cond), std::move(t_branch), std::move(f_branch));
             active_scopes.back()->addInstruction(std::move(i));
         }
     };
