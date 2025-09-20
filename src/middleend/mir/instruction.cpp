@@ -97,6 +97,10 @@ namespace middleend::mir {
 
     BasicBlock *TerminatorBranch::getSuccessor() { return successor; }
 
+    void TerminatorBranch::setSuccessor(BasicBlock *successor) {
+        this->successor = successor;
+    }
+
     void TerminatorBranch::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
@@ -115,6 +119,14 @@ namespace middleend::mir {
     BasicBlock *TerminatorCondBranch::getTSuccessor() { return t_successor; };
 
     BasicBlock *TerminatorCondBranch::getFSuccessor() { return f_successor; };
+
+    void TerminatorCondBranch::setTSuccessor(BasicBlock *t_successor) {
+        this->t_successor = t_successor;
+    }
+
+    void TerminatorCondBranch::setFSuccessor(BasicBlock *f_successor) {
+        this->f_successor = f_successor;
+    }
 
     void TerminatorCondBranch::accept(InstructionVisitor *visitor) {
         visitor->visit(this);

@@ -103,6 +103,7 @@ namespace middleend::mir {
     public:
         TerminatorBranch(BasicBlock *successor);
         BasicBlock *getSuccessor();
+        void setSuccessor(BasicBlock *successor);
         void accept(InstructionVisitor *visitor);
 
     private:
@@ -116,6 +117,8 @@ namespace middleend::mir {
         Value *getCond();
         BasicBlock *getTSuccessor();
         BasicBlock *getFSuccessor();
+        void setTSuccessor(BasicBlock *t_successor);
+        void setFSuccessor(BasicBlock *f_successor);
         void accept(InstructionVisitor *visitor);
 
     private:
