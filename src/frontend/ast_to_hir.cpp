@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <memory>
 
 #include "frontend/ast/ast.h"
 #include "frontend/ast_to_hir.h"
@@ -104,7 +105,37 @@ namespace frontend {
     }
 
     void ASTToHIRVisitor::visit(ast::InstructionIf *i) {
-        // TODO
+        bool has_else = i->getFBranch() != nullptr;
+
+        auto t_label = makeLabel("if_t");
+        auto f_label = has_else ? makeLabel("if_t") : nullptr;
+        auto cont_label = makeLabel("if_cont");
+
+        auto cond = resolveUseScope(i->getCond().get());
+        auto cond_t_label =
+            std::make_unique<AtomIdentifier>(t_label->getName()->getValue());
+        auto cond_f_label = std::make_unique<AtomIdentifier>(
+            has_else ? f_label->getName()->getValue()
+                     : cont_label->getName()->getValue());
+        auto cond_i = std::make_unique<hir::InstructionBranchCond>(
+            std::move(cond), std::move(cond_t_label), std::move(cond_f_label));
+        result.push_back(std::move(cond_i));
+
+        result.push_back(std::move(t_label));
+        i->getTBranch()->accept(this);
+
+        if (has_else) {
+            auto continue_label = std::make_unique<AtomIdentifier>(
+                cont_label->getName()->getValue());
+            auto continue_i = std::make_unique<hir::InstructionBranch>(
+                std::move(continue_label));
+            result.push_back(std::move(continue_i));
+
+            result.push_back(std::move(f_label));
+            i->getFBranch()->accept(this);
+        }
+
+        result.push_back(std::move(cont_label));
     }
 
     std::unique_ptr<AtomIdentifier>
@@ -152,6 +183,15 @@ namespace frontend {
         return a->isIdentifier()
                    ? (std::unique_ptr<Atom>)resolveUseScope((AtomIdentifier *)a)
                    : std::make_unique<AtomLiteral>(a->getValue());
+    }
+
+    std::unique_ptr<hir::Label> ASTToHIRVisitor::makeLabel(std::string name) {
+        uint64_t count = labelCounts[name]++;
+        std::string label_str = "__" + name + std::to_string(count);
+
+        auto identifier = createUnscopedIdentifier(label_str);
+        auto res = std::make_unique<hir::Label>(std::move(identifier));
+        return res;
     }
 
     void ASTToHIRVisitor::addReturnIfMissing(ast::Function &f) {
