@@ -13,6 +13,14 @@ namespace frontend {
         AND,
     };
 
+    enum class CmpOp {
+        GT,
+    };
+
+    const std::unordered_map<std::string, CmpOp> strToCmpOp = {
+        {">", CmpOp::GT},
+    };
+
     const std::unordered_map<std::string, BinaryOp> strToBinaryOp = {
         {"+", BinaryOp::ADD},
         {"-", BinaryOp::SUB},
@@ -22,5 +30,9 @@ namespace frontend {
 
     std::string toString(BinaryOp op);
 
+    std::string toString(CmpOp op);
+
     middleend::mir::BinaryOp toMir(BinaryOp op);
+
+    middleend::mir::CmpOp toMir(CmpOp op, bool isSigned);
 } // namespace frontend
