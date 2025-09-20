@@ -11,6 +11,10 @@ namespace middleend::mir {
         AND,
     };
 
+    enum class CmpOp {
+        SGT,
+    };
+
     const std::unordered_map<std::string, BinaryOp> strToBinaryOp = {
         {"add", BinaryOp::ADD},
         {"sub", BinaryOp::SUB},
@@ -18,5 +22,11 @@ namespace middleend::mir {
         {"and", BinaryOp::AND},
     };
 
+    const std::unordered_map<std::string, CmpOp> strToCmpOp = {
+        {"sgt", CmpOp::SGT},
+    };
+
     std::string toString(BinaryOp op);
+
+    std::string toString(CmpOp op);
 } // namespace middleend::mir

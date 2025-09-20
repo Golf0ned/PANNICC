@@ -16,4 +16,12 @@ namespace middleend::mir {
         }
         std::unreachable();
     }
+
+    std::string toString(CmpOp op) {
+        switch (op) {
+        case CmpOp::SGT:
+            return "sgt";
+        }
+        std::unreachable();
+    }
 } // namespace middleend::mir
