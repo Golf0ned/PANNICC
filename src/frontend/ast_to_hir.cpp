@@ -144,7 +144,7 @@ namespace frontend {
         std::string scoped_symbol = symbol + "_" + std::to_string(scope);
 
         uint64_t id = new_table.addSymbol(scoped_symbol);
-        scope_mappings.back().insert(symbol);
+        scope_mappings[scope].insert(symbol);
         return std::make_unique<AtomIdentifier>(id);
     }
 
