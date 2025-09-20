@@ -38,6 +38,7 @@ namespace frontend {
         std::unique_ptr<Atom> resolveDeclarationScope(Atom *a);
         std::unique_ptr<AtomIdentifier> resolveUseScope(AtomIdentifier *a);
         std::unique_ptr<Atom> resolveUseScope(Atom *a);
+        std::unique_ptr<hir::Label> makeLabel(std::string name);
         void addReturnIfMissing(ast::Function &f);
 
     private:
@@ -46,5 +47,6 @@ namespace frontend {
         std::vector<std::unordered_set<std::string>> scope_mappings;
         SymbolTable old_table;
         SymbolTable &new_table;
+        std::unordered_map<std::string, uint64_t> labelCounts;
     };
 } // namespace frontend
