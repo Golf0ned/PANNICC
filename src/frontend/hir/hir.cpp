@@ -56,8 +56,9 @@ namespace frontend::hir {
         res = "    [UNKNOWN INSTRUCTION]";
     }
 
-    void ToStringVisitor::visit(Label *i) {
-        // TODO
+    void ToStringVisitor::visit(Label *l) {
+        const std::string label = l->getName()->toString(symbol_table);
+        res = "\n    " + label + ':';
     }
 
     void ToStringVisitor::visit(InstructionDeclaration *i) {
@@ -103,10 +104,16 @@ namespace frontend::hir {
     }
 
     void ToStringVisitor::visit(InstructionBranch *i) {
-        // TODO
+        const std::string label = i->getLabel()->toString(symbol_table);
+
+        res = "    goto " + label + ';';
     }
 
     void ToStringVisitor::visit(InstructionBranchCond *i) {
-        // TODO
+        const std::string cond = i->getCmp()->toString(symbol_table);
+        const std::string t_label = i->getTLabel()->toString(symbol_table);
+        const std::string f_label = i->getFLabel()->toString(symbol_table);
+
+        res = "    goto_if (" + cond + ") " + t_label + ' ' + f_label + ';';
     }
 } // namespace frontend::hir
