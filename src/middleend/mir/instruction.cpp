@@ -109,8 +109,9 @@ namespace middleend::mir {
                                                BasicBlock *t_successor,
                                                BasicBlock *f_successor)
         : t_successor(t_successor), f_successor(f_successor) {
-        if (cond->getType() != Type::I1)
-            throw std::invalid_argument("TerminatorCondBranch cond must be i1");
+        // if (cond->getType() != Type::I1)
+        //     throw std::invalid_argument("TerminatorCondBranch cond must be
+        //     i1");
         this->cond = cond;
     }
 
