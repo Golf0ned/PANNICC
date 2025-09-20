@@ -4,6 +4,13 @@
 #include "frontend/utils/type.h"
 
 namespace frontend::hir {
+    Label::Label(std::unique_ptr<AtomIdentifier> name)
+        : name(std::move(name)) {}
+
+    std::unique_ptr<AtomIdentifier> &Label::getName() { return name; }
+
+    void Label::accept(InstructionVisitor *visitor) { visitor->visit(this); }
+
     InstructionDeclaration::InstructionDeclaration(
         Type type, std::unique_ptr<AtomIdentifier> variable)
         : type(type), variable(std::move(variable)) {}
@@ -88,6 +95,37 @@ namespace frontend::hir {
     }
 
     void InstructionCallAssign::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
+
+    InstructionBranch::InstructionBranch(std::unique_ptr<AtomIdentifier> label)
+        : label(std::move(label)) {}
+
+    std::unique_ptr<AtomIdentifier> &InstructionBranch::getLabel() {
+        return label;
+    }
+
+    void InstructionBranch::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
+
+    InstructionBranchCond::InstructionBranchCond(
+        std::unique_ptr<Atom> cmp, std::unique_ptr<AtomIdentifier> t_label,
+        std::unique_ptr<AtomIdentifier> f_label)
+        : cmp(std::move(cmp)), t_label(std::move(t_label)),
+          f_label(std::move(f_label)) {}
+
+    std::unique_ptr<Atom> &InstructionBranchCond::getCmp() { return cmp; }
+
+    std::unique_ptr<AtomIdentifier> &InstructionBranchCond::getTLabel() {
+        return t_label;
+    }
+
+    std::unique_ptr<AtomIdentifier> &InstructionBranchCond::getFLabel() {
+        return f_label;
+    }
+
+    void InstructionBranchCond::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 } // namespace frontend::hir
