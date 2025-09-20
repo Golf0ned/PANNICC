@@ -15,6 +15,16 @@ namespace frontend::hir {
         virtual ~Instruction() = default;
     };
 
+    class Label : public Instruction {
+    public:
+        Label(std::unique_ptr<AtomIdentifier> name);
+        std::unique_ptr<AtomIdentifier> &getName();
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        std::unique_ptr<AtomIdentifier> name;
+    };
+
     class InstructionDeclaration : public Instruction {
     public:
         InstructionDeclaration(Type type,
@@ -92,14 +102,43 @@ namespace frontend::hir {
         std::unique_ptr<AtomIdentifier> callee;
     };
 
+    class InstructionBranch : public Instruction {
+    public:
+        InstructionBranch(std::unique_ptr<AtomIdentifier> label);
+        std::unique_ptr<AtomIdentifier> &getLabel();
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        std::unique_ptr<AtomIdentifier> label;
+    };
+
+    class InstructionBranchCond : public Instruction {
+    public:
+        InstructionBranchCond(std::unique_ptr<Atom> cmp,
+                              std::unique_ptr<AtomIdentifier> t_label,
+                              std::unique_ptr<AtomIdentifier> f_label);
+        std::unique_ptr<Atom> &getCmp();
+        std::unique_ptr<AtomIdentifier> &getTLabel();
+        std::unique_ptr<AtomIdentifier> &getFLabel();
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        std::unique_ptr<Atom> cmp;
+        std::unique_ptr<AtomIdentifier> t_label;
+        std::unique_ptr<AtomIdentifier> f_label;
+    };
+
     class InstructionVisitor {
     public:
         virtual void visit(Instruction *i) = 0;
+        virtual void visit(Label *l) = 0;
         virtual void visit(InstructionDeclaration *i) = 0;
         virtual void visit(InstructionAssignValue *i) = 0;
         virtual void visit(InstructionAssignBinaryOp *i) = 0;
         virtual void visit(InstructionReturn *i) = 0;
         virtual void visit(InstructionCall *i) = 0;
         virtual void visit(InstructionCallAssign *i) = 0;
+        virtual void visit(InstructionBranch *i) = 0;
+        virtual void visit(InstructionBranchCond *i) = 0;
     };
 } // namespace frontend::hir

@@ -43,12 +43,15 @@ namespace frontend::hir {
         std::string getResult();
 
         void visit(Instruction *i) override;
+        void visit(Label *l) override;
         void visit(InstructionDeclaration *i) override;
         void visit(InstructionAssignValue *i) override;
         void visit(InstructionAssignBinaryOp *i) override;
         void visit(InstructionReturn *i) override;
         void visit(InstructionCall *i) override;
         void visit(InstructionCallAssign *i) override;
+        void visit(InstructionBranch *i) override;
+        void visit(InstructionBranchCond *i) override;
 
     private:
         SymbolTable &symbol_table;

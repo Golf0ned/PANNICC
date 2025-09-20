@@ -56,6 +56,10 @@ namespace frontend::hir {
         res = "    [UNKNOWN INSTRUCTION]";
     }
 
+    void ToStringVisitor::visit(Label *i) {
+        // TODO
+    }
+
     void ToStringVisitor::visit(InstructionDeclaration *i) {
         const std::string type = toString(i->getType());
         const std::string variable = i->getVariable()->toString(symbol_table);
@@ -96,5 +100,13 @@ namespace frontend::hir {
         const std::string callee = i->getCallee()->toString(symbol_table);
 
         res = "    " + variable + " = " + callee + '(' + ");";
+    }
+
+    void ToStringVisitor::visit(InstructionBranch *i) {
+        // TODO
+    }
+
+    void ToStringVisitor::visit(InstructionBranchCond *i) {
+        // TODO
     }
 } // namespace frontend::hir

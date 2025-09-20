@@ -119,6 +119,22 @@ namespace frontend::ast {
         std::unique_ptr<AtomIdentifier> target;
     };
 
+    class InstructionIf : public Instruction {
+    public:
+        InstructionIf(std::unique_ptr<Atom> cond,
+                      std::unique_ptr<Instruction> t_branch,
+                      std::unique_ptr<Instruction> f_branch);
+        std::unique_ptr<Atom> &getCond();
+        std::unique_ptr<Instruction> &getTBranch();
+        std::unique_ptr<Instruction> &getFBranch();
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        std::unique_ptr<Atom> cond;
+        std::unique_ptr<Instruction> t_branch;
+        std::unique_ptr<Instruction> f_branch;
+    };
+
     class InstructionVisitor {
     public:
         virtual void visit(Instruction *i) = 0;
@@ -130,5 +146,6 @@ namespace frontend::ast {
         virtual void visit(InstructionReturn *i) = 0;
         virtual void visit(InstructionCall *i) = 0;
         virtual void visit(InstructionCallAssign *i) = 0;
+        virtual void visit(InstructionIf *i) = 0;
     };
 } // namespace frontend::ast

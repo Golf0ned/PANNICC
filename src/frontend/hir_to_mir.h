@@ -17,12 +17,15 @@ namespace frontend {
         mir::Value *resolveAtom(Atom *a);
 
         void visit(hir::Instruction *i) override;
+        void visit(hir::Label *l) override;
         void visit(hir::InstructionDeclaration *i) override;
         void visit(hir::InstructionAssignValue *i) override;
         void visit(hir::InstructionAssignBinaryOp *i) override;
         void visit(hir::InstructionReturn *i) override;
         void visit(hir::InstructionCall *i) override;
         void visit(hir::InstructionCallAssign *i) override;
+        void visit(hir::InstructionBranch *i) override;
+        void visit(hir::InstructionBranchCond *i) override;
 
     private:
         std::vector<std::unique_ptr<mir::Instruction>> cur_instructions;

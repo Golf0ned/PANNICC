@@ -103,6 +103,10 @@ namespace frontend {
         result.push_back(std::move(new_i));
     }
 
+    void ASTToHIRVisitor::visit(ast::InstructionIf *i) {
+        // TODO
+    }
+
     std::unique_ptr<AtomIdentifier>
     ASTToHIRVisitor::createScopedIdentifier(std::string symbol,
                                             uint64_t scope) {

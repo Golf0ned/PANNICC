@@ -16,17 +16,28 @@ namespace middleend::mir {
         return body;
     }
 
-    std::vector<BasicBlock *> &BasicBlock::getDescendants() {
-        return descendants;
+    std::unique_ptr<Terminator> &BasicBlock::getTerminator() {
+        return terminator;
     }
 
-    std::string BasicBlock::toString(uint64_t &counter, bool isEntry) {
-        ToStringVisitor visitor(counter);
+    std::vector<BasicBlock *> &BasicBlock::getPredecessors() {
+        return predecessors;
+    }
 
-        std::string name =
-            isEntry ? "entry" : std::to_string(visitor.getNextIdentifier());
+    std::vector<BasicBlock *> &BasicBlock::getSuccessors() {
+        return successors;
+    }
+
+    std::string BasicBlock::toString(
+        const std::unordered_map<BasicBlock *, uint64_t> &basic_block_ids,
+        const std::unordered_map<Value *, uint64_t> &instruction_ids) {
+        std::string name = basic_block_ids.at(this) == -1
+                               ? "entry"
+                               : std::to_string(basic_block_ids.at(this));
+
         std::string res = name + ":\n";
 
+        ToStringVisitor visitor(basic_block_ids, instruction_ids);
         for (auto &i : body) {
             i->accept(&visitor);
             res += "  " + visitor.getResult() + '\n';
@@ -54,12 +65,27 @@ namespace middleend::mir {
                           name + "() {\n";
 
         uint64_t counter = 0;
+        std::unordered_map<BasicBlock *, uint64_t> basic_block_ids;
+        std::unordered_map<Value *, uint64_t> instruction_ids;
+        for (auto &bb : basic_blocks) {
+            basic_block_ids[&bb] =
+                bb.getPredecessors().empty() ? -1 : counter++;
+
+            for (auto &i : bb.getInstructions()) {
+                auto v = dynamic_cast<Value *>(i.get());
+                if (v)
+                    instruction_ids[v] = counter++;
+            }
+
+            auto t = dynamic_cast<Value *>(bb.getTerminator().get());
+            instruction_ids[t] = counter++;
+        }
+
         for (auto iter = basic_blocks.begin(); iter != basic_blocks.end();
              iter++) {
             if (iter != basic_blocks.begin())
-                res += "\n\n" + iter->toString(counter);
-            else
-                res += iter->toString(counter, true);
+                res += "\n\n";
+            res += iter->toString(basic_block_ids, instruction_ids);
         }
         res += "\n}";
         return res;
@@ -81,49 +107,31 @@ namespace middleend::mir {
         return res;
     }
 
-    ToStringVisitor::ToStringVisitor(uint64_t &counter)
-        : result(), counter(counter) {}
+    ToStringVisitor::ToStringVisitor(
+        const std::unordered_map<BasicBlock *, uint64_t> &basic_block_ids,
+        const std::unordered_map<Value *, uint64_t> &instruction_ids)
+        : basic_block_ids(basic_block_ids), instruction_ids(instruction_ids) {}
 
     std::string ToStringVisitor::getResult() { return result; }
-
-    uint64_t ToStringVisitor::resolveBasicBlock(BasicBlock *basic_block) {
-        auto iter = basic_block_ids.find(basic_block);
-        if (iter != basic_block_ids.end())
-            return iter->second;
-
-        uint64_t new_id = counter++;
-        basic_block_ids[basic_block] = new_id;
-        return new_id;
-    }
-
-    uint64_t ToStringVisitor::resolveInstruction(Instruction *instruction) {
-        auto iter = instruction_ids.find(instruction);
-        if (iter != instruction_ids.end())
-            return iter->second;
-
-        uint64_t new_id = counter++;
-        instruction_ids[instruction] = new_id;
-        return new_id;
-    }
-
-    uint64_t ToStringVisitor::getNextIdentifier() { return counter++; }
 
     std::string ToStringVisitor::valueToString(Value *v) {
         std::string v_type = toString(v->getType());
         Literal *l = dynamic_cast<Literal *>(v);
         if (l)
-            return v_type + ' ' + std::to_string(l->getValue());
+            return std::to_string(l->getValue());
         // TODO: function params
-        return v_type + " %" +
-               std::to_string(
-                   resolveInstruction(reinterpret_cast<Instruction *>(v)));
+        return "%" + std::to_string(instruction_ids.at(v));
+    }
+
+    std::string ToStringVisitor::valueToTypedString(Value *v) {
+        return toString(v->getType()) + ' ' + valueToString(v);
     }
 
     void ToStringVisitor::visit(InstructionBinaryOp *i) {
         std::string var = valueToString(i);
         std::string op = toString(i->getOp());
-        std::string left = valueToString(i->getLeft());
-        std::string right = valueToString(i->getRight());
+        std::string left = valueToTypedString(i->getLeft());
+        std::string right = valueToTypedString(i->getRight());
 
         result = var + " = " + op + ' ' + left + ", " + right;
     }
@@ -135,28 +143,61 @@ namespace middleend::mir {
 
         result = var + " = call " + f_type + " @" + f_name;
     }
+
     void ToStringVisitor::visit(InstructionAlloca *i) {
         std::string var = valueToString(i);
         std::string alloc_type = toString(i->getAllocType());
 
         result = var + " = alloca " + alloc_type;
     }
+
     void ToStringVisitor::visit(InstructionLoad *i) {
         std::string var = valueToString(i);
-        std::string ptr = valueToString(i->getPtr());
+        std::string ptr = valueToTypedString(i->getPtr());
 
         result = var + " = load " + ptr;
     }
+
     void ToStringVisitor::visit(InstructionStore *i) {
-        std::string value = valueToString(i->getValue());
-        std::string ptr = valueToString(i->getPtr());
+        std::string value = valueToTypedString(i->getValue());
+        std::string ptr = valueToTypedString(i->getPtr());
 
         result = "store " + value + ", " + ptr;
     }
 
+    void ToStringVisitor::visit(InstructionPhi *i) {
+        std::string var = valueToString(i);
+        std::string type = toString(i->getType());
+
+        result = var + " = phi " + type + ' ';
+        auto pairs = i->getPredecessors();
+        for (auto iter = pairs.begin(); iter != pairs.end(); iter++) {
+            if (iter != pairs.begin())
+                result += ", ";
+            std::string value = valueToString(iter->second);
+            std::string bb_name =
+                std::to_string(basic_block_ids.at(iter->first));
+            result += "[ " + value + ", " + bb_name + " ]";
+        }
+    }
+
     void ToStringVisitor::visit(TerminatorReturn *t) {
-        std::string value = valueToString(t->getValue());
+        std::string value = valueToTypedString(t->getValue());
 
         result = "ret " + value;
+    }
+
+    void ToStringVisitor::visit(TerminatorBranch *t) {
+        std::string bb = std::to_string(basic_block_ids.at(t->getSuccessor()));
+        result = "br label " + bb;
+    }
+
+    void ToStringVisitor::visit(TerminatorCondBranch *t) {
+        std::string cond = valueToTypedString(t->getCond());
+        std::string bb_true =
+            std::to_string(basic_block_ids.at(t->getTSuccessor()));
+        std::string bb_false =
+            std::to_string(basic_block_ids.at(t->getFSuccessor()));
+        result = "br " + cond + ", label " + bb_true + ", label " + bb_false;
     }
 } // namespace middleend::mir

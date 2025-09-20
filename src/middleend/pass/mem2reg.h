@@ -12,13 +12,16 @@ namespace middleend {
     public:
         ReplaceUseVisitor(mir::Value *oldValue, mir::Value *newValue);
 
-        void visit(mir::InstructionBinaryOp *i);
-        void visit(mir::InstructionCall *i);
-        void visit(mir::InstructionAlloca *i);
-        void visit(mir::InstructionLoad *i);
-        void visit(mir::InstructionStore *i);
+        virtual void visit(mir::InstructionBinaryOp *i);
+        virtual void visit(mir::InstructionCall *i);
+        virtual void visit(mir::InstructionAlloca *i);
+        virtual void visit(mir::InstructionLoad *i);
+        virtual void visit(mir::InstructionStore *i);
+        virtual void visit(mir::InstructionPhi *i);
 
-        void visit(mir::TerminatorReturn *t);
+        virtual void visit(mir::TerminatorReturn *t);
+        virtual void visit(mir::TerminatorBranch *t);
+        virtual void visit(mir::TerminatorCondBranch *t);
 
     private:
         mir::Value *oldValue;
