@@ -56,6 +56,8 @@ namespace frontend {
 
     void HIRToMIRVisitor::visit(hir::Instruction *i) {}
 
+    void HIRToMIRVisitor::visit(hir::Label *l) {}
+
     void HIRToMIRVisitor::visit(hir::InstructionDeclaration *i) {
         mir::Type t = toMir(i->getType());
         auto alloca = std::make_unique<mir::InstructionAlloca>(t);
@@ -121,4 +123,8 @@ namespace frontend {
         cur_instructions.push_back(std::move(call));
         cur_instructions.push_back(std::move(store));
     }
+
+    void HIRToMIRVisitor::visit(hir::InstructionBranch *i) {}
+
+    void HIRToMIRVisitor::visit(hir::InstructionBranchCond *i) {}
 } // namespace frontend

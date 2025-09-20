@@ -131,11 +131,14 @@ namespace frontend::hir {
     class InstructionVisitor {
     public:
         virtual void visit(Instruction *i) = 0;
+        virtual void visit(Label *l) = 0;
         virtual void visit(InstructionDeclaration *i) = 0;
         virtual void visit(InstructionAssignValue *i) = 0;
         virtual void visit(InstructionAssignBinaryOp *i) = 0;
         virtual void visit(InstructionReturn *i) = 0;
         virtual void visit(InstructionCall *i) = 0;
         virtual void visit(InstructionCallAssign *i) = 0;
+        virtual void visit(InstructionBranch *i) = 0;
+        virtual void visit(InstructionBranchCond *i) = 0;
     };
 } // namespace frontend::hir
