@@ -56,7 +56,9 @@ namespace frontend {
 
     void HIRToMIRVisitor::visit(hir::Instruction *i) {}
 
-    void HIRToMIRVisitor::visit(hir::Label *l) {}
+    void HIRToMIRVisitor::visit(hir::Label *l) {
+        // TODO
+    }
 
     void HIRToMIRVisitor::visit(hir::InstructionDeclaration *i) {
         mir::Type t = toMir(i->getType());
@@ -124,7 +126,11 @@ namespace frontend {
         cur_instructions.push_back(std::move(store));
     }
 
-    void HIRToMIRVisitor::visit(hir::InstructionBranch *i) {}
+    void HIRToMIRVisitor::visit(hir::InstructionBranch *i) {
+        // TODO
+    }
 
-    void HIRToMIRVisitor::visit(hir::InstructionBranchCond *i) {}
+    void HIRToMIRVisitor::visit(hir::InstructionBranchCond *i) {
+        // TODO
+    }
 } // namespace frontend
