@@ -11,11 +11,11 @@ namespace frontend {
 
     class HIRToMIRVisitor : public hir::InstructionVisitor {
     public:
-        HIRToMIRVisitor();
+        HIRToMIRVisitor(mir::Type function_type);
 
         std::vector<mir::BasicBlock> getResult();
         mir::Value *resolveAtom(Atom *a);
-        void makeLabelIfMissing(hir::Instruction *i);
+        bool startOfBasicBlock();
         void connectBasicBlocks();
 
         void visit(hir::Instruction *i) override;
@@ -30,6 +30,8 @@ namespace frontend {
         void visit(hir::InstructionBranchCond *i) override;
 
     private:
+        mir::Type function_type;
+        mir::InstructionAlloca *ret_alloca;
         std::vector<std::unique_ptr<mir::Instruction>> cur_instructions;
         std::vector<std::unique_ptr<mir::Literal>> cur_literals;
         std::vector<mir::BasicBlock> basic_blocks;
