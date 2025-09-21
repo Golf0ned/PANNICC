@@ -58,7 +58,7 @@ namespace frontend::hir {
 
     void ToStringVisitor::visit(Label *l) {
         const std::string label = l->getName()->toString(symbol_table);
-        res = "\n    " + label + ':';
+        res = "    " + label + ':';
     }
 
     void ToStringVisitor::visit(InstructionDeclaration *i) {

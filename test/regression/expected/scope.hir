@@ -1,4 +1,5 @@
 int64_t scope() {
+    __entry:
     int64_t before_1;
     before_1 = 0;
     int64_t before_2;

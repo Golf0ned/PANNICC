@@ -1,8 +1,10 @@
 int64_t first() {
+    __entry:
     return 1;
 }
 
 int64_t second() {
+    __entry:
     int64_t res_1;
     res_1 = first();
     res_1 = res_1 + 1;
@@ -10,6 +12,7 @@ int64_t second() {
 }
 
 int64_t third() {
+    __entry:
     int64_t res_1;
     res_1 = second();
     res_1 = res_1 + 2;
@@ -17,6 +20,7 @@ int64_t third() {
 }
 
 int64_t fourth() {
+    __entry:
     int64_t res_1;
     res_1 = third();
     res_1 = res_1 + 3;
@@ -24,6 +28,7 @@ int64_t fourth() {
 }
 
 int64_t fifth() {
+    __entry:
     int64_t res_1;
     res_1 = fourth();
     res_1 = res_1 + 4;
@@ -31,6 +36,7 @@ int64_t fifth() {
 }
 
 int64_t sixth() {
+    __entry:
     int64_t res_1;
     res_1 = fifth();
     res_1 = res_1 + 5;
@@ -38,6 +44,7 @@ int64_t sixth() {
 }
 
 int64_t main() {
+    __entry:
     int64_t res_1;
     res_1 = 0;
     int64_t buf_1;

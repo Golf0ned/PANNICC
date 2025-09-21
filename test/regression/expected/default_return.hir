@@ -1,3 +1,4 @@
 int64_t main() {
+    __entry:
     return 0;
 }
