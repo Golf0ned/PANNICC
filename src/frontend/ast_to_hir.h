@@ -47,6 +47,6 @@ namespace frontend {
         std::vector<std::unordered_set<std::string>> scope_mappings;
         SymbolTable old_table;
         SymbolTable &new_table;
-        std::unordered_map<std::string, uint64_t> labelCounts;
+        std::unordered_map<std::string, uint64_t> label_counts;
     };
 } // namespace frontend
