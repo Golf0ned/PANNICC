@@ -33,16 +33,19 @@ namespace middleend::mir {
     class Function {
     public:
         Function(Type type, std::string name,
-                 std::vector<BasicBlock> basic_blocks);
+                 std::vector<std::unique_ptr<BasicBlock>> basic_blocks,
+                 BasicBlock *entry_block);
         Type getType();
         std::string getName();
-        std::vector<BasicBlock> &getBasicBlocks();
+        std::vector<std::unique_ptr<BasicBlock>> &getBasicBlocks();
+        BasicBlock *getEntryBlock();
         std::string toString();
 
     private:
         Type type;
         std::string name;
-        std::vector<BasicBlock> basic_blocks;
+        std::vector<std::unique_ptr<BasicBlock>> basic_blocks;
+        BasicBlock *entry_block;
     };
 
     class Program {

@@ -19,7 +19,7 @@ namespace middleend {
 
             std::unordered_set<mir::BasicBlock *> visited;
             std::deque<mir::BasicBlock *> worklist;
-            worklist.push_back(&f.getBasicBlocks()[0]);
+            worklist.push_back(f.getEntryBlock());
             bool isEntry = true;
 
             while (!worklist.empty()) {
