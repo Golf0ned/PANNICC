@@ -6,13 +6,20 @@
 #include "middleend/mir/mir.h"
 #include "middleend/mir/operator.h"
 #include "middleend/mir/type.h"
+#include <iostream>
 
 namespace mir = middleend::mir;
 
 namespace frontend {
     std::unordered_map<uint64_t, mir::Function *> lowered_functions;
 
-    HIRToMIRVisitor::HIRToMIRVisitor() : new_basic_block(true) {}
+    HIRToMIRVisitor::HIRToMIRVisitor(mir::Type function_type)
+        : new_basic_block(true), function_type(function_type) {
+        // TODO: handle void
+        auto ret_val = std::make_unique<mir::InstructionAlloca>(function_type);
+        ret_alloca = ret_val.get();
+        cur_instructions.push_back(std::move(ret_val));
+    }
 
     mir::Program hirToMir(hir::Program &hir) {
         std::vector<mir::Function> functions;
@@ -21,9 +28,11 @@ namespace frontend {
         for (auto &f : hir.getFunctions()) {
             mir::Type function_type = toMir(f.getType());
 
-            HIRToMIRVisitor visitor;
+            HIRToMIRVisitor visitor(function_type);
             for (auto &i : f.getBody()) {
-                visitor.makeLabelIfMissing(i.get());
+                if (visitor.startOfBasicBlock() &&
+                    !dynamic_cast<hir::Label *>(i.get()))
+                    continue;
                 i->accept(&visitor);
             }
             visitor.connectBasicBlocks();
@@ -58,36 +67,73 @@ namespace frontend {
         }
     }
 
-    void HIRToMIRVisitor::makeLabelIfMissing(hir::Instruction *i) {
-        if (!new_basic_block || dynamic_cast<hir::Label *>(i))
-            return;
-
-        // 0 is fine since 0 identifier should always be first function name
-        labels.push_back(0);
-        new_basic_block = false;
-    }
+    bool HIRToMIRVisitor::startOfBasicBlock() { return new_basic_block; }
 
     void HIRToMIRVisitor::connectBasicBlocks() {
+        // Close dangling block
+        if (!new_basic_block) {
+            auto branch = std::make_unique<mir::TerminatorBranch>(nullptr);
+            instruction_to_bbs.push_back({branch.get(), {0}});
+
+            basic_blocks.emplace_back(std::move(cur_instructions),
+                                      std::move(branch),
+                                      std::move(cur_literals));
+            cur_instructions.clear();
+            cur_literals.clear();
+            new_basic_block = true;
+        }
+
+        // Generate return block
+        // TODO: handle void
+        auto ret_load =
+            std::make_unique<mir::InstructionLoad>(function_type, ret_alloca);
+        auto ret_terminator =
+            std::make_unique<mir::TerminatorReturn>(ret_load.get());
+        std::vector<std::unique_ptr<mir::Instruction>> ret_body;
+        ret_body.push_back(std::move(ret_load));
+        std::vector<std::unique_ptr<mir::Literal>> ret_literals;
+        basic_blocks.emplace_back(std::move(ret_body),
+                                  std::move(ret_terminator),
+                                  std::move(ret_literals));
+        labels.push_back(0);
+
+        // Add basic block pointers to terminators
         std::unordered_map<uint64_t, mir::BasicBlock *> label_to_bb;
         for (int i = 0; i < labels.size(); i++) {
-            if (labels[i] == 0)
-                continue;
             label_to_bb[labels[i]] = &basic_blocks[i];
         }
 
         for (auto [i, ids] : instruction_to_bbs) {
-            auto branch = dynamic_cast<middleend::mir::TerminatorBranch *>(i);
+            auto branch = dynamic_cast<mir::TerminatorBranch *>(i);
             if (branch) {
                 auto successor_id = ids[0];
                 branch->setSuccessor(label_to_bb[successor_id]);
             }
 
-            auto cond_branch =
-                dynamic_cast<middleend::mir::TerminatorCondBranch *>(i);
+            auto cond_branch = dynamic_cast<mir::TerminatorCondBranch *>(i);
             if (cond_branch) {
                 auto t_successor_id = ids[0], f_successor_id = ids[1];
                 cond_branch->setTSuccessor(label_to_bb[t_successor_id]);
                 cond_branch->setFSuccessor(label_to_bb[f_successor_id]);
+            }
+        }
+
+        // Link basic blocks
+        for (auto &bb : basic_blocks) {
+            auto terminator = bb.getTerminator().get();
+            auto branch = dynamic_cast<mir::TerminatorBranch *>(terminator);
+            if (branch) {
+                bb.getSuccessors().push_back(branch->getSuccessor());
+                branch->getSuccessor()->getPredecessors().push_back(&bb);
+            }
+
+            auto cond_branch =
+                dynamic_cast<mir::TerminatorCondBranch *>(terminator);
+            if (cond_branch) {
+                bb.getSuccessors().push_back(cond_branch->getTSuccessor());
+                cond_branch->getTSuccessor()->getPredecessors().push_back(&bb);
+                bb.getSuccessors().push_back(cond_branch->getFSuccessor());
+                cond_branch->getFSuccessor()->getPredecessors().push_back(&bb);
             }
         }
     }
@@ -144,12 +190,16 @@ namespace frontend {
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionReturn *i) {
-        mir::Value *retVal = resolveAtom(i->getValue().get());
-        std::unique_ptr<mir::TerminatorReturn> ret =
-            std::make_unique<mir::TerminatorReturn>(retVal);
+        auto retVal = resolveAtom(i->getValue().get());
+        mir::InstructionAlloca *ptr = ret_alloca;
+        auto store = std::make_unique<mir::InstructionStore>(retVal, ptr);
+        cur_instructions.push_back(std::move(store));
 
-        basic_blocks.emplace_back(std::move(cur_instructions), std::move(ret),
-                                  std::move(cur_literals));
+        auto branch = std::make_unique<mir::TerminatorBranch>(nullptr);
+        instruction_to_bbs.push_back({branch.get(), {0}});
+
+        basic_blocks.emplace_back(std::move(cur_instructions),
+                                  std::move(branch), std::move(cur_literals));
         cur_instructions.clear();
         cur_literals.clear();
         new_basic_block = true;
