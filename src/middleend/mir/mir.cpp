@@ -84,7 +84,8 @@ namespace middleend::mir {
             }
 
             auto t = dynamic_cast<Value *>(bb->getTerminator().get());
-            instruction_ids[t] = counter++;
+            if (t)
+                instruction_ids[t] = counter++;
         }
 
         for (auto iter = basic_blocks.begin(); iter != basic_blocks.end();
