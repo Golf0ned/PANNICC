@@ -13,7 +13,7 @@ namespace frontend {
     public:
         HIRToMIRVisitor(mir::Type function_type);
 
-        std::vector<mir::BasicBlock> getResult();
+        std::vector<std::unique_ptr<mir::BasicBlock>> getResult();
         mir::Value *resolveAtom(Atom *a);
         bool startOfBasicBlock();
         void connectBasicBlocks();
@@ -34,7 +34,7 @@ namespace frontend {
         mir::InstructionAlloca *ret_alloca;
         std::vector<std::unique_ptr<mir::Instruction>> cur_instructions;
         std::vector<std::unique_ptr<mir::Literal>> cur_literals;
-        std::vector<mir::BasicBlock> basic_blocks;
+        std::vector<std::unique_ptr<mir::BasicBlock>> basic_blocks;
         std::unordered_map<uint64_t, mir::InstructionAlloca *> value_mappings;
         bool new_basic_block;
         std::vector<uint64_t> labels;

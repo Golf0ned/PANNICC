@@ -50,14 +50,20 @@ namespace middleend::mir {
     }
 
     Function::Function(Type type, std::string name,
-                       std::vector<BasicBlock> basic_blocks)
-        : type(type), name(name), basic_blocks(std::move(basic_blocks)) {}
+                       std::vector<std::unique_ptr<BasicBlock>> basic_blocks,
+                       BasicBlock *entry_block)
+        : type(type), name(name), basic_blocks(std::move(basic_blocks)),
+          entry_block(entry_block) {}
 
     Type Function::getType() { return type; }
 
     std::string Function::getName() { return name; }
 
-    std::vector<BasicBlock> &Function::getBasicBlocks() { return basic_blocks; }
+    std::vector<std::unique_ptr<BasicBlock>> &Function::getBasicBlocks() {
+        return basic_blocks;
+    }
+
+    BasicBlock *Function::getEntryBlock() { return entry_block; }
 
     std::string Function::toString() {
         // TODO: function params
@@ -68,16 +74,16 @@ namespace middleend::mir {
         std::unordered_map<BasicBlock *, uint64_t> basic_block_ids;
         std::unordered_map<Value *, uint64_t> instruction_ids;
         for (auto &bb : basic_blocks) {
-            basic_block_ids[&bb] =
-                bb.getPredecessors().empty() ? -1 : counter++;
+            basic_block_ids[bb.get()] =
+                bb->getPredecessors().empty() ? -1 : counter++;
 
-            for (auto &i : bb.getInstructions()) {
+            for (auto &i : bb->getInstructions()) {
                 auto v = dynamic_cast<Value *>(i.get());
                 if (v)
                     instruction_ids[v] = counter++;
             }
 
-            auto t = dynamic_cast<Value *>(bb.getTerminator().get());
+            auto t = dynamic_cast<Value *>(bb->getTerminator().get());
             instruction_ids[t] = counter++;
         }
 
@@ -85,7 +91,7 @@ namespace middleend::mir {
              iter++) {
             if (iter != basic_blocks.begin())
                 res += "\n\n";
-            res += iter->toString(basic_block_ids, instruction_ids);
+            res += iter->get()->toString(basic_block_ids, instruction_ids);
         }
         res += "\n}";
         return res;
