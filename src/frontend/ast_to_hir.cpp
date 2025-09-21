@@ -23,8 +23,8 @@ namespace frontend {
 
     void ASTToHIRVisitor::clearResult() {
         result.clear();
-        result.push_back(makeLabel("entry"));
         label_counts.clear();
+        result.push_back(makeLabel("entry"));
     }
 
     void ASTToHIRVisitor::visit(ast::Instruction *i) {}
