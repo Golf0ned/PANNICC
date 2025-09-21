@@ -13,6 +13,7 @@ namespace frontend {
                                      SymbolTable &new_table)
         : cur_scope(0), old_table(old_table), new_table(new_table) {
         scope_mappings.emplace_back();
+        result.push_back(makeLabel("entry"));
     };
 
     std::vector<std::unique_ptr<hir::Instruction>>
@@ -20,7 +21,11 @@ namespace frontend {
         return std::move(result);
     }
 
-    void ASTToHIRVisitor::clearResult() { result.clear(); }
+    void ASTToHIRVisitor::clearResult() {
+        result.clear();
+        result.push_back(makeLabel("entry"));
+        label_counts.clear();
+    }
 
     void ASTToHIRVisitor::visit(ast::Instruction *i) {}
 
@@ -186,8 +191,9 @@ namespace frontend {
     }
 
     std::unique_ptr<hir::Label> ASTToHIRVisitor::makeLabel(std::string name) {
-        uint64_t count = labelCounts[name]++;
-        std::string label_str = "__" + name + std::to_string(count);
+        uint64_t count = label_counts[name]++;
+        std::string postfix = (count == 0) ? "" : std::to_string(count);
+        std::string label_str = "__" + name + postfix;
 
         auto identifier = createUnscopedIdentifier(label_str);
         auto res = std::make_unique<hir::Label>(std::move(identifier));
