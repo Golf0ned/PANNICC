@@ -22,9 +22,9 @@ entry:
   %12 = alloca i64
   store i64 6, ptr %12
   store i64 0, ptr %0
-  br label 14
+  br label 13
 
-14:
-  %15 = load ptr %0
-  ret i64 %15
+13:
+  %14 = load ptr %0
+  ret i64 %14
 }
