@@ -75,7 +75,7 @@ namespace middleend::mir {
         std::unordered_map<Value *, uint64_t> instruction_ids;
         for (auto &bb : basic_blocks) {
             basic_block_ids[bb.get()] =
-                bb->getPredecessors().empty() ? -1 : counter++;
+                bb.get() == entry_block ? -1 : counter++;
 
             for (auto &i : bb->getInstructions()) {
                 auto v = dynamic_cast<Value *>(i.get());
