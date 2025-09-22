@@ -18,9 +18,9 @@ namespace middleend::mir {
 
     Value *InstructionBinaryOp::getRight() { return right; }
 
-    void InstructionBinaryOp::setLeft(Value *newVal) { left = newVal; }
+    void InstructionBinaryOp::setLeft(Value *new_val) { left = new_val; }
 
-    void InstructionBinaryOp::setRight(Value *newVal) { right = newVal; }
+    void InstructionBinaryOp::setRight(Value *new_val) { right = new_val; }
 
     void InstructionBinaryOp::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
@@ -65,7 +65,7 @@ namespace middleend::mir {
 
     InstructionAlloca *InstructionStore::getPtr() { return ptr; }
 
-    void InstructionStore::setValue(Value *newVal) { value = newVal; }
+    void InstructionStore::setValue(Value *new_val) { value = new_val; }
 
     void InstructionStore::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
@@ -86,7 +86,7 @@ namespace middleend::mir {
 
     Value *TerminatorReturn::getValue() { return value; }
 
-    void TerminatorReturn::setValue(Value *newVal) { value = newVal; }
+    void TerminatorReturn::setValue(Value *new_val) { value = new_val; }
 
     void TerminatorReturn::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
@@ -120,6 +120,8 @@ namespace middleend::mir {
     BasicBlock *TerminatorCondBranch::getTSuccessor() { return t_successor; };
 
     BasicBlock *TerminatorCondBranch::getFSuccessor() { return f_successor; };
+
+    void TerminatorCondBranch::setCond(Value *new_val) { this->cond = new_val; }
 
     void TerminatorCondBranch::setTSuccessor(BasicBlock *t_successor) {
         this->t_successor = t_successor;
