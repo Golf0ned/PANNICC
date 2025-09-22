@@ -90,15 +90,15 @@ namespace middleend {
         }
     }
 
-    ReplaceUseVisitor::ReplaceUseVisitor(mir::Value *oldValue,
-                                         mir::Value *newValue)
-        : oldValue(oldValue), newValue(newValue) {}
+    ReplaceUseVisitor::ReplaceUseVisitor(mir::Value *old_value,
+                                         mir::Value *new_value)
+        : old_value(old_value), new_value(new_value) {}
 
     void ReplaceUseVisitor::visit(mir::InstructionBinaryOp *i) {
-        if (i->getLeft() == oldValue)
-            i->setLeft(newValue);
-        if (i->getRight() == oldValue)
-            i->setRight(newValue);
+        if (i->getLeft() == old_value)
+            i->setLeft(new_value);
+        if (i->getRight() == old_value)
+            i->setRight(new_value);
     }
 
     void ReplaceUseVisitor::visit(mir::InstructionCall *i) {}
@@ -108,19 +108,27 @@ namespace middleend {
     void ReplaceUseVisitor::visit(mir::InstructionLoad *i) {}
 
     void ReplaceUseVisitor::visit(mir::InstructionStore *i) {
-        if (i->getValue() == oldValue)
-            i->setValue(newValue);
+        if (i->getValue() == old_value)
+            i->setValue(new_value);
     }
 
-    void ReplaceUseVisitor::visit(mir::InstructionPhi *i) {}
+    void ReplaceUseVisitor::visit(mir::InstructionPhi *i) {
+        for (auto &pair : i->getPredecessors()) {
+            if (pair.second == old_value)
+                i->getPredecessors()[pair.first] = new_value;
+        }
+    }
 
     void ReplaceUseVisitor::visit(mir::TerminatorReturn *t) {
-        if (t->getValue() == oldValue) {
-            t->setValue(newValue);
+        if (t->getValue() == old_value) {
+            t->setValue(new_value);
         }
     }
 
     void ReplaceUseVisitor::visit(mir::TerminatorBranch *t) {}
 
-    void ReplaceUseVisitor::visit(mir::TerminatorCondBranch *t) {}
+    void ReplaceUseVisitor::visit(mir::TerminatorCondBranch *t) {
+        if (t->getCond() == old_value)
+            t->setCond(new_value);
+    }
 } // namespace middleend
