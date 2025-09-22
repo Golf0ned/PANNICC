@@ -20,8 +20,8 @@ namespace middleend::mir {
         BinaryOp getOp();
         Value *getLeft();
         Value *getRight();
-        void setLeft(Value *newVal);
-        void setRight(Value *newVal);
+        void setLeft(Value *new_val);
+        void setRight(Value *new_val);
         void accept(InstructionVisitor *visitor);
 
     private:
@@ -65,7 +65,7 @@ namespace middleend::mir {
         InstructionStore(Value *value, InstructionAlloca *ptr);
         Value *getValue();
         InstructionAlloca *getPtr();
-        void setValue(Value *newVal);
+        void setValue(Value *new_val);
         void accept(InstructionVisitor *visitor);
 
     private:
@@ -92,7 +92,7 @@ namespace middleend::mir {
     public:
         TerminatorReturn(Value *value);
         Value *getValue();
-        void setValue(Value *newVal);
+        void setValue(Value *new_val);
         void accept(InstructionVisitor *visitor);
 
     private:
@@ -117,6 +117,7 @@ namespace middleend::mir {
         Value *getCond();
         BasicBlock *getTSuccessor();
         BasicBlock *getFSuccessor();
+        void setCond(Value *new_val);
         void setTSuccessor(BasicBlock *t_successor);
         void setFSuccessor(BasicBlock *f_successor);
         void accept(InstructionVisitor *visitor);
