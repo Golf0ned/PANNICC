@@ -3,6 +3,7 @@
 
 #include "middleend/mir/instruction.h"
 #include "middleend/mir/mir.h"
+#include "middleend/pass/dominator_tree.h"
 #include "middleend/pass/mem2reg.h"
 
 namespace middleend {
@@ -87,6 +88,21 @@ namespace middleend {
 
                 isEntry = false;
             }
+        }
+    }
+
+    void Mem2Reg::registerAnalyses(
+        std::vector<std::unique_ptr<AnalysisPass>> &analyses) {
+        for (auto &pass : analyses) {
+            auto dt = dynamic_cast<DominatorTree *>(pass.get());
+            if (dt)
+                this->dt = dt;
+        }
+
+        if (!this->dt) {
+            auto dt = std::make_unique<DominatorTree>();
+            this->dt = dt.get();
+            analyses.push_back(std::move(dt));
         }
     }
 
