@@ -95,13 +95,16 @@ namespace middleend {
         std::vector<std::unique_ptr<AnalysisPass>> &analyses) {
         for (auto &pass : analyses) {
             auto dt = dynamic_cast<DominatorTree *>(pass.get());
-            if (dt)
+            if (dt) {
                 this->dt = dt;
+                required_analyses.push_back(dt);
+            }
         }
 
         if (!this->dt) {
             auto dt = std::make_unique<DominatorTree>();
             this->dt = dt.get();
+            required_analyses.push_back(dt.get());
             analyses.push_back(std::move(dt));
         }
     }
