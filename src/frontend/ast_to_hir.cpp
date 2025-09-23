@@ -113,7 +113,7 @@ namespace frontend {
         bool has_else = i->getFBranch() != nullptr;
 
         auto t_label = makeLabel("if_t");
-        auto f_label = has_else ? makeLabel("if_t") : nullptr;
+        auto f_label = has_else ? makeLabel("if_f") : nullptr;
         auto cont_label = makeLabel("if_cont");
 
         auto cond = resolveUseScope(i->getCond().get());
