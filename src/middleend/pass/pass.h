@@ -28,7 +28,7 @@ namespace middleend {
         registerAnalyses(std::vector<std::unique_ptr<AnalysisPass>> &analyses);
         const std::vector<AnalysisPass *> &getAnalyses();
 
-    private:
-        std::vector<AnalysisPass *> requiredAnalyses;
+    protected:
+        std::vector<AnalysisPass *> required_analyses;
     };
 } // namespace middleend
