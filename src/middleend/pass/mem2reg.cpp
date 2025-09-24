@@ -1,4 +1,5 @@
 #include <deque>
+#include <ranges>
 #include <unordered_set>
 
 #include "middleend/mir/instruction.h"
@@ -7,87 +8,156 @@
 #include "middleend/pass/mem2reg.h"
 
 namespace middleend {
+    std::unordered_map<mir::BasicBlock *, std::vector<mir::BasicBlock *>>
+    computeDominanceFrontiers(DominatorTree *dt, mir::Function &f) {
+        std::unordered_map<mir::BasicBlock *, std::vector<mir::BasicBlock *>>
+            res;
+
+        for (auto &bb : f.getBasicBlocks()) {
+            auto &preds = bb->getPredecessors();
+            if (preds.size() < 2)
+                continue;
+
+            for (auto pred : preds) {
+                auto bb_ptr = bb.get();
+                auto cur = pred, i_dom = dt->getImmediateDominator(bb_ptr);
+                while (cur != i_dom) {
+                    res[cur].push_back(bb_ptr);
+                    cur = dt->getImmediateDominator(cur);
+                }
+            }
+        }
+
+        return res;
+    }
+
     void Mem2Reg::run(mir::Program &p) {
         for (auto &f : p.getFunctions()) {
-            // TODO: phi insertion
-            // follow the algorithm, insert phis
+            //
+            // Phi Insertion
+            //
+            std::unordered_map<mir::BasicBlock *,
+                               std::vector<mir::BasicBlock *>>
+                dominance_frontiers = computeDominanceFrontiers(dt, f);
+
+            std::unordered_map<mir::BasicBlock *,
+                               std::unordered_set<mir::InstructionAlloca *>>
+                defs;
+            for (auto &bb : f.getBasicBlocks()) {
+                for (auto &i : bb->getInstructions()) {
+                    auto *store =
+                        dynamic_cast<mir::InstructionStore *>(i.get());
+                    if (store)
+                        defs[bb.get()].insert(store->getPtr());
+                }
+            }
+
+            std::vector<std::pair<mir::BasicBlock *, mir::InstructionAlloca *>>
+                worklist;
+            for (auto pair : defs)
+                for (auto alloca : pair.second)
+                    worklist.push_back({pair.first, alloca});
+
+            std::unordered_map<
+                mir::BasicBlock *,
+                std::unordered_map<mir::InstructionAlloca *,
+                                   std::unique_ptr<mir::InstructionPhi>>>
+                phis;
+            while (!worklist.empty()) {
+                auto [block, var] = worklist.back();
+                worklist.pop_back();
+                for (auto &bb : dominance_frontiers[block]) {
+                    if (visited[bb])
+                        continue;
+
+                    // insert phis
+
+                    // rewrite this part too
+                    visited.insert(bb);
+                    if (!has_def.contains(bb))
+                        worklist.push_back(bb);
+                }
+            }
 
             //
             // Variable renaming
             //
-            std::vector<std::unique_ptr<mir::Instruction>> toPromote;
-            std::unordered_map<mir::InstructionAlloca *, mir::Value *> curVal;
-
-            std::unordered_set<mir::BasicBlock *> visited;
-            std::deque<mir::BasicBlock *> worklist;
-            worklist.push_back(f.getEntryBlock());
-            bool isEntry = true;
-
-            while (!worklist.empty()) {
-                auto cur = worklist.back();
-                worklist.pop_back();
-
-                // Visited before: only update phis
-                if (visited.contains(cur)) {
-                    // TODO: update phis
-                    continue;
-                }
-
-                visited.insert(cur);
-
-                // Not visited: update phis and rename in instructions
-                auto &instructions = cur->getInstructions();
-                for (int ind = 0, end = instructions.size(); ind < end; ind++) {
-                    auto &i = instructions[ind];
-
-                    // phi: add value from previous basic block
-                    // TODO: update phis
-
-                    // alloca: if promotable (lives in entry block),
-                    // steal from instructions
-                    auto *alloca =
-                        dynamic_cast<mir::InstructionAlloca *>(i.get());
-                    if (isEntry && alloca) {
-                        toPromote.push_back(std::move(i));
-                        instructions.erase(instructions.begin() + ind);
-                        ind--;
-                        end--;
-                        continue;
-                    }
-
-                    // store: update current value mapping
-                    // remove store from instructions
-                    auto *store =
-                        dynamic_cast<mir::InstructionStore *>(i.get());
-                    if (store) {
-                        curVal[store->getPtr()] = store->getValue();
-                        instructions.erase(instructions.begin() + ind);
-                        ind--;
-                        end--;
-                        continue;
-                    }
-
-                    // load: replace all uses of the load with current value
-                    // remove load from instructions
-                    auto *load = dynamic_cast<mir::InstructionLoad *>(i.get());
-                    if (load) {
-                        ReplaceUseVisitor visitor(load, curVal[load->getPtr()]);
-                        for (auto &use : load->getUses()) {
-                            use->accept(&visitor);
-                        }
-                        instructions.erase(instructions.begin() + ind);
-                        ind--;
-                        end--;
-                        continue;
-                    }
-                }
-
-                for (auto &next : cur->getSuccessors()) {
-                    worklist.push_back(next);
-                }
-
-                isEntry = false;
-            }
+            // std::vector<std::unique_ptr<mir::Instruction>> toPromote;
+            // std::unordered_map<mir::InstructionAlloca *, mir::Value *>
+            // curVal;
+            //
+            // std::unordered_set<mir::BasicBlock *> visited;
+            // std::deque<mir::BasicBlock *> worklist;
+            // worklist.push_back(f.getEntryBlock());
+            // bool isEntry = true;
+            //
+            // while (!worklist.empty()) {
+            //     auto cur = worklist.back();
+            //     worklist.pop_back();
+            //
+            //     // Visited before: only update phis
+            //     if (visited.contains(cur)) {
+            //         // TODO: update phis
+            //         continue;
+            //     }
+            //
+            //     visited.insert(cur);
+            //
+            //     // Not visited: update phis and rename in instructions
+            //     auto &instructions = cur->getInstructions();
+            //     for (int ind = 0, end = instructions.size(); ind < end;
+            //     ind++) {
+            //         auto &i = instructions[ind];
+            //
+            //         // phi: add value from previous basic block
+            //         // TODO: update phis
+            //
+            //         // alloca: if promotable (lives in entry block),
+            //         // steal from instructions
+            //         auto *alloca =
+            //             dynamic_cast<mir::InstructionAlloca *>(i.get());
+            //         if (isEntry && alloca) {
+            //             toPromote.push_back(std::move(i));
+            //             instructions.erase(instructions.begin() + ind);
+            //             ind--;
+            //             end--;
+            //             continue;
+            //         }
+            //
+            //         // store: update current value mapping
+            //         // remove store from instructions
+            //         auto *store =
+            //             dynamic_cast<mir::InstructionStore *>(i.get());
+            //         if (store) {
+            //             curVal[store->getPtr()] = store->getValue();
+            //             instructions.erase(instructions.begin() + ind);
+            //             ind--;
+            //             end--;
+            //             continue;
+            //         }
+            //
+            //         // load: replace all uses of the load with current value
+            //         // remove load from instructions
+            //         auto *load = dynamic_cast<mir::InstructionLoad
+            //         *>(i.get()); if (load) {
+            //             ReplaceUseVisitor visitor(load,
+            //             curVal[load->getPtr()]); for (auto &use :
+            //             load->getUses()) {
+            //                 use->accept(&visitor);
+            //             }
+            //             instructions.erase(instructions.begin() + ind);
+            //             ind--;
+            //             end--;
+            //             continue;
+            //         }
+            //     }
+            //
+            //     for (auto &next : cur->getSuccessors()) {
+            //         worklist.push_back(next);
+            //     }
+            //
+            //     isEntry = false;
+            // }
         }
     }
 
