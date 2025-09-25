@@ -1,4 +1,4 @@
-#include <deque>
+#include <iostream>
 #include <ranges>
 #include <unordered_set>
 
@@ -40,42 +40,48 @@ namespace middleend {
                                std::vector<mir::BasicBlock *>>
                 dominance_frontiers = computeDominanceFrontiers(dt, f);
 
-            std::unordered_map<mir::BasicBlock *,
-                               std::unordered_set<mir::InstructionAlloca *>>
+            std::unordered_map<mir::InstructionAlloca *,
+                               std::unordered_set<mir::BasicBlock *>>
                 defs;
             for (auto &bb : f.getBasicBlocks()) {
                 for (auto &i : bb->getInstructions()) {
                     auto *store =
                         dynamic_cast<mir::InstructionStore *>(i.get());
                     if (store)
-                        defs[bb.get()].insert(store->getPtr());
+                        defs[store->getPtr()].insert(bb.get());
                 }
             }
 
-            std::vector<std::pair<mir::BasicBlock *, mir::InstructionAlloca *>>
-                worklist;
-            for (auto pair : defs)
-                for (auto alloca : pair.second)
-                    worklist.push_back({pair.first, alloca});
-
             std::unordered_map<
                 mir::BasicBlock *,
-                std::unordered_map<mir::InstructionAlloca *,
-                                   std::unique_ptr<mir::InstructionPhi>>>
+                std::vector<std::unique_ptr<mir::InstructionPhi>>>
                 phis;
-            while (!worklist.empty()) {
-                auto [block, var] = worklist.back();
-                worklist.pop_back();
-                for (auto &bb : dominance_frontiers[block]) {
-                    if (visited[bb])
-                        continue;
+            for (auto const &[alloca, def_blocks] : defs) {
+                mir::Type type = alloca->getAllocType();
+                std::vector<mir::BasicBlock *> worklist(def_blocks.begin(),
+                                                        def_blocks.end());
+                std::unordered_set<mir::BasicBlock *> visited;
+                while (!worklist.empty()) {
+                    auto &block = worklist.back();
+                    worklist.pop_back();
+                    for (auto &bb : dominance_frontiers[block]) {
+                        if (visited.contains(bb))
+                            continue;
 
-                    // insert phis
+                        auto phi = std::make_unique<mir::InstructionPhi>(type);
+                        phis[bb].push_back(std::move(phi));
 
-                    // rewrite this part too
-                    visited.insert(bb);
-                    if (!has_def.contains(bb))
-                        worklist.push_back(bb);
+                        visited.insert(bb);
+                        if (!def_blocks.contains(bb))
+                            worklist.push_back(bb);
+                    }
+                }
+            }
+
+            for (auto &[bb, phi_vec] : phis) {
+                for (auto &phi : phi_vec) {
+                    bb->getInstructions().insert(bb->getInstructions().begin(),
+                                                 std::move(phi));
                 }
             }
 
