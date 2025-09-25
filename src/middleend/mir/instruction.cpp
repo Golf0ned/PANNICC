@@ -115,6 +115,7 @@ namespace middleend::mir {
         //     throw std::invalid_argument("TerminatorCondBranch cond must be
         //     i1");
         this->cond = cond;
+        cond->getUses().push_back(this);
     }
 
     Value *TerminatorCondBranch::getCond() { return cond; }
