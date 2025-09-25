@@ -1,4 +1,3 @@
-#include <iostream>
 #include <ranges>
 
 #include "middleend/pass/dominator_tree.h"
