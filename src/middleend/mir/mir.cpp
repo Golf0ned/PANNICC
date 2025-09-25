@@ -183,7 +183,7 @@ namespace middleend::mir {
                 result += ", ";
             std::string value = valueToString(iter->second);
             std::string bb_name =
-                std::to_string(basic_block_ids.at(iter->first));
+                '%' + std::to_string(basic_block_ids.at(iter->first));
             result += "[ " + value + ", " + bb_name + " ]";
         }
     }
