@@ -1,3 +1,4 @@
+#include <iostream>
 #include <ranges>
 #include <unordered_set>
 
@@ -20,7 +21,7 @@ namespace middleend {
             for (auto pred : preds) {
                 auto bb_ptr = bb.get();
                 auto cur = pred, i_dom = dt->getImmediateDominator(bb_ptr);
-                while (cur != i_dom) {
+                while (cur != nullptr && cur != i_dom) {
                     res[cur].push_back(bb_ptr);
                     cur = dt->getImmediateDominator(cur);
                 }

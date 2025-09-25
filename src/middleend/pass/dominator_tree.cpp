@@ -68,25 +68,26 @@ namespace middleend {
         }
     }
 
+    // TODO: replace bracket operator with nullptr return
     bool DominatorTree::dominates(mir::BasicBlock *bb1, mir::BasicBlock *bb2) {
-        if (immediate_dominators.at(bb1) == bb1)
+        if (immediate_dominators[bb1] == bb1)
             return true;
 
         auto cur = bb2;
-        while (cur != immediate_dominators.at(cur)) {
+        while (cur != immediate_dominators[cur]) {
             if (cur == bb1)
                 return true;
-            cur = immediate_dominators.at(cur);
+            cur = immediate_dominators[cur];
         }
         return false;
     }
 
     mir::BasicBlock *DominatorTree::getImmediateDominator(mir::BasicBlock *bb) {
-        return immediate_dominators.at(bb);
+        return immediate_dominators[bb];
     }
 
     const std::vector<mir::BasicBlock *> &
     DominatorTree::getDominees(mir::BasicBlock *bb) {
-        return immediate_dominated.at(bb);
+        return immediate_dominated[bb];
     }
 } // namespace middleend
