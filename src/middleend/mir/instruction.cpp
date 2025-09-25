@@ -71,6 +71,8 @@ namespace middleend::mir {
         visitor->visit(this);
     }
 
+    InstructionPhi::InstructionPhi(Type type) : Value(type) {}
+
     std::unordered_map<BasicBlock *, Value *> &
     InstructionPhi::getPredecessors() {
         return predecessors;
