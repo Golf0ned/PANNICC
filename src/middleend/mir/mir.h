@@ -15,6 +15,7 @@ namespace middleend::mir {
                    std::unique_ptr<Terminator> terminator,
                    std::vector<std::unique_ptr<Literal>> literals);
         std::vector<std::unique_ptr<Instruction>> &getInstructions();
+        std::vector<std::unique_ptr<Literal>> &getLiterals();
         std::unique_ptr<Terminator> &getTerminator();
         std::vector<BasicBlock *> &getPredecessors();
         std::vector<BasicBlock *> &getSuccessors();

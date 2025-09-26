@@ -16,6 +16,10 @@ namespace middleend::mir {
         return body;
     }
 
+    std::vector<std::unique_ptr<Literal>> &BasicBlock::getLiterals() {
+        return literals;
+    }
+
     std::unique_ptr<Terminator> &BasicBlock::getTerminator() {
         return terminator;
     }
