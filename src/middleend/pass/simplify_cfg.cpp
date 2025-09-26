@@ -1,5 +1,3 @@
-#include <algorithm>
-
 #include "middleend/pass/simplify_cfg.h"
 
 namespace middleend {
@@ -11,28 +9,25 @@ namespace middleend {
                 std::vector<size_t> to_erase;
                 auto &bbs = f.getBasicBlocks();
                 for (size_t ind = 0; ind < bbs.size(); ind++) {
-                    auto &bb = bbs[ind];
+                    auto bb = bbs[ind].get();
+
+                    auto &preds = bb->getPredecessors();
+                    auto &succs = bb->getSuccessors();
 
                     // Remove if no predecessors
-                    if (bb->getPredecessors().empty() &&
-                        bb.get() != f.getEntryBlock()) {
-                        for (auto pred : bb->getPredecessors()) {
-                            auto &succs = pred->getSuccessors();
-                            succs.erase(std::find(succs.begin(), succs.end(),
-                                                  bb.get()));
-                        }
+                    if (preds.empty() && bb != f.getEntryBlock()) {
+                        for (auto pred : preds)
+                            std::erase(pred->getSuccessors(), bb);
 
-                        for (auto succ : bb->getSuccessors()) {
-                            auto &preds = succ->getPredecessors();
-                            preds.erase(std::find(preds.begin(), preds.end(),
-                                                  bb.get()));
-                        }
+                        for (auto succ : succs)
+                            std::erase(succ->getPredecessors(), bb);
 
                         to_erase.push_back(ind);
 
                         changed = true;
                         continue;
                     }
+
                     // Merge if straight line connection
                     // Eliminate phis if only one successor
                     // Eliminate if only unconditional br
