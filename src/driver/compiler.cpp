@@ -7,6 +7,7 @@
 #include "middleend/pass/mem2reg.h"
 #include "middleend/pass/pass.h"
 #include "middleend/pass/pass_manager.h"
+#include "middleend/pass/simplify_cfg.h"
 
 void printHelp(const std::string &program_name) {
     std::cerr << "USAGE: " << program_name << " [options] <file>" << std::endl;
@@ -73,6 +74,9 @@ int main(int argc, char *argv[]) {
     std::unique_ptr<middleend::TransformPass> mem2reg =
         std::make_unique<middleend::Mem2Reg>();
     pm.addPass(std::move(mem2reg));
+    std::unique_ptr<middleend::TransformPass> simplify_cfg =
+        std::make_unique<middleend::SimplifyCFG>();
+    pm.addPass(std::move(simplify_cfg));
     pm.runPasses(mir);
 
     std::cout << mir.toString() << std::endl;
