@@ -166,7 +166,8 @@ namespace middleend {
 
                 size_t to_erase_ind = 0;
                 for (size_t ind = 0; ind < instructions.size(); ind++) {
-                    if (ind == to_erase[to_erase_ind]) {
+                    if (to_erase_ind < to_erase.size() &&
+                        ind == to_erase[to_erase_ind]) {
                         to_erase_ind++;
                         continue;
                     }
