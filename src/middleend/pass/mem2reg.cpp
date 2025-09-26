@@ -1,4 +1,3 @@
-#include <iostream>
 #include <ranges>
 #include <unordered_set>
 
@@ -100,20 +99,18 @@ namespace middleend {
 
                 auto &instructions = bb->getInstructions();
                 for (size_t ind = 0; ind < instructions.size(); ind++) {
-                    auto &i = instructions[ind];
+                    auto i = instructions[ind].get();
 
                     // Alloca: delete
                     // TODO: delete when finding promotable
-                    auto *alloca =
-                        dynamic_cast<mir::InstructionAlloca *>(i.get());
+                    auto *alloca = dynamic_cast<mir::InstructionAlloca *>(i);
                     if (alloca) {
                         indices_to_erase[bb].push_back(ind);
                         continue;
                     }
 
                     // Store: update reaching def, delete
-                    auto *store =
-                        dynamic_cast<mir::InstructionStore *>(i.get());
+                    auto *store = dynamic_cast<mir::InstructionStore *>(i);
                     if (store) {
                         auto alloca = store->getPtr();
                         auto value = store->getValue();
@@ -129,7 +126,7 @@ namespace middleend {
                     }
 
                     // Load: replace uses with reaching def, delete
-                    auto *load = dynamic_cast<mir::InstructionLoad *>(i.get());
+                    auto *load = dynamic_cast<mir::InstructionLoad *>(i);
                     if (load) {
                         ReplaceUseVisitor visitor(load,
                                                   reaching[load->getPtr()]);
