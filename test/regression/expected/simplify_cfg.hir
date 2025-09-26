@@ -1,0 +1,48 @@
+int64_t simplify_cfg_delete_orphaned() {
+    __entry:
+    goto_if (1) __if_t __if_f;
+    __if_t:
+    return 2;
+    goto __if_cont;
+    __if_f:
+    return 3;
+    __if_cont:
+}
+
+int64_t simplify_cfg_merge_straight_line() {
+    __entry:
+    int64_t val_1;
+    val_1 = 0;
+    goto_if (1) __if_t __if_f;
+    __if_t:
+    goto_if (2) __if_t1 __if_cont1;
+    __if_t1:
+    return 3;
+    __if_cont1:
+    val_1 = val_1 + 4;
+    goto __if_cont;
+    __if_f:
+    return 5;
+    __if_cont:
+    return val_1;
+}
+
+int64_t simplify_cfg_delete_empty() {
+    __entry:
+    goto_if (1) __if_t __if_f;
+    __if_t:
+    goto_if (2) __if_t1 __if_f1;
+    __if_t1:
+    goto __if_cont1;
+    __if_f1:
+    __if_cont1:
+    goto __if_cont;
+    __if_f:
+    goto_if (3) __if_t2 __if_f2;
+    __if_t2:
+    goto __if_cont2;
+    __if_f2:
+    __if_cont2:
+    __if_cont:
+    return 4;
+}

@@ -19,6 +19,23 @@ int64_t mem2reg_basic() {
     return bit_and;
 }
 
+int64_t mem2reg_branching() {
+    int64_t res = 0;
+    if (res) {
+        res = 1;
+        if (res) {
+            res = 2;
+        } else {
+            res = 3;
+        }
+        res = 4;
+    } else {
+        res = 5;
+    }
+    res = 6;
+    return res;
+}
+
 int64_t mem2reg_negative() {
     int64_t a;
     a = 6 + 7;

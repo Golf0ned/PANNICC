@@ -1,0 +1,55 @@
+define i64 @first() {
+
+}
+
+define i64 @second() {
+entry:
+  %0 = call i64 @first
+  %1 = add i64 %0, i64 1
+  ret i64 %1
+}
+
+define i64 @third() {
+entry:
+  %0 = call i64 @second
+  %1 = add i64 %0, i64 2
+  ret i64 %1
+}
+
+define i64 @fourth() {
+entry:
+  %0 = call i64 @third
+  %1 = add i64 %0, i64 3
+  ret i64 %1
+}
+
+define i64 @fifth() {
+entry:
+  %0 = call i64 @fourth
+  %1 = add i64 %0, i64 4
+  ret i64 %1
+}
+
+define i64 @sixth() {
+entry:
+  %0 = call i64 @fifth
+  %1 = add i64 %0, i64 5
+  ret i64 %1
+}
+
+define i64 @main() {
+entry:
+  %0 = call i64 @first
+  %1 = add i64 0, i64 %0
+  %2 = call i64 @second
+  %3 = add i64 %1, i64 %2
+  %4 = call i64 @third
+  %5 = add i64 %3, i64 %4
+  %6 = call i64 @fourth
+  %7 = add i64 %5, i64 %6
+  %8 = call i64 @fifth
+  %9 = add i64 %7, i64 %8
+  %10 = call i64 @sixth
+  %11 = add i64 %9, i64 %10
+  ret i64 %11
+}
