@@ -17,3 +17,15 @@ int64_t scope() {
     after_1 = 6;
     return 0;
 }
+
+int64_t scope_reassign_variable() {
+    __entry:
+    int64_t cond_1;
+    cond_1 = 1;
+    cond_1 = cond_1 + 1;
+    int64_t cond_2;
+    cond_2 = 3;
+    cond_2 = cond_2 + 4;
+    cond_1 = cond_1 + 5;
+    return cond_1;
+}

@@ -17,3 +17,14 @@ int64_t scope() {
 
     return 0;
 }
+
+int64_t scope_reassign_variable() {
+    int64_t cond = 1;
+    {
+        cond = cond + 1;
+        int64_t cond = 3;
+        cond = cond + 4;
+    }
+    cond = cond + 5;
+    return cond;
+}

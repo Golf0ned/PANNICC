@@ -5,6 +5,7 @@ int64_t add() {
     c = a + b;
     return c;
 }
+
 int64_t sub() {
     int64_t a = 10;
     int64_t b = 1;
@@ -12,6 +13,7 @@ int64_t sub() {
     c = a - b;
     return c;
 }
+
 int64_t mul() {
     int64_t a = 3;
     int64_t b = 4;
@@ -19,6 +21,7 @@ int64_t mul() {
     c = a * b;
     return c;
 }
+
 int64_t bit_and() {
     int64_t a = 31;
     int64_t b = 4;

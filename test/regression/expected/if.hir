@@ -1,0 +1,94 @@
+int64_t if_basic() {
+    __entry:
+    int64_t cond_1;
+    cond_1 = 1;
+    goto_if (cond_1) __if_t __if_cont;
+    __if_t:
+    cond_1 = cond_1 + 100;
+    __if_cont:
+    return cond_1;
+}
+
+int64_t if_basic_else() {
+    __entry:
+    int64_t cond_1;
+    cond_1 = 1;
+    goto_if (cond_1) __if_t __if_f;
+    __if_t:
+    cond_1 = cond_1 + 3;
+    goto __if_cont;
+    __if_f:
+    cond_1 = cond_1 + 100;
+    __if_cont:
+    return cond_1;
+}
+
+int64_t if_no_braces() {
+    __entry:
+    int64_t cond_1;
+    cond_1 = 1;
+    goto_if (cond_1) __if_t __if_f;
+    __if_t:
+    return cond_1;
+    goto __if_cont;
+    __if_f:
+    return cond_1;
+    __if_cont:
+}
+
+int64_t if_chain() {
+    __entry:
+    int64_t cond_1;
+    cond_1 = 1;
+    int64_t cond_2_1;
+    cond_2_1 = 2;
+    goto_if (cond_1) __if_t __if_cont;
+    __if_t:
+    goto_if (cond_2_1) __if_t1 __if_cont1;
+    __if_t1:
+    return 0;
+    __if_cont1:
+    __if_cont:
+    return 1;
+}
+
+int64_t if_chain_many() {
+    __entry:
+    int64_t cond_1;
+    cond_1 = 1;
+    int64_t cond_2_1;
+    cond_2_1 = 2;
+    int64_t cond_3_1;
+    cond_3_1 = 0;
+    goto_if (cond_1) __if_t __if_cont;
+    __if_t:
+    goto_if (cond_2_1) __if_t1 __if_cont1;
+    __if_t1:
+    goto_if (cond_3_1) __if_t2 __if_f;
+    __if_t2:
+    return 0;
+    goto __if_cont2;
+    __if_f:
+    return 3;
+    __if_cont2:
+    __if_cont1:
+    __if_cont:
+    return 1;
+}
+
+int64_t if_else_if() {
+    __entry:
+    goto_if (1) __if_t __if_f;
+    __if_t:
+    return 2;
+    goto __if_cont;
+    __if_f:
+    goto_if (3) __if_t1 __if_f1;
+    __if_t1:
+    return 4;
+    goto __if_cont1;
+    __if_f1:
+    return 5;
+    __if_cont1:
+    __if_cont:
+}

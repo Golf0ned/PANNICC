@@ -24,6 +24,29 @@ int64_t mem2reg_basic() {
     return bit_and_1;
 }
 
+int64_t mem2reg_branching() {
+    __entry:
+    int64_t res_1;
+    res_1 = 0;
+    goto_if (res_1) __if_t __if_f;
+    __if_t:
+    res_1 = 1;
+    goto_if (res_1) __if_t1 __if_f1;
+    __if_t1:
+    res_1 = 2;
+    goto __if_cont1;
+    __if_f1:
+    res_1 = 3;
+    __if_cont1:
+    res_1 = 4;
+    goto __if_cont;
+    __if_f:
+    res_1 = 5;
+    __if_cont:
+    res_1 = 6;
+    return res_1;
+}
+
 int64_t mem2reg_negative() {
     __entry:
     int64_t a_1;
