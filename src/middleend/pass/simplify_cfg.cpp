@@ -36,12 +36,17 @@ namespace middleend {
                     if (preds.size() == 1 &&
                         preds[0]->getSuccessors().size() == 1) {
                         auto &pred = preds[0];
+
                         auto &pred_insts = pred->getInstructions();
                         for (auto &i : bb->getInstructions()) {
                             assert(
                                 !dynamic_cast<mir::InstructionPhi *>(i.get()));
                             pred_insts.push_back(std::move(i));
                         }
+
+                        auto &pred_literals = pred->getLiterals();
+                        for (auto &l : bb->getLiterals())
+                            pred_literals.push_back(std::move(l));
 
                         for (auto succ : succs) {
                             auto &succ_preds = succ->getPredecessors();
@@ -63,9 +68,6 @@ namespace middleend {
 
                         pred->getSuccessors().swap(succs);
                         pred->getTerminator().swap(bb->getTerminator());
-                        auto &pred_literals = pred->getLiterals();
-                        for (auto &l : bb->getLiterals())
-                            pred_literals.push_back(std::move(l));
 
                         to_erase.push_back(ind);
 
@@ -122,7 +124,7 @@ namespace middleend {
                             if (cond_branch) {
                                 if (cond_branch->getTSuccessor() == bb)
                                     cond_branch->setTSuccessor(succ);
-                                else
+                                if (cond_branch->getFSuccessor() == bb)
                                     cond_branch->setFSuccessor(succ);
                             }
                         }
