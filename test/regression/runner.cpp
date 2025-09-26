@@ -10,6 +10,7 @@
 #include "frontend/parser.h"
 #include "middleend/pass/mem2reg.h"
 #include "middleend/pass/pass_manager.h"
+#include "middleend/pass/simplify_cfg.h"
 
 namespace fs = std::filesystem;
 
@@ -29,6 +30,8 @@ buildPassesFromFile(std::string passes_path) {
     while (buffer >> pass_str) {
         if (pass_str == "mem2reg")
             pm->addPass(std::make_unique<middleend::Mem2Reg>());
+        else if (pass_str == "simplify_cfg")
+            pm->addPass(std::make_unique<middleend::SimplifyCFG>());
         else
             continue;
     }
