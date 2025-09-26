@@ -71,12 +71,8 @@ int main(int argc, char *argv[]) {
     middleend::mir::Program mir = frontend::hirToMir(hir);
 
     middleend::PassManager pm;
-    std::unique_ptr<middleend::TransformPass> mem2reg =
-        std::make_unique<middleend::Mem2Reg>();
-    pm.addPass(std::move(mem2reg));
-    std::unique_ptr<middleend::TransformPass> simplify_cfg =
-        std::make_unique<middleend::SimplifyCFG>();
-    pm.addPass(std::move(simplify_cfg));
+    pm.addPass(std::make_unique<middleend::Mem2Reg>());
+    pm.addPass(std::make_unique<middleend::SimplifyCFG>());
     pm.runPasses(mir);
 
     std::cout << mir.toString() << std::endl;
