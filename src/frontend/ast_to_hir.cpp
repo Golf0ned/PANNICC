@@ -117,28 +117,55 @@ namespace frontend {
         auto cont_label = makeLabel("if_cont");
 
         auto cond = resolveUseScope(i->getCond().get());
-        auto cond_t_label =
+        auto t_atom =
             std::make_unique<AtomIdentifier>(t_label->getName()->getValue());
-        auto cond_f_label = std::make_unique<AtomIdentifier>(
+        auto f_atom = std::make_unique<AtomIdentifier>(
             has_else ? f_label->getName()->getValue()
                      : cont_label->getName()->getValue());
         auto cond_i = std::make_unique<hir::InstructionBranchCond>(
-            std::move(cond), std::move(cond_t_label), std::move(cond_f_label));
+            std::move(cond), std::move(t_atom), std::move(f_atom));
         result.push_back(std::move(cond_i));
 
         result.push_back(std::move(t_label));
         i->getTBranch()->accept(this);
 
         if (has_else) {
-            auto continue_label = std::make_unique<AtomIdentifier>(
+            auto cont_atom = std::make_unique<AtomIdentifier>(
                 cont_label->getName()->getValue());
-            auto continue_i = std::make_unique<hir::InstructionBranch>(
-                std::move(continue_label));
+            auto continue_i =
+                std::make_unique<hir::InstructionBranch>(std::move(cont_atom));
             result.push_back(std::move(continue_i));
 
             result.push_back(std::move(f_label));
             i->getFBranch()->accept(this);
         }
+
+        result.push_back(std::move(cont_label));
+    }
+
+    void ASTToHIRVisitor::visit(ast::InstructionWhile *i) {
+        auto cond_label = makeLabel("while_cond");
+        auto body_label = makeLabel("while_body");
+        auto cont_label = makeLabel("while_cont");
+
+        auto cond_atom =
+            std::make_unique<AtomIdentifier>(cond_label->getName()->getValue());
+        auto body_atom =
+            std::make_unique<AtomIdentifier>(body_label->getName()->getValue());
+        auto cont_atom =
+            std::make_unique<AtomIdentifier>(cont_label->getName()->getValue());
+
+        result.push_back(std::move(cond_label));
+        auto cond = resolveUseScope(i->getCond().get());
+        auto cond_i = std::make_unique<hir::InstructionBranchCond>(
+            std::move(cond), std::move(body_atom), std::move(cont_atom));
+        result.push_back(std::move(cond_i));
+
+        result.push_back(std::move(body_label));
+        i->getBody()->accept(this);
+        auto continue_i =
+            std::make_unique<hir::InstructionBranch>(std::move(cond_atom));
+        result.push_back(std::move(continue_i));
 
         result.push_back(std::move(cont_label));
     }

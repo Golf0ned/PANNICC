@@ -138,4 +138,16 @@ namespace frontend::ast {
     void InstructionIf::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
+
+    InstructionWhile::InstructionWhile(std::unique_ptr<Atom> cond,
+                                       std::unique_ptr<Instruction> body)
+        : cond(std::move(cond)), body(std::move(body)) {}
+
+    std::unique_ptr<Atom> &InstructionWhile::getCond() { return cond; }
+
+    std::unique_ptr<Instruction> &InstructionWhile::getBody() { return body; }
+
+    void InstructionWhile::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
 } // namespace frontend::ast

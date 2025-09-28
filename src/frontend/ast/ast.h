@@ -54,6 +54,7 @@ namespace frontend::ast {
         void visit(InstructionCall *i) override;
         void visit(InstructionCallAssign *i) override;
         void visit(InstructionIf *i) override;
+        void visit(InstructionWhile *i) override;
 
     private:
         SymbolTable symbol_table;

@@ -28,6 +28,7 @@ namespace frontend {
         void visit(ast::InstructionCall *i) override;
         void visit(ast::InstructionCallAssign *i) override;
         void visit(ast::InstructionIf *i) override;
+        void visit(ast::InstructionWhile *i) override;
 
         std::unique_ptr<AtomIdentifier>
         createScopedIdentifier(std::string symbol, uint64_t scope);

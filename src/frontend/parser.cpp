@@ -38,6 +38,7 @@ namespace frontend {
     struct keyword_return : TAO_PEGTL_STRING("return") {};
     struct keyword_if : TAO_PEGTL_STRING("if") {};
     struct keyword_else : TAO_PEGTL_STRING("else") {};
+    struct keyword_while : TAO_PEGTL_STRING("while") {};
 
     struct keyword_int64_t : TAO_PEGTL_STRING("int64_t") {};
 
@@ -111,7 +112,6 @@ namespace frontend {
                      // TODO: parameter list
                      right_paren, ignorable, semicolon> {};
 
-    // TODO: do this properly
     struct instruction_if
         : pegtl::seq<keyword_if, ignorable, left_paren, ignorable, value,
                      ignorable, right_paren, ignorable, instruction_any> {};
@@ -121,8 +121,13 @@ namespace frontend {
                      ignorable, right_paren, ignorable, instruction_any,
                      ignorable, keyword_else, ignorable, instruction_any> {};
 
+    struct instruction_while
+        : pegtl::seq<keyword_while, ignorable, left_paren, ignorable, value,
+                     ignorable, right_paren, ignorable, instruction_any> {};
+
     struct instruction_any
         : pegtl::sor<pegtl_apply_if_match<scope>,
+                     pegtl_apply_if_match<instruction_while>,
                      pegtl_apply_if_match<instruction_if_else>,
                      pegtl_apply_if_match<instruction_if>,
                      pegtl_apply_if_match<instruction_return>,
@@ -359,6 +364,22 @@ namespace frontend {
 
             auto i = std::make_unique<ast::InstructionIf>(
                 std::move(cond), std::move(t_branch), std::move(f_branch));
+            active_scopes.back()->addInstruction(std::move(i));
+        }
+    };
+
+    template <> struct action<instruction_while> {
+        template <typename Input>
+        static void apply(const Input &in, parsing_results &res) {
+            auto cond = std::move(parsed_atoms.back());
+            parsed_atoms.pop_back();
+
+            auto body =
+                std::move(active_scopes.back()->getInstructions().back());
+            active_scopes.back()->getInstructions().pop_back();
+
+            auto i = std::make_unique<ast::InstructionWhile>(std::move(cond),
+                                                             std::move(body));
             active_scopes.back()->addInstruction(std::move(i));
         }
     };
