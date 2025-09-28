@@ -5,7 +5,6 @@
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"
 #include "middleend/pass/mem2reg.h"
-#include "middleend/pass/pass.h"
 #include "middleend/pass/pass_manager.h"
 #include "middleend/pass/simplify_cfg.h"
 
