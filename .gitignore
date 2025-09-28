@@ -1,5 +1,6 @@
-# Build output
+# Build directories
 build/
+debug/
 
 # Clangd
 .clangd/
