@@ -135,6 +135,19 @@ namespace frontend::ast {
         std::unique_ptr<Instruction> f_branch;
     };
 
+    class InstructionWhile : public Instruction {
+    public:
+        InstructionWhile(std::unique_ptr<Atom> cond,
+                         std::unique_ptr<Instruction> body);
+        std::unique_ptr<Atom> &getCond();
+        std::unique_ptr<Instruction> &getBody();
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        std::unique_ptr<Atom> cond;
+        std::unique_ptr<Instruction> body;
+    };
+
     class InstructionVisitor {
     public:
         virtual void visit(Instruction *i) = 0;
@@ -147,5 +160,6 @@ namespace frontend::ast {
         virtual void visit(InstructionCall *i) = 0;
         virtual void visit(InstructionCallAssign *i) = 0;
         virtual void visit(InstructionIf *i) = 0;
+        virtual void visit(InstructionWhile *i) = 0;
     };
 } // namespace frontend::ast

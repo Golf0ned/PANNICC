@@ -162,4 +162,15 @@ namespace frontend::ast {
 
         res = if_res;
     }
+
+    void ToStringVisitor::visit(InstructionWhile *i) {
+        const std::string cond = i->getCond()->toString(symbol_table);
+        std::string if_res = prefix + "while (" + cond + ")";
+
+        convertSubexpression(i->getBody().get());
+        std::string body = getResult();
+        if_res += body;
+
+        res = if_res;
+    }
 } // namespace frontend::ast
