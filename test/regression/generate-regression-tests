@@ -1,0 +1,31 @@
+#!/bin/bash
+
+INPUT=$1
+PASSES=$2
+
+PANNICC="${HOME}/code/projects/PANNICC/build/bin/pannicc"
+OUTPUT_DIR="${HOME}/code/projects/PANNICC/test/regression/expected"
+
+if [ -x "${INPUT}" ]; then
+    echo "No input file"
+    exit 1
+fi
+
+if [ ! -f "${INPUT}" ]; then
+    echo "Invalid input file: ${INPUT}"
+    exit 1
+fi
+
+BASE_NAME=$(basename ${INPUT})
+INPUT_NAME="${BASE_NAME%.c}"
+
+$(${PANNICC} --dump-ast ${INPUT} > ${OUTPUT_DIR}/${INPUT_NAME}.ast)
+$(${PANNICC} --dump-hir ${INPUT} > ${OUTPUT_DIR}/${INPUT_NAME}.hir)
+# $(${PANNICC} --O0 ${INPUT} > ${OUTPUT_DIR}/${INPUT_NAME}.mir)
+
+if [ "${PASSES}" ]; then
+    # TODO: generate test file with passes
+    echo "TODO: run with passes"
+fi
+
+exit 0
