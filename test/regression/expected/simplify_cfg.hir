@@ -46,3 +46,13 @@ int64_t simplify_cfg_delete_empty() {
     __if_cont:
     return 4;
 }
+
+int64_t simplify_cfg_empty_loop() {
+    __entry:
+    __while_cond:
+    goto_if (0) __while_body __while_cont;
+    __while_body:
+    goto __while_cond;
+    __while_cont:
+    return 0;
+}

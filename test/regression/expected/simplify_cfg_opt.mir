@@ -63,3 +63,17 @@ entry:
   %4 = load ptr %0
   ret i64 %4
 }
+
+define i64 @simplify_cfg_empty_loop() {
+entry:
+  %0 = alloca i64
+  br label 1
+
+1:
+  br i64 0, label 1, label 2
+
+2:
+  store i64 0, ptr %0
+  %3 = load ptr %0
+  ret i64 %3
+}

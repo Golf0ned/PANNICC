@@ -89,6 +89,51 @@ entry:
   ret i64 %12
 }
 
+define i64 @mem2reg_while() {
+entry:
+  %0 = alloca i64
+  %1 = alloca i64
+  store i64 123, ptr %1
+  %2 = alloca i64
+  store i64 456, ptr %2
+  %3 = alloca i64
+  store i64 789, ptr %3
+  br label 4
+
+4:
+  %5 = load ptr %2
+  br i64 %5, label 6, label 13
+
+6:
+  %7 = alloca i64
+  store i64 432, ptr %7
+  %8 = load ptr %1
+  %9 = load ptr %7
+  %10 = add i64 %8, i64 %9
+  store i64 %10, ptr %1
+  %11 = load ptr %2
+  %12 = sub i64 %11, i64 2
+  store i64 %12, ptr %2
+  br label 4
+
+13:
+  %14 = load ptr %2
+  br i64 %14, label 15, label 17
+
+15:
+  %16 = load ptr %2
+  store i64 %16, ptr %0
+  br label 18
+
+17:
+  store i64 987654321, ptr %0
+  br label 18
+
+18:
+  %19 = load ptr %0
+  ret i64 %19
+}
+
 define i64 @mem2reg_negative() {
 entry:
   %0 = alloca i64

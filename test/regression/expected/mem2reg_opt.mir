@@ -47,6 +47,35 @@ entry:
   ret i64 6
 }
 
+define i64 @mem2reg_while() {
+entry:
+  br label 0
+
+0:
+  %1 = phi i64 [ %5, %4 ], [ 123, %18446744073709551615 ]
+  %2 = phi i64 [ %6, %4 ], [ 456, %18446744073709551615 ]
+  %3 = phi i64 [ 432, %4 ]
+  br i64 %2, label 4, label 7
+
+4:
+  %5 = add i64 %1, i64 432
+  %6 = sub i64 %2, i64 2
+  br label 0
+
+7:
+  br i64 %2, label 8, label 9
+
+8:
+  br label 10
+
+9:
+  br label 10
+
+10:
+  %11 = phi i64 [ %2, %8 ], [ 987654321, %9 ]
+  ret i64 %11
+}
+
 define i64 @mem2reg_negative() {
 entry:
   %0 = add i64 6, i64 7

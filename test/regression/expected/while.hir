@@ -1,0 +1,56 @@
+int64_t while_basic() {
+    __entry:
+    int64_t val_1;
+    val_1 = 0;
+    __while_cond:
+    goto_if (1) __while_body __while_cont;
+    __while_body:
+    val_1 = val_1 + 2;
+    goto __while_cond;
+    __while_cont:
+    return val_1;
+}
+
+int64_t while_complex() {
+    __entry:
+    int64_t res_1;
+    res_1 = 0;
+    int64_t cond_1;
+    cond_1 = 100;
+    __while_cond:
+    goto_if (cond_1) __while_body __while_cont;
+    __while_body:
+    res_1 = res_1 + 5;
+    cond_1 = cond_1 - 1;
+    goto __while_cond;
+    __while_cont:
+    return res_1;
+}
+
+int64_t while_empty() {
+    __entry:
+    __while_cond:
+    goto_if (0) __while_body __while_cont;
+    __while_body:
+    goto __while_cond;
+    __while_cont:
+    return 0;
+}
+
+int64_t while_if() {
+    __entry:
+    int64_t counter_1;
+    counter_1 = 200;
+    __while_cond:
+    goto_if (1) __while_body __while_cont;
+    __while_body:
+    goto_if (counter_1) __if_t __if_f;
+    __if_t:
+    goto __if_cont;
+    __if_f:
+    return 500;
+    __if_cont:
+    goto __while_cond;
+    __while_cont:
+    return 0;
+}
