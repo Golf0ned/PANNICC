@@ -47,6 +47,30 @@ int64_t mem2reg_branching() {
     return res_1;
 }
 
+int64_t mem2reg_while() {
+    __entry:
+    int64_t mem_1;
+    mem_1 = 123;
+    int64_t to_1;
+    to_1 = 456;
+    int64_t reg_1;
+    reg_1 = 789;
+    __while_cond:
+    goto_if (to_1) __while_body __while_cont;
+    __while_body:
+    int64_t reg_2;
+    reg_2 = 432;
+    mem_1 = mem_1 + reg_2;
+    to_1 = to_1 - 2;
+    goto __while_cond;
+    __while_cont:
+    goto_if (to_1) __if_t __if_cont;
+    __if_t:
+    return to_1;
+    __if_cont:
+    return 987654321;
+}
+
 int64_t mem2reg_negative() {
     __entry:
     int64_t a_1;

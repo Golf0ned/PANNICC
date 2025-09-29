@@ -35,3 +35,8 @@ int64_t simplify_cfg_delete_empty() {
     }
     return 4;
 }
+
+int64_t simplify_cfg_empty_loop() {
+    while(0) {}
+    return 0;
+}

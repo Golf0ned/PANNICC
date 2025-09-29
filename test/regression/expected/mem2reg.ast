@@ -36,6 +36,20 @@ int64_t mem2reg_branching() {
     return res;
 }
 
+int64_t mem2reg_while() {
+    int64_t mem = 123;
+    int64_t to = 456;
+    int64_t reg = 789;
+    while (to) {
+        int64_t reg = 432;
+        mem = mem + reg;
+        to = to - 2;
+    }
+    if (to)
+        return to;
+    return 987654321;
+}
+
 int64_t mem2reg_negative() {
     int64_t a;
     a = 6 + 7;
