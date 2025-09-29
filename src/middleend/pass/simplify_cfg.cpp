@@ -12,6 +12,7 @@ namespace middleend {
                 changed = false;
                 std::vector<size_t> to_erase;
                 auto &bbs = f.getBasicBlocks();
+                // TODO: handle non-sequential BB storage order
                 for (size_t ind = 0; ind < bbs.size(); ind++) {
                     auto bb = bbs[ind].get();
 
@@ -128,6 +129,9 @@ namespace middleend {
                                     cond_branch->setFSuccessor(succ);
                             }
                         }
+
+                        if (bb == f.getEntryBlock())
+                            f.setEntryBlock(succ);
 
                         to_erase.push_back(ind);
 
