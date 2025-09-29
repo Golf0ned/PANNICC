@@ -129,7 +129,7 @@ namespace middleend {
                     auto *load = dynamic_cast<mir::InstructionLoad *>(i);
                     if (load) {
                         ReplaceUseVisitor visitor(load,
-                                                  reaching[load->getPtr()]);
+                                                  reaching[load->getPtr()], bb);
                         for (auto &use : load->getUses()) {
                             use->accept(&visitor);
                         }
@@ -195,14 +195,27 @@ namespace middleend {
     }
 
     ReplaceUseVisitor::ReplaceUseVisitor(mir::Value *old_value,
-                                         mir::Value *new_value)
-        : old_value(old_value), new_value(new_value) {}
+                                         mir::Value *new_value,
+                                         mir::BasicBlock *bb)
+        : old_value(old_value), new_value(new_value), bb(bb) {
+        new_value_literal = dynamic_cast<mir::Literal *>(new_value);
+    }
 
     void ReplaceUseVisitor::visit(mir::InstructionBinaryOp *i) {
         if (i->getLeft() == old_value)
-            i->setLeft(new_value);
+            i->setLeft(addNewValue());
         if (i->getRight() == old_value)
-            i->setRight(new_value);
+            i->setRight(addNewValue());
+    }
+
+    mir::Value *ReplaceUseVisitor::addNewValue() {
+        if (!new_value_literal)
+            return new_value;
+        auto new_literal = std::make_unique<mir::Literal>(
+            new_value_literal->getType(), new_value_literal->getValue());
+        auto new_literal_ptr = new_literal.get();
+        bb->getLiterals().push_back(std::move(new_literal));
+        return new_literal_ptr;
     }
 
     void ReplaceUseVisitor::visit(mir::InstructionCall *i) {}
@@ -213,7 +226,7 @@ namespace middleend {
 
     void ReplaceUseVisitor::visit(mir::InstructionStore *i) {
         if (i->getValue() == old_value)
-            i->setValue(new_value);
+            i->setValue(addNewValue());
     }
 
     void ReplaceUseVisitor::visit(mir::InstructionPhi *i) {
@@ -225,7 +238,7 @@ namespace middleend {
 
     void ReplaceUseVisitor::visit(mir::TerminatorReturn *t) {
         if (t->getValue() == old_value) {
-            t->setValue(new_value);
+            t->setValue(addNewValue());
         }
     }
 
@@ -233,6 +246,6 @@ namespace middleend {
 
     void ReplaceUseVisitor::visit(mir::TerminatorCondBranch *t) {
         if (t->getCond() == old_value)
-            t->setCond(new_value);
+            t->setCond(addNewValue());
     }
 } // namespace middleend
