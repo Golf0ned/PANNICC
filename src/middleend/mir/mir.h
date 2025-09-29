@@ -40,6 +40,7 @@ namespace middleend::mir {
         std::string getName();
         std::vector<std::unique_ptr<BasicBlock>> &getBasicBlocks();
         BasicBlock *getEntryBlock();
+        void setEntryBlock(BasicBlock *new_block);
         std::string toString();
 
     private:

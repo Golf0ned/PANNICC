@@ -69,6 +69,10 @@ namespace middleend::mir {
 
     BasicBlock *Function::getEntryBlock() { return entry_block; }
 
+    void Function::setEntryBlock(BasicBlock *new_block) {
+        entry_block = new_block;
+    }
+
     std::string Function::toString() {
         // TODO: function params
         std::string res = "define " + ::middleend::mir::toString(type) + " @" +
