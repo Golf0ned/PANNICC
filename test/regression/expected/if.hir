@@ -1,6 +1,6 @@
-int64_t if_basic() {
+int if_basic() {
     __entry:
-    int64_t cond_1;
+    int cond_1;
     cond_1 = 1;
     goto_if (cond_1) __if_t __if_cont;
     __if_t:
@@ -9,9 +9,9 @@ int64_t if_basic() {
     return cond_1;
 }
 
-int64_t if_basic_else() {
+int if_basic_else() {
     __entry:
-    int64_t cond_1;
+    int cond_1;
     cond_1 = 1;
     goto_if (cond_1) __if_t __if_f;
     __if_t:
@@ -23,9 +23,9 @@ int64_t if_basic_else() {
     return cond_1;
 }
 
-int64_t if_no_braces() {
+int if_no_braces() {
     __entry:
-    int64_t cond_1;
+    int cond_1;
     cond_1 = 1;
     goto_if (cond_1) __if_t __if_f;
     __if_t:
@@ -36,11 +36,11 @@ int64_t if_no_braces() {
     __if_cont:
 }
 
-int64_t if_chain() {
+int if_chain() {
     __entry:
-    int64_t cond_1;
+    int cond_1;
     cond_1 = 1;
-    int64_t cond_2_1;
+    int cond_2_1;
     cond_2_1 = 2;
     goto_if (cond_1) __if_t __if_cont;
     __if_t:
@@ -52,13 +52,13 @@ int64_t if_chain() {
     return 1;
 }
 
-int64_t if_chain_many() {
+int if_chain_many() {
     __entry:
-    int64_t cond_1;
+    int cond_1;
     cond_1 = 1;
-    int64_t cond_2_1;
+    int cond_2_1;
     cond_2_1 = 2;
-    int64_t cond_3_1;
+    int cond_3_1;
     cond_3_1 = 0;
     goto_if (cond_1) __if_t __if_cont;
     __if_t:
@@ -76,7 +76,7 @@ int64_t if_chain_many() {
     return 1;
 }
 
-int64_t if_else_if() {
+int if_else_if() {
     __entry:
     goto_if (1) __if_t __if_f;
     __if_t:

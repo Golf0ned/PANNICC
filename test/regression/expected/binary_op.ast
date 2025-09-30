@@ -1,31 +1,31 @@
-int64_t add() {
-    int64_t a = 1;
-    int64_t b = 2;
-    int64_t c;
+int add() {
+    int a = 1;
+    int b = 2;
+    int c;
     c = a + b;
     return c;
 }
 
-int64_t sub() {
-    int64_t a = 10;
-    int64_t b = 1;
-    int64_t c;
+int sub() {
+    int a = 10;
+    int b = 1;
+    int c;
     c = a - b;
     return c;
 }
 
-int64_t mul() {
-    int64_t a = 3;
-    int64_t b = 4;
-    int64_t c;
+int mul() {
+    int a = 3;
+    int b = 4;
+    int c;
     c = a * b;
     return c;
 }
 
-int64_t bit_and() {
-    int64_t a = 31;
-    int64_t b = 4;
-    int64_t c;
+int bit_and() {
+    int a = 31;
+    int b = 4;
+    int c;
     c = a & b;
     return c;
 }

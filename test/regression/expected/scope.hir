@@ -1,29 +1,29 @@
-int64_t scope() {
+int scope() {
     __entry:
-    int64_t before_1;
+    int before_1;
     before_1 = 0;
-    int64_t before_2;
+    int before_2;
     before_2 = 1;
-    int64_t before_3;
+    int before_3;
     before_3 = 2;
-    int64_t in_4;
+    int in_4;
     in_4 = before_3 + 3;
-    int64_t after_3;
+    int after_3;
     after_3 = 4;
-    int64_t after_2;
+    int after_2;
     after_2 = 5;
     after_2 = after_2 + before_2;
-    int64_t after_1;
+    int after_1;
     after_1 = 6;
     return 0;
 }
 
-int64_t scope_reassign_variable() {
+int scope_reassign_variable() {
     __entry:
-    int64_t cond_1;
+    int cond_1;
     cond_1 = 1;
     cond_1 = cond_1 + 1;
-    int64_t cond_2;
+    int cond_2;
     cond_2 = 3;
     cond_2 = cond_2 + 4;
     cond_1 = cond_1 + 5;

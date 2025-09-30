@@ -1,4 +1,4 @@
-int64_t simplify_cfg_delete_orphaned() {
+int simplify_cfg_delete_orphaned() {
     __entry:
     goto_if (1) __if_t __if_f;
     __if_t:
@@ -9,9 +9,9 @@ int64_t simplify_cfg_delete_orphaned() {
     __if_cont:
 }
 
-int64_t simplify_cfg_merge_straight_line() {
+int simplify_cfg_merge_straight_line() {
     __entry:
-    int64_t val_1;
+    int val_1;
     val_1 = 0;
     goto_if (1) __if_t __if_f;
     __if_t:
@@ -27,7 +27,7 @@ int64_t simplify_cfg_merge_straight_line() {
     return val_1;
 }
 
-int64_t simplify_cfg_delete_empty() {
+int simplify_cfg_delete_empty() {
     __entry:
     goto_if (1) __if_t __if_f;
     __if_t:
@@ -47,7 +47,7 @@ int64_t simplify_cfg_delete_empty() {
     return 4;
 }
 
-int64_t simplify_cfg_empty_loop() {
+int simplify_cfg_empty_loop() {
     __entry:
     __while_cond:
     goto_if (0) __while_body __while_cont;

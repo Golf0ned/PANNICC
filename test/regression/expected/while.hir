@@ -1,6 +1,6 @@
-int64_t while_basic() {
+int while_basic() {
     __entry:
-    int64_t val_1;
+    int val_1;
     val_1 = 0;
     __while_cond:
     goto_if (1) __while_body __while_cont;
@@ -11,11 +11,11 @@ int64_t while_basic() {
     return val_1;
 }
 
-int64_t while_complex() {
+int while_complex() {
     __entry:
-    int64_t res_1;
+    int res_1;
     res_1 = 0;
-    int64_t cond_1;
+    int cond_1;
     cond_1 = 100;
     __while_cond:
     goto_if (cond_1) __while_body __while_cont;
@@ -27,7 +27,7 @@ int64_t while_complex() {
     return res_1;
 }
 
-int64_t while_empty() {
+int while_empty() {
     __entry:
     __while_cond:
     goto_if (0) __while_body __while_cont;
@@ -37,9 +37,9 @@ int64_t while_empty() {
     return 0;
 }
 
-int64_t while_if() {
+int while_if() {
     __entry:
-    int64_t counter_1;
+    int counter_1;
     counter_1 = 200;
     __while_cond:
     goto_if (1) __while_body __while_cont;
