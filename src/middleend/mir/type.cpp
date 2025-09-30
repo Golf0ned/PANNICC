@@ -8,9 +8,9 @@ namespace middleend::mir {
         case Type::I1:
             return "i1";
         case Type::I16:
-            return "i1";
+            return "i16";
         case Type::I32:
-            return "i1";
+            return "i32";
         case Type::I64:
             return "i64";
         case Type::PTR:

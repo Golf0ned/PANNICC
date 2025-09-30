@@ -24,6 +24,7 @@ namespace frontend {
     typedef std::pair<std::vector<ast::Function>, SymbolTable> parsing_results;
 
     std::vector<std::string> parsed_tokens;
+    std::vector<Type> parsed_types;
     std::vector<std::unique_ptr<Atom>> parsed_atoms;
     std::vector<std::unique_ptr<ast::Scope>> active_scopes;
 
@@ -169,7 +170,8 @@ namespace frontend {
     template <> struct action<number> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            auto a = std::make_unique<AtomLiteral>(std::stoull(in.string()));
+            auto a = std::make_unique<AtomLiteral>(std::stoull(in.string()),
+                                                   parsed_types.back());
             parsed_atoms.push_back(std::move(a));
         }
     };
@@ -177,8 +179,18 @@ namespace frontend {
     template <> struct action<identifier> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            uint64_t id = res.second.addSymbol(in.string());
-            auto a = std::make_unique<AtomIdentifier>(id);
+            Type type;
+            uint64_t id;
+
+            if (res.second.hasSymbol(in.string())) {
+                id = res.second.addSymbol(in.string(), type);
+                type = res.second.getType(id);
+            } else {
+                type = parsed_types.back();
+                id = res.second.addSymbol(in.string(), type);
+            }
+
+            auto a = std::make_unique<AtomIdentifier>(id, type);
             parsed_atoms.push_back(std::move(a));
         }
     };
@@ -193,7 +205,7 @@ namespace frontend {
     template <> struct action<type> {
         template <typename Input>
         static void apply(const Input &in, parsing_results &res) {
-            parsed_tokens.push_back(in.string());
+            parsed_types.push_back(strToType.at(in.string()));
         }
     };
 
@@ -226,11 +238,8 @@ namespace frontend {
             AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
             std::unique_ptr<AtomIdentifier> variable(ptr);
 
-            Type type = strToType.at(parsed_tokens.back());
-            parsed_tokens.pop_back();
-
             auto i = std::make_unique<ast::InstructionDeclaration>(
-                type, std::move(variable));
+                std::move(variable));
             active_scopes.back()->addInstruction(std::move(i));
         }
     };
@@ -246,11 +255,8 @@ namespace frontend {
             AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
             std::unique_ptr<AtomIdentifier> variable(ptr);
 
-            Type type = strToType.at(parsed_tokens.back());
-            parsed_tokens.pop_back();
-
             auto i = std::make_unique<ast::InstructionDeclarationAssignValue>(
-                type, std::move(variable), std::move(value));
+                std::move(variable), std::move(value));
             active_scopes.back()->addInstruction(std::move(i));
         }
     };
@@ -399,14 +405,11 @@ namespace frontend {
             AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
             std::unique_ptr<AtomIdentifier> name(ptr);
 
-            Type type = strToType.at(parsed_tokens.back());
-            parsed_tokens.pop_back();
-
             auto body = std::move(active_scopes.back());
             active_scopes.pop_back();
 
             res.first.push_back(
-                ast::Function(type, std::move(name), std::move(body)));
+                ast::Function(std::move(name), std::move(body)));
         }
     };
 

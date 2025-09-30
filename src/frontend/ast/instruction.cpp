@@ -12,10 +12,8 @@ namespace frontend::ast {
     void Scope::accept(InstructionVisitor *visitor) { visitor->visit(this); }
 
     InstructionDeclaration::InstructionDeclaration(
-        Type type, std::unique_ptr<AtomIdentifier> variable)
-        : type(type), variable(std::move(variable)) {}
-
-    Type InstructionDeclaration::getType() { return type; }
+        std::unique_ptr<AtomIdentifier> variable)
+        : variable(std::move(variable)) {}
 
     std::unique_ptr<AtomIdentifier> &InstructionDeclaration::getVariable() {
         return variable;
@@ -26,11 +24,8 @@ namespace frontend::ast {
     }
 
     InstructionDeclarationAssignValue::InstructionDeclarationAssignValue(
-        Type type, std::unique_ptr<AtomIdentifier> variable,
-        std::unique_ptr<Atom> value)
-        : type(type), variable(std::move(variable)), value(std::move(value)) {}
-
-    Type InstructionDeclarationAssignValue::getType() { return type; }
+        std::unique_ptr<AtomIdentifier> variable, std::unique_ptr<Atom> value)
+        : variable(std::move(variable)), value(std::move(value)) {}
 
     std::unique_ptr<AtomIdentifier> &
     InstructionDeclarationAssignValue::getVariable() {

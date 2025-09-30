@@ -40,20 +40,19 @@ namespace frontend {
     }
 
     void ASTToHIRVisitor::visit(ast::InstructionDeclaration *i) {
-        Type type = i->getType();
+        Type type = i->getVariable()->getType();
         auto variable = resolveDeclarationScope(i->getVariable().get());
 
-        auto new_i = std::make_unique<hir::InstructionDeclaration>(
-            type, std::move(variable));
+        auto new_i =
+            std::make_unique<hir::InstructionDeclaration>(std::move(variable));
         result.push_back(std::move(new_i));
     }
 
     void ASTToHIRVisitor::visit(ast::InstructionDeclarationAssignValue *i) {
-        Type type = i->getType();
         auto variable = resolveDeclarationScope(i->getVariable().get());
 
-        auto new_declare = std::make_unique<hir::InstructionDeclaration>(
-            type, std::move(variable));
+        auto new_declare =
+            std::make_unique<hir::InstructionDeclaration>(std::move(variable));
         result.push_back(std::move(new_declare));
 
         auto variable2 = resolveUseScope(i->getVariable().get());
@@ -92,8 +91,8 @@ namespace frontend {
     }
 
     void ASTToHIRVisitor::visit(ast::InstructionCall *i) {
-        auto target =
-            createUnscopedIdentifier(i->getTarget()->toString(old_table));
+        auto target = createUnscopedIdentifier(
+            i->getTarget()->toString(old_table), i->getTarget()->getType());
 
         auto new_i = std::make_unique<hir::InstructionCall>(std::move(target));
         result.push_back(std::move(new_i));
@@ -101,8 +100,8 @@ namespace frontend {
 
     void ASTToHIRVisitor::visit(ast::InstructionCallAssign *i) {
         auto variable = resolveUseScope(i->getVariable().get());
-        auto target =
-            createUnscopedIdentifier(i->getTarget()->toString(old_table));
+        auto target = createUnscopedIdentifier(
+            i->getTarget()->toString(old_table), i->getTarget()->getType());
 
         auto new_i = std::make_unique<hir::InstructionCallAssign>(
             std::move(variable), std::move(target));
@@ -116,12 +115,11 @@ namespace frontend {
         auto f_label = has_else ? makeLabel("if_f") : nullptr;
         auto cont_label = makeLabel("if_cont");
 
+        auto t_atom = makeLabelAtom(t_label.get());
+        auto f_atom =
+            makeLabelAtom(has_else ? f_label.get() : cont_label.get());
+
         auto cond = resolveUseScope(i->getCond().get());
-        auto t_atom =
-            std::make_unique<AtomIdentifier>(t_label->getName()->getValue());
-        auto f_atom = std::make_unique<AtomIdentifier>(
-            has_else ? f_label->getName()->getValue()
-                     : cont_label->getName()->getValue());
         auto cond_i = std::make_unique<hir::InstructionBranchCond>(
             std::move(cond), std::move(t_atom), std::move(f_atom));
         result.push_back(std::move(cond_i));
@@ -130,8 +128,8 @@ namespace frontend {
         i->getTBranch()->accept(this);
 
         if (has_else) {
-            auto cont_atom = std::make_unique<AtomIdentifier>(
-                cont_label->getName()->getValue());
+            auto cont_atom = makeLabelAtom(cont_label.get());
+
             auto continue_i =
                 std::make_unique<hir::InstructionBranch>(std::move(cont_atom));
             result.push_back(std::move(continue_i));
@@ -148,12 +146,9 @@ namespace frontend {
         auto body_label = makeLabel("while_body");
         auto cont_label = makeLabel("while_cont");
 
-        auto cond_atom =
-            std::make_unique<AtomIdentifier>(cond_label->getName()->getValue());
-        auto body_atom =
-            std::make_unique<AtomIdentifier>(body_label->getName()->getValue());
-        auto cont_atom =
-            std::make_unique<AtomIdentifier>(cont_label->getName()->getValue());
+        auto cond_atom = makeLabelAtom(cond_label.get());
+        auto body_atom = makeLabelAtom(body_label.get());
+        auto cont_atom = makeLabelAtom(cont_label.get());
 
         result.push_back(std::move(cond_label));
         auto cond = resolveUseScope(i->getCond().get());
@@ -171,25 +166,26 @@ namespace frontend {
     }
 
     std::unique_ptr<AtomIdentifier>
-    ASTToHIRVisitor::createScopedIdentifier(std::string symbol,
+    ASTToHIRVisitor::createScopedIdentifier(std::string symbol, Type type,
                                             uint64_t scope) {
         std::string scoped_symbol = symbol + "_" + std::to_string(scope);
 
-        uint64_t id = new_table.addSymbol(scoped_symbol);
+        uint64_t id = new_table.addSymbol(scoped_symbol, type);
         scope_mappings[scope].insert(symbol);
-        return std::make_unique<AtomIdentifier>(id);
+        return std::make_unique<AtomIdentifier>(id, type);
     }
 
     std::unique_ptr<AtomIdentifier>
-    ASTToHIRVisitor::createUnscopedIdentifier(std::string symbol) {
-        uint64_t id = new_table.addSymbol(symbol);
+    ASTToHIRVisitor::createUnscopedIdentifier(std::string symbol, Type type) {
+        uint64_t id = new_table.addSymbol(symbol, type);
         scope_mappings.back().insert(symbol);
-        return std::make_unique<AtomIdentifier>(id);
+        return std::make_unique<AtomIdentifier>(id, type);
     }
 
     std::unique_ptr<AtomIdentifier>
     ASTToHIRVisitor::resolveDeclarationScope(AtomIdentifier *a) {
-        return createScopedIdentifier(a->toString(old_table), cur_scope);
+        return createScopedIdentifier(a->toString(old_table), a->getType(),
+                                      cur_scope);
     }
 
     std::unique_ptr<AtomIdentifier>
@@ -201,20 +197,21 @@ namespace frontend {
                 break;
             }
         }
-        return createScopedIdentifier(a->toString(old_table), scope);
+        return createScopedIdentifier(a->toString(old_table), a->getType(),
+                                      scope);
     }
 
     std::unique_ptr<Atom> ASTToHIRVisitor::resolveDeclarationScope(Atom *a) {
         return a->isIdentifier()
                    ? (std::unique_ptr<Atom>)resolveDeclarationScope(
                          (AtomIdentifier *)a)
-                   : std::make_unique<AtomLiteral>(a->getValue());
+                   : std::make_unique<AtomLiteral>(a->getValue(), a->getType());
     }
 
     std::unique_ptr<Atom> ASTToHIRVisitor::resolveUseScope(Atom *a) {
         return a->isIdentifier()
                    ? (std::unique_ptr<Atom>)resolveUseScope((AtomIdentifier *)a)
-                   : std::make_unique<AtomLiteral>(a->getValue());
+                   : std::make_unique<AtomLiteral>(a->getValue(), a->getType());
     }
 
     std::unique_ptr<hir::Label> ASTToHIRVisitor::makeLabel(std::string name) {
@@ -222,27 +219,33 @@ namespace frontend {
         std::string postfix = (count == 0) ? "" : std::to_string(count);
         std::string label_str = "__" + name + postfix;
 
-        auto identifier = createUnscopedIdentifier(label_str);
+        auto identifier = createUnscopedIdentifier(label_str, Type::LABEL);
         auto res = std::make_unique<hir::Label>(std::move(identifier));
         return res;
     }
 
+    std::unique_ptr<AtomIdentifier>
+    ASTToHIRVisitor::makeLabelAtom(hir::Label *l) {
+        return std::make_unique<AtomIdentifier>(l->getName()->getValue(),
+                                                Type::LABEL);
+    }
+
     void ASTToHIRVisitor::addReturnIfMissing(ast::Function &f) {
-        // if f is main with return type i32, implicit return 0
+        // if f is main with return type int, implicit return 0
         // if f is void type, implicit return
-        //
-        // we have neither rn, so check main with ui64
         if (!result.empty() &&
             dynamic_cast<hir::InstructionReturn *>(result.back().get()))
             return;
 
         if (f.getName()->toString(old_table) == "main") {
-            auto zero = std::make_unique<AtomLiteral>(0);
+            auto zero = std::make_unique<AtomLiteral>(0, Type::INT);
             auto ret =
                 std::make_unique<hir::InstructionReturn>(std::move(zero));
             result.push_back(std::move(ret));
             return;
         }
+
+        // TODO: void function
     }
 
     hir::Program astToHir(ast::Program &ast) {
@@ -252,10 +255,10 @@ namespace frontend {
         std::vector<hir::Function> functions;
         ASTToHIRVisitor visitor(old_table, new_table);
         for (ast::Function &f : ast.getFunctions()) {
-            Type type = f.getType();
+            Type type = f.getName()->getType();
 
             auto name = visitor.createUnscopedIdentifier(
-                f.getName()->toString(old_table));
+                f.getName()->toString(old_table), type);
 
             // TODO: params
 
@@ -263,7 +266,7 @@ namespace frontend {
             visitor.addReturnIfMissing(f);
             auto body = visitor.getResult();
 
-            hir::Function hir_function(type, std::move(name), std::move(body));
+            hir::Function hir_function(std::move(name), std::move(body));
             functions.push_back(std::move(hir_function));
             visitor.clearResult();
         }

@@ -31,15 +31,16 @@ namespace frontend {
         void visit(ast::InstructionWhile *i) override;
 
         std::unique_ptr<AtomIdentifier>
-        createScopedIdentifier(std::string symbol, uint64_t scope);
+        createScopedIdentifier(std::string symbol, Type type, uint64_t scope);
         std::unique_ptr<AtomIdentifier>
-        createUnscopedIdentifier(std::string symbol);
+        createUnscopedIdentifier(std::string symbol, Type type);
         std::unique_ptr<AtomIdentifier>
         resolveDeclarationScope(AtomIdentifier *a);
         std::unique_ptr<Atom> resolveDeclarationScope(Atom *a);
         std::unique_ptr<AtomIdentifier> resolveUseScope(AtomIdentifier *a);
         std::unique_ptr<Atom> resolveUseScope(Atom *a);
         std::unique_ptr<hir::Label> makeLabel(std::string name);
+        std::unique_ptr<AtomIdentifier> makeLabelAtom(hir::Label *l);
         void addReturnIfMissing(ast::Function &f);
 
     private:

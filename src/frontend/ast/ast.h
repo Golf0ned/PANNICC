@@ -6,20 +6,17 @@
 #include "frontend/ast/instruction.h"
 #include "frontend/utils/atom.h"
 #include "frontend/utils/symbol_table.h"
-#include "frontend/utils/type.h"
 
 namespace frontend::ast {
     class Function {
     public:
-        Function(Type type, std::unique_ptr<AtomIdentifier> name,
+        Function(std::unique_ptr<AtomIdentifier> name,
                  std::unique_ptr<Scope> body);
-        Type getType();
         std::unique_ptr<AtomIdentifier> &getName();
         std::unique_ptr<Scope> &getBody();
         std::string toString(SymbolTable &symbol_table);
 
     private:
-        Type type;
         std::unique_ptr<AtomIdentifier> name;
         // TODO: params
         std::unique_ptr<Scope> body;
