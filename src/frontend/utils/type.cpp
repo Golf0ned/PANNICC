@@ -5,15 +5,24 @@
 namespace frontend {
     std::string toString(Type type) {
         switch (type) {
-        case Type::INT64:
-            return "int64_t";
+        case Type::SHORT:
+            return "short";
+        case Type::INT:
+            return "int";
+        case Type::LONG:
+            return "long";
+        case Type::LONG_LONG:
+            return "long long";
         }
         std::unreachable();
     }
 
     middleend::mir::Type toMir(Type type) {
         switch (type) {
-        case Type::INT64:
+        case Type::SHORT:
+        case Type::INT:
+        case Type::LONG:
+        case Type::LONG_LONG:
             return middleend::mir::Type::I64;
         }
         std::unreachable();
