@@ -6,7 +6,7 @@
 #include "middleend/mir/type.h"
 
 namespace frontend {
-    enum class Type { SHORT, INT, LONG, LONG_LONG };
+    enum class Type { SHORT, INT, LONG, LONG_LONG, FUNCTION };
 
     const std::unordered_map<std::string, Type> strToType = {
         {"short", Type::SHORT},
