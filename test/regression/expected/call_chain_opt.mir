@@ -1,55 +1,55 @@
-define i64 @first() {
+define i32 @first() {
 
 }
 
-define i64 @second() {
+define i32 @second() {
 entry:
-  %0 = call i64 @first
-  %1 = add i64 %0, i64 1
-  ret i64 %1
+  %0 = call i32 @first
+  %1 = add i32 %0, i32 1
+  ret i32 %1
 }
 
-define i64 @third() {
+define i32 @third() {
 entry:
-  %0 = call i64 @second
-  %1 = add i64 %0, i64 2
-  ret i64 %1
+  %0 = call i32 @second
+  %1 = add i32 %0, i32 2
+  ret i32 %1
 }
 
-define i64 @fourth() {
+define i32 @fourth() {
 entry:
-  %0 = call i64 @third
-  %1 = add i64 %0, i64 3
-  ret i64 %1
+  %0 = call i32 @third
+  %1 = add i32 %0, i32 3
+  ret i32 %1
 }
 
-define i64 @fifth() {
+define i32 @fifth() {
 entry:
-  %0 = call i64 @fourth
-  %1 = add i64 %0, i64 4
-  ret i64 %1
+  %0 = call i32 @fourth
+  %1 = add i32 %0, i32 4
+  ret i32 %1
 }
 
-define i64 @sixth() {
+define i32 @sixth() {
 entry:
-  %0 = call i64 @fifth
-  %1 = add i64 %0, i64 5
-  ret i64 %1
+  %0 = call i32 @fifth
+  %1 = add i32 %0, i32 5
+  ret i32 %1
 }
 
-define i64 @main() {
+define i32 @main() {
 entry:
-  %0 = call i64 @first
-  %1 = add i64 0, i64 %0
-  %2 = call i64 @second
-  %3 = add i64 %1, i64 %2
-  %4 = call i64 @third
-  %5 = add i64 %3, i64 %4
-  %6 = call i64 @fourth
-  %7 = add i64 %5, i64 %6
-  %8 = call i64 @fifth
-  %9 = add i64 %7, i64 %8
-  %10 = call i64 @sixth
-  %11 = add i64 %9, i64 %10
-  ret i64 %11
+  %0 = call i32 @first
+  %1 = add i32 0, i32 %0
+  %2 = call i32 @second
+  %3 = add i32 %1, i32 %2
+  %4 = call i32 @third
+  %5 = add i32 %3, i32 %4
+  %6 = call i32 @fourth
+  %7 = add i32 %5, i32 %6
+  %8 = call i32 @fifth
+  %9 = add i32 %7, i32 %8
+  %10 = call i32 @sixth
+  %11 = add i32 %9, i32 %10
+  ret i32 %11
 }

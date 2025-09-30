@@ -1,10 +1,10 @@
-define i64 @main() {
+define i32 @main() {
 entry:
-  %0 = alloca i64
-  store i64 0, ptr %0
+  %0 = alloca i32
+  store i32 0, ptr %0
   br label 1
 
 1:
   %2 = load ptr %0
-  ret i64 %2
+  ret i32 %2
 }

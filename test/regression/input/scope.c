@@ -28,3 +28,14 @@ int scope_reassign_variable() {
     cond = cond + 5;
     return cond;
 }
+
+int scope_handle_diff_types() {
+    int typed = 1;
+    {
+        long typed = 2;
+    }
+    {
+        short typed = 3;
+    }
+    return typed;
+}
