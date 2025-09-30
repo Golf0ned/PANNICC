@@ -1,11 +1,10 @@
 #include "frontend/hir/hir.h"
+#include "frontend/utils/type.h"
 
 namespace frontend::hir {
-    Function::Function(Type type, std::unique_ptr<AtomIdentifier> name,
+    Function::Function(std::unique_ptr<AtomIdentifier> name,
                        std::vector<std::unique_ptr<Instruction>> body)
-        : type(type), name(std::move(name)), body(std::move(body)) {}
-
-    Type Function::getType() { return type; }
+        : name(std::move(name)), body(std::move(body)) {}
 
     std::unique_ptr<AtomIdentifier> &Function::getName() { return name; }
 
@@ -14,7 +13,7 @@ namespace frontend::hir {
     }
 
     std::string Function::toString(SymbolTable &symbol_table) {
-        std::string type_str = ::frontend::toString(type);
+        std::string type_str = ::frontend::toString(name->getType());
         std::string name_str = name->toString(symbol_table);
 
         std::string res = type_str + " " + name_str + "() {\n";
@@ -62,7 +61,7 @@ namespace frontend::hir {
     }
 
     void ToStringVisitor::visit(InstructionDeclaration *i) {
-        const std::string type = toString(i->getType());
+        const std::string type = toString(i->getVariable()->getType());
         const std::string variable = i->getVariable()->toString(symbol_table);
 
         res = "    " + type + ' ' + variable + ';';

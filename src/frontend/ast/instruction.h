@@ -28,29 +28,24 @@ namespace frontend::ast {
 
     class InstructionDeclaration : public Instruction {
     public:
-        InstructionDeclaration(Type type,
-                               std::unique_ptr<AtomIdentifier> variable);
-        Type getType();
+        InstructionDeclaration(std::unique_ptr<AtomIdentifier> variable);
         std::unique_ptr<AtomIdentifier> &getVariable();
         void accept(InstructionVisitor *visitor);
 
     private:
-        Type type;
         std::unique_ptr<AtomIdentifier> variable;
     };
 
     class InstructionDeclarationAssignValue : public Instruction {
     public:
         InstructionDeclarationAssignValue(
-            Type type, std::unique_ptr<AtomIdentifier> variable,
+            std::unique_ptr<AtomIdentifier> variable,
             std::unique_ptr<Atom> value);
-        Type getType();
         std::unique_ptr<AtomIdentifier> &getVariable();
         std::unique_ptr<Atom> &getValue();
         void accept(InstructionVisitor *visitor);
 
     private:
-        Type type;
         std::unique_ptr<AtomIdentifier> variable;
         std::unique_ptr<Atom> value;
     };

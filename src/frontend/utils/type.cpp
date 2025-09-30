@@ -13,7 +13,7 @@ namespace frontend {
             return "long";
         case Type::LONG_LONG:
             return "long long";
-        case Type::FUNCTION:
+        case Type::LABEL:
             std::unreachable();
         }
         std::unreachable();
@@ -30,7 +30,7 @@ namespace frontend {
             return middleend::mir::Type::I64;
         case Type::LONG_LONG:
             return middleend::mir::Type::I64;
-        case Type::FUNCTION:
+        case Type::LABEL:
             std::unreachable();
         }
         std::unreachable();
