@@ -40,7 +40,10 @@ namespace frontend {
     struct keyword_else : TAO_PEGTL_STRING("else") {};
     struct keyword_while : TAO_PEGTL_STRING("while") {};
 
-    struct keyword_int64_t : TAO_PEGTL_STRING("int64_t") {};
+    struct keyword_short : TAO_PEGTL_STRING("short") {};
+    struct keyword_int : TAO_PEGTL_STRING("int") {};
+    struct keyword_long : TAO_PEGTL_STRING("long") {};
+    struct keyword_long_long : TAO_PEGTL_STRING("long long") {};
 
     struct left_paren : pegtl::one<'('> {};
     struct right_paren : pegtl::one<')'> {};
@@ -77,7 +80,10 @@ namespace frontend {
 
     struct binary_op : pegtl::sor<plus, minus, asterisk, ampersand> {};
 
-    struct type : pegtl::sor<keyword_int64_t> {};
+    struct type : pegtl::sor<pegtl_apply_if_match<keyword_long_long>,
+                             pegtl_apply_if_match<keyword_long>,
+                             pegtl_apply_if_match<keyword_int>,
+                             pegtl_apply_if_match<keyword_short>> {};
 
     // Instructions
     struct instruction_any;
