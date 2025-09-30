@@ -1,45 +1,45 @@
-int64_t first() {
+int first() {
     return 1;
 }
 
-int64_t second() {
-    int64_t res;
+int second() {
+    int res;
     res = first();
     res = res + 1;
     return res;
 }
 
-int64_t third() {
-    int64_t res;
+int third() {
+    int res;
     res = second();
     res = res + 2;
     return res;
 }
 
-int64_t fourth() {
-    int64_t res;
+int fourth() {
+    int res;
     res = third();
     res = res + 3;
     return res;
 }
 
-int64_t fifth() {
-    int64_t res;
+int fifth() {
+    int res;
     res = fourth();
     res = res + 4;
     return res;
 }
 
-int64_t sixth() {
-    int64_t res;
+int sixth() {
+    int res;
     res = fifth();
     res = res + 5;
     return res;
 }
 
-int64_t main() {
-    int64_t res = 0;
-    int64_t buf;
+int main() {
+    int res = 0;
+    int buf;
     buf = first();
     res = res + buf;
     buf = second();

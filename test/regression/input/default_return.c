@@ -1,1 +1,1 @@
-int64_t main() {}
+int main() {}
