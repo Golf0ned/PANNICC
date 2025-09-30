@@ -1,32 +1,32 @@
-int64_t fun_call() {
+int fun_call() {
     return 0;
 }
 
-int64_t mem2reg_basic() {
-    int64_t a = 1;
-    int64_t b = 2;
-    int64_t c = 3;
+int mem2reg_basic() {
+    int a = 1;
+    int b = 2;
+    int c = 3;
 
-    int64_t add;
+    int add;
     add = a + b;
 
-    int64_t sub;
+    int sub;
     sub = c - a;
 
-    int64_t mul;
+    int mul;
     mul = add * sub;
 
-    int64_t bit_and;
+    int bit_and;
     bit_and = add & 1;
 
-    int64_t call;
+    int call;
     call = fun_call();
 
     return bit_and;
 }
 
-int64_t mem2reg_branching() {
-    int64_t res = 0;
+int mem2reg_branching() {
+    int res = 0;
     if (res) {
         res = 1;
         if (res) {
@@ -42,12 +42,12 @@ int64_t mem2reg_branching() {
     return res;
 }
 
-int64_t mem2reg_while() {
-    int64_t mem = 123;
-    int64_t to = 456;
-    int64_t reg = 789;
+int mem2reg_while() {
+    int mem = 123;
+    int to = 456;
+    int reg = 789;
     while (to) {
-        int64_t reg = 432;
+        int reg = 432;
         mem = mem + reg;
         to = to - 2;
     }
@@ -56,8 +56,8 @@ int64_t mem2reg_while() {
     return 987654321;
 }
 
-int64_t mem2reg_negative() {
-    int64_t a;
+int mem2reg_negative() {
+    int a;
     a = 6 + 7;
     return a;
 }
