@@ -16,9 +16,9 @@ namespace frontend::ast {
 
     std::unique_ptr<Scope> &Function::getBody() { return body; }
 
-    std::string Function::toString(SymbolTable &symbol_table) {
+    std::string Function::toString(SymbolTable *symbol_table) {
         std::string type_str = ::frontend::toString(type);
-        std::string name_str = name->toString(symbol_table);
+        std::string name_str = name->toString(*symbol_table);
 
         std::string res = type_str + " " + name_str + "()";
         ToStringVisitor visitor = ToStringVisitor(symbol_table);
@@ -28,12 +28,16 @@ namespace frontend::ast {
         return res;
     }
 
-    Program::Program(std::vector<Function> functions, SymbolTable &symbol_table)
-        : functions(std::move(functions)), symbol_table(symbol_table) {}
+    Program::Program(std::vector<Function> functions,
+                     std::unique_ptr<SymbolTable> symbol_table)
+        : functions(std::move(functions)),
+          symbol_table(std::move(symbol_table)) {}
 
     std::vector<Function> &Program::getFunctions() { return functions; }
 
-    SymbolTable &Program::getSymbolTable() { return symbol_table; }
+    std::unique_ptr<SymbolTable> &Program::getSymbolTable() {
+        return symbol_table;
+    }
 
     std::string Program::toString() {
         std::string res = "";
@@ -41,13 +45,13 @@ namespace frontend::ast {
         for (auto iter = functions.begin(); iter != functions.end(); iter++) {
             if (iter != functions.begin())
                 res += "\n\n";
-            res += iter->toString(symbol_table);
+            res += iter->toString(symbol_table.get());
         }
 
         return res;
     }
 
-    ToStringVisitor::ToStringVisitor(SymbolTable &symbol_table)
+    ToStringVisitor::ToStringVisitor(SymbolTable *symbol_table)
         : symbol_table(symbol_table), prefix(""), res("") {}
 
     std::string ToStringVisitor::getResult() { return res; }
@@ -94,56 +98,56 @@ namespace frontend::ast {
 
     void ToStringVisitor::visit(InstructionDeclaration *i) {
         const std::string type = toString(i->getType());
-        const std::string variable = i->getVariable()->toString(symbol_table);
+        const std::string variable = i->getVariable()->toString(*symbol_table);
 
         res = prefix + type + " " + variable + ";";
     }
 
     void ToStringVisitor::visit(InstructionDeclarationAssignValue *i) {
         const std::string type = toString(i->getType());
-        const std::string variable = i->getVariable()->toString(symbol_table);
-        const std::string value = i->getValue()->toString(symbol_table);
+        const std::string variable = i->getVariable()->toString(*symbol_table);
+        const std::string value = i->getValue()->toString(*symbol_table);
 
         res = prefix + type + " " + variable + " = " + value + ";";
     }
 
     void ToStringVisitor::visit(InstructionAssignValue *i) {
-        const std::string variable = i->getVariable()->toString(symbol_table);
-        const std::string value = i->getValue()->toString(symbol_table);
+        const std::string variable = i->getVariable()->toString(*symbol_table);
+        const std::string value = i->getValue()->toString(*symbol_table);
 
         res = prefix + variable + " = " + value + ";";
     }
 
     void ToStringVisitor::visit(InstructionAssignBinaryOp *i) {
-        const std::string variable = i->getVariable()->toString(symbol_table);
+        const std::string variable = i->getVariable()->toString(*symbol_table);
         const std::string op = toString(i->getOp());
-        const std::string left = i->getLeft()->toString(symbol_table);
-        const std::string right = i->getRight()->toString(symbol_table);
+        const std::string left = i->getLeft()->toString(*symbol_table);
+        const std::string right = i->getRight()->toString(*symbol_table);
 
         res = prefix + variable + " = " + left + " " + op + " " + right + ";";
     }
 
     void ToStringVisitor::visit(InstructionReturn *i) {
-        const std::string value = i->getValue()->toString(symbol_table);
+        const std::string value = i->getValue()->toString(*symbol_table);
 
         res = prefix + "return " + value + ";";
     }
 
     void ToStringVisitor::visit(InstructionCall *i) {
-        const std::string target = i->getTarget()->toString(symbol_table);
+        const std::string target = i->getTarget()->toString(*symbol_table);
 
         res = prefix + target + '(' + ");";
     }
 
     void ToStringVisitor::visit(InstructionCallAssign *i) {
-        const std::string variable = i->getVariable()->toString(symbol_table);
-        const std::string target = i->getTarget()->toString(symbol_table);
+        const std::string variable = i->getVariable()->toString(*symbol_table);
+        const std::string target = i->getTarget()->toString(*symbol_table);
 
         res = prefix + variable + " = " + target + '(' + ");";
     }
 
     void ToStringVisitor::visit(InstructionIf *i) {
-        const std::string cond = i->getCond()->toString(symbol_table);
+        const std::string cond = i->getCond()->toString(*symbol_table);
         std::string if_res = prefix + "if (" + cond + ")";
 
         convertSubexpression(i->getTBranch().get());
@@ -164,7 +168,7 @@ namespace frontend::ast {
     }
 
     void ToStringVisitor::visit(InstructionWhile *i) {
-        const std::string cond = i->getCond()->toString(symbol_table);
+        const std::string cond = i->getCond()->toString(*symbol_table);
         std::string if_res = prefix + "while (" + cond + ")";
 
         convertSubexpression(i->getBody().get());
