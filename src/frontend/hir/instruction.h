@@ -4,6 +4,8 @@
 
 #include "frontend/utils/atom.h"
 #include "frontend/utils/operator.h"
+#include "frontend/utils/type.h"
+
 namespace frontend::hir {
     class InstructionVisitor;
 
@@ -25,11 +27,14 @@ namespace frontend::hir {
 
     class InstructionDeclaration : public Instruction {
     public:
-        InstructionDeclaration(std::unique_ptr<AtomIdentifier> variable);
+        InstructionDeclaration(Type type,
+                               std::unique_ptr<AtomIdentifier> variable);
+        Type getType();
         std::unique_ptr<AtomIdentifier> &getVariable();
         void accept(InstructionVisitor *visitor);
 
     private:
+        Type type;
         std::unique_ptr<AtomIdentifier> variable;
     };
 
