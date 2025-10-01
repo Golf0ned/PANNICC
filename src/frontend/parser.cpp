@@ -1,4 +1,3 @@
-#include <cstdint>
 #include <string>
 #include <utility>
 
@@ -210,21 +209,21 @@ namespace frontend {
     template <> struct action<number> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
-            parsed_tokens.push_back(in.string());
+            parsed_tokens.push_back({in.string(), TokenType::NUMBER});
         }
     };
 
     template <> struct action<identifier> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
-            parsed_tokens.push_back(in.string());
+            parsed_tokens.push_back({in.string(), TokenType::IDENTIFIER});
         }
     };
 
     template <> struct action<binary_op> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
-            parsed_tokens.push_back(in.string());
+            parsed_tokens.push_back({in.string(), TokenType::BINARY_OP});
         }
     };
 
