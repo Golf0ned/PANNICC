@@ -21,12 +21,52 @@ template <typename Rule>
 using pegtl_apply_if_match = pegtl::seq<pegtl::at<Rule>, Rule>;
 
 namespace frontend {
-    typedef std::pair<std::vector<ast::Function>, SymbolTable> parsing_results;
+    enum class TokenType {
+        NUMBER,
+        IDENTIFIER,
+        BINARY_OP,
+    };
 
-    std::vector<std::string> parsed_tokens;
-    std::vector<Type> parsed_types;
-    std::vector<std::unique_ptr<Atom>> parsed_atoms;
+    using Token = std::pair<std::string, TokenType>;
+
+    std::unique_ptr<SymbolTable> symbol_table;
+    std::vector<Token> parsed_tokens;
     std::vector<std::unique_ptr<ast::Scope>> active_scopes;
+
+    std::unique_ptr<Atom> popAtom() {
+        auto [token_val, token_type] = parsed_tokens.back();
+        parsed_tokens.pop_back();
+        if (token_type == TokenType::NUMBER)
+            return std::make_unique<AtomLiteral>(std::stoll(token_val));
+        else
+            return std::make_unique<AtomIdentifier>(
+                symbol_table->addSymbol(token_val));
+    }
+
+    std::unique_ptr<AtomIdentifier> popIdentifier() {
+        auto [token_val, token_type] = parsed_tokens.back();
+        parsed_tokens.pop_back();
+        return std::make_unique<AtomIdentifier>(
+            symbol_table->addSymbol(token_val));
+    }
+
+    BinaryOp popBinOp() {
+        auto [token_val, token_type] = parsed_tokens.back();
+        parsed_tokens.pop_back();
+        return strToBinaryOp.at(token_val);
+    }
+
+    std::unique_ptr<ast::Instruction> popInstruction() {
+        auto i = std::move(active_scopes.back()->getInstructions().back());
+        active_scopes.back()->getInstructions().pop_back();
+        return i;
+    }
+
+    std::unique_ptr<ast::Scope> popScope() {
+        auto scope = std::move(active_scopes.back());
+        active_scopes.pop_back();
+        return scope;
+    }
 
     //
     // Grammar
@@ -169,50 +209,29 @@ namespace frontend {
     // Value token actions
     template <> struct action<number> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            auto a = std::make_unique<AtomLiteral>(std::stoull(in.string()),
-                                                   parsed_types.back());
-            parsed_atoms.push_back(std::move(a));
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            parsed_tokens.push_back(in.string());
         }
     };
 
     template <> struct action<identifier> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            Type type;
-            uint64_t id;
-
-            if (res.second.hasSymbol(in.string())) {
-                id = res.second.addSymbol(in.string(), type);
-                type = res.second.getType(id);
-            } else {
-                type = parsed_types.back();
-                id = res.second.addSymbol(in.string(), type);
-            }
-
-            auto a = std::make_unique<AtomIdentifier>(id, type);
-            parsed_atoms.push_back(std::move(a));
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            parsed_tokens.push_back(in.string());
         }
     };
 
     template <> struct action<binary_op> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
             parsed_tokens.push_back(in.string());
-        }
-    };
-
-    template <> struct action<type> {
-        template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            parsed_types.push_back(strToType.at(in.string()));
         }
     };
 
     // Instruction actions
     template <> struct action<left_brace> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto scope = std::make_unique<ast::Scope>();
             active_scopes.push_back(std::move(scope));
         }
@@ -220,8 +239,8 @@ namespace frontend {
 
     template <> struct action<right_brace> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            if (active_scopes.size() == 1) // function
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            if (active_scopes.size() == 1) // function -- in global scope
                 return;
 
             auto scope = std::move(active_scopes.back());
@@ -232,45 +251,34 @@ namespace frontend {
 
     template <> struct action<instruction_declaration> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            auto back = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-            AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
-            std::unique_ptr<AtomIdentifier> variable(ptr);
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto variable = popIdentifier();
+            auto type = Type::INT;
 
             auto i = std::make_unique<ast::InstructionDeclaration>(
-                std::move(variable));
+                type, std::move(variable));
             active_scopes.back()->addInstruction(std::move(i));
         }
     };
 
     template <> struct action<instruction_declaration_assign_value> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            auto value = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-
-            auto back = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-            AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
-            std::unique_ptr<AtomIdentifier> variable(ptr);
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto value = popAtom();
+            auto variable = popIdentifier();
+            auto type = Type::INT;
 
             auto i = std::make_unique<ast::InstructionDeclarationAssignValue>(
-                std::move(variable), std::move(value));
+                type, std::move(variable), std::move(value));
             active_scopes.back()->addInstruction(std::move(i));
         }
     };
 
     template <> struct action<instruction_assign_value> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            auto value = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-
-            auto back = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-            AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
-            std::unique_ptr<AtomIdentifier> variable(ptr);
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto value = popAtom();
+            auto variable = popIdentifier();
 
             auto i = std::make_unique<ast::InstructionAssignValue>(
                 std::move(variable), std::move(value));
@@ -280,20 +288,11 @@ namespace frontend {
 
     template <> struct action<instruction_assign_binary_op> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            auto right = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-
-            BinaryOp op = strToBinaryOp.at(parsed_tokens.back());
-            parsed_tokens.pop_back();
-
-            auto left = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-
-            auto back = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-            AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
-            std::unique_ptr<AtomIdentifier> variable(ptr);
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popAtom();
+            auto op = popBinOp();
+            auto left = popAtom();
+            auto variable = popIdentifier();
 
             auto i = std::make_unique<ast::InstructionAssignBinaryOp>(
                 std::move(variable), op, std::move(left), std::move(right));
@@ -303,9 +302,8 @@ namespace frontend {
 
     template <> struct action<instruction_return> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            auto value = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto value = popAtom();
 
             auto i = std::make_unique<ast::InstructionReturn>(std::move(value));
             active_scopes.back()->addInstruction(std::move(i));
@@ -314,11 +312,8 @@ namespace frontend {
 
     template <> struct action<instruction_call> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            auto back = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-            AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
-            std::unique_ptr<AtomIdentifier> target(ptr);
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto target = popIdentifier();
 
             auto i = std::make_unique<ast::InstructionCall>(std::move(target));
             active_scopes.back()->addInstruction(std::move(i));
@@ -327,16 +322,9 @@ namespace frontend {
 
     template <> struct action<instruction_call_assign> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            auto back = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-            AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
-            std::unique_ptr<AtomIdentifier> target(ptr);
-
-            back = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-            ptr = static_cast<AtomIdentifier *>(back.release());
-            std::unique_ptr<AtomIdentifier> variable(ptr);
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto target = popIdentifier();
+            auto variable = popIdentifier();
 
             auto i = std::make_unique<ast::InstructionCallAssign>(
                 std::move(variable), std::move(target));
@@ -346,13 +334,9 @@ namespace frontend {
 
     template <> struct action<instruction_if> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            auto cond = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-
-            auto t_branch =
-                std::move(active_scopes.back()->getInstructions().back());
-            active_scopes.back()->getInstructions().pop_back();
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto t_branch = popInstruction();
+            auto cond = popAtom();
 
             auto i = std::make_unique<ast::InstructionIf>(
                 std::move(cond), std::move(t_branch), nullptr);
@@ -362,17 +346,10 @@ namespace frontend {
 
     template <> struct action<instruction_if_else> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            auto cond = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-
-            auto f_branch =
-                std::move(active_scopes.back()->getInstructions().back());
-            active_scopes.back()->getInstructions().pop_back();
-
-            auto t_branch =
-                std::move(active_scopes.back()->getInstructions().back());
-            active_scopes.back()->getInstructions().pop_back();
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto f_branch = popInstruction();
+            auto t_branch = popInstruction();
+            auto cond = popAtom();
 
             auto i = std::make_unique<ast::InstructionIf>(
                 std::move(cond), std::move(t_branch), std::move(f_branch));
@@ -382,13 +359,9 @@ namespace frontend {
 
     template <> struct action<instruction_while> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            auto cond = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-
-            auto body =
-                std::move(active_scopes.back()->getInstructions().back());
-            active_scopes.back()->getInstructions().pop_back();
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto body = popInstruction();
+            auto cond = popAtom();
 
             auto i = std::make_unique<ast::InstructionWhile>(std::move(cond),
                                                              std::move(body));
@@ -399,17 +372,13 @@ namespace frontend {
     // Function
     template <> struct action<function> {
         template <typename Input>
-        static void apply(const Input &in, parsing_results &res) {
-            auto back = std::move(parsed_atoms.back());
-            parsed_atoms.pop_back();
-            AtomIdentifier *ptr = static_cast<AtomIdentifier *>(back.release());
-            std::unique_ptr<AtomIdentifier> name(ptr);
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto body = popScope();
+            auto name = popIdentifier();
+            auto type = Type::INT;
 
-            auto body = std::move(active_scopes.back());
-            active_scopes.pop_back();
-
-            res.first.push_back(
-                ast::Function(std::move(name), std::move(body)));
+            res.push_back(
+                ast::Function(type, std::move(name), std::move(body)));
         }
     };
 
@@ -419,14 +388,14 @@ namespace frontend {
     ast::Program parse(const std::string &input_file) {
         file_input in(input_file);
 
+        symbol_table = std::make_unique<SymbolTable>();
         parsed_tokens.clear();
-        parsed_atoms.clear();
         active_scopes.clear();
 
-        parsing_results res;
-        pegtl::parse<grammar, action>(in, res);
+        std::vector<ast::Function> parsed_functions;
+        pegtl::parse<grammar, action>(in, parsed_functions);
 
-        ast::Program ast(std::move(res.first), res.second);
+        ast::Program ast(std::move(parsed_functions), std::move(symbol_table));
         return ast;
     }
 } // namespace frontend
