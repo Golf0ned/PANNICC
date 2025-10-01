@@ -16,7 +16,7 @@ namespace frontend::hir {
         Type getType();
         std::unique_ptr<AtomIdentifier> &getName();
         std::vector<std::unique_ptr<Instruction>> &getBody();
-        std::string toString(SymbolTable &symbol_table);
+        std::string toString(SymbolTable *symbol_table);
 
     private:
         Type type;
@@ -27,19 +27,20 @@ namespace frontend::hir {
 
     class Program {
     public:
-        Program(std::vector<Function> functions, SymbolTable &symbol_table);
+        Program(std::vector<Function> functions,
+                std::unique_ptr<SymbolTable> symbol_table);
         std::vector<Function> &getFunctions();
-        SymbolTable &getSymbolTable();
+        std::unique_ptr<SymbolTable> &getSymbolTable();
         std::string toString();
 
     private:
         std::vector<Function> functions;
-        SymbolTable symbol_table;
+        std::unique_ptr<SymbolTable> symbol_table;
     };
 
     class ToStringVisitor : public InstructionVisitor {
     public:
-        ToStringVisitor(SymbolTable &symbol_table);
+        ToStringVisitor(SymbolTable *symbol_table);
         std::string getResult();
 
         void visit(Instruction *i) override;
@@ -54,7 +55,7 @@ namespace frontend::hir {
         void visit(InstructionBranchCond *i) override;
 
     private:
-        SymbolTable &symbol_table;
+        SymbolTable *symbol_table;
         std::string res;
     };
 } // namespace frontend::hir
