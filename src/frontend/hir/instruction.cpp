@@ -1,6 +1,7 @@
 #include "frontend/hir/instruction.h"
 #include "frontend/utils/atom.h"
 #include "frontend/utils/operator.h"
+#include "frontend/utils/type.h"
 
 namespace frontend::hir {
     Label::Label(std::unique_ptr<AtomIdentifier> name)
@@ -11,8 +12,10 @@ namespace frontend::hir {
     void Label::accept(InstructionVisitor *visitor) { visitor->visit(this); }
 
     InstructionDeclaration::InstructionDeclaration(
-        std::unique_ptr<AtomIdentifier> variable)
-        : variable(std::move(variable)) {}
+        Type type, std::unique_ptr<AtomIdentifier> variable)
+        : type(type), variable(std::move(variable)) {}
+
+    Type InstructionDeclaration::getType() { return type; }
 
     std::unique_ptr<AtomIdentifier> &InstructionDeclaration::getVariable() {
         return variable;

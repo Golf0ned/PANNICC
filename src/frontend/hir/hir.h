@@ -6,17 +6,20 @@
 #include "frontend/hir/instruction.h"
 #include "frontend/utils/atom.h"
 #include "frontend/utils/symbol_table.h"
+#include "frontend/utils/type.h"
 
 namespace frontend::hir {
     class Function {
     public:
-        Function(std::unique_ptr<AtomIdentifier> name,
+        Function(Type type, std::unique_ptr<AtomIdentifier> name,
                  std::vector<std::unique_ptr<Instruction>> body);
+        Type getType();
         std::unique_ptr<AtomIdentifier> &getName();
         std::vector<std::unique_ptr<Instruction>> &getBody();
         std::string toString(SymbolTable &symbol_table);
 
     private:
+        Type type;
         std::unique_ptr<AtomIdentifier> name;
         // TODO: params
         std::vector<std::unique_ptr<Instruction>> body;
