@@ -6,16 +6,18 @@
 #include "frontend/utils/type.h"
 
 namespace frontend::ast {
-    Function::Function(std::unique_ptr<AtomIdentifier> name,
+    Function::Function(Type type, std::unique_ptr<AtomIdentifier> name,
                        std::unique_ptr<Scope> body)
-        : name(std::move(name)), body(std::move(body)) {}
+        : type(type), name(std::move(name)), body(std::move(body)) {}
+
+    Type Function::getType() { return type; }
 
     std::unique_ptr<AtomIdentifier> &Function::getName() { return name; }
 
     std::unique_ptr<Scope> &Function::getBody() { return body; }
 
     std::string Function::toString(SymbolTable &symbol_table) {
-        std::string type_str = ::frontend::toString(name->getType());
+        std::string type_str = ::frontend::toString(type);
         std::string name_str = name->toString(symbol_table);
 
         std::string res = type_str + " " + name_str + "()";
@@ -91,14 +93,14 @@ namespace frontend::ast {
     }
 
     void ToStringVisitor::visit(InstructionDeclaration *i) {
-        const std::string type = toString(i->getVariable()->getType());
+        const std::string type = toString(i->getType());
         const std::string variable = i->getVariable()->toString(symbol_table);
 
         res = prefix + type + " " + variable + ";";
     }
 
     void ToStringVisitor::visit(InstructionDeclarationAssignValue *i) {
-        const std::string type = toString(i->getVariable()->getType());
+        const std::string type = toString(i->getType());
         const std::string variable = i->getVariable()->toString(symbol_table);
         const std::string value = i->getValue()->toString(symbol_table);
 
