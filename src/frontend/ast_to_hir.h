@@ -13,10 +13,23 @@ namespace frontend {
 
     class ASTToHIRVisitor : public ast::InstructionVisitor {
     public:
-        ASTToHIRVisitor(SymbolTable old_table, SymbolTable &new_table);
+        ASTToHIRVisitor(SymbolTable *old_table, SymbolTable *new_table);
 
         std::vector<std::unique_ptr<hir::Instruction>> getResult();
         void clearResult();
+
+        std::unique_ptr<AtomIdentifier>
+        createScopedIdentifier(std::string symbol, uint64_t scope);
+        std::unique_ptr<AtomIdentifier>
+        createUnscopedIdentifier(std::string symbol);
+        std::unique_ptr<AtomIdentifier>
+        resolveDeclarationScope(AtomIdentifier *a);
+        std::unique_ptr<Atom> resolveDeclarationScope(Atom *a);
+        std::unique_ptr<AtomIdentifier> resolveUseScope(AtomIdentifier *a);
+        std::unique_ptr<Atom> resolveUseScope(Atom *a);
+        std::unique_ptr<hir::Label> makeLabel(std::string name);
+        std::unique_ptr<AtomIdentifier> makeLabelAtom(hir::Label *l);
+        void addReturnIfMissing(ast::Function &f);
 
         void visit(ast::Instruction *i) override;
         void visit(ast::Scope *s) override;
@@ -30,25 +43,12 @@ namespace frontend {
         void visit(ast::InstructionIf *i) override;
         void visit(ast::InstructionWhile *i) override;
 
-        std::unique_ptr<AtomIdentifier>
-        createScopedIdentifier(std::string symbol, Type type, uint64_t scope);
-        std::unique_ptr<AtomIdentifier>
-        createUnscopedIdentifier(std::string symbol, Type type);
-        std::unique_ptr<AtomIdentifier>
-        resolveDeclarationScope(AtomIdentifier *a);
-        std::unique_ptr<Atom> resolveDeclarationScope(Atom *a);
-        std::unique_ptr<AtomIdentifier> resolveUseScope(AtomIdentifier *a);
-        std::unique_ptr<Atom> resolveUseScope(Atom *a);
-        std::unique_ptr<hir::Label> makeLabel(std::string name);
-        std::unique_ptr<AtomIdentifier> makeLabelAtom(hir::Label *l);
-        void addReturnIfMissing(ast::Function &f);
-
     private:
         std::vector<std::unique_ptr<hir::Instruction>> result;
         uint64_t cur_scope;
         std::vector<std::unordered_set<std::string>> scope_mappings;
-        SymbolTable old_table;
-        SymbolTable &new_table;
+        SymbolTable *old_table;
+        SymbolTable *new_table;
         std::unordered_map<std::string, uint64_t> label_counts;
     };
 } // namespace frontend
