@@ -53,3 +53,21 @@ entry:
   %11 = load ptr %0
   ret i32 %11
 }
+
+define i32 @scope_reassign_in_parallel_scopes() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  store i32 1, ptr %1
+  %2 = alloca i32
+  store i32 2, ptr %2
+  %3 = alloca i32
+  store i32 3, ptr %3
+  %4 = load ptr %1
+  store i32 %4, ptr %0
+  br label 5
+
+5:
+  %6 = load ptr %0
+  ret i32 %6
+}

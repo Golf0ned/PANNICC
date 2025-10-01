@@ -29,3 +29,14 @@ int scope_reassign_variable() {
     cond_1 = cond_1 + 5;
     return cond_1;
 }
+
+int scope_reassign_in_parallel_scopes() {
+    __entry:
+    int typed_1;
+    typed_1 = 1;
+    int typed_2;
+    typed_2 = 2;
+    int typed_2;
+    typed_2 = 3;
+    return typed_1;
+}
