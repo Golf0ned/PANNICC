@@ -17,14 +17,6 @@ namespace frontend {
         std::unreachable();
     }
 
-    std::string toString(CmpOp op) {
-        switch (op) {
-        case CmpOp::GT:
-            return ">";
-        }
-        std::unreachable();
-    }
-
     middleend::mir::BinaryOp toMir(BinaryOp op) {
         switch (op) {
         case BinaryOp::ADD:
@@ -37,21 +29,5 @@ namespace frontend {
             return middleend::mir::BinaryOp::AND;
         }
         std::unreachable();
-    }
-
-    middleend::mir::CmpOp toMir(CmpOp op, bool isSigned) {
-        if (isSigned) {
-            switch (op) {
-            case CmpOp::GT:
-                return middleend::mir::CmpOp::SGT;
-            }
-            std::unreachable();
-        } else {
-            switch (op) {
-            case CmpOp::GT:
-                std::unreachable();
-            }
-            std::unreachable();
-        }
     }
 } // namespace frontend
