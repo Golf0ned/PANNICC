@@ -25,7 +25,7 @@ namespace frontend {
         functions.reserve(hir.getFunctions().size());
 
         for (auto &f : hir.getFunctions()) {
-            mir::Type function_type = toMir(f.getName()->getType());
+            mir::Type function_type = toMir(f.getType());
 
             HIRToMIRVisitor visitor(function_type);
             for (auto &i : f.getBody()) {
@@ -38,7 +38,7 @@ namespace frontend {
             auto basic_blocks = visitor.getResult();
 
             auto &nameAtom = f.getName();
-            std::string name = nameAtom->toString(hir.getSymbolTable());
+            std::string name = nameAtom->toString(*hir.getSymbolTable().get());
             mir::BasicBlock *entry = basic_blocks.front().get();
             functions.emplace_back(function_type, name, std::move(basic_blocks),
                                    entry);
@@ -52,15 +52,15 @@ namespace frontend {
     }
 
     mir::Value *HIRToMIRVisitor::resolveAtom(Atom *a) {
+        auto type = toMir(Type::INT);
         if (a->isIdentifier()) {
             auto load = std::make_unique<mir::InstructionLoad>(
-                toMir(a->getType()), value_mappings.at(a->getValue()));
+                type, value_mappings.at(a->getValue()));
             mir::InstructionLoad *load_ptr = load.get();
             cur_instructions.push_back(std::move(load));
             return load_ptr;
         } else {
-            auto literal = std::make_unique<mir::Literal>(toMir(a->getType()),
-                                                          a->getValue());
+            auto literal = std::make_unique<mir::Literal>(type, a->getValue());
             mir::Literal *literal_ptr = literal.get();
             cur_literals.push_back(std::move(literal));
             return literal_ptr;
@@ -163,7 +163,7 @@ namespace frontend {
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionDeclaration *i) {
-        mir::Type t = toMir(i->getVariable()->getType());
+        auto t = toMir(Type::INT);
         auto alloca = std::make_unique<mir::InstructionAlloca>(t);
         value_mappings[i->getVariable()->getValue()] = alloca.get();
 
@@ -180,7 +180,7 @@ namespace frontend {
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionAssignBinaryOp *i) {
-        mir::Type type = toMir(i->getVariable()->getType());
+        auto type = toMir(Type::INT);
         mir::Value *left = resolveAtom(i->getLeft().get());
         mir::Value *right = resolveAtom(i->getRight().get());
         mir::BinaryOp op = toMir(i->getOp());
@@ -214,7 +214,7 @@ namespace frontend {
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionCall *i) {
-        mir::Type type = toMir(i->getCallee()->getType());
+        auto type = toMir(Type::INT);
         mir::Function *callee =
             lowered_functions.at(i->getCallee()->getValue());
         auto call = std::make_unique<mir::InstructionCall>(type, callee);
@@ -223,7 +223,7 @@ namespace frontend {
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionCallAssign *i) {
-        mir::Type type = toMir(i->getCallee()->getType());
+        auto type = toMir(Type::INT);
         mir::Function *callee =
             lowered_functions.at(i->getCallee()->getValue());
         auto call = std::make_unique<mir::InstructionCall>(type, callee);
