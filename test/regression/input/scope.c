@@ -29,13 +29,13 @@ int scope_reassign_variable() {
     return cond;
 }
 
-int scope_handle_diff_types() {
+int scope_reassign_in_parallel_scopes() {
     int typed = 1;
     {
-        long typed = 2;
+        int typed = 2;
     }
     {
-        short typed = 3;
+        int typed = 3;
     }
     return typed;
 }
