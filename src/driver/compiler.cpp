@@ -4,6 +4,7 @@
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"
+#include "middleend/pass/inst_combine.h"
 #include "middleend/pass/mem2reg.h"
 #include "middleend/pass/pass_manager.h"
 #include "middleend/pass/simplify_cfg.h"
@@ -71,6 +72,7 @@ int main(int argc, char *argv[]) {
 
     middleend::PassManager pm;
     pm.addPass(std::make_unique<middleend::Mem2Reg>());
+    // pm.addPass(std::make_unique<middleend::InstCombine>());
     pm.addPass(std::make_unique<middleend::SimplifyCFG>());
     pm.runPasses(mir);
 
