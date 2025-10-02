@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <vector>
 
 #include "middleend/mir/type.h"
@@ -12,12 +13,12 @@ namespace middleend::mir {
     public:
         Value(Type type);
         Type getType();
-        std::vector<Instruction *> &getUses();
+        std::unordered_map<Instruction *, uint64_t> &getUses();
         virtual ~Value() = default;
 
     private:
         Type type;
-        std::vector<Instruction *> uses;
+        std::unordered_map<Instruction *, uint64_t> uses;
     };
 
     class Literal : public Value {

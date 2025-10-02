@@ -5,11 +5,19 @@
 #include "middleend/mir/value.h"
 
 namespace middleend::mir {
+    void addUse(Instruction *user, Value *def) { def->getUses()[user]++; }
+
+    void delUse(Instruction *user, Value *def) {
+        def->getUses()[user]--;
+        if (def->getUses()[user] == 0)
+            def->getUses().erase(user);
+    }
+
     InstructionBinaryOp::InstructionBinaryOp(Type type, BinaryOp op,
                                              Value *left, Value *right)
         : Value(type), op(op), left(left), right(right) {
-        left->getUses().push_back(this);
-        right->getUses().push_back(this);
+        addUse(this, left);
+        addUse(this, right);
     }
 
     BinaryOp InstructionBinaryOp::getOp() { return op; }
@@ -18,9 +26,17 @@ namespace middleend::mir {
 
     Value *InstructionBinaryOp::getRight() { return right; }
 
-    void InstructionBinaryOp::setLeft(Value *new_val) { left = new_val; }
+    void InstructionBinaryOp::setLeft(Value *new_val) {
+        delUse(this, left);
+        addUse(this, new_val);
+        left = new_val;
+    }
 
-    void InstructionBinaryOp::setRight(Value *new_val) { right = new_val; }
+    void InstructionBinaryOp::setRight(Value *new_val) {
+        delUse(this, right);
+        addUse(this, new_val);
+        right = new_val;
+    }
 
     void InstructionBinaryOp::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
@@ -46,7 +62,7 @@ namespace middleend::mir {
 
     InstructionLoad::InstructionLoad(Type type, InstructionAlloca *ptr)
         : Value(type), ptr(ptr) {
-        ptr->getUses().push_back(this);
+        addUse(this, ptr);
     }
 
     InstructionAlloca *InstructionLoad::getPtr() { return ptr; }
@@ -57,15 +73,19 @@ namespace middleend::mir {
 
     InstructionStore::InstructionStore(Value *value, InstructionAlloca *ptr)
         : value(value), ptr(ptr) {
-        value->getUses().push_back(this);
-        ptr->getUses().push_back(this);
+        addUse(this, value);
+        addUse(this, ptr);
     }
 
     Value *InstructionStore::getValue() { return value; }
 
     InstructionAlloca *InstructionStore::getPtr() { return ptr; }
 
-    void InstructionStore::setValue(Value *new_val) { value = new_val; }
+    void InstructionStore::setValue(Value *new_val) {
+        delUse(this, value);
+        addUse(this, new_val);
+        value = new_val;
+    }
 
     void InstructionStore::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
@@ -83,12 +103,16 @@ namespace middleend::mir {
     }
 
     TerminatorReturn::TerminatorReturn(Value *value) : value(value) {
-        value->getUses().push_back(this);
+        addUse(this, value);
     }
 
     Value *TerminatorReturn::getValue() { return value; }
 
-    void TerminatorReturn::setValue(Value *new_val) { value = new_val; }
+    void TerminatorReturn::setValue(Value *new_val) {
+        delUse(this, value);
+        addUse(this, new_val);
+        value = new_val;
+    }
 
     void TerminatorReturn::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
@@ -115,7 +139,7 @@ namespace middleend::mir {
         //     throw std::invalid_argument("TerminatorCondBranch cond must be
         //     i1");
         this->cond = cond;
-        cond->getUses().push_back(this);
+        addUse(this, cond);
     }
 
     Value *TerminatorCondBranch::getCond() { return cond; }
@@ -124,7 +148,11 @@ namespace middleend::mir {
 
     BasicBlock *TerminatorCondBranch::getFSuccessor() { return f_successor; };
 
-    void TerminatorCondBranch::setCond(Value *new_val) { this->cond = new_val; }
+    void TerminatorCondBranch::setCond(Value *new_val) {
+        delUse(this, cond);
+        addUse(this, new_val);
+        this->cond = new_val;
+    }
 
     void TerminatorCondBranch::setTSuccessor(BasicBlock *t_successor) {
         this->t_successor = t_successor;

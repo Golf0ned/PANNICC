@@ -131,7 +131,7 @@ namespace middleend {
                     if (load) {
                         ReplaceUsesVisitor visitor(
                             load, reaching[load->getPtr()], bb);
-                        for (auto &use : load->getUses()) {
+                        for (auto &[use, _] : load->getUses()) {
                             use->accept(&visitor);
                         }
                         indices_to_erase[bb].push_back(ind);
