@@ -6,7 +6,9 @@ namespace middleend::mir {
 
     Type Value::getType() { return type; }
 
-    std::vector<Instruction *> &Value::getUses() { return uses; }
+    std::unordered_map<Instruction *, uint64_t> &Value::getUses() {
+        return uses;
+    }
 
     Literal::Literal(Type type, int64_t value) : Value(type), value(value) {}
 
