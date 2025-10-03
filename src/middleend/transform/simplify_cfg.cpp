@@ -2,7 +2,7 @@
 #include <cassert>
 #include <unordered_set>
 
-#include "middleend/pass/simplify_cfg.h"
+#include "middleend/transform/simplify_cfg.h"
 
 namespace middleend {
     void SimplifyCFG::run(mir::Program &p) {

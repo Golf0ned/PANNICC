@@ -1,10 +1,10 @@
 #include <ranges>
 #include <unordered_set>
 
+#include "middleend/analysis/dominator_tree.h"
 #include "middleend/mir/instruction.h"
 #include "middleend/mir/mir.h"
-#include "middleend/pass/dominator_tree.h"
-#include "middleend/pass/mem2reg.h"
+#include "middleend/transform/mem2reg.h"
 
 namespace middleend {
     std::unordered_map<mir::BasicBlock *, std::vector<mir::BasicBlock *>>

@@ -1,6 +1,6 @@
 #include <ranges>
 
-#include "middleend/pass/dominator_tree.h"
+#include "middleend/analysis/dominator_tree.h"
 
 namespace middleend {
     void recursePostorder(mir::BasicBlock *bb,

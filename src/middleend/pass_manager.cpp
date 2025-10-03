@@ -1,4 +1,4 @@
-#include "middleend/pass/pass_manager.h"
+#include "middleend/pass_manager.h"
 
 namespace middleend {
     void PassManager::addPass(std::unique_ptr<TransformPass> p) {
