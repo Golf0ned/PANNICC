@@ -8,16 +8,16 @@
 
 namespace middleend {
     std::unordered_map<mir::BasicBlock *, std::vector<mir::BasicBlock *>>
-    computeDominanceFrontiers(DominatorTree *dt, mir::Function &f) {
+    computeDominanceFrontiers(DominatorTree *dt, mir::Function *f) {
         std::unordered_map<mir::BasicBlock *, std::vector<mir::BasicBlock *>>
             res;
 
-        for (auto &bb : f.getBasicBlocks()) {
+        for (auto &bb : f->getBasicBlocks()) {
             auto &preds = bb->getPredecessors();
             if (preds.size() < 2)
                 continue;
 
-            for (auto pred : preds) {
+            for (auto [pred, _] : preds) {
                 auto bb_ptr = bb.get();
                 auto cur = pred, i_dom = dt->getImmediateDominator(bb_ptr);
                 while (cur != nullptr && cur != i_dom) {
@@ -37,12 +37,12 @@ namespace middleend {
             //
             std::unordered_map<mir::BasicBlock *,
                                std::vector<mir::BasicBlock *>>
-                dominance_frontiers = computeDominanceFrontiers(dt, f);
+                dominance_frontiers = computeDominanceFrontiers(dt, f.get());
 
             std::unordered_map<mir::InstructionAlloca *,
                                std::unordered_set<mir::BasicBlock *>>
                 defs;
-            for (auto &bb : f.getBasicBlocks()) {
+            for (auto &bb : f->getBasicBlocks()) {
                 for (auto &i : bb->getInstructions()) {
                     auto *store =
                         dynamic_cast<mir::InstructionStore *>(i.get());
@@ -84,7 +84,7 @@ namespace middleend {
             std::vector<std::pair<
                 mir::BasicBlock *,
                 std::unordered_map<mir::InstructionAlloca *, mir::Value *>>>
-                worklist = {{f.getEntryBlock(), {}}};
+                worklist = {{f->getEntryBlock(), {}}};
             std::unordered_set<mir::BasicBlock *> visited;
             std::unordered_map<mir::BasicBlock *, std::vector<size_t>>
                 indices_to_erase;
@@ -98,8 +98,9 @@ namespace middleend {
                     reaching[alloca] = phi.get();
 
                 auto &instructions = bb->getInstructions();
-                for (size_t ind = 0; ind < instructions.size(); ind++) {
-                    auto i = instructions[ind].get();
+                size_t ind = 0;
+                for (auto &i_ref : instructions) {
+                    auto i = i_ref.get();
 
                     // Alloca: delete
                     // TODO: delete when finding promotable
@@ -115,7 +116,7 @@ namespace middleend {
                         auto alloca = store->getPtr();
                         auto value = store->getValue();
                         reaching[alloca] = value;
-                        for (auto succ : bb->getSuccessors()) {
+                        for (auto [succ, _] : bb->getSuccessors()) {
                             auto &succ_phis = phis[succ];
                             if (succ_phis.contains(alloca))
                                 succ_phis[alloca]->getPredecessors()[bb] =
@@ -129,17 +130,19 @@ namespace middleend {
                     auto *load = dynamic_cast<mir::InstructionLoad *>(i);
                     if (load) {
                         ReplaceUseVisitor visitor(load,
-                                                  reaching[load->getPtr()], bb);
+                                                  reaching[load->getPtr()], p);
                         for (auto &use : load->getUses()) {
                             use->accept(&visitor);
                         }
                         indices_to_erase[bb].push_back(ind);
                         continue;
                     }
+
+                    ind++;
                 }
 
                 visited.insert(bb);
-                for (auto succ : bb->getSuccessors()) {
+                for (auto [succ, _] : bb->getSuccessors()) {
                     if (visited.contains(succ))
                         continue;
                     worklist.push_back({succ, reaching});
@@ -149,29 +152,23 @@ namespace middleend {
             //
             // Final basic block modifications
             //
-            for (auto &bb : f.getBasicBlocks()) {
+            for (auto &bb : f->getBasicBlocks()) {
                 auto &instructions = bb->getInstructions();
                 auto &to_insert = phis[bb.get()];
                 auto &to_erase = indices_to_erase[bb.get()];
 
-                std::vector<std::unique_ptr<mir::Instruction>> new_body;
-                new_body.reserve(instructions.size() + to_insert.size() -
-                                 to_erase.size());
-
-                for (auto &[alloca, phi] : phis[bb.get()])
-                    new_body.push_back(std::move(phi));
-
-                size_t to_erase_ind = 0;
-                for (size_t ind = 0; ind < instructions.size(); ind++) {
+                size_t ind = 0, to_erase_ind = 0;
+                for (auto iter = instructions.begin();
+                     iter != instructions.end(); iter++) {
                     if (to_erase_ind < to_erase.size() &&
                         ind == to_erase[to_erase_ind]) {
-                        to_erase_ind++;
-                        continue;
+                        iter = instructions.erase(iter);
                     }
-                    new_body.push_back(std::move(instructions[ind]));
+                    ind++;
                 }
 
-                bb->getInstructions().swap(new_body);
+                for (auto &[alloca, phi] : phis[bb.get()])
+                    instructions.push_front(std::move(phi));
             }
         }
     }
@@ -195,27 +192,16 @@ namespace middleend {
     }
 
     ReplaceUseVisitor::ReplaceUseVisitor(mir::Value *old_value,
-                                         mir::Value *new_value,
-                                         mir::BasicBlock *bb)
-        : old_value(old_value), new_value(new_value), bb(bb) {
+                                         mir::Value *new_value, mir::Program &p)
+        : old_value(old_value), new_value(new_value), p(p) {
         new_value_literal = dynamic_cast<mir::Literal *>(new_value);
     }
 
     void ReplaceUseVisitor::visit(mir::InstructionBinaryOp *i) {
         if (i->getLeft() == old_value)
-            i->setLeft(addNewValue());
+            i->setLeft(new_value);
         if (i->getRight() == old_value)
-            i->setRight(addNewValue());
-    }
-
-    mir::Value *ReplaceUseVisitor::addNewValue() {
-        if (!new_value_literal)
-            return new_value;
-        auto new_literal = std::make_unique<mir::Literal>(
-            new_value_literal->getType(), new_value_literal->getValue());
-        auto new_literal_ptr = new_literal.get();
-        bb->getLiterals().push_back(std::move(new_literal));
-        return new_literal_ptr;
+            i->setRight(new_value);
     }
 
     void ReplaceUseVisitor::visit(mir::InstructionCall *i) {}
@@ -226,7 +212,7 @@ namespace middleend {
 
     void ReplaceUseVisitor::visit(mir::InstructionStore *i) {
         if (i->getValue() == old_value)
-            i->setValue(addNewValue());
+            i->setValue(new_value);
     }
 
     void ReplaceUseVisitor::visit(mir::InstructionPhi *i) {
@@ -238,7 +224,7 @@ namespace middleend {
 
     void ReplaceUseVisitor::visit(mir::TerminatorReturn *t) {
         if (t->getValue() == old_value) {
-            t->setValue(addNewValue());
+            t->setValue(new_value);
         }
     }
 
@@ -246,6 +232,6 @@ namespace middleend {
 
     void ReplaceUseVisitor::visit(mir::TerminatorCondBranch *t) {
         if (t->getCond() == old_value)
-            t->setCond(addNewValue());
+            t->setCond(new_value);
     }
 } // namespace middleend
