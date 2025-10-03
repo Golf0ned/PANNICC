@@ -1,7 +1,7 @@
 #pragma once
 
-#include "middleend/pass/dominator_tree.h"
-#include "middleend/pass/pass.h"
+#include "middleend/analysis/dominator_tree.h"
+#include "middleend/pass.h"
 
 namespace middleend {
     class Mem2Reg : public TransformPass {

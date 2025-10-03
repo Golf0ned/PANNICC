@@ -1,6 +1,6 @@
 #pragma once
 
-#include "middleend/pass/pass.h"
+#include "middleend/pass.h"
 
 namespace middleend {
     class DominatorTree : public AnalysisPass {
