@@ -1,30 +1,13 @@
 #include <ranges>
 
 #include "middleend/analysis/dominator_tree.h"
+#include "middleend/utils/traversal.h"
 
 namespace middleend {
-    void recursePostorder(mir::BasicBlock *bb,
-                          std::vector<mir::BasicBlock *> &to,
-                          std::unordered_map<mir::BasicBlock *, uint64_t> &tn,
-                          uint64_t &counter) {
-        tn[bb]; // Prevent loops
-        for (auto succ : bb->getSuccessors())
-            if (!tn.contains(succ))
-                recursePostorder(succ, to, tn, counter);
-        tn[bb] = counter++;
-        to.push_back(bb);
-    }
-
-    void numberPostorder(
-        mir::BasicBlock *entry, std::vector<mir::BasicBlock *> &traversal_order,
-        std::unordered_map<mir::BasicBlock *, uint64_t> &traversal_numbers) {
-        uint64_t counter = 0;
-        recursePostorder(entry, traversal_order, traversal_numbers, counter);
-    }
 
     void DominatorTree::run(mir::Program &p) {
         for (auto &f : p.getFunctions()) {
-            std::vector<mir::BasicBlock *> traversal_order;
+            std::list<mir::BasicBlock *> traversal_order;
             std::ranges::reverse_view reverse_traversal_order{traversal_order};
             std::unordered_map<mir::BasicBlock *, uint64_t> traversal_numbers;
 
@@ -38,19 +21,19 @@ namespace middleend {
                 return b1;
             };
 
-            numberPostorder(f.getEntryBlock(), traversal_order,
-                            traversal_numbers);
+            auto entry = f->getEntryBlock();
+            numberPostorder(entry, traversal_order, traversal_numbers);
 
-            immediate_dominators[f.getEntryBlock()] = f.getEntryBlock();
+            immediate_dominators[entry] = entry;
             bool changed = true;
             while (changed) {
                 changed = false;
                 for (auto &bb : reverse_traversal_order) {
-                    if (bb == f.getEntryBlock())
+                    if (bb == entry)
                         continue;
 
                     mir::BasicBlock *idom = nullptr;
-                    for (auto pred : bb->getPredecessors()) {
+                    for (auto [pred, _] : bb->getPredecessors()) {
                         if (immediate_dominators.contains(pred))
                             idom = idom ? findLCA(idom, pred) : pred;
                     }
