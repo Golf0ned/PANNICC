@@ -5,7 +5,7 @@ namespace middleend {
                           std::unordered_map<mir::BasicBlock *, uint64_t> &tn,
                           uint64_t &counter) {
         tn[bb]; // Prevent loops
-        for (auto [succ, _] : bb->getSuccessors())
+        for (auto succ : bb->getSuccessors().getUniqueEdges())
             if (!tn.contains(succ))
                 recursePostorder(succ, to, tn, counter);
         tn[bb] = counter++;

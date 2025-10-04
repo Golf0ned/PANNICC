@@ -84,7 +84,7 @@ namespace frontend {
         auto new_block = std::make_unique<mir::BasicBlock>(
             std::move(cur_instructions), std::move(terminator));
         basic_blocks.push_back(std::move(new_block));
-        cur_instructions.clear();
+        // cur_instructions.clear();
         new_basic_block = true;
     }
 
@@ -113,21 +113,21 @@ namespace frontend {
         std::unordered_map<uint64_t, mir::BasicBlock *> label_to_bb;
         size_t i = 0;
         for (auto &bb : basic_blocks) {
-            label_to_bb[labels[i]] = bb.get();
+            label_to_bb[labels[i++]] = bb.get();
         }
 
         for (auto [i, ids] : instruction_to_bbs) {
             auto branch = dynamic_cast<mir::TerminatorBranch *>(i);
             if (branch) {
-                auto successor_id = ids[0];
-                branch->setSuccessor(label_to_bb[successor_id]);
+                auto succ_id = ids[0];
+                branch->setSuccessor(label_to_bb.at(succ_id));
             }
 
             auto cond_branch = dynamic_cast<mir::TerminatorCondBranch *>(i);
             if (cond_branch) {
-                auto t_successor_id = ids[0], f_successor_id = ids[1];
-                cond_branch->setTSuccessor(label_to_bb[t_successor_id]);
-                cond_branch->setFSuccessor(label_to_bb[f_successor_id]);
+                auto t_succ_id = ids[0], f_succ_id = ids[1];
+                cond_branch->setTSuccessor(label_to_bb.at(t_succ_id));
+                cond_branch->setFSuccessor(label_to_bb.at(f_succ_id));
             }
         }
 
@@ -137,20 +137,20 @@ namespace frontend {
             auto branch = dynamic_cast<mir::TerminatorBranch *>(terminator);
             if (branch) {
                 auto succ = branch->getSuccessor();
-                bb->getSuccessors()[succ]++;
-                succ->getPredecessors()[bb.get()]++;
+                bb->getSuccessors().addEdge(succ);
+                succ->getPredecessors().addEdge(bb.get());
             }
 
             auto cond_branch =
                 dynamic_cast<mir::TerminatorCondBranch *>(terminator);
             if (cond_branch) {
                 auto t_succ = cond_branch->getTSuccessor();
-                bb->getSuccessors()[t_succ]++;
-                t_succ->getPredecessors()[bb.get()]++;
+                bb->getSuccessors().addEdge(t_succ);
+                t_succ->getPredecessors().addEdge(bb.get()); // problematic line
 
                 auto f_succ = cond_branch->getFSuccessor();
-                bb->getSuccessors()[f_succ]++;
-                f_succ->getPredecessors()[bb.get()]++;
+                bb->getSuccessors().addEdge(f_succ);
+                f_succ->getPredecessors().addEdge(bb.get());
             }
         }
     }
@@ -166,7 +166,7 @@ namespace frontend {
             auto new_block = std::make_unique<mir::BasicBlock>(
                 std::move(cur_instructions), std::move(branch));
             basic_blocks.push_back(std::move(new_block));
-            cur_instructions.clear();
+            // cur_instructions.clear();
         }
 
         labels.push_back(l->getName()->getValue());
