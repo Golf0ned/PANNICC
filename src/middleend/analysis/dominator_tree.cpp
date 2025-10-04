@@ -33,7 +33,7 @@ namespace middleend {
                         continue;
 
                     mir::BasicBlock *idom = nullptr;
-                    for (auto [pred, _] : bb->getPredecessors()) {
+                    for (auto pred : bb->getPredecessors().getEdges()) {
                         if (immediate_dominators.contains(pred))
                             idom = idom ? findLCA(idom, pred) : pred;
                     }

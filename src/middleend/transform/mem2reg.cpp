@@ -14,10 +14,10 @@ namespace middleend {
 
         for (auto &bb : f->getBasicBlocks()) {
             auto &preds = bb->getPredecessors();
-            if (preds.size() < 2)
+            if (preds.getEdges().size() < 2)
                 continue;
 
-            for (auto [pred, _] : preds) {
+            for (auto pred : preds.getEdges()) {
                 auto bb_ptr = bb.get();
                 auto cur = pred, i_dom = dt->getImmediateDominator(bb_ptr);
                 while (cur != nullptr && cur != i_dom) {
@@ -116,7 +116,7 @@ namespace middleend {
                         auto alloca = store->getPtr();
                         auto value = store->getValue();
                         reaching[alloca] = value;
-                        for (auto [succ, _] : bb->getSuccessors()) {
+                        for (auto succ : bb->getSuccessors().getEdges()) {
                             auto &succ_phis = phis[succ];
                             if (succ_phis.contains(alloca))
                                 succ_phis[alloca]->getPredecessors()[bb] =
@@ -142,7 +142,7 @@ namespace middleend {
                 }
 
                 visited.insert(bb);
-                for (auto [succ, _] : bb->getSuccessors()) {
+                for (auto succ : bb->getSuccessors().getEdges()) {
                     if (visited.contains(succ))
                         continue;
                     worklist.push_back({succ, reaching});
@@ -163,6 +163,7 @@ namespace middleend {
                     if (to_erase_ind < to_erase.size() &&
                         ind == to_erase[to_erase_ind]) {
                         iter = instructions.erase(iter);
+                        to_erase_ind++;
                     }
                     ind++;
                 }

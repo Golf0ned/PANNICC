@@ -4,6 +4,35 @@
 #include "middleend/mir/value.h"
 
 namespace middleend::mir {
+    const std::vector<BasicBlock *> BasicBlockEdges::getEdges() {
+        std::vector<BasicBlock *> res;
+        for (auto [bb, count] : edges)
+            for (int i = 0; i < count; i++)
+                res.push_back(bb);
+        return res;
+    }
+
+    const std::unordered_set<BasicBlock *> BasicBlockEdges::getUniqueEdges() {
+        std::unordered_set<BasicBlock *> res;
+        for (auto [bb, _] : edges)
+            res.insert(bb);
+        return res;
+    }
+
+    void BasicBlockEdges::addEdge(BasicBlock *bb) {
+        edges[bb]++;
+        size++;
+    }
+
+    void BasicBlockEdges::removeEdge(BasicBlock *bb) {
+        edges.at(bb); // too lazy to add an exception by hand lmao
+        if (--edges[bb] == 0)
+            edges.erase(bb);
+        size--;
+    }
+
+    uint64_t BasicBlockEdges::getSize() { return size; }
+
     BasicBlock::BasicBlock(std::list<std::unique_ptr<Instruction>> body,
                            std::unique_ptr<Terminator> terminator)
         : body(std::move(body)), terminator(std::move(terminator)) {}
@@ -16,13 +45,9 @@ namespace middleend::mir {
         return terminator;
     }
 
-    std::unordered_map<BasicBlock *, uint64_t> &BasicBlock::getPredecessors() {
-        return predecessors;
-    }
+    BasicBlockEdges &BasicBlock::getPredecessors() { return predecessors; }
 
-    std::unordered_map<BasicBlock *, uint64_t> &BasicBlock::getSuccessors() {
-        return successors;
-    }
+    BasicBlockEdges &BasicBlock::getSuccessors() { return successors; }
 
     std::string BasicBlock::toString(
         const std::unordered_map<BasicBlock *, uint64_t> &basic_block_ids,

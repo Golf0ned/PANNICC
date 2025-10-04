@@ -1,6 +1,4 @@
-#include <algorithm>
 #include <cassert>
-#include <unordered_set>
 
 #include "middleend/transform/simplify_cfg.h"
 
@@ -11,21 +9,19 @@ namespace middleend {
             while (changed) {
                 changed = false;
                 std::vector<size_t> to_erase;
-                auto &bbs = f.getBasicBlocks();
+                auto &bbs = f->getBasicBlocks();
                 // TODO: handle non-sequential BB storage order
-                for (size_t ind = 0; ind < bbs.size(); ind++) {
-                    auto bb = bbs[ind].get();
+                size_t ind = 0;
+                for (auto &bb_ref : bbs) {
+                    auto bb = bb_ref.get();
 
                     auto &preds = bb->getPredecessors();
                     auto &succs = bb->getSuccessors();
 
                     // Remove if no predecessors
-                    if (preds.empty() && bb != f.getEntryBlock()) {
-                        for (auto pred : preds)
-                            std::erase(pred->getSuccessors(), bb);
-
-                        for (auto succ : succs)
-                            std::erase(succ->getPredecessors(), bb);
+                    if (!preds.getSize() && bb != f->getEntryBlock()) {
+                        for (auto succ : succs.getUniqueEdges())
+                            succ->getPredecessors().removeEdge(bb);
 
                         to_erase.push_back(ind);
 
@@ -34,9 +30,10 @@ namespace middleend {
                     }
 
                     // Merge if straight line connection
-                    if (preds.size() == 1 &&
-                        preds[0]->getSuccessors().size() == 1) {
-                        auto &pred = preds[0];
+                    if (preds.getSize() == 1) {
+                        auto pred = preds.getEdges()[0];
+                        if (pred->getSuccessors().getSize() != 1)
+                            continue;
 
                         auto &pred_insts = pred->getInstructions();
                         for (auto &i : bb->getInstructions()) {
@@ -45,14 +42,10 @@ namespace middleend {
                             pred_insts.push_back(std::move(i));
                         }
 
-                        auto &pred_literals = pred->getLiterals();
-                        for (auto &l : bb->getLiterals())
-                            pred_literals.push_back(std::move(l));
-
-                        for (auto succ : succs) {
+                        for (auto succ : succs.getEdges()) {
                             auto &succ_preds = succ->getPredecessors();
-                            std::replace(succ_preds.begin(), succ_preds.end(),
-                                         bb, pred);
+                            succ_preds.removeEdge(bb);
+                            succ_preds.addEdge(pred);
 
                             for (auto &i : succ->getInstructions()) {
                                 auto phi = dynamic_cast<mir::InstructionPhi *>(
@@ -67,7 +60,7 @@ namespace middleend {
                             }
                         }
 
-                        pred->getSuccessors().swap(succs);
+                        pred->getSuccessors() = std::move(succs);
                         pred->getTerminator().swap(bb->getTerminator());
 
                         to_erase.push_back(ind);
@@ -82,32 +75,28 @@ namespace middleend {
                     auto terminator = dynamic_cast<mir::TerminatorBranch *>(
                         bb->getTerminator().get());
                     if (terminator && bb->getInstructions().empty()) {
-                        auto &succ = succs[0];
+                        auto succ = terminator->getSuccessor();
                         auto &succ_preds = succ->getPredecessors();
-                        std::unordered_set<mir::BasicBlock *> succ_preds_has(
-                            succ_preds.begin(), succ_preds.end());
-
+                        auto succ_preds_has = succ_preds.getUniqueEdges();
                         // TODO: handle this case properly: we can't join if
                         // succ has a phi since its value depends on previous
                         // block
                         auto &succ_insts = succ->getInstructions();
                         bool succ_has_phi = !succ_insts.empty() &&
                                             dynamic_cast<mir::InstructionPhi *>(
-                                                succ_insts[0].get());
+                                                succ_insts.front().get());
                         if (succ_has_phi)
                             continue;
 
-                        for (auto pred : preds) {
+                        succ_preds.removeEdge(bb);
+                        for (auto pred : preds.getUniqueEdges()) {
                             // Replace succ preds
-                            if (!succ_preds_has.contains(pred)) {
-                                succ_preds.push_back(pred);
-                                succ_preds_has.insert(pred);
-                            }
+                            succ_preds.addEdge(pred);
 
                             // Replace pred succs
                             auto &pred_succs = pred->getSuccessors();
-                            std::replace(pred_succs.begin(), pred_succs.end(),
-                                         bb, succ);
+                            pred_succs.removeEdge(bb);
+                            pred_succs.addEdge(succ);
 
                             // Replace pred terminator blocks
                             auto pred_terminator = pred->getTerminator().get();
@@ -130,14 +119,15 @@ namespace middleend {
                             }
                         }
 
-                        if (bb == f.getEntryBlock())
-                            f.setEntryBlock(succ);
+                        if (bb == f->getEntryBlock())
+                            f->setEntryBlock(succ);
 
                         to_erase.push_back(ind);
 
                         changed = true;
                         continue;
                     }
+                    ind++;
                 }
 
                 //
@@ -146,21 +136,21 @@ namespace middleend {
                 if (to_erase.size() == 0)
                     continue;
 
-                std::vector<std::unique_ptr<mir::BasicBlock>> new_bbs;
-                new_bbs.reserve(bbs.size() - to_erase.size());
+                std::list<std::unique_ptr<mir::BasicBlock>> new_bbs;
 
-                size_t to_erase_ind = 0;
-                for (size_t ind = 0; ind < bbs.size(); ind++) {
-                    auto &bb = bbs[ind];
+                size_t new_ind = 0, to_erase_ind = 0;
+                for (auto &bb : bbs) {
                     if (to_erase_ind < to_erase.size() &&
-                        ind == to_erase[to_erase_ind]) {
+                        new_ind == to_erase[to_erase_ind]) {
                         to_erase_ind++;
+                        new_ind++;
                         continue;
                     }
                     new_bbs.push_back(std::move(bb));
+                    new_ind++;
                 }
 
-                f.getBasicBlocks().swap(new_bbs);
+                f->getBasicBlocks().swap(new_bbs);
             }
         }
     }

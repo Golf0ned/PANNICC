@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <list>
 #include <memory>
+#include <unordered_set>
 
 #include "middleend/mir/instruction.h"
 #include "middleend/mir/type.h"
@@ -11,14 +12,28 @@ namespace middleend::mir {
     using LiteralMap = std::unordered_map<
         Type, std::unordered_map<uint64_t, std::unique_ptr<Literal>>>;
 
+    class BasicBlockEdges {
+    public:
+        const std::vector<BasicBlock *> getEdges(); // TODO: iterator
+        const std::unordered_set<BasicBlock *>
+        getUniqueEdges(); // TODO: iterator
+        void addEdge(BasicBlock *bb);
+        void removeEdge(BasicBlock *bb);
+        uint64_t getSize();
+
+    private:
+        std::unordered_map<BasicBlock *, uint64_t> edges;
+        uint64_t size;
+    };
+
     class BasicBlock {
     public:
         BasicBlock(std::list<std::unique_ptr<Instruction>> body,
                    std::unique_ptr<Terminator> terminator);
         std::list<std::unique_ptr<Instruction>> &getInstructions();
         std::unique_ptr<Terminator> &getTerminator();
-        std::unordered_map<BasicBlock *, uint64_t> &getPredecessors();
-        std::unordered_map<BasicBlock *, uint64_t> &getSuccessors();
+        BasicBlockEdges &getPredecessors();
+        BasicBlockEdges &getSuccessors();
         std::string toString(
             const std::unordered_map<BasicBlock *, uint64_t> &basic_block_ids,
             const std::unordered_map<Value *, uint64_t> &instruction_ids);
@@ -26,8 +41,8 @@ namespace middleend::mir {
     private:
         std::list<std::unique_ptr<Instruction>> body;
         std::unique_ptr<Terminator> terminator;
-        std::unordered_map<BasicBlock *, uint64_t> predecessors;
-        std::unordered_map<BasicBlock *, uint64_t> successors;
+        BasicBlockEdges predecessors;
+        BasicBlockEdges successors;
     };
 
     class Function {
