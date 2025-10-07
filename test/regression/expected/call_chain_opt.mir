@@ -1,5 +1,6 @@
 define i32 @first() {
-
+entry:
+  ret i32 1
 }
 
 define i32 @second() {
