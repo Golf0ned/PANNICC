@@ -51,10 +51,9 @@ namespace middleend {
                 }
             }
 
-            std::unordered_map<
-                mir::BasicBlock *,
-                std::unordered_map<mir::InstructionAlloca *,
-                                   std::unique_ptr<mir::InstructionPhi>>>
+            std::unordered_map<mir::BasicBlock *,
+                               std::unordered_map<mir::InstructionAlloca *,
+                                                  mir::InstructionPhi *>>
                 phis;
             for (auto const &[alloca, def_blocks] : defs) {
                 mir::Type type = alloca->getAllocType();
@@ -69,7 +68,8 @@ namespace middleend {
                             continue;
 
                         auto phi = std::make_unique<mir::InstructionPhi>(type);
-                        phis[bb][alloca] = std::move(phi);
+                        phis[bb][alloca] = phi.get();
+                        bb->getInstructions().push_front(std::move(phi));
 
                         visited.insert(bb);
                         if (!def_blocks.contains(bb))
@@ -86,27 +86,31 @@ namespace middleend {
                 std::unordered_map<mir::InstructionAlloca *, mir::Value *>>>
                 worklist = {{f->getEntryBlock(), {}}};
             std::unordered_set<mir::BasicBlock *> visited;
-            std::unordered_map<mir::BasicBlock *, std::vector<size_t>>
-                indices_to_erase;
-
+            std::vector<std::unique_ptr<mir::Instruction>> to_drop;
             while (!worklist.empty()) {
                 auto &bb = worklist.back().first;
                 auto reaching = std::move(worklist.back().second);
                 worklist.pop_back();
 
-                for (auto &[alloca, phi] : phis[bb])
-                    reaching[alloca] = phi.get();
+                for (auto [alloca, phi] : phis[bb]) {
+                    reaching[alloca] = phi;
+                    for (auto succ : bb->getSuccessors().getEdges()) {
+                        auto &succ_phis = phis[succ];
+                        if (succ_phis.contains(alloca))
+                            succ_phis[alloca]->getPredecessors()[bb] = phi;
+                    }
+                }
 
                 auto &instructions = bb->getInstructions();
-                size_t ind = 0;
-                for (auto &i_ref : instructions) {
-                    auto i = i_ref.get();
+                auto iter = instructions.begin();
+                while (iter != instructions.end()) {
+                    auto i = iter->get();
 
-                    // Alloca: delete
-                    // TODO: delete when finding promotable
+                    // Alloca: mark for drop
                     auto *alloca = dynamic_cast<mir::InstructionAlloca *>(i);
                     if (alloca) {
-                        indices_to_erase[bb].push_back(ind);
+                        to_drop.push_back(std::move(*iter));
+                        iter = instructions.erase(iter);
                         continue;
                     }
 
@@ -122,7 +126,9 @@ namespace middleend {
                                 succ_phis[alloca]->getPredecessors()[bb] =
                                     value;
                         }
-                        indices_to_erase[bb].push_back(ind);
+
+                        to_drop.push_back(std::move(*iter));
+                        iter = instructions.erase(iter);
                         continue;
                     }
 
@@ -130,15 +136,16 @@ namespace middleend {
                     auto *load = dynamic_cast<mir::InstructionLoad *>(i);
                     if (load) {
                         ReplaceUseVisitor visitor(load,
-                                                  reaching[load->getPtr()], p);
-                        for (auto &use : load->getUses()) {
+                                                  reaching[load->getPtr()]);
+                        for (auto &use : load->getUses())
                             use->accept(&visitor);
-                        }
-                        indices_to_erase[bb].push_back(ind);
+
+                        to_drop.push_back(std::move(*iter));
+                        iter = instructions.erase(iter);
                         continue;
                     }
 
-                    ind++;
+                    iter++;
                 }
 
                 visited.insert(bb);
@@ -147,29 +154,6 @@ namespace middleend {
                         continue;
                     worklist.push_back({succ, reaching});
                 }
-            }
-
-            //
-            // Final basic block modifications
-            //
-            for (auto &bb : f->getBasicBlocks()) {
-                auto &instructions = bb->getInstructions();
-                auto &to_insert = phis[bb.get()];
-                auto &to_erase = indices_to_erase[bb.get()];
-
-                size_t ind = 0, to_erase_ind = 0;
-                for (auto iter = instructions.begin();
-                     iter != instructions.end(); iter++) {
-                    if (to_erase_ind < to_erase.size() &&
-                        ind == to_erase[to_erase_ind]) {
-                        iter = instructions.erase(iter);
-                        to_erase_ind++;
-                    }
-                    ind++;
-                }
-
-                for (auto &[alloca, phi] : phis[bb.get()])
-                    instructions.push_front(std::move(phi));
             }
         }
     }
@@ -193,10 +177,8 @@ namespace middleend {
     }
 
     ReplaceUseVisitor::ReplaceUseVisitor(mir::Value *old_value,
-                                         mir::Value *new_value, mir::Program &p)
-        : old_value(old_value), new_value(new_value), p(p) {
-        new_value_literal = dynamic_cast<mir::Literal *>(new_value);
-    }
+                                         mir::Value *new_value)
+        : old_value(old_value), new_value(new_value) {}
 
     void ReplaceUseVisitor::visit(mir::InstructionBinaryOp *i) {
         if (i->getLeft() == old_value)
@@ -217,9 +199,9 @@ namespace middleend {
     }
 
     void ReplaceUseVisitor::visit(mir::InstructionPhi *i) {
-        for (auto &pair : i->getPredecessors()) {
-            if (pair.second == old_value)
-                i->getPredecessors()[pair.first] = new_value;
+        for (auto &[bb, val] : i->getPredecessors()) {
+            if (val == old_value)
+                i->getPredecessors()[bb] = new_value;
         }
     }
 
