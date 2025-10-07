@@ -4,6 +4,8 @@
 #include "middleend/mir/value.h"
 
 namespace middleend::mir {
+    BasicBlockEdges::BasicBlockEdges() : size(0) {}
+
     const std::vector<BasicBlock *> BasicBlockEdges::getEdges() {
         std::vector<BasicBlock *> res;
         for (auto [bb, count] : edges)
