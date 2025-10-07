@@ -8,32 +8,34 @@ namespace middleend {
             bool changed = true;
             while (changed) {
                 changed = false;
-                std::vector<size_t> to_erase;
+                std::vector<std::unique_ptr<mir::BasicBlock>> to_drop;
                 auto &bbs = f->getBasicBlocks();
                 // TODO: handle non-sequential BB storage order
-                size_t ind = 0;
-                for (auto &bb_ref : bbs) {
-                    auto bb = bb_ref.get();
+                auto iter = bbs.begin();
+                while (iter != bbs.end()) {
+                    auto bb = iter->get();
 
                     auto &preds = bb->getPredecessors();
                     auto &succs = bb->getSuccessors();
 
-                    // Remove if no predecessors
-                    if (!preds.getSize() && bb != f->getEntryBlock()) {
+                    auto tryRemoveOrphaned = [&]() {
+                        if (preds.getSize() || bb == f->getEntryBlock())
+                            return false;
+
                         for (auto succ : succs.getUniqueEdges())
                             succ->getPredecessors().removeEdge(bb);
 
-                        to_erase.push_back(ind);
+                        to_drop.push_back(std::move(*iter));
+                        iter = bbs.erase(iter);
+                        return true;
+                    };
 
-                        changed = true;
-                        continue;
-                    }
-
-                    // Merge if straight line connection
-                    if (preds.getSize() == 1) {
+                    auto tryMergeStraightLine = [&]() {
+                        if (preds.getSize() != 1)
+                            return false;
                         auto pred = preds.getEdges()[0];
                         if (pred->getSuccessors().getSize() != 1)
-                            continue;
+                            return false;
 
                         auto &pred_insts = pred->getInstructions();
                         for (auto &i : bb->getInstructions()) {
@@ -63,30 +65,28 @@ namespace middleend {
                         pred->getSuccessors() = std::move(succs);
                         pred->getTerminator().swap(bb->getTerminator());
 
-                        to_erase.push_back(ind);
+                        to_drop.push_back(std::move(*iter));
+                        iter = bbs.erase(iter);
+                        return true;
+                    };
 
-                        changed = true;
-                        continue;
-                    }
-
-                    // Eliminate phis if only one successor
-
-                    // Eliminate if only unconditional br
-                    auto terminator = dynamic_cast<mir::TerminatorBranch *>(
-                        bb->getTerminator().get());
-                    if (terminator && bb->getInstructions().empty()) {
+                    auto tryMergeUncondBr = [&]() {
+                        auto terminator = dynamic_cast<mir::TerminatorBranch *>(
+                            bb->getTerminator().get());
+                        if (!terminator || bb->getInstructions().size())
+                            return false;
                         auto succ = terminator->getSuccessor();
                         auto &succ_preds = succ->getPredecessors();
                         auto succ_preds_has = succ_preds.getUniqueEdges();
                         // TODO: handle this case properly: we can't join if
-                        // succ has a phi since its value depends on previous
-                        // block
+                        // succ has a phi since its value depends on
+                        // previous block
                         auto &succ_insts = succ->getInstructions();
                         bool succ_has_phi = !succ_insts.empty() &&
                                             dynamic_cast<mir::InstructionPhi *>(
                                                 succ_insts.front().get());
                         if (succ_has_phi)
-                            continue;
+                            return false;
 
                         succ_preds.removeEdge(bb);
                         for (auto pred : preds.getUniqueEdges()) {
@@ -122,35 +122,28 @@ namespace middleend {
                         if (bb == f->getEntryBlock())
                             f->setEntryBlock(succ);
 
-                        to_erase.push_back(ind);
+                        to_drop.push_back(std::move(*iter));
+                        iter = bbs.erase(iter);
+                        return true;
+                    };
 
+                    // TODO: eliminate phi if only one successor
+                    auto tryResolvePhi = [&]() { return false; };
+
+                    // clang-format off
+                    if (false
+                        || tryRemoveOrphaned()
+                        || tryMergeStraightLine()
+                        || tryMergeUncondBr()
+                        || tryResolvePhi()
+                    ) {
+                        // clang-format on
                         changed = true;
                         continue;
                     }
-                    ind++;
+
+                    iter++;
                 }
-
-                //
-                // Commit changes
-                //
-                if (to_erase.size() == 0)
-                    continue;
-
-                std::list<std::unique_ptr<mir::BasicBlock>> new_bbs;
-
-                size_t new_ind = 0, to_erase_ind = 0;
-                for (auto &bb : bbs) {
-                    if (to_erase_ind < to_erase.size() &&
-                        new_ind == to_erase[to_erase_ind]) {
-                        to_erase_ind++;
-                        new_ind++;
-                        continue;
-                    }
-                    new_bbs.push_back(std::move(bb));
-                    new_ind++;
-                }
-
-                f->getBasicBlocks().swap(new_bbs);
             }
         }
     }

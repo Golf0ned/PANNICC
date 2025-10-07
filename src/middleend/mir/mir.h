@@ -14,6 +14,7 @@ namespace middleend::mir {
 
     class BasicBlockEdges {
     public:
+        BasicBlockEdges();
         const std::vector<BasicBlock *> getEdges(); // TODO: iterator
         const std::unordered_set<BasicBlock *>
         getUniqueEdges(); // TODO: iterator
