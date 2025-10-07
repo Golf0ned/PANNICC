@@ -4,9 +4,9 @@
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"
-#include "middleend/pass/mem2reg.h"
-#include "middleend/pass/pass_manager.h"
-#include "middleend/pass/simplify_cfg.h"
+#include "middleend/pass_manager.h"
+#include "middleend/transform/mem2reg.h"
+#include "middleend/transform/simplify_cfg.h"
 
 void printHelp(const std::string &program_name) {
     std::cerr << "USAGE: " << program_name << " [options] <file>" << std::endl;
