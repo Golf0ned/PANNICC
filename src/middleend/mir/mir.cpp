@@ -1,5 +1,7 @@
-#include "middleend/mir/mir.h"
+#include <map>
+
 #include "middleend/mir/instruction.h"
+#include "middleend/mir/mir.h"
 #include "middleend/mir/type.h"
 #include "middleend/mir/value.h"
 
@@ -218,10 +220,17 @@ namespace middleend::mir {
         std::string var = valueToString(i);
         std::string type = toString(i->getType());
 
-        result = var + " = phi " + type + ' ';
+        auto comp = [&](BasicBlock *a, BasicBlock *b) {
+            return basic_block_ids[a] < basic_block_ids[b];
+        };
+
         auto pairs = i->getPredecessors();
-        for (auto iter = pairs.begin(); iter != pairs.end(); iter++) {
-            if (iter != pairs.begin())
+        std::map<BasicBlock *, Value *, decltype(comp)> ordered(
+            pairs.begin(), pairs.end(), comp);
+
+        result = var + " = phi " + type + ' ';
+        for (auto iter = ordered.begin(); iter != ordered.end(); iter++) {
+            if (iter != ordered.begin())
                 result += ", ";
             std::string value = valueToString(iter->second);
             std::string bb_name =
