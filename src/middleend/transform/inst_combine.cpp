@@ -1,4 +1,4 @@
-#include "middleend/inst_combine.h"
+#include "middleend/transform/inst_combine.h"
 #include "middleend/utils/replace_uses.h"
 
 namespace middleend {

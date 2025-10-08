@@ -4,8 +4,8 @@
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"
-#include "middleend/inst_combine.h"
 #include "middleend/pass_manager.h"
+#include "middleend/transform/inst_combine.h"
 #include "middleend/transform/mem2reg.h"
 #include "middleend/transform/simplify_cfg.h"
 
