@@ -5,10 +5,7 @@
 namespace middleend {
     class ReplaceUsesVisitor : public mir::InstructionVisitor {
     public:
-        ReplaceUsesVisitor(mir::Value *old_value, mir::Value *new_value,
-                           mir::BasicBlock *bb);
-
-        mir::Value *addNewValue();
+        ReplaceUsesVisitor(mir::Value *old_value, mir::Value *new_value);
 
         virtual void visit(mir::InstructionBinaryOp *i);
         virtual void visit(mir::InstructionCall *i);
@@ -24,7 +21,5 @@ namespace middleend {
     private:
         mir::Value *old_value;
         mir::Value *new_value;
-        mir::Literal *new_value_literal;
-        mir::BasicBlock *bb;
     };
 } // namespace middleend

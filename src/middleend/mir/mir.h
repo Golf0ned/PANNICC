@@ -1,44 +1,59 @@
 #pragma once
 
 #include <cstdint>
+#include <list>
 #include <memory>
-#include <vector>
+#include <unordered_set>
 
 #include "middleend/mir/instruction.h"
 #include "middleend/mir/type.h"
 
 namespace middleend::mir {
+    using LiteralMap = std::unordered_map<
+        Type, std::unordered_map<uint64_t, std::unique_ptr<Literal>>>;
+
+    class BasicBlockEdges {
+    public:
+        BasicBlockEdges();
+        const std::vector<BasicBlock *> getEdges(); // TODO: iterator
+        const std::unordered_set<BasicBlock *>
+        getUniqueEdges(); // TODO: iterator
+        void addEdge(BasicBlock *bb);
+        void removeEdge(BasicBlock *bb);
+        uint64_t getSize();
+
+    private:
+        std::unordered_map<BasicBlock *, uint64_t> edges;
+        uint64_t size;
+    };
 
     class BasicBlock {
     public:
-        BasicBlock(std::vector<std::unique_ptr<Instruction>> body,
-                   std::unique_ptr<Terminator> terminator,
-                   std::vector<std::unique_ptr<Literal>> literals);
-        std::vector<std::unique_ptr<Instruction>> &getInstructions();
-        std::vector<std::unique_ptr<Literal>> &getLiterals();
+        BasicBlock(std::list<std::unique_ptr<Instruction>> body,
+                   std::unique_ptr<Terminator> terminator);
+        std::list<std::unique_ptr<Instruction>> &getInstructions();
         std::unique_ptr<Terminator> &getTerminator();
-        std::vector<BasicBlock *> &getPredecessors();
-        std::vector<BasicBlock *> &getSuccessors();
+        BasicBlockEdges &getPredecessors();
+        BasicBlockEdges &getSuccessors();
         std::string toString(
             const std::unordered_map<BasicBlock *, uint64_t> &basic_block_ids,
             const std::unordered_map<Value *, uint64_t> &instruction_ids);
 
     private:
-        std::vector<std::unique_ptr<Instruction>> body;
-        std::vector<std::unique_ptr<Literal>> literals;
+        std::list<std::unique_ptr<Instruction>> body;
         std::unique_ptr<Terminator> terminator;
-        std::vector<BasicBlock *> predecessors;
-        std::vector<BasicBlock *> successors;
+        BasicBlockEdges predecessors;
+        BasicBlockEdges successors;
     };
 
     class Function {
     public:
         Function(Type type, std::string name,
-                 std::vector<std::unique_ptr<BasicBlock>> basic_blocks,
+                 std::list<std::unique_ptr<BasicBlock>> basic_blocks,
                  BasicBlock *entry_block);
         Type getType();
         std::string getName();
-        std::vector<std::unique_ptr<BasicBlock>> &getBasicBlocks();
+        std::list<std::unique_ptr<BasicBlock>> &getBasicBlocks();
         BasicBlock *getEntryBlock();
         void setEntryBlock(BasicBlock *new_block);
         std::string toString();
@@ -46,18 +61,21 @@ namespace middleend::mir {
     private:
         Type type;
         std::string name;
-        std::vector<std::unique_ptr<BasicBlock>> basic_blocks;
+        std::list<std::unique_ptr<BasicBlock>> basic_blocks;
         BasicBlock *entry_block;
     };
 
     class Program {
     public:
-        Program(std::vector<Function> functions);
-        std::vector<Function> &getFunctions();
+        Program(std::list<std::unique_ptr<Function>> functions,
+                LiteralMap literals);
+        std::list<std::unique_ptr<Function>> &getFunctions();
+        Literal *getLiteral(Type type, uint64_t value);
         std::string toString();
 
     private:
-        std::vector<Function> functions;
+        std::list<std::unique_ptr<Function>> functions;
+        LiteralMap literals;
     };
 
     class ToStringVisitor : public InstructionVisitor {

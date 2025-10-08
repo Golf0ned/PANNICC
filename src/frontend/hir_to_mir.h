@@ -11,11 +11,12 @@ namespace frontend {
 
     class HIRToMIRVisitor : public hir::InstructionVisitor {
     public:
-        HIRToMIRVisitor(mir::Type function_type);
+        HIRToMIRVisitor(mir::Type function_type, mir::LiteralMap &literal_map);
 
-        std::vector<std::unique_ptr<mir::BasicBlock>> getResult();
+        std::list<std::unique_ptr<mir::BasicBlock>> getResult();
         mir::Value *resolveAtom(Atom *a);
         bool startOfBasicBlock();
+        void createBasicBlock(std::unique_ptr<mir::Terminator> terminator);
         void connectBasicBlocks();
 
         void visit(hir::Instruction *i) override;
@@ -32,12 +33,12 @@ namespace frontend {
     private:
         mir::Type function_type;
         mir::InstructionAlloca *ret_alloca;
-        std::vector<std::unique_ptr<mir::Instruction>> cur_instructions;
-        std::vector<std::unique_ptr<mir::Literal>> cur_literals;
-        std::vector<std::unique_ptr<mir::BasicBlock>> basic_blocks;
-        std::unordered_map<uint64_t, mir::InstructionAlloca *> value_mappings;
+        std::list<std::unique_ptr<mir::Instruction>> cur_instructions;
+        std::list<std::unique_ptr<mir::BasicBlock>> basic_blocks;
+        mir::LiteralMap &literal_map;
         bool new_basic_block;
         std::vector<uint64_t> labels;
+        std::unordered_map<uint64_t, mir::InstructionAlloca *> value_mappings;
         std::vector<std::pair<mir::Instruction *, std::vector<uint64_t>>>
             instruction_to_bbs;
     };

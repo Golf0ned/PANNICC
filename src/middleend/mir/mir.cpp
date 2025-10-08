@@ -1,4 +1,4 @@
-#include <vector>
+#include <map>
 
 #include "middleend/mir/instruction.h"
 #include "middleend/mir/mir.h"
@@ -6,31 +6,52 @@
 #include "middleend/mir/value.h"
 
 namespace middleend::mir {
-    BasicBlock::BasicBlock(std::vector<std::unique_ptr<Instruction>> body,
-                           std::unique_ptr<Terminator> terminator,
-                           std::vector<std::unique_ptr<Literal>> literals)
-        : body(std::move(body)), terminator(std::move(terminator)),
-          literals(std::move(literals)) {}
+    BasicBlockEdges::BasicBlockEdges() : size(0) {}
 
-    std::vector<std::unique_ptr<Instruction>> &BasicBlock::getInstructions() {
-        return body;
+    const std::vector<BasicBlock *> BasicBlockEdges::getEdges() {
+        std::vector<BasicBlock *> res;
+        for (auto [bb, count] : edges)
+            for (int i = 0; i < count; i++)
+                res.push_back(bb);
+        return res;
     }
 
-    std::vector<std::unique_ptr<Literal>> &BasicBlock::getLiterals() {
-        return literals;
+    const std::unordered_set<BasicBlock *> BasicBlockEdges::getUniqueEdges() {
+        std::unordered_set<BasicBlock *> res;
+        for (auto [bb, _] : edges)
+            res.insert(bb);
+        return res;
+    }
+
+    void BasicBlockEdges::addEdge(BasicBlock *bb) {
+        edges[bb]++;
+        size++;
+    }
+
+    void BasicBlockEdges::removeEdge(BasicBlock *bb) {
+        edges.at(bb); // too lazy to add an exception by hand lmao
+        if (--edges[bb] == 0)
+            edges.erase(bb);
+        size--;
+    }
+
+    uint64_t BasicBlockEdges::getSize() { return size; }
+
+    BasicBlock::BasicBlock(std::list<std::unique_ptr<Instruction>> body,
+                           std::unique_ptr<Terminator> terminator)
+        : body(std::move(body)), terminator(std::move(terminator)) {}
+
+    std::list<std::unique_ptr<Instruction>> &BasicBlock::getInstructions() {
+        return body;
     }
 
     std::unique_ptr<Terminator> &BasicBlock::getTerminator() {
         return terminator;
     }
 
-    std::vector<BasicBlock *> &BasicBlock::getPredecessors() {
-        return predecessors;
-    }
+    BasicBlockEdges &BasicBlock::getPredecessors() { return predecessors; }
 
-    std::vector<BasicBlock *> &BasicBlock::getSuccessors() {
-        return successors;
-    }
+    BasicBlockEdges &BasicBlock::getSuccessors() { return successors; }
 
     std::string BasicBlock::toString(
         const std::unordered_map<BasicBlock *, uint64_t> &basic_block_ids,
@@ -54,7 +75,7 @@ namespace middleend::mir {
     }
 
     Function::Function(Type type, std::string name,
-                       std::vector<std::unique_ptr<BasicBlock>> basic_blocks,
+                       std::list<std::unique_ptr<BasicBlock>> basic_blocks,
                        BasicBlock *entry_block)
         : type(type), name(name), basic_blocks(std::move(basic_blocks)),
           entry_block(entry_block) {}
@@ -63,7 +84,7 @@ namespace middleend::mir {
 
     std::string Function::getName() { return name; }
 
-    std::vector<std::unique_ptr<BasicBlock>> &Function::getBasicBlocks() {
+    std::list<std::unique_ptr<BasicBlock>> &Function::getBasicBlocks() {
         return basic_blocks;
     }
 
@@ -106,17 +127,32 @@ namespace middleend::mir {
         return res;
     }
 
-    Program::Program(std::vector<Function> functions)
-        : functions(std::move(functions)) {}
+    Program::Program(std::list<std::unique_ptr<Function>> functions,
+                     LiteralMap literals)
+        : functions(std::move(functions)), literals(std::move(literals)) {}
 
-    std::vector<Function> &Program::getFunctions() { return functions; }
+    std::list<std::unique_ptr<Function>> &Program::getFunctions() {
+        return functions;
+    }
+
+    Literal *Program::getLiteral(Type type, uint64_t value) {
+        auto &typed_map = literals[type];
+        if (typed_map.contains(value))
+            return typed_map.at(value).get();
+
+        auto literal = std::make_unique<Literal>(type, value);
+        auto literal_ptr = literal.get();
+
+        typed_map[value] = std::move(literal);
+        return literal_ptr;
+    }
 
     std::string Program::toString() {
         std::string res = "";
         for (auto iter = functions.begin(); iter != functions.end(); iter++) {
             if (iter != functions.begin())
                 res += "\n\n";
-            res += iter->toString();
+            res += iter->get()->toString();
         }
 
         return res;
@@ -184,10 +220,17 @@ namespace middleend::mir {
         std::string var = valueToString(i);
         std::string type = toString(i->getType());
 
-        result = var + " = phi " + type + ' ';
+        auto comp = [&](BasicBlock *a, BasicBlock *b) {
+            return basic_block_ids[a] < basic_block_ids[b];
+        };
+
         auto pairs = i->getPredecessors();
-        for (auto iter = pairs.begin(); iter != pairs.end(); iter++) {
-            if (iter != pairs.begin())
+        std::map<BasicBlock *, Value *, decltype(comp)> ordered(
+            pairs.begin(), pairs.end(), comp);
+
+        result = var + " = phi " + type + ' ';
+        for (auto iter = ordered.begin(); iter != ordered.end(); iter++) {
+            if (iter != ordered.begin())
                 result += ", ";
             std::string value = valueToString(iter->second);
             std::string bb_name =

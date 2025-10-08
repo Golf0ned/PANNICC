@@ -12,8 +12,10 @@ namespace mir = middleend::mir;
 namespace frontend {
     std::unordered_map<uint64_t, mir::Function *> lowered_functions;
 
-    HIRToMIRVisitor::HIRToMIRVisitor(mir::Type function_type)
-        : new_basic_block(true), function_type(function_type) {
+    HIRToMIRVisitor::HIRToMIRVisitor(mir::Type function_type,
+                                     mir::LiteralMap &literal_map)
+        : new_basic_block(true), function_type(function_type),
+          literal_map(literal_map) {
         // TODO: handle void
         auto ret_val = std::make_unique<mir::InstructionAlloca>(function_type);
         ret_alloca = ret_val.get();
@@ -21,13 +23,13 @@ namespace frontend {
     }
 
     mir::Program hirToMir(hir::Program &hir) {
-        std::vector<mir::Function> functions;
-        functions.reserve(hir.getFunctions().size());
+        mir::LiteralMap literal_map;
+        std::list<std::unique_ptr<mir::Function>> functions;
 
         for (auto &f : hir.getFunctions()) {
             mir::Type function_type = toMir(f.getType());
 
-            HIRToMIRVisitor visitor(function_type);
+            HIRToMIRVisitor visitor(function_type, literal_map);
             for (auto &i : f.getBody()) {
                 if (visitor.startOfBasicBlock() &&
                     !dynamic_cast<hir::Label *>(i.get()))
@@ -37,17 +39,19 @@ namespace frontend {
             visitor.connectBasicBlocks();
             auto basic_blocks = visitor.getResult();
 
-            auto &nameAtom = f.getName();
-            std::string name = nameAtom->toString(*hir.getSymbolTable().get());
+            auto &name_atom = f.getName();
+            std::string name = name_atom->toString(*hir.getSymbolTable().get());
             mir::BasicBlock *entry = basic_blocks.front().get();
-            functions.emplace_back(function_type, name, std::move(basic_blocks),
-                                   entry);
-            lowered_functions[nameAtom->getValue()] = &functions.back();
+
+            auto fun = std::make_unique<mir::Function>(
+                function_type, name, std::move(basic_blocks), entry);
+            lowered_functions[name_atom->getValue()] = fun.get();
+            functions.push_back(std::move(fun));
         }
-        return mir::Program(std::move(functions));
+        return mir::Program(std::move(functions), std::move(literal_map));
     }
 
-    std::vector<std::unique_ptr<mir::BasicBlock>> HIRToMIRVisitor::getResult() {
+    std::list<std::unique_ptr<mir::BasicBlock>> HIRToMIRVisitor::getResult() {
         return std::move(basic_blocks);
     }
 
@@ -60,28 +64,36 @@ namespace frontend {
             cur_instructions.push_back(std::move(load));
             return load_ptr;
         } else {
-            auto literal = std::make_unique<mir::Literal>(type, a->getValue());
-            mir::Literal *literal_ptr = literal.get();
-            cur_literals.push_back(std::move(literal));
+            auto value = a->getValue();
+            auto &typed_map = literal_map[type];
+            if (typed_map.contains(value))
+                return typed_map.at(value).get();
+
+            auto literal = std::make_unique<mir::Literal>(type, value);
+            auto literal_ptr = literal.get();
+
+            typed_map[value] = std::move(literal);
             return literal_ptr;
         }
     }
 
     bool HIRToMIRVisitor::startOfBasicBlock() { return new_basic_block; }
 
+    void HIRToMIRVisitor::createBasicBlock(
+        std::unique_ptr<mir::Terminator> terminator) {
+        auto new_block = std::make_unique<mir::BasicBlock>(
+            std::move(cur_instructions), std::move(terminator));
+        basic_blocks.push_back(std::move(new_block));
+        // cur_instructions.clear();
+        new_basic_block = true;
+    }
+
     void HIRToMIRVisitor::connectBasicBlocks() {
         // Close dangling block
         if (!new_basic_block) {
             auto branch = std::make_unique<mir::TerminatorBranch>(nullptr);
             instruction_to_bbs.push_back({branch.get(), {0}});
-
-            auto new_block = std::make_unique<mir::BasicBlock>(
-                std::move(cur_instructions), std::move(branch),
-                std::move(cur_literals));
-            basic_blocks.push_back(std::move(new_block));
-            cur_instructions.clear();
-            cur_literals.clear();
-            new_basic_block = true;
+            createBasicBlock(std::move(branch));
         }
 
         // Generate return block
@@ -90,33 +102,32 @@ namespace frontend {
             std::make_unique<mir::InstructionLoad>(function_type, ret_alloca);
         auto ret_terminator =
             std::make_unique<mir::TerminatorReturn>(ret_load.get());
-        std::vector<std::unique_ptr<mir::Instruction>> ret_body;
+        std::list<std::unique_ptr<mir::Instruction>> ret_body;
         ret_body.push_back(std::move(ret_load));
-        std::vector<std::unique_ptr<mir::Literal>> ret_literals;
         auto ret_block = std::make_unique<mir::BasicBlock>(
-            std::move(ret_body), std::move(ret_terminator),
-            std::move(ret_literals));
+            std::move(ret_body), std::move(ret_terminator));
         basic_blocks.push_back(std::move(ret_block));
         labels.push_back(0);
 
         // Add basic block pointers to terminators
         std::unordered_map<uint64_t, mir::BasicBlock *> label_to_bb;
-        for (int i = 0; i < labels.size(); i++) {
-            label_to_bb[labels[i]] = basic_blocks[i].get();
+        size_t i = 0;
+        for (auto &bb : basic_blocks) {
+            label_to_bb[labels[i++]] = bb.get();
         }
 
         for (auto [i, ids] : instruction_to_bbs) {
             auto branch = dynamic_cast<mir::TerminatorBranch *>(i);
             if (branch) {
-                auto successor_id = ids[0];
-                branch->setSuccessor(label_to_bb[successor_id]);
+                auto succ_id = ids[0];
+                branch->setSuccessor(label_to_bb.at(succ_id));
             }
 
             auto cond_branch = dynamic_cast<mir::TerminatorCondBranch *>(i);
             if (cond_branch) {
-                auto t_successor_id = ids[0], f_successor_id = ids[1];
-                cond_branch->setTSuccessor(label_to_bb[t_successor_id]);
-                cond_branch->setFSuccessor(label_to_bb[f_successor_id]);
+                auto t_succ_id = ids[0], f_succ_id = ids[1];
+                cond_branch->setTSuccessor(label_to_bb.at(t_succ_id));
+                cond_branch->setFSuccessor(label_to_bb.at(f_succ_id));
             }
         }
 
@@ -125,19 +136,21 @@ namespace frontend {
             auto terminator = bb->getTerminator().get();
             auto branch = dynamic_cast<mir::TerminatorBranch *>(terminator);
             if (branch) {
-                bb->getSuccessors().push_back(branch->getSuccessor());
-                branch->getSuccessor()->getPredecessors().push_back(bb.get());
+                auto succ = branch->getSuccessor();
+                bb->getSuccessors().addEdge(succ);
+                succ->getPredecessors().addEdge(bb.get());
             }
 
             auto cond_branch =
                 dynamic_cast<mir::TerminatorCondBranch *>(terminator);
             if (cond_branch) {
-                bb->getSuccessors().push_back(cond_branch->getTSuccessor());
-                cond_branch->getTSuccessor()->getPredecessors().push_back(
-                    bb.get());
-                bb->getSuccessors().push_back(cond_branch->getFSuccessor());
-                cond_branch->getFSuccessor()->getPredecessors().push_back(
-                    bb.get());
+                auto t_succ = cond_branch->getTSuccessor();
+                bb->getSuccessors().addEdge(t_succ);
+                t_succ->getPredecessors().addEdge(bb.get()); // problematic line
+
+                auto f_succ = cond_branch->getFSuccessor();
+                bb->getSuccessors().addEdge(f_succ);
+                f_succ->getPredecessors().addEdge(bb.get());
             }
         }
     }
@@ -151,11 +164,9 @@ namespace frontend {
                 {branch.get(), {l->getName()->getValue()}});
 
             auto new_block = std::make_unique<mir::BasicBlock>(
-                std::move(cur_instructions), std::move(branch),
-                std::move(cur_literals));
+                std::move(cur_instructions), std::move(branch));
             basic_blocks.push_back(std::move(new_block));
-            cur_instructions.clear();
-            cur_literals.clear();
+            // cur_instructions.clear();
         }
 
         labels.push_back(l->getName()->getValue());
@@ -204,13 +215,7 @@ namespace frontend {
         auto branch = std::make_unique<mir::TerminatorBranch>(nullptr);
         instruction_to_bbs.push_back({branch.get(), {0}});
 
-        auto new_block = std::make_unique<mir::BasicBlock>(
-            std::move(cur_instructions), std::move(branch),
-            std::move(cur_literals));
-        basic_blocks.push_back(std::move(new_block));
-        cur_instructions.clear();
-        cur_literals.clear();
-        new_basic_block = true;
+        createBasicBlock(std::move(branch));
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionCall *i) {
@@ -241,13 +246,7 @@ namespace frontend {
         instruction_to_bbs.push_back(
             {branch.get(), {i->getLabel()->getValue()}});
 
-        auto new_block = std::make_unique<mir::BasicBlock>(
-            std::move(cur_instructions), std::move(branch),
-            std::move(cur_literals));
-        basic_blocks.push_back(std::move(new_block));
-        cur_instructions.clear();
-        cur_literals.clear();
-        new_basic_block = true;
+        createBasicBlock(std::move(branch));
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionBranchCond *i) {
@@ -258,12 +257,6 @@ namespace frontend {
             {branch.get(),
              {i->getTLabel()->getValue(), i->getFLabel()->getValue()}});
 
-        auto new_block = std::make_unique<mir::BasicBlock>(
-            std::move(cur_instructions), std::move(branch),
-            std::move(cur_literals));
-        basic_blocks.push_back(std::move(new_block));
-        cur_instructions.clear();
-        cur_literals.clear();
-        new_basic_block = true;
+        createBasicBlock(std::move(branch));
     }
 } // namespace frontend

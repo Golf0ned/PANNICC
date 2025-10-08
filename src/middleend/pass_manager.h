@@ -1,7 +1,7 @@
 #pragma once
 
 #include "middleend/mir/mir.h"
-#include "middleend/pass/pass.h"
+#include "middleend/pass.h"
 
 namespace middleend {
     class PassManager {

@@ -1,4 +1,4 @@
-#include "middleend/pass/pass.h"
+#include "middleend/pass.h"
 
 namespace middleend {
     void AnalysisPass::invalidate() { valid = false; }
