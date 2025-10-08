@@ -9,6 +9,7 @@
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"
 #include "middleend/pass_manager.h"
+#include "middleend/transform/inst_combine.h"
 #include "middleend/transform/mem2reg.h"
 #include "middleend/transform/simplify_cfg.h"
 
@@ -32,6 +33,8 @@ buildPassesFromFile(std::string passes_path) {
             pm->addPass(std::make_unique<middleend::Mem2Reg>());
         else if (pass_str == "simplify_cfg")
             pm->addPass(std::make_unique<middleend::SimplifyCFG>());
+        else if (pass_str == "inst_combine")
+            pm->addPass(std::make_unique<middleend::InstCombine>());
         else
             continue;
     }
