@@ -118,8 +118,8 @@ namespace frontend {
         : pegtl::seq<pegtl::plus<pegtl::sor<pegtl::alpha, pegtl::one<'_'>>>,
                      pegtl::star<pegtl::sor<pegtl::alnum, pegtl::one<'_'>>>> {};
 
-    struct number
-        : pegtl::seq<pegtl::opt<plus, minus>, pegtl::plus<pegtl::digit>> {};
+    struct number : pegtl::seq<pegtl::opt<pegtl::sor<plus, minus>>,
+                               pegtl::plus<pegtl::digit>> {};
 
     struct value : pegtl::sor<identifier, number> {};
 
