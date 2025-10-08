@@ -5,19 +5,19 @@
 #include "middleend/mir/value.h"
 
 namespace middleend::mir {
-    void addUse(Instruction *user, Value *def) { def->getUses()[user]++; }
+    void Instruction::addUse(Value *def) { def->getUses()[this]++; }
 
-    void delUse(Instruction *user, Value *def) {
-        def->getUses()[user]--;
-        if (def->getUses()[user] == 0)
-            def->getUses().erase(user);
+    void Instruction::delUse(Value *def) {
+        def->getUses()[this]--;
+        if (def->getUses()[this] == 0)
+            def->getUses().erase(this);
     }
 
     InstructionBinaryOp::InstructionBinaryOp(Type type, BinaryOp op,
                                              Value *left, Value *right)
         : Value(type), op(op), left(left), right(right) {
-        addUse(this, left);
-        addUse(this, right);
+        addUse(left);
+        addUse(right);
     }
 
     BinaryOp InstructionBinaryOp::getOp() { return op; }
@@ -27,14 +27,14 @@ namespace middleend::mir {
     Value *InstructionBinaryOp::getRight() { return right; }
 
     void InstructionBinaryOp::setLeft(Value *new_val) {
-        delUse(this, left);
-        addUse(this, new_val);
+        delUse(left);
+        addUse(new_val);
         left = new_val;
     }
 
     void InstructionBinaryOp::setRight(Value *new_val) {
-        delUse(this, right);
-        addUse(this, new_val);
+        delUse(right);
+        addUse(new_val);
         right = new_val;
     }
 
@@ -62,7 +62,7 @@ namespace middleend::mir {
 
     InstructionLoad::InstructionLoad(Type type, InstructionAlloca *ptr)
         : Value(type), ptr(ptr) {
-        addUse(this, ptr);
+        addUse(ptr);
     }
 
     InstructionAlloca *InstructionLoad::getPtr() { return ptr; }
@@ -73,8 +73,8 @@ namespace middleend::mir {
 
     InstructionStore::InstructionStore(Value *value, InstructionAlloca *ptr)
         : value(value), ptr(ptr) {
-        addUse(this, value);
-        addUse(this, ptr);
+        addUse(value);
+        addUse(ptr);
     }
 
     Value *InstructionStore::getValue() { return value; }
@@ -82,8 +82,8 @@ namespace middleend::mir {
     InstructionAlloca *InstructionStore::getPtr() { return ptr; }
 
     void InstructionStore::setValue(Value *new_val) {
-        delUse(this, value);
-        addUse(this, new_val);
+        delUse(value);
+        addUse(new_val);
         value = new_val;
     }
 
@@ -103,14 +103,14 @@ namespace middleend::mir {
     }
 
     TerminatorReturn::TerminatorReturn(Value *value) : value(value) {
-        addUse(this, value);
+        addUse(value);
     }
 
     Value *TerminatorReturn::getValue() { return value; }
 
     void TerminatorReturn::setValue(Value *new_val) {
-        delUse(this, value);
-        addUse(this, new_val);
+        delUse(value);
+        addUse(new_val);
         value = new_val;
     }
 
@@ -139,7 +139,7 @@ namespace middleend::mir {
         //     throw std::invalid_argument("TerminatorCondBranch cond must be
         //     i1");
         this->cond = cond;
-        addUse(this, cond);
+        addUse(cond);
     }
 
     Value *TerminatorCondBranch::getCond() { return cond; }
@@ -149,8 +149,8 @@ namespace middleend::mir {
     BasicBlock *TerminatorCondBranch::getFSuccessor() { return f_successor; };
 
     void TerminatorCondBranch::setCond(Value *new_val) {
-        delUse(this, cond);
-        addUse(this, new_val);
+        delUse(cond);
+        addUse(new_val);
         this->cond = new_val;
     }
 
