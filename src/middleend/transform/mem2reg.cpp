@@ -5,6 +5,7 @@
 #include "middleend/mir/instruction.h"
 #include "middleend/mir/mir.h"
 #include "middleend/transform/mem2reg.h"
+#include "middleend/utils/erase_uses.h"
 #include "middleend/utils/replace_uses.h"
 
 namespace middleend {
@@ -32,6 +33,7 @@ namespace middleend {
     }
 
     void Mem2Reg::run(mir::Program &p) {
+        EraseUsesVisitor erase;
         for (auto &f : p.getFunctions()) {
             //
             // Phi Insertion
@@ -99,6 +101,7 @@ namespace middleend {
                         auto &succ_phis = phis[succ];
                         if (succ_phis.contains(alloca))
                             succ_phis[alloca]->getPredecessors()[bb] = phi;
+                        // TODO: figure out uses
                     }
                 }
 
@@ -110,6 +113,7 @@ namespace middleend {
                     // Alloca: mark for drop
                     auto *alloca = dynamic_cast<mir::InstructionAlloca *>(i);
                     if (alloca) {
+                        i->accept(&erase);
                         to_drop.push_back(std::move(*iter));
                         iter = instructions.erase(iter);
                         continue;
@@ -126,8 +130,10 @@ namespace middleend {
                             if (succ_phis.contains(alloca))
                                 succ_phis[alloca]->getPredecessors()[bb] =
                                     value;
+                            // TODO: figure out uses
                         }
 
+                        i->accept(&erase);
                         to_drop.push_back(std::move(*iter));
                         iter = instructions.erase(iter);
                         continue;
@@ -138,12 +144,12 @@ namespace middleend {
                     if (load) {
                         ReplaceUsesVisitor visitor(load,
                                                    reaching[load->getPtr()]);
-                        std::vector<mir::Instruction *> uses =
-                            std::views::keys(load->getUses()) |
-                            std::ranges::to<std::vector>();
+                        auto uses = std::views::keys(load->getUses()) |
+                                    std::ranges::to<std::vector>();
                         for (auto &use : uses)
                             use->accept(&visitor);
 
+                        i->accept(&erase);
                         to_drop.push_back(std::move(*iter));
                         iter = instructions.erase(iter);
                         continue;
