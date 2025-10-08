@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
 
     middleend::PassManager pm;
     pm.addPass(std::make_unique<middleend::Mem2Reg>());
-    // pm.addPass(std::make_unique<middleend::InstCombine>());
+    pm.addPass(std::make_unique<middleend::InstCombine>());
     pm.addPass(std::make_unique<middleend::SimplifyCFG>());
     pm.runPasses(mir);
 
