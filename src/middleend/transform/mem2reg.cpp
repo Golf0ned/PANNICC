@@ -144,8 +144,9 @@ namespace middleend {
                     if (load) {
                         ReplaceUsesVisitor visitor(load,
                                                    reaching[load->getPtr()]);
-                        auto uses = std::views::keys(load->getUses()) |
-                                    std::ranges::to<std::vector>();
+                        auto uses =
+                            std::views::keys(load->getUses()) |
+                            std::ranges::to<std::vector<mir::Instruction *>>();
                         for (auto &use : uses)
                             use->accept(&visitor);
 

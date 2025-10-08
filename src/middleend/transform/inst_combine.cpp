@@ -65,7 +65,8 @@ namespace middleend {
 
                             ReplaceUsesVisitor visitor(bin_op, folded_literal);
                             auto uses = std::views::keys(bin_op->getUses()) |
-                                        std::ranges::to<std::vector>();
+                                        std::ranges::to<
+                                            std::vector<mir::Instruction *>>();
                             for (auto &use : uses)
                                 use->accept(&visitor);
 
