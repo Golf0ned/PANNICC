@@ -98,6 +98,13 @@ namespace middleend::mir {
         return predecessors;
     }
 
+    void InstructionPhi::setPredecessor(BasicBlock *bb, Value *new_val) {
+        if (predecessors.contains(bb))
+            delUse(predecessors.at(bb));
+        addUse(new_val);
+        predecessors[bb] = new_val;
+    }
+
     void InstructionPhi::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }

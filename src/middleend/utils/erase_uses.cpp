@@ -21,8 +21,8 @@ namespace middleend {
     }
 
     void EraseUsesVisitor::visit(mir::InstructionPhi *i) {
-        // for (auto [_, val] : i->getPredecessors())
-        //     i->delUse(val);
+        for (auto [_, val] : i->getPredecessors())
+            i->delUse(val);
     }
 
     void EraseUsesVisitor::visit(mir::TerminatorReturn *t) {

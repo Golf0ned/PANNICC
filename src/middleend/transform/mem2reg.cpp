@@ -100,8 +100,7 @@ namespace middleend {
                     for (auto succ : bb->getSuccessors().getEdges()) {
                         auto &succ_phis = phis[succ];
                         if (succ_phis.contains(alloca))
-                            succ_phis[alloca]->getPredecessors()[bb] = phi;
-                        // TODO: figure out uses
+                            succ_phis[alloca]->setPredecessor(bb, phi);
                     }
                 }
 
@@ -128,9 +127,7 @@ namespace middleend {
                         for (auto succ : bb->getSuccessors().getEdges()) {
                             auto &succ_phis = phis[succ];
                             if (succ_phis.contains(alloca))
-                                succ_phis[alloca]->getPredecessors()[bb] =
-                                    value;
-                            // TODO: figure out uses
+                                succ_phis[alloca]->setPredecessor(bb, value);
                         }
 
                         i->accept(&erase);
