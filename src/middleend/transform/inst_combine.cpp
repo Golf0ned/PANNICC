@@ -29,15 +29,15 @@ namespace middleend {
                             if (!left)
                                 return false;
 
-                            auto right =
-                                dynamic_cast<mir::Literal *>(bin_op->getLeft());
+                            auto right = dynamic_cast<mir::Literal *>(
+                                bin_op->getRight());
                             if (!right)
                                 return false;
 
-                            uint32_t lhs = static_cast<uint32_t>(
-                                static_cast<int32_t>(left->getValue()));
-                            uint32_t rhs = static_cast<uint32_t>(
-                                static_cast<int32_t>(right->getValue()));
+                            int32_t lhs = static_cast<int32_t>(
+                                static_cast<uint32_t>(left->getValue()));
+                            int32_t rhs = static_cast<int32_t>(
+                                static_cast<uint32_t>(right->getValue()));
 
                             int32_t folded_val;
                             switch (bin_op->getOp()) {
