@@ -35,9 +35,14 @@ namespace frontend {
     std::unique_ptr<Atom> popAtom() {
         auto [token_val, token_type] = parsed_tokens.back();
         parsed_tokens.pop_back();
-        if (token_type == TokenType::NUMBER)
-            return std::make_unique<AtomLiteral>(std::stoll(token_val));
-        else
+        if (token_type == TokenType::NUMBER) {
+            // TODO: generalize for other types
+            long long parsed_val = std::stoll(token_val);
+            int32_t truncated = static_cast<int32_t>(parsed_val);
+            uint64_t val =
+                static_cast<uint64_t>(static_cast<int64_t>(truncated));
+            return std::make_unique<AtomLiteral>(val);
+        } else
             return std::make_unique<AtomIdentifier>(
                 symbol_table->addSymbol(token_val));
     }
@@ -113,8 +118,8 @@ namespace frontend {
         : pegtl::seq<pegtl::plus<pegtl::sor<pegtl::alpha, pegtl::one<'_'>>>,
                      pegtl::star<pegtl::sor<pegtl::alnum, pegtl::one<'_'>>>> {};
 
-    struct number
-        : pegtl::seq<pegtl::opt<plus, minus>, pegtl::plus<pegtl::digit>> {};
+    struct number : pegtl::seq<pegtl::opt<pegtl::sor<plus, minus>>,
+                               pegtl::plus<pegtl::digit>> {};
 
     struct value : pegtl::sor<identifier, number> {};
 

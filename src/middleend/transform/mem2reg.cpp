@@ -5,6 +5,8 @@
 #include "middleend/mir/instruction.h"
 #include "middleend/mir/mir.h"
 #include "middleend/transform/mem2reg.h"
+#include "middleend/utils/erase_uses.h"
+#include "middleend/utils/replace_uses.h"
 
 namespace middleend {
     std::unordered_map<mir::BasicBlock *, std::vector<mir::BasicBlock *>>
@@ -31,6 +33,7 @@ namespace middleend {
     }
 
     void Mem2Reg::run(mir::Program &p) {
+        EraseUsesVisitor erase;
         for (auto &f : p.getFunctions()) {
             //
             // Phi Insertion
@@ -97,7 +100,7 @@ namespace middleend {
                     for (auto succ : bb->getSuccessors().getEdges()) {
                         auto &succ_phis = phis[succ];
                         if (succ_phis.contains(alloca))
-                            succ_phis[alloca]->getPredecessors()[bb] = phi;
+                            succ_phis[alloca]->setPredecessor(bb, phi);
                     }
                 }
 
@@ -109,6 +112,7 @@ namespace middleend {
                     // Alloca: mark for drop
                     auto *alloca = dynamic_cast<mir::InstructionAlloca *>(i);
                     if (alloca) {
+                        i->accept(&erase);
                         to_drop.push_back(std::move(*iter));
                         iter = instructions.erase(iter);
                         continue;
@@ -123,10 +127,10 @@ namespace middleend {
                         for (auto succ : bb->getSuccessors().getEdges()) {
                             auto &succ_phis = phis[succ];
                             if (succ_phis.contains(alloca))
-                                succ_phis[alloca]->getPredecessors()[bb] =
-                                    value;
+                                succ_phis[alloca]->setPredecessor(bb, value);
                         }
 
+                        i->accept(&erase);
                         to_drop.push_back(std::move(*iter));
                         iter = instructions.erase(iter);
                         continue;
@@ -135,11 +139,15 @@ namespace middleend {
                     // Load: replace uses with reaching def, delete
                     auto *load = dynamic_cast<mir::InstructionLoad *>(i);
                     if (load) {
-                        ReplaceUseVisitor visitor(load,
-                                                  reaching[load->getPtr()]);
-                        for (auto &use : load->getUses())
+                        ReplaceUsesVisitor visitor(load,
+                                                   reaching[load->getPtr()]);
+                        auto uses_range = std::views::keys(load->getUses());
+                        std::vector<mir::Instruction *> uses(uses_range.begin(),
+                                                             uses_range.end());
+                        for (auto &use : uses)
                             use->accept(&visitor);
 
+                        i->accept(&erase);
                         to_drop.push_back(std::move(*iter));
                         iter = instructions.erase(iter);
                         continue;
@@ -174,47 +182,5 @@ namespace middleend {
             required_analyses.push_back(dt.get());
             analyses.push_back(std::move(dt));
         }
-    }
-
-    ReplaceUseVisitor::ReplaceUseVisitor(mir::Value *old_value,
-                                         mir::Value *new_value)
-        : old_value(old_value), new_value(new_value) {}
-
-    void ReplaceUseVisitor::visit(mir::InstructionBinaryOp *i) {
-        if (i->getLeft() == old_value)
-            i->setLeft(new_value);
-        if (i->getRight() == old_value)
-            i->setRight(new_value);
-    }
-
-    void ReplaceUseVisitor::visit(mir::InstructionCall *i) {}
-
-    void ReplaceUseVisitor::visit(mir::InstructionAlloca *i) {}
-
-    void ReplaceUseVisitor::visit(mir::InstructionLoad *i) {}
-
-    void ReplaceUseVisitor::visit(mir::InstructionStore *i) {
-        if (i->getValue() == old_value)
-            i->setValue(new_value);
-    }
-
-    void ReplaceUseVisitor::visit(mir::InstructionPhi *i) {
-        for (auto &[bb, val] : i->getPredecessors()) {
-            if (val == old_value)
-                i->getPredecessors()[bb] = new_value;
-        }
-    }
-
-    void ReplaceUseVisitor::visit(mir::TerminatorReturn *t) {
-        if (t->getValue() == old_value) {
-            t->setValue(new_value);
-        }
-    }
-
-    void ReplaceUseVisitor::visit(mir::TerminatorBranch *t) {}
-
-    void ReplaceUseVisitor::visit(mir::TerminatorCondBranch *t) {
-        if (t->getCond() == old_value)
-            t->setCond(new_value);
     }
 } // namespace middleend

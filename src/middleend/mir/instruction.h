@@ -4,6 +4,7 @@
 #include "middleend/mir/value.h"
 
 namespace middleend::mir {
+
     class InstructionVisitor;
     class Function;
     class BasicBlock;
@@ -12,6 +13,8 @@ namespace middleend::mir {
     public:
         virtual void accept(InstructionVisitor *visitor) = 0;
         virtual ~Instruction() = default;
+        void addUse(Value *def);
+        void delUse(Value *def);
     };
 
     class InstructionBinaryOp : public Instruction, public Value {
@@ -77,6 +80,7 @@ namespace middleend::mir {
     public:
         InstructionPhi(Type type);
         std::unordered_map<BasicBlock *, Value *> &getPredecessors();
+        void setPredecessor(BasicBlock *bb, Value *new_val);
         void accept(InstructionVisitor *visitor);
 
     private:

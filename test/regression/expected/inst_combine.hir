@@ -1,0 +1,33 @@
+int constant_fold() {
+    __entry:
+    int i_1;
+    i_1 = 1;
+    int j_1;
+    j_1 = i_1 + 13;
+    int k_1;
+    k_1 = i_1 + i_1;
+    int l_1;
+    l_1 = j_1 * k_1;
+    l_1 = l_1 + l_1;
+    int m_1;
+    m_1 = l_1 - i_1;
+    return m_1;
+}
+
+int constant_fold_overflow() {
+    __entry:
+    int i_1;
+    i_1 = 2147483647;
+    int j_1;
+    j_1 = i_1 + 1;
+    return j_1;
+}
+
+int constant_fold_underflow() {
+    __entry:
+    int i_1;
+    i_1 = 18446744071562067968;
+    int j_1;
+    j_1 = i_1 - 1;
+    return j_1;
+}
