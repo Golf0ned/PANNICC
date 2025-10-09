@@ -5,9 +5,6 @@
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"
 #include "middleend/pass_manager.h"
-#include "middleend/transform/inst_combine.h"
-#include "middleend/transform/mem2reg.h"
-#include "middleend/transform/simplify_cfg.h"
 
 void printHelp(const std::string &program_name) {
     std::cerr << "USAGE: " << program_name << " [options] <file>" << std::endl;
@@ -29,9 +26,10 @@ int main(int argc, char *argv[]) {
     std::filesystem::path input_file = "";
     bool ast_only = false;
     bool hir_only = false;
+    middleend::PassManager pm = middleend::initializeO1();
 
     for (int i = 1; i < argc; i++) {
-        const std::string &arg = argv[i];
+        const std::string arg = argv[i];
 
         if (!arg.starts_with("-")) {
             input_file = argv[i];
@@ -42,6 +40,19 @@ int main(int argc, char *argv[]) {
             ast_only = true;
         } else if (arg == "--dump-hir") {
             hir_only = true;
+        } else if (arg.starts_with("-O") && arg.size() == 3) {
+            switch (arg.back()) {
+            case '0':
+                pm = middleend::initializeO0();
+                break;
+            case '1':
+                pm = middleend::initializeO1();
+                break;
+            default:
+                std::cerr << "Error: invalid opt level \"-O" << arg.back()
+                          << "\"" << std::endl;
+                return 1;
+            }
         } else {
             std::cerr << "Error: invalid option \"" << argv[i] << "\""
                       << std::endl;
@@ -70,10 +81,6 @@ int main(int argc, char *argv[]) {
 
     middleend::mir::Program mir = frontend::hirToMir(hir);
 
-    middleend::PassManager pm;
-    pm.addPass(std::make_unique<middleend::Mem2Reg>());
-    pm.addPass(std::make_unique<middleend::InstCombine>());
-    pm.addPass(std::make_unique<middleend::SimplifyCFG>());
     pm.runPasses(mir);
 
     std::cout << mir.toString() << std::endl;
