@@ -17,6 +17,16 @@ namespace frontend {
         std::unreachable();
     }
 
+    std::string toString(UnaryOp op) {
+        switch (op) {
+        case UnaryOp::PLUS:
+            return "+";
+        case UnaryOp::MINUS:
+            return "-";
+        }
+        std::unreachable();
+    }
+
     middleend::mir::BinaryOp toMir(BinaryOp op) {
         switch (op) {
         case BinaryOp::ADD:
