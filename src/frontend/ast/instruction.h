@@ -3,8 +3,8 @@
 #include <memory>
 #include <vector>
 
+#include "frontend/ast/expr.h"
 #include "frontend/utils/atom.h"
-#include "frontend/utils/operator.h"
 #include "frontend/utils/type.h"
 
 namespace frontend::ast {
@@ -26,6 +26,16 @@ namespace frontend::ast {
         std::vector<std::unique_ptr<Instruction>> instructions;
     };
 
+    class InstructionExpr : public Instruction {
+    public:
+        InstructionExpr(std::unique_ptr<Expr> expr);
+        std::unique_ptr<Expr> &getExpr();
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        std::unique_ptr<Expr> expr;
+    };
+
     class InstructionDeclaration : public Instruction {
     public:
         InstructionDeclaration(Type type,
@@ -39,112 +49,72 @@ namespace frontend::ast {
         std::unique_ptr<AtomIdentifier> variable;
     };
 
-    class InstructionDeclarationAssignValue : public Instruction {
+    class InstructionDeclarationAssign : public Instruction {
     public:
-        InstructionDeclarationAssignValue(
-            Type type, std::unique_ptr<AtomIdentifier> variable,
-            std::unique_ptr<Atom> value);
+        InstructionDeclarationAssign(Type type,
+                                     std::unique_ptr<AtomIdentifier> variable,
+                                     std::unique_ptr<Expr> value);
         Type getType();
         std::unique_ptr<AtomIdentifier> &getVariable();
-        std::unique_ptr<Atom> &getValue();
+        std::unique_ptr<Expr> &getValue();
         void accept(InstructionVisitor *visitor);
 
     private:
         Type type;
         std::unique_ptr<AtomIdentifier> variable;
-        std::unique_ptr<Atom> value;
+        std::unique_ptr<Expr> value;
     };
 
-    class InstructionAssignValue : public Instruction {
+    class InstructionAssign : public Instruction {
     public:
-        InstructionAssignValue(std::unique_ptr<AtomIdentifier> variable,
-                               std::unique_ptr<Atom> value);
+        InstructionAssign(std::unique_ptr<AtomIdentifier> variable,
+                          std::unique_ptr<Expr> value);
         std::unique_ptr<AtomIdentifier> &getVariable();
-        std::unique_ptr<Atom> &getValue();
+        std::unique_ptr<Expr> &getValue();
         void accept(InstructionVisitor *visitor);
 
     private:
         std::unique_ptr<AtomIdentifier> variable;
-        std::unique_ptr<Atom> value;
-    };
-
-    class InstructionAssignBinaryOp : public Instruction {
-    public:
-        InstructionAssignBinaryOp(std::unique_ptr<AtomIdentifier> variable,
-                                  BinaryOp op, std::unique_ptr<Atom> left,
-                                  std::unique_ptr<Atom> right);
-        std::unique_ptr<AtomIdentifier> &getVariable();
-        BinaryOp getOp();
-        std::unique_ptr<Atom> &getLeft();
-        std::unique_ptr<Atom> &getRight();
-        void accept(InstructionVisitor *visitor);
-
-    private:
-        std::unique_ptr<AtomIdentifier> variable;
-        BinaryOp op;
-        std::unique_ptr<Atom> left;
-        std::unique_ptr<Atom> right;
+        std::unique_ptr<Expr> value;
     };
 
     class InstructionReturn : public Instruction {
     public:
-        InstructionReturn(std::unique_ptr<Atom> value);
-        std::unique_ptr<Atom> &getValue();
+        InstructionReturn(std::unique_ptr<Expr> value);
+        std::unique_ptr<Expr> &getValue();
         void accept(InstructionVisitor *visitor);
 
     private:
-        std::unique_ptr<Atom> value;
-    };
-
-    class InstructionCall : public Instruction {
-    public:
-        InstructionCall(std::unique_ptr<AtomIdentifier> target);
-        std::unique_ptr<AtomIdentifier> &getTarget();
-        void accept(InstructionVisitor *visitor);
-
-    private:
-        std::unique_ptr<AtomIdentifier> target;
-    };
-
-    class InstructionCallAssign : public Instruction {
-    public:
-        InstructionCallAssign(std::unique_ptr<AtomIdentifier> variable,
-                              std::unique_ptr<AtomIdentifier> target);
-        std::unique_ptr<AtomIdentifier> &getVariable();
-        std::unique_ptr<AtomIdentifier> &getTarget();
-        void accept(InstructionVisitor *visitor);
-
-    private:
-        std::unique_ptr<AtomIdentifier> variable;
-        std::unique_ptr<AtomIdentifier> target;
+        std::unique_ptr<Expr> value;
     };
 
     class InstructionIf : public Instruction {
     public:
-        InstructionIf(std::unique_ptr<Atom> cond,
+        InstructionIf(std::unique_ptr<Expr> cond,
                       std::unique_ptr<Instruction> t_branch,
                       std::unique_ptr<Instruction> f_branch);
-        std::unique_ptr<Atom> &getCond();
+        std::unique_ptr<Expr> &getCond();
         std::unique_ptr<Instruction> &getTBranch();
         std::unique_ptr<Instruction> &getFBranch();
+        bool hasFBranch();
         void accept(InstructionVisitor *visitor);
 
     private:
-        std::unique_ptr<Atom> cond;
+        std::unique_ptr<Expr> cond;
         std::unique_ptr<Instruction> t_branch;
         std::unique_ptr<Instruction> f_branch;
     };
 
     class InstructionWhile : public Instruction {
     public:
-        InstructionWhile(std::unique_ptr<Atom> cond,
+        InstructionWhile(std::unique_ptr<Expr> cond,
                          std::unique_ptr<Instruction> body);
-        std::unique_ptr<Atom> &getCond();
+        std::unique_ptr<Expr> &getCond();
         std::unique_ptr<Instruction> &getBody();
         void accept(InstructionVisitor *visitor);
 
     private:
-        std::unique_ptr<Atom> cond;
+        std::unique_ptr<Expr> cond;
         std::unique_ptr<Instruction> body;
     };
 
@@ -153,12 +123,9 @@ namespace frontend::ast {
         virtual void visit(Instruction *i) = 0;
         virtual void visit(Scope *s) = 0;
         virtual void visit(InstructionDeclaration *i) = 0;
-        virtual void visit(InstructionDeclarationAssignValue *i) = 0;
-        virtual void visit(InstructionAssignValue *i) = 0;
-        virtual void visit(InstructionAssignBinaryOp *i) = 0;
+        virtual void visit(InstructionDeclarationAssign *i) = 0;
+        virtual void visit(InstructionAssign *i) = 0;
         virtual void visit(InstructionReturn *i) = 0;
-        virtual void visit(InstructionCall *i) = 0;
-        virtual void visit(InstructionCallAssign *i) = 0;
         virtual void visit(InstructionIf *i) = 0;
         virtual void visit(InstructionWhile *i) = 0;
     };
