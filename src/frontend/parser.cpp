@@ -195,16 +195,16 @@ namespace frontend {
         : pegtl::seq<keyword_return, ignorable, expr, ignorable, semicolon> {};
 
     struct instruction_if
-        : pegtl::seq<keyword_if, ignorable, left_paren, ignorable, value,
+        : pegtl::seq<keyword_if, ignorable, left_paren, ignorable, expr,
                      ignorable, right_paren, ignorable, instruction_any> {};
 
     struct instruction_if_else
-        : pegtl::seq<keyword_if, ignorable, left_paren, ignorable, value,
+        : pegtl::seq<keyword_if, ignorable, left_paren, ignorable, expr,
                      ignorable, right_paren, ignorable, instruction_any,
                      ignorable, keyword_else, ignorable, instruction_any> {};
 
     struct instruction_while
-        : pegtl::seq<keyword_while, ignorable, left_paren, ignorable, value,
+        : pegtl::seq<keyword_while, ignorable, left_paren, ignorable, expr,
                      ignorable, right_paren, ignorable, instruction_any> {};
 
     struct instruction_any
