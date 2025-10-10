@@ -54,6 +54,12 @@ namespace frontend {
             symbol_table->addSymbol(token_val));
     }
 
+    std::unique_ptr<ast::Expr> popExpr() {
+        auto expr = std::move(parsed_exprs.back());
+        parsed_exprs.pop_back();
+        return expr;
+    }
+
     std::unique_ptr<ast::Instruction> popInstruction() {
         auto i = std::move(active_scopes.back()->getInstructions().back());
         active_scopes.back()->getInstructions().pop_back();
@@ -125,13 +131,12 @@ namespace frontend {
 
     struct number : pegtl::plus<pegtl::digit> {};
 
-    struct value : pegtl::sor<identifier, number> {};
-
     // 1
     struct expr_1;
     struct call : pegtl::seq<identifier, ignorable, left_paren, ignorable,
                              // TODO: parameter list
                              right_paren> {};
+    struct value : pegtl::sor<identifier, number> {};
     struct expr_1 : pegtl::sor<call, value> {};
 
     // 2
@@ -146,8 +151,9 @@ namespace frontend {
     struct expr_3;
     struct multiply
         : pegtl::seq<expr_3, ignorable, asterisk, ignorable, expr_2> {};
-    struct divide : pegtl::seq<expr_3, ignorable, slash, ignorable, expr_2> {};
-    struct expr_3 : pegtl::sor<multiply, divide, expr_2> {};
+    // struct divide : pegtl::seq<expr_3, ignorable, slash, ignorable, expr_2>
+    // {};
+    struct expr_3 : pegtl::sor<multiply, expr_2> {};
 
     // 4
     struct expr_4;
@@ -245,6 +251,89 @@ namespace frontend {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             parsed_tokens.push_back({in.string(), TokenType::IDENTIFIER});
+        }
+    };
+
+    // Expr actions
+    template <> struct action<value> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto value = popAtom();
+            auto expr = std::make_unique<ast::TerminalExpr>(std::move(value));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<call> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto callee = popIdentifier();
+            auto expr = std::make_unique<ast::CallExpr>(std::move(callee));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<unary_plus> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto back = popExpr();
+            auto expr = std::make_unique<ast::UnaryOpExpr>(UnaryOp::PLUS,
+                                                           std::move(back));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<unary_minus> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto back = popExpr();
+            auto expr = std::make_unique<ast::UnaryOpExpr>(UnaryOp::MINUS,
+                                                           std::move(back));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<multiply> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::MUL, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<add> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::ADD, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<subtract> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::SUB, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<bitwise_and> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::AND, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
         }
     };
 
