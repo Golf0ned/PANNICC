@@ -9,6 +9,7 @@ namespace frontend::ast {
     class Expr {};
 
     class TerminalExpr : public Expr {
+    public:
         TerminalExpr(std::unique_ptr<Atom> atom);
 
     private:
@@ -16,14 +17,16 @@ namespace frontend::ast {
     };
 
     class CallExpr : public Expr {
-        CallExpr(std::unique_ptr<AtomLiteral> callee);
+    public:
+        CallExpr(std::unique_ptr<AtomIdentifier> callee);
 
     private:
-        std::unique_ptr<AtomLiteral> callee;
+        std::unique_ptr<AtomIdentifier> callee;
         // TODO: params
     };
 
     class UnaryOpExpr : public Expr {
+    public:
         UnaryOpExpr(UnaryOp op, std::unique_ptr<Expr> value);
 
     private:
@@ -32,6 +35,7 @@ namespace frontend::ast {
     };
 
     class BinaryOpExpr : public Expr {
+    public:
         BinaryOpExpr(BinaryOp op, std::unique_ptr<Expr> left,
                      std::unique_ptr<Expr> right);
 
