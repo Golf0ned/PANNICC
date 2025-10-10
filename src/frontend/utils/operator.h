@@ -13,6 +13,11 @@ namespace frontend {
         AND,
     };
 
+    enum class UnaryOp {
+        PLUS,
+        MINUS,
+    };
+
     const std::unordered_map<std::string, BinaryOp> strToBinaryOp = {
         {"+", BinaryOp::ADD},
         {"-", BinaryOp::SUB},
@@ -20,7 +25,14 @@ namespace frontend {
         {"&", BinaryOp::AND},
     };
 
+    const std::unordered_map<std::string, UnaryOp> strToUnaryOp = {
+        {"+", UnaryOp::PLUS},
+        {"-", UnaryOp::MINUS},
+    };
+
     std::string toString(BinaryOp op);
+    std::string toString(UnaryOp op);
 
     middleend::mir::BinaryOp toMir(BinaryOp op);
+    // middleend::mir::BinaryOp toMir(UnaryOp op);
 } // namespace frontend
