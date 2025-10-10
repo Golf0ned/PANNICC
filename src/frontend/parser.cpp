@@ -6,6 +6,7 @@
 #include <tao/pegtl/contrib/raw_string.hpp>
 
 #include "frontend/ast/ast.h"
+#include "frontend/ast/expr.h"
 #include "frontend/ast/instruction.h"
 #include "frontend/parser.h"
 #include "frontend/utils/atom.h"
@@ -23,20 +24,19 @@ namespace frontend {
     enum class TokenType {
         NUMBER,
         IDENTIFIER,
-        BINARY_OP,
     };
 
     using Token = std::pair<std::string, TokenType>;
 
     std::unique_ptr<SymbolTable> symbol_table;
     std::vector<Token> parsed_tokens;
+    std::vector<std::unique_ptr<ast::Expr>> parsed_exprs;
     std::vector<std::unique_ptr<ast::Scope>> active_scopes;
 
     std::unique_ptr<Atom> popAtom() {
         auto [token_val, token_type] = parsed_tokens.back();
         parsed_tokens.pop_back();
         if (token_type == TokenType::NUMBER) {
-            // TODO: generalize for other types
             long long parsed_val = std::stoll(token_val);
             int32_t truncated = static_cast<int32_t>(parsed_val);
             uint64_t val =
@@ -52,12 +52,6 @@ namespace frontend {
         parsed_tokens.pop_back();
         return std::make_unique<AtomIdentifier>(
             symbol_table->addSymbol(token_val));
-    }
-
-    BinaryOp popBinOp() {
-        auto [token_val, token_type] = parsed_tokens.back();
-        parsed_tokens.pop_back();
-        return strToBinaryOp.at(token_val);
     }
 
     std::unique_ptr<ast::Instruction> popInstruction() {
@@ -254,13 +248,6 @@ namespace frontend {
         }
     };
 
-    template <> struct action<binary_op> {
-        template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
-            parsed_tokens.push_back({in.string(), TokenType::BINARY_OP});
-        }
-    };
-
     // Instruction actions
     template <> struct action<left_brace> {
         template <typename Input>
@@ -282,6 +269,13 @@ namespace frontend {
         }
     };
 
+    template <> struct action<instruction_expr> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            // TODO
+        }
+    };
+
     template <> struct action<instruction_declaration> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
@@ -294,7 +288,7 @@ namespace frontend {
         }
     };
 
-    template <> struct action<instruction_declaration_assign_value> {
+    template <> struct action<instruction_declaration_assign> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto value = popAtom();
@@ -307,7 +301,7 @@ namespace frontend {
         }
     };
 
-    template <> struct action<instruction_assign_value> {
+    template <> struct action<instruction_assign> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto value = popAtom();
@@ -319,48 +313,12 @@ namespace frontend {
         }
     };
 
-    template <> struct action<instruction_assign_binary_op> {
-        template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
-            auto right = popAtom();
-            auto op = popBinOp();
-            auto left = popAtom();
-            auto variable = popIdentifier();
-
-            auto i = std::make_unique<ast::InstructionAssignBinaryOp>(
-                std::move(variable), op, std::move(left), std::move(right));
-            active_scopes.back()->addInstruction(std::move(i));
-        }
-    };
-
     template <> struct action<instruction_return> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto value = popAtom();
 
             auto i = std::make_unique<ast::InstructionReturn>(std::move(value));
-            active_scopes.back()->addInstruction(std::move(i));
-        }
-    };
-
-    template <> struct action<instruction_call> {
-        template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
-            auto target = popIdentifier();
-
-            auto i = std::make_unique<ast::InstructionCall>(std::move(target));
-            active_scopes.back()->addInstruction(std::move(i));
-        }
-    };
-
-    template <> struct action<instruction_call_assign> {
-        template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
-            auto target = popIdentifier();
-            auto variable = popIdentifier();
-
-            auto i = std::make_unique<ast::InstructionCallAssign>(
-                std::move(variable), std::move(target));
             active_scopes.back()->addInstruction(std::move(i));
         }
     };
