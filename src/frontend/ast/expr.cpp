@@ -4,7 +4,7 @@ namespace frontend::ast {
     TerminalExpr::TerminalExpr(std::unique_ptr<Atom> atom)
         : atom(std::move(atom)) {}
 
-    CallExpr::CallExpr(std::unique_ptr<AtomLiteral> callee)
+    CallExpr::CallExpr(std::unique_ptr<AtomIdentifier> callee)
         : callee(std::move(callee)) {}
 
     UnaryOpExpr::UnaryOpExpr(UnaryOp op, std::unique_ptr<Expr> value)
