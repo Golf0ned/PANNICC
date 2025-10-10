@@ -99,8 +99,15 @@ namespace frontend {
     struct plus : pegtl::one<'+'> {};
     struct minus : pegtl::one<'-'> {};
     struct asterisk : pegtl::one<'*'> {};
+    struct slash : pegtl::one<'/'> {};
     struct ampersand : pegtl::one<'&'> {};
+    struct pipe : pegtl::one<'|'> {};
+    struct caret : pegtl::one<'^'> {};
+    struct tilde : pegtl::one<'~'> {};
+    struct bang : pegtl::one<'!'> {};
     struct equal : pegtl::one<'='> {};
+    struct greater : pegtl::one<'>'> {};
+    struct less : pegtl::one<'<'> {};
 
     // Ignorables
     struct comment
@@ -113,17 +120,54 @@ namespace frontend {
 
     struct ignorable : pegtl::star<pegtl::sor<whitespace_char, comment>> {};
 
-    // Values
+    // Expression
+    // Refer to operator precedence:
+    // https://en.cppreference.com/w/c/language/operator_precedence.html
+
+    // 0
     struct identifier
         : pegtl::seq<pegtl::plus<pegtl::sor<pegtl::alpha, pegtl::one<'_'>>>,
                      pegtl::star<pegtl::sor<pegtl::alnum, pegtl::one<'_'>>>> {};
 
-    struct number : pegtl::seq<pegtl::opt<pegtl::sor<plus, minus>>,
-                               pegtl::plus<pegtl::digit>> {};
+    struct number : pegtl::plus<pegtl::digit> {};
 
     struct value : pegtl::sor<identifier, number> {};
 
-    struct binary_op : pegtl::sor<plus, minus, asterisk, ampersand> {};
+    // 1
+    struct expr_1;
+    struct call : pegtl::seq<identifier, ignorable, left_paren, ignorable,
+                             // TODO: parameter list
+                             right_paren> {};
+    struct expr_1 : pegtl::sor<call, value> {};
+
+    // 2
+    struct expr_2;
+    struct unary_plus : pegtl::seq<plus, ignorable, expr_2> {};
+    struct unary_minus : pegtl::seq<minus, ignorable, expr_2> {};
+    // struct unary_logical_not : pegtl::seq<bang, ignorable, expr_2> {};
+    // struct unary_bitwise_not : pegtl::seq<tilde, ignorable, expr_2> {};
+    struct expr_2 : pegtl::sor<unary_plus, unary_minus, expr_1> {};
+
+    // 3
+    struct expr_3;
+    struct multiply
+        : pegtl::seq<expr_3, ignorable, asterisk, ignorable, expr_2> {};
+    struct divide : pegtl::seq<expr_3, ignorable, slash, ignorable, expr_2> {};
+    struct expr_3 : pegtl::sor<multiply, divide, expr_2> {};
+
+    // 4
+    struct expr_4;
+    struct add : pegtl::seq<expr_4, ignorable, plus, ignorable, expr_3> {};
+    struct subtract : pegtl::seq<expr_4, ignorable, minus, ignorable, expr_3> {
+    };
+    struct expr_4 : pegtl::sor<add, subtract, expr_3> {};
+
+    // 8
+    struct expr_8;
+    struct bitwise_and : pegtl::seq<expr_8, bitwise_and, expr_4> {};
+    struct expr_8 : pegtl::sor<bitwise_and, expr_4> {};
+
+    struct expr : expr_8 {};
 
     struct type : pegtl::sor<pegtl_apply_if_match<keyword_long_long>,
                              pegtl_apply_if_match<keyword_long>,
@@ -134,34 +178,21 @@ namespace frontend {
     struct instruction_any;
     struct scope;
 
+    struct instruction_expr : pegtl::seq<expr, ignorable, semicolon> {};
+
     struct instruction_declaration
         : pegtl::seq<type, ignorable, identifier, ignorable, semicolon> {};
 
-    struct instruction_declaration_assign_value
+    struct instruction_declaration_assign
         : pegtl::seq<type, ignorable, identifier, ignorable, equal, ignorable,
-                     value, ignorable, semicolon> {};
+                     expr, ignorable, semicolon> {};
 
-    struct instruction_assign_value
-        : pegtl::seq<identifier, ignorable, equal, ignorable, value, ignorable,
+    struct instruction_assign
+        : pegtl::seq<identifier, ignorable, equal, ignorable, expr, ignorable,
                      semicolon> {};
 
-    struct instruction_assign_binary_op
-        : pegtl::seq<identifier, ignorable, equal, ignorable, value, ignorable,
-                     binary_op, ignorable, value, ignorable, semicolon> {};
-
     struct instruction_return
-        : pegtl::seq<keyword_return, ignorable, value, ignorable, semicolon> {};
-
-    struct instruction_call
-        : pegtl::seq<identifier, ignorable, left_paren, ignorable,
-                     // TODO: parameter list
-                     right_paren, ignorable, semicolon> {};
-
-    struct instruction_call_assign
-        : pegtl::seq<identifier, ignorable, equal, ignorable, identifier,
-                     ignorable, left_paren, ignorable,
-                     // TODO: parameter list
-                     right_paren, ignorable, semicolon> {};
+        : pegtl::seq<keyword_return, ignorable, expr, ignorable, semicolon> {};
 
     struct instruction_if
         : pegtl::seq<keyword_if, ignorable, left_paren, ignorable, value,
@@ -182,12 +213,10 @@ namespace frontend {
                      pegtl_apply_if_match<instruction_if_else>,
                      pegtl_apply_if_match<instruction_if>,
                      pegtl_apply_if_match<instruction_return>,
-                     pegtl_apply_if_match<instruction_call>,
-                     pegtl_apply_if_match<instruction_call_assign>,
-                     pegtl_apply_if_match<instruction_declaration_assign_value>,
+                     pegtl_apply_if_match<instruction_declaration_assign>,
                      pegtl_apply_if_match<instruction_declaration>,
-                     pegtl_apply_if_match<instruction_assign_value>,
-                     pegtl_apply_if_match<instruction_assign_binary_op>> {};
+                     pegtl_apply_if_match<instruction_assign>,
+                     pegtl_apply_if_match<instruction_expr>> {};
 
     // Program structure
     struct scope
