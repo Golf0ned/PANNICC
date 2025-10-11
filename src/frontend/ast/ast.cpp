@@ -96,6 +96,11 @@ namespace frontend::ast {
         res = prefix + scope_res;
     }
 
+    void ToStringVisitor::visit(InstructionExpr *i) {
+        i->getExpr()->accept(this);
+        res = prefix + res + ';';
+    }
+
     void ToStringVisitor::visit(InstructionDeclaration *i) {
         const std::string type = toString(i->getType());
         const std::string variable = i->getVariable()->toString(*symbol_table);
@@ -103,58 +108,36 @@ namespace frontend::ast {
         res = prefix + type + " " + variable + ";";
     }
 
-    void ToStringVisitor::visit(InstructionDeclarationAssignValue *i) {
+    void ToStringVisitor::visit(InstructionDeclarationAssign *i) {
         const std::string type = toString(i->getType());
         const std::string variable = i->getVariable()->toString(*symbol_table);
-        const std::string value = i->getValue()->toString(*symbol_table);
+        i->getValue()->accept(this);
 
-        res = prefix + type + " " + variable + " = " + value + ";";
+        res = prefix + type + " " + variable + " = " + res + ";";
     }
 
-    void ToStringVisitor::visit(InstructionAssignValue *i) {
+    void ToStringVisitor::visit(InstructionAssign *i) {
         const std::string variable = i->getVariable()->toString(*symbol_table);
-        const std::string value = i->getValue()->toString(*symbol_table);
+        i->getValue()->accept(this);
 
-        res = prefix + variable + " = " + value + ";";
-    }
-
-    void ToStringVisitor::visit(InstructionAssignBinaryOp *i) {
-        const std::string variable = i->getVariable()->toString(*symbol_table);
-        const std::string op = toString(i->getOp());
-        const std::string left = i->getLeft()->toString(*symbol_table);
-        const std::string right = i->getRight()->toString(*symbol_table);
-
-        res = prefix + variable + " = " + left + " " + op + " " + right + ";";
+        res = prefix + variable + " = " + res + ";";
     }
 
     void ToStringVisitor::visit(InstructionReturn *i) {
-        const std::string value = i->getValue()->toString(*symbol_table);
-
-        res = prefix + "return " + value + ";";
-    }
-
-    void ToStringVisitor::visit(InstructionCall *i) {
-        const std::string target = i->getTarget()->toString(*symbol_table);
-
-        res = prefix + target + '(' + ");";
-    }
-
-    void ToStringVisitor::visit(InstructionCallAssign *i) {
-        const std::string variable = i->getVariable()->toString(*symbol_table);
-        const std::string target = i->getTarget()->toString(*symbol_table);
-
-        res = prefix + variable + " = " + target + '(' + ");";
+        i->getValue()->accept(this);
+        res = prefix + "return " + res + ";";
     }
 
     void ToStringVisitor::visit(InstructionIf *i) {
-        const std::string cond = i->getCond()->toString(*symbol_table);
+        i->getCond()->accept(this);
+        const std::string cond = res;
         std::string if_res = prefix + "if (" + cond + ")";
 
         convertSubexpression(i->getTBranch().get());
         std::string t_branch = getResult();
         if_res += t_branch;
 
-        if (i->getFBranch() != nullptr) {
+        if (i->hasFBranch()) {
             convertSubexpression(i->getFBranch().get());
             std::string f_branch = getResult();
             if_res += dynamic_cast<Scope *>(i->getTBranch().get()) != nullptr
@@ -168,13 +151,45 @@ namespace frontend::ast {
     }
 
     void ToStringVisitor::visit(InstructionWhile *i) {
-        const std::string cond = i->getCond()->toString(*symbol_table);
-        std::string if_res = prefix + "while (" + cond + ")";
+        i->getCond()->accept(this);
+        const std::string cond = res;
+        std::string while_res = prefix + "while (" + cond + ")";
 
         convertSubexpression(i->getBody().get());
         std::string body = getResult();
-        if_res += body;
+        while_res += body;
 
-        res = if_res;
+        res = while_res;
     }
+
+    void ToStringVisitor::visit(Expr *e) { res = "[UNKNOWNM EXPRESSION]"; }
+
+    void ToStringVisitor::visit(TerminalExpr *e) {
+        res = e->getAtom()->toString(*symbol_table);
+    }
+
+    void ToStringVisitor::visit(CallExpr *e) {
+        // TODO: function params
+        res = e->getCallee()->toString(*symbol_table) + "()";
+    }
+
+    void ToStringVisitor::visit(UnaryOpExpr *e) {
+        const std::string op = toString(e->getOp());
+        e->getValue()->accept(this);
+
+        res = op + res;
+    }
+
+    void ToStringVisitor::visit(BinaryOpExpr *e) {
+        const std::string op = toString(e->getOp());
+
+        e->getLeft()->accept(this);
+        const std::string left = res;
+
+        e->getRight()->accept(this);
+        const std::string right = res;
+
+        res = left + ' ' + op + ' ' + right;
+    }
+
 } // namespace frontend::ast
