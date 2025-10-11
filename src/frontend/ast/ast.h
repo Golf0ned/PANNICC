@@ -38,7 +38,7 @@ namespace frontend::ast {
         std::unique_ptr<SymbolTable> symbol_table;
     };
 
-    class ToStringVisitor : public InstructionVisitor {
+    class ToStringVisitor : public InstructionVisitor, public ExprVisitor {
     public:
         ToStringVisitor(SymbolTable *symbol_table);
         std::string getResult();
@@ -47,15 +47,19 @@ namespace frontend::ast {
 
         void visit(Instruction *i) override;
         void visit(Scope *s) override;
+        void visit(InstructionExpr *i) override;
         void visit(InstructionDeclaration *i) override;
-        void visit(InstructionDeclarationAssignValue *i) override;
-        void visit(InstructionAssignValue *i) override;
-        void visit(InstructionAssignBinaryOp *i) override;
+        void visit(InstructionDeclarationAssign *i) override;
+        void visit(InstructionAssign *i) override;
         void visit(InstructionReturn *i) override;
-        void visit(InstructionCall *i) override;
-        void visit(InstructionCallAssign *i) override;
         void visit(InstructionIf *i) override;
         void visit(InstructionWhile *i) override;
+
+        void visit(Expr *e) override;
+        void visit(TerminalExpr *e) override;
+        void visit(CallExpr *e) override;
+        void visit(UnaryOpExpr *e) override;
+        void visit(BinaryOpExpr *e) override;
 
     private:
         SymbolTable *symbol_table;
