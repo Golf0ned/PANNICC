@@ -122,6 +122,7 @@ namespace frontend::ast {
     public:
         virtual void visit(Instruction *i) = 0;
         virtual void visit(Scope *s) = 0;
+        virtual void visit(InstructionExpr *i) = 0;
         virtual void visit(InstructionDeclaration *i) = 0;
         virtual void visit(InstructionDeclarationAssign *i) = 0;
         virtual void visit(InstructionAssign *i) = 0;
