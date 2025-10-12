@@ -47,6 +47,7 @@ namespace frontend::hir {
         void visit(Label *l) override;
         void visit(InstructionDeclaration *i) override;
         void visit(InstructionAssignValue *i) override;
+        void visit(InstructionAssignUnaryOp *i) override;
         void visit(InstructionAssignBinaryOp *i) override;
         void visit(InstructionReturn *i) override;
         void visit(InstructionCall *i) override;

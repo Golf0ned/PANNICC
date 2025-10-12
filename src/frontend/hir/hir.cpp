@@ -79,6 +79,14 @@ namespace frontend::hir {
         res = "    " + variable + " = " + value + ';';
     }
 
+    void ToStringVisitor::visit(InstructionAssignUnaryOp *i) {
+        const std::string variable = i->getVariable()->toString(*symbol_table);
+        const std::string op = toString(i->getOp());
+        const std::string value = i->getValue()->toString(*symbol_table);
+
+        res = "    " + variable + " = " + op + value + ';';
+    }
+
     void ToStringVisitor::visit(InstructionAssignBinaryOp *i) {
         const std::string variable = i->getVariable()->toString(*symbol_table);
         const std::string op = toString(i->getOp());
