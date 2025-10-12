@@ -51,6 +51,21 @@ namespace frontend::hir {
         std::unique_ptr<Atom> value;
     };
 
+    class InstructionAssignUnaryOp : public Instruction {
+    public:
+        InstructionAssignUnaryOp(std::unique_ptr<AtomIdentifier> variable,
+                                 UnaryOp op, std::unique_ptr<Atom> value);
+        std::unique_ptr<AtomIdentifier> &getVariable();
+        UnaryOp getOp();
+        std::unique_ptr<Atom> &getValue();
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        std::unique_ptr<AtomIdentifier> variable;
+        UnaryOp op;
+        std::unique_ptr<Atom> value;
+    };
+
     class InstructionAssignBinaryOp : public Instruction {
     public:
         InstructionAssignBinaryOp(std::unique_ptr<AtomIdentifier> variable,
@@ -134,6 +149,7 @@ namespace frontend::hir {
         virtual void visit(Label *l) = 0;
         virtual void visit(InstructionDeclaration *i) = 0;
         virtual void visit(InstructionAssignValue *i) = 0;
+        virtual void visit(InstructionAssignUnaryOp *i) = 0;
         virtual void visit(InstructionAssignBinaryOp *i) = 0;
         virtual void visit(InstructionReturn *i) = 0;
         virtual void visit(InstructionCall *i) = 0;

@@ -23,6 +23,7 @@ namespace frontend {
         void visit(hir::Label *l) override;
         void visit(hir::InstructionDeclaration *i) override;
         void visit(hir::InstructionAssignValue *i) override;
+        void visit(hir::InstructionAssignUnaryOp *i) override;
         void visit(hir::InstructionAssignBinaryOp *i) override;
         void visit(hir::InstructionReturn *i) override;
         void visit(hir::InstructionCall *i) override;

@@ -190,6 +190,10 @@ namespace frontend {
         cur_instructions.push_back(std::move(store));
     }
 
+    void HIRToMIRVisitor::visit(hir::InstructionAssignUnaryOp *i) {
+        // TODO
+    }
+
     void HIRToMIRVisitor::visit(hir::InstructionAssignBinaryOp *i) {
         auto type = toMir(Type::INT);
         mir::Value *left = resolveAtom(i->getLeft().get());
