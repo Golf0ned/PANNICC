@@ -240,7 +240,7 @@ namespace frontend {
 
     void ASTToHIRVisitor::visit(ast::TerminalExpr *e) {
         auto type = Type::INT;
-        auto var_declare = makeTemp("terminal");
+        auto var_declare = makeTemp("term");
         auto var_assign =
             std::make_unique<AtomIdentifier>(var_declare->getValue());
         last_expr = var_declare.get();
@@ -250,7 +250,9 @@ namespace frontend {
         result.push_back(std::move(new_declare));
 
         auto new_assign = std::make_unique<hir::InstructionAssignValue>(
-            std::move(var_assign), std::move(e->getAtom()));
+            std::move(var_assign),
+            std::move(resolveUseScope(e->getAtom().get())));
+
         result.push_back(std::move(new_assign));
     }
 
@@ -266,7 +268,8 @@ namespace frontend {
         result.push_back(std::move(new_declare));
 
         auto new_assign = std::make_unique<hir::InstructionCallAssign>(
-            std::move(var_assign), std::move(e->getCallee()));
+            std::move(var_assign),
+            createUnscopedIdentifier(e->getCallee()->toString(*old_table)));
         result.push_back(std::move(new_assign));
     }
 
