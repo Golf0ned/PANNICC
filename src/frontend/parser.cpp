@@ -128,8 +128,8 @@ namespace frontend {
         : pegtl::seq<pegtl::plus<pegtl::sor<pegtl::alpha, pegtl::one<'_'>>>,
                      pegtl::star<pegtl::sor<pegtl::alnum, pegtl::one<'_'>>>> {};
 
-    struct number : pegtl::plus<pegtl::digit> {};
-
+    struct number : pegtl::seq<pegtl::opt<pegtl::sor<plus, minus>>,
+                               pegtl::plus<pegtl::digit>> {};
     // 1
     struct expr_1;
     struct call : pegtl::seq<identifier, ignorable, left_paren, ignorable,
