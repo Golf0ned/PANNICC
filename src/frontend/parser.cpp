@@ -149,23 +149,21 @@ namespace frontend {
 
     // 3
     struct expr_3;
-    struct multiply
-        : pegtl::seq<expr_3, ignorable, asterisk, ignorable, expr_2> {};
+    struct multiply : pegtl::seq<ignorable, asterisk, ignorable, expr_2> {};
     // struct divide : pegtl::seq<expr_3, ignorable, slash, ignorable, expr_2>
     // {};
-    struct expr_3 : pegtl::sor<multiply, expr_2> {};
+    struct expr_3 : pegtl::seq<expr_2, pegtl::star<multiply>> {};
 
     // 4
     struct expr_4;
-    struct add : pegtl::seq<expr_4, ignorable, plus, ignorable, expr_3> {};
-    struct subtract : pegtl::seq<expr_4, ignorable, minus, ignorable, expr_3> {
+    struct add : pegtl::seq<ignorable, plus, ignorable, expr_3> {};
+    struct subtract : pegtl::seq<ignorable, minus, ignorable, expr_3> {};
+    struct expr_4 : pegtl::seq<expr_3, pegtl::star<pegtl::sor<add, subtract>>> {
     };
-    struct expr_4 : pegtl::sor<add, subtract, expr_3> {};
 
     // 8
-    struct expr_8;
-    struct bitwise_and : pegtl::seq<expr_8, bitwise_and, expr_4> {};
-    struct expr_8 : pegtl::sor<bitwise_and, expr_4> {};
+    struct bitwise_and : pegtl::seq<ignorable, ampersand, ignorable, expr_4> {};
+    struct expr_8 : pegtl::seq<expr_4, pegtl::star<bitwise_and>> {};
 
     struct expr : expr_8 {};
 
@@ -361,7 +359,10 @@ namespace frontend {
     template <> struct action<instruction_expr> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
-            // TODO
+            auto expr = popExpr();
+
+            auto i = std::make_unique<ast::InstructionExpr>(std::move(expr));
+            active_scopes.back()->addInstruction(std::move(i));
         }
     };
 
@@ -380,11 +381,11 @@ namespace frontend {
     template <> struct action<instruction_declaration_assign> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
-            auto value = popAtom();
+            auto value = popExpr();
             auto variable = popIdentifier();
             auto type = Type::INT;
 
-            auto i = std::make_unique<ast::InstructionDeclarationAssignValue>(
+            auto i = std::make_unique<ast::InstructionDeclarationAssign>(
                 type, std::move(variable), std::move(value));
             active_scopes.back()->addInstruction(std::move(i));
         }
@@ -393,10 +394,10 @@ namespace frontend {
     template <> struct action<instruction_assign> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
-            auto value = popAtom();
+            auto value = popExpr();
             auto variable = popIdentifier();
 
-            auto i = std::make_unique<ast::InstructionAssignValue>(
+            auto i = std::make_unique<ast::InstructionAssign>(
                 std::move(variable), std::move(value));
             active_scopes.back()->addInstruction(std::move(i));
         }
@@ -405,7 +406,7 @@ namespace frontend {
     template <> struct action<instruction_return> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
-            auto value = popAtom();
+            auto value = popExpr();
 
             auto i = std::make_unique<ast::InstructionReturn>(std::move(value));
             active_scopes.back()->addInstruction(std::move(i));
@@ -416,7 +417,7 @@ namespace frontend {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto t_branch = popInstruction();
-            auto cond = popAtom();
+            auto cond = popExpr();
 
             auto i = std::make_unique<ast::InstructionIf>(
                 std::move(cond), std::move(t_branch), nullptr);
@@ -429,7 +430,7 @@ namespace frontend {
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto f_branch = popInstruction();
             auto t_branch = popInstruction();
-            auto cond = popAtom();
+            auto cond = popExpr();
 
             auto i = std::make_unique<ast::InstructionIf>(
                 std::move(cond), std::move(t_branch), std::move(f_branch));
@@ -441,7 +442,7 @@ namespace frontend {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto body = popInstruction();
-            auto cond = popAtom();
+            auto cond = popExpr();
 
             auto i = std::make_unique<ast::InstructionWhile>(std::move(cond),
                                                              std::move(body));
