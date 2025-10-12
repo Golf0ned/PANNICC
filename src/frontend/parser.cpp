@@ -17,8 +17,7 @@
 namespace pegtl = tao::pegtl;
 using namespace pegtl;
 
-template <typename Rule>
-using pegtl_apply_if_match = pegtl::seq<pegtl::at<Rule>, Rule>;
+template <typename Rule> using pegtl_try = pegtl::seq<pegtl::at<Rule>, Rule>;
 
 namespace frontend {
     enum class TokenType {
@@ -137,40 +136,42 @@ namespace frontend {
                              // TODO: parameter list
                              right_paren> {};
     struct value : pegtl::sor<identifier, number> {};
-    struct expr_1 : pegtl::sor<call, value> {};
+    struct expr_1 : pegtl::sor<pegtl_try<call>, value> {};
 
     // 2
     struct expr_2;
-    struct unary_plus : pegtl::seq<plus, ignorable, expr_2> {};
-    struct unary_minus : pegtl::seq<minus, ignorable, expr_2> {};
+    struct unary_plus : pegtl_try<pegtl::seq<plus, ignorable, expr_2>> {};
+    struct unary_minus : pegtl_try<pegtl::seq<minus, ignorable, expr_2>> {};
     // struct unary_logical_not : pegtl::seq<bang, ignorable, expr_2> {};
     // struct unary_bitwise_not : pegtl::seq<tilde, ignorable, expr_2> {};
-    struct expr_2 : pegtl::sor<unary_plus, unary_minus, expr_1> {};
+    struct expr_2 : pegtl::sor<expr_1, unary_plus, unary_minus> {};
 
     // 3
     struct expr_3;
-    struct multiply : pegtl::seq<ignorable, asterisk, ignorable, expr_2> {};
+    struct multiply
+        : pegtl_try<pegtl::seq<ignorable, asterisk, ignorable, expr_2>> {};
     // struct divide : pegtl::seq<expr_3, ignorable, slash, ignorable, expr_2>
     // {};
     struct expr_3 : pegtl::seq<expr_2, pegtl::star<multiply>> {};
 
     // 4
     struct expr_4;
-    struct add : pegtl::seq<ignorable, plus, ignorable, expr_3> {};
-    struct subtract : pegtl::seq<ignorable, minus, ignorable, expr_3> {};
+    struct add : pegtl_try<pegtl::seq<ignorable, plus, ignorable, expr_3>> {};
+    struct subtract
+        : pegtl_try<pegtl::seq<ignorable, minus, ignorable, expr_3>> {};
     struct expr_4 : pegtl::seq<expr_3, pegtl::star<pegtl::sor<add, subtract>>> {
     };
 
     // 8
-    struct bitwise_and : pegtl::seq<ignorable, ampersand, ignorable, expr_4> {};
+    struct bitwise_and
+        : pegtl_try<pegtl::seq<ignorable, ampersand, ignorable, expr_4>> {};
     struct expr_8 : pegtl::seq<expr_4, pegtl::star<bitwise_and>> {};
 
     struct expr : expr_8 {};
 
-    struct type : pegtl::sor<pegtl_apply_if_match<keyword_long_long>,
-                             pegtl_apply_if_match<keyword_long>,
-                             pegtl_apply_if_match<keyword_int>,
-                             pegtl_apply_if_match<keyword_short>> {};
+    struct type
+        : pegtl::sor<pegtl_try<keyword_long_long>, pegtl_try<keyword_long>,
+                     pegtl_try<keyword_int>, pegtl_try<keyword_short>> {};
 
     // Instructions
     struct instruction_any;
@@ -206,15 +207,13 @@ namespace frontend {
                      ignorable, right_paren, ignorable, instruction_any> {};
 
     struct instruction_any
-        : pegtl::sor<pegtl_apply_if_match<scope>,
-                     pegtl_apply_if_match<instruction_while>,
-                     pegtl_apply_if_match<instruction_if_else>,
-                     pegtl_apply_if_match<instruction_if>,
-                     pegtl_apply_if_match<instruction_return>,
-                     pegtl_apply_if_match<instruction_declaration_assign>,
-                     pegtl_apply_if_match<instruction_declaration>,
-                     pegtl_apply_if_match<instruction_assign>,
-                     pegtl_apply_if_match<instruction_expr>> {};
+        : pegtl::sor<pegtl_try<scope>, pegtl_try<instruction_while>,
+                     pegtl_try<instruction_if_else>, pegtl_try<instruction_if>,
+                     pegtl_try<instruction_return>,
+                     pegtl_try<instruction_declaration_assign>,
+                     pegtl_try<instruction_declaration>,
+                     pegtl_try<instruction_assign>,
+                     pegtl_try<instruction_expr>> {};
 
     // Program structure
     struct scope
@@ -235,7 +234,7 @@ namespace frontend {
     //
     // Action
     //
-    template <typename Rule> struct action : pegtl::nothing<Rule> {};
+    template <typename Rule> struct action {};
 
     // Value token actions
     template <> struct action<number> {
