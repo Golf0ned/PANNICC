@@ -7,6 +7,7 @@ namespace middleend {
     class PassManager {
     public:
         void addPass(std::unique_ptr<TransformPass> p);
+        void addPass(const std::string &pass_name);
         void runPasses(mir::Program &mir);
 
     private:
