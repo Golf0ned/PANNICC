@@ -30,16 +30,15 @@ namespace middleend {
         }
     }
 
-    PassManager initializeO0() {
-        PassManager pm;
-        return pm;
+    std::unique_ptr<PassManager> initializeO0() {
+        return std::make_unique<PassManager>();
     }
 
-    PassManager initializeO1() {
-        PassManager pm;
-        pm.addPass(std::make_unique<middleend::Mem2Reg>());
-        pm.addPass(std::make_unique<middleend::InstCombine>());
-        pm.addPass(std::make_unique<middleend::SimplifyCFG>());
+    std::unique_ptr<PassManager> initializeO1() {
+        auto pm = std::make_unique<PassManager>();
+        pm->addPass(std::make_unique<middleend::Mem2Reg>());
+        pm->addPass(std::make_unique<middleend::InstCombine>());
+        pm->addPass(std::make_unique<middleend::SimplifyCFG>());
         return pm;
     }
 } // namespace middleend

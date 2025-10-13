@@ -15,6 +15,6 @@ namespace middleend {
         std::vector<std::unique_ptr<AnalysisPass>> analyses;
     };
 
-    PassManager initializeO0();
-    PassManager initializeO1();
+    std::unique_ptr<PassManager> initializeO0();
+    std::unique_ptr<PassManager> initializeO1();
 } // namespace middleend
