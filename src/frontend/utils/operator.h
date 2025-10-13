@@ -34,5 +34,4 @@ namespace frontend {
     std::string toString(UnaryOp op);
 
     middleend::mir::BinaryOp toMir(BinaryOp op);
-    // middleend::mir::BinaryOp toMir(UnaryOp op);
 } // namespace frontend
