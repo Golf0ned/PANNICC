@@ -1,31 +1,22 @@
 #!/bin/bash
 
-INPUT=$1
-PASSES=$2
+PANNICC_DIR="${HOME}/code/projects/PANNICC"
 
-PANNICC="${HOME}/code/projects/PANNICC/build/bin/pannicc"
-OUTPUT_DIR="${HOME}/code/projects/PANNICC/test/regression/expected"
+PANNICC="${PANNICC_DIR}/debug/bin/pannicc"
+INPUT_DIR="${PANNICC_DIR}/test/regression/input"
+OUTPUT_DIR="${PANNICC_DIR}/test/regression/expected"
 
-if [ -x "${INPUT}" ]; then
-    echo "No input file"
-    exit 1
-fi
+for test in ${INPUT_DIR}/*.c; do
+    BASE_NAME=$(basename ${test})
+    echo "Updating output for ${BASE_NAME}..."
 
-if [ ! -f "${INPUT}" ]; then
-    echo "Invalid input file: ${INPUT}"
-    exit 1
-fi
+    INPUT="${BASE_NAME%.c}"
 
-BASE_NAME=$(basename ${INPUT})
-INPUT_NAME="${BASE_NAME%.c}"
+    $(${PANNICC} --dump-ast ${test} > ${OUTPUT_DIR}/${INPUT}.ast)
+    $(${PANNICC} --dump-hir ${test} > ${OUTPUT_DIR}/${INPUT}.hir)
+    $(${PANNICC} -O0 ${test} > ${OUTPUT_DIR}/${INPUT}.mir)
 
-$(${PANNICC} --dump-ast ${INPUT} > ${OUTPUT_DIR}/${INPUT_NAME}.ast)
-$(${PANNICC} --dump-hir ${INPUT} > ${OUTPUT_DIR}/${INPUT_NAME}.hir)
-# $(${PANNICC} --O0 ${INPUT} > ${OUTPUT_DIR}/${INPUT_NAME}.mir)
-
-if [ "${PASSES}" ]; then
-    # TODO: generate test file with passes
-    echo "TODO: run with passes"
-fi
+    # TODO: generate tests with passes
+done
 
 exit 0
