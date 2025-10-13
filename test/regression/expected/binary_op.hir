@@ -1,43 +1,101 @@
 int add() {
     __entry:
     int a_1;
-    a_1 = 1;
+    int __term;
+    __term = 1;
+    a_1 = __term;
     int b_1;
-    b_1 = 2;
-    int c_1;
-    c_1 = a_1 + b_1;
-    return c_1;
+    int __term1;
+    __term1 = 2;
+    b_1 = __term1;
+    int __term2;
+    __term2 = a_1;
+    int __term3;
+    __term3 = b_1;
+    int __bin;
+    __bin = __term2 + __term3;
+    return __bin;
 }
 
 int sub() {
     __entry:
     int a_1;
-    a_1 = 10;
+    int __term;
+    __term = 10;
+    a_1 = __term;
     int b_1;
-    b_1 = 1;
-    int c_1;
-    c_1 = a_1 - b_1;
-    return c_1;
+    int __term1;
+    __term1 = 1;
+    b_1 = __term1;
+    int __term2;
+    __term2 = a_1;
+    int __term3;
+    __term3 = b_1;
+    int __bin;
+    __bin = __term2 - __term3;
+    return __bin;
 }
 
 int mul() {
     __entry:
     int a_1;
-    a_1 = 3;
+    int __term;
+    __term = 3;
+    a_1 = __term;
     int b_1;
-    b_1 = 4;
-    int c_1;
-    c_1 = a_1 * b_1;
-    return c_1;
+    int __term1;
+    __term1 = 4;
+    b_1 = __term1;
+    int __term2;
+    __term2 = a_1;
+    int __term3;
+    __term3 = b_1;
+    int __bin;
+    __bin = __term2 * __term3;
+    return __bin;
 }
 
 int bit_and() {
     __entry:
     int a_1;
-    a_1 = 31;
+    int __term;
+    __term = 31;
+    a_1 = __term;
     int b_1;
-    b_1 = 4;
-    int c_1;
-    c_1 = a_1 & b_1;
-    return c_1;
+    int __term1;
+    __term1 = 4;
+    b_1 = __term1;
+    int __term2;
+    __term2 = a_1;
+    int __term3;
+    __term3 = b_1;
+    int __bin;
+    __bin = __term2 & __term3;
+    return __bin;
+}
+
+int unary_plus() {
+    __entry:
+    int a_1;
+    int __term;
+    __term = 42;
+    a_1 = __term;
+    int __term1;
+    __term1 = a_1;
+    int __un;
+    __un = +__term1;
+    return __un;
+}
+
+int unary_minus() {
+    __entry:
+    int a_1;
+    int __term;
+    __term = 42;
+    a_1 = __term;
+    int __term1;
+    __term1 = a_1;
+    int __un;
+    __un = -__term1;
+    return __un;
 }

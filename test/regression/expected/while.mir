@@ -2,58 +2,106 @@ define i32 @while_basic() {
 entry:
   %0 = alloca i32
   %1 = alloca i32
-  store i32 0, ptr %1
-  br label 2
+  %2 = alloca i32
+  store i32 0, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  br label 4
 
-2:
-  br i32 1, label 3, label 6
+4:
+  %5 = alloca i32
+  store i32 1, ptr %5
+  %6 = load ptr %5
+  br i32 %6, label 7, label 16
 
-3:
-  %4 = load ptr %1
-  %5 = add i32 %4, i32 2
-  store i32 %5, ptr %1
-  br label 2
+7:
+  %8 = alloca i32
+  %9 = load ptr %1
+  store i32 %9, ptr %8
+  %10 = alloca i32
+  store i32 2, ptr %10
+  %11 = alloca i32
+  %12 = load ptr %8
+  %13 = load ptr %10
+  %14 = add i32 %12, i32 %13
+  store i32 %14, ptr %11
+  %15 = load ptr %11
+  store i32 %15, ptr %1
+  br label 4
 
-6:
-  %7 = load ptr %1
-  store i32 %7, ptr %0
-  br label 8
+16:
+  %17 = alloca i32
+  %18 = load ptr %1
+  store i32 %18, ptr %17
+  %19 = load ptr %17
+  store i32 %19, ptr %0
+  br label 20
 
-8:
-  %9 = load ptr %0
-  ret i32 %9
+20:
+  %21 = load ptr %0
+  ret i32 %21
 }
 
 define i32 @while_complex() {
 entry:
   %0 = alloca i32
   %1 = alloca i32
-  store i32 0, ptr %1
   %2 = alloca i32
-  store i32 100, ptr %2
-  br label 3
+  store i32 0, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  %4 = alloca i32
+  %5 = alloca i32
+  store i32 100, ptr %5
+  %6 = load ptr %5
+  store i32 %6, ptr %4
+  br label 7
 
-3:
-  %4 = load ptr %2
-  br i32 %4, label 5, label 10
+7:
+  %8 = alloca i32
+  %9 = load ptr %4
+  store i32 %9, ptr %8
+  %10 = load ptr %8
+  br i32 %10, label 11, label 28
 
-5:
-  %6 = load ptr %1
-  %7 = add i32 %6, i32 5
-  store i32 %7, ptr %1
-  %8 = load ptr %2
-  %9 = sub i32 %8, i32 1
-  store i32 %9, ptr %2
-  br label 3
+11:
+  %12 = alloca i32
+  %13 = load ptr %1
+  store i32 %13, ptr %12
+  %14 = alloca i32
+  store i32 5, ptr %14
+  %15 = alloca i32
+  %16 = load ptr %12
+  %17 = load ptr %14
+  %18 = add i32 %16, i32 %17
+  store i32 %18, ptr %15
+  %19 = load ptr %15
+  store i32 %19, ptr %1
+  %20 = alloca i32
+  %21 = load ptr %4
+  store i32 %21, ptr %20
+  %22 = alloca i32
+  store i32 1, ptr %22
+  %23 = alloca i32
+  %24 = load ptr %20
+  %25 = load ptr %22
+  %26 = sub i32 %24, i32 %25
+  store i32 %26, ptr %23
+  %27 = load ptr %23
+  store i32 %27, ptr %4
+  br label 7
 
-10:
-  %11 = load ptr %1
-  store i32 %11, ptr %0
-  br label 12
+28:
+  %29 = alloca i32
+  %30 = load ptr %1
+  store i32 %30, ptr %29
+  %31 = load ptr %29
+  store i32 %31, ptr %0
+  br label 32
 
-12:
-  %13 = load ptr %0
-  ret i32 %13
+32:
+  %33 = load ptr %0
+  ret i32 %33
 }
 
 define i32 @while_empty() {
@@ -62,49 +110,70 @@ entry:
   br label 1
 
 1:
-  br i32 0, label 2, label 3
-
-2:
-  br label 1
-
-3:
-  store i32 0, ptr %0
-  br label 4
+  %2 = alloca i32
+  store i32 0, ptr %2
+  %3 = load ptr %2
+  br i32 %3, label 4, label 5
 
 4:
-  %5 = load ptr %0
-  ret i32 %5
+  br label 1
+
+5:
+  %6 = alloca i32
+  store i32 0, ptr %6
+  %7 = load ptr %6
+  store i32 %7, ptr %0
+  br label 8
+
+8:
+  %9 = load ptr %0
+  ret i32 %9
 }
 
 define i32 @while_if() {
 entry:
   %0 = alloca i32
   %1 = alloca i32
-  store i32 200, ptr %1
-  br label 2
+  %2 = alloca i32
+  store i32 200, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  br label 4
 
-2:
-  br i32 1, label 3, label 8
-
-3:
-  %4 = load ptr %1
-  br i32 %4, label 5, label 6
-
-5:
-  br label 7
-
-6:
-  store i32 500, ptr %0
-  br label 9
+4:
+  %5 = alloca i32
+  store i32 1, ptr %5
+  %6 = load ptr %5
+  br i32 %6, label 7, label 16
 
 7:
-  br label 2
+  %8 = alloca i32
+  %9 = load ptr %1
+  store i32 %9, ptr %8
+  %10 = load ptr %8
+  br i32 %10, label 11, label 12
 
-8:
-  store i32 0, ptr %0
-  br label 9
+11:
+  br label 15
 
-9:
-  %10 = load ptr %0
-  ret i32 %10
+12:
+  %13 = alloca i32
+  store i32 500, ptr %13
+  %14 = load ptr %13
+  store i32 %14, ptr %0
+  br label 19
+
+15:
+  br label 4
+
+16:
+  %17 = alloca i32
+  store i32 0, ptr %17
+  %18 = load ptr %17
+  store i32 %18, ptr %0
+  br label 19
+
+19:
+  %20 = load ptr %0
+  ret i32 %20
 }

@@ -1,42 +1,100 @@
 int scope() {
     __entry:
     int before_1;
-    before_1 = 0;
+    int __term;
+    __term = 0;
+    before_1 = __term;
     int before_2;
-    before_2 = 1;
+    int __term1;
+    __term1 = 1;
+    before_2 = __term1;
     int before_3;
-    before_3 = 2;
+    int __term2;
+    __term2 = 2;
+    before_3 = __term2;
     int in_4;
-    in_4 = before_3 + 3;
+    int __term3;
+    __term3 = before_3;
+    int __term4;
+    __term4 = 3;
+    int __bin;
+    __bin = __term3 + __term4;
+    in_4 = __bin;
     int after_3;
-    after_3 = 4;
+    int __term5;
+    __term5 = 4;
+    after_3 = __term5;
     int after_2;
-    after_2 = 5;
-    after_2 = after_2 + before_2;
+    int __term6;
+    __term6 = 5;
+    after_2 = __term6;
+    int __term7;
+    __term7 = after_2;
+    int __term8;
+    __term8 = before_2;
+    int __bin1;
+    __bin1 = __term7 + __term8;
+    after_2 = __bin1;
     int after_1;
-    after_1 = 6;
-    return 0;
+    int __term9;
+    __term9 = 6;
+    after_1 = __term9;
+    int __term10;
+    __term10 = 0;
+    return __term10;
 }
 
 int scope_reassign_variable() {
     __entry:
     int cond_1;
-    cond_1 = 1;
-    cond_1 = cond_1 + 1;
+    int __term;
+    __term = 1;
+    cond_1 = __term;
+    int __term1;
+    __term1 = cond_1;
+    int __term2;
+    __term2 = 1;
+    int __bin;
+    __bin = __term1 + __term2;
+    cond_1 = __bin;
     int cond_2;
-    cond_2 = 3;
-    cond_2 = cond_2 + 4;
-    cond_1 = cond_1 + 5;
-    return cond_1;
+    int __term3;
+    __term3 = 3;
+    cond_2 = __term3;
+    int __term4;
+    __term4 = cond_2;
+    int __term5;
+    __term5 = 4;
+    int __bin1;
+    __bin1 = __term4 + __term5;
+    cond_2 = __bin1;
+    int __term6;
+    __term6 = cond_1;
+    int __term7;
+    __term7 = 5;
+    int __bin2;
+    __bin2 = __term6 + __term7;
+    cond_1 = __bin2;
+    int __term8;
+    __term8 = cond_1;
+    return __term8;
 }
 
 int scope_reassign_in_parallel_scopes() {
     __entry:
     int typed_1;
-    typed_1 = 1;
+    int __term;
+    __term = 1;
+    typed_1 = __term;
     int typed_2;
-    typed_2 = 2;
+    int __term1;
+    __term1 = 2;
+    typed_2 = __term1;
     int typed_2;
-    typed_2 = 3;
-    return typed_1;
+    int __term2;
+    __term2 = 3;
+    typed_2 = __term2;
+    int __term3;
+    __term3 = typed_1;
+    return __term3;
 }

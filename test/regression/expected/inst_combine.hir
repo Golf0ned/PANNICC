@@ -1,33 +1,79 @@
 int constant_fold() {
     __entry:
     int i_1;
-    i_1 = 1;
+    int __term;
+    __term = 1;
+    i_1 = __term;
     int j_1;
-    j_1 = i_1 + 13;
+    int __term1;
+    __term1 = i_1;
+    int __term2;
+    __term2 = 13;
+    int __bin;
+    __bin = __term1 + __term2;
+    j_1 = __bin;
     int k_1;
-    k_1 = i_1 + i_1;
+    int __term3;
+    __term3 = i_1;
+    int __term4;
+    __term4 = i_1;
+    int __bin1;
+    __bin1 = __term3 + __term4;
+    k_1 = __bin1;
     int l_1;
-    l_1 = j_1 * k_1;
-    l_1 = l_1 + l_1;
+    int __term5;
+    __term5 = j_1;
+    int __term6;
+    __term6 = k_1;
+    int __bin2;
+    __bin2 = __term5 * __term6;
+    l_1 = __bin2;
+    int __term7;
+    __term7 = l_1;
+    int __term8;
+    __term8 = l_1;
+    int __bin3;
+    __bin3 = __term7 + __term8;
+    l_1 = __bin3;
     int m_1;
-    m_1 = l_1 - i_1;
-    return m_1;
+    int __term9;
+    __term9 = l_1;
+    int __term10;
+    __term10 = i_1;
+    int __bin4;
+    __bin4 = __term9 - __term10;
+    m_1 = __bin4;
+    int __term11;
+    __term11 = m_1;
+    return __term11;
 }
 
 int constant_fold_overflow() {
     __entry:
-    int i_1;
-    i_1 = 2147483647;
-    int j_1;
-    j_1 = i_1 + 1;
-    return j_1;
+    int overflow_1;
+    int __term;
+    __term = 2147483647;
+    int __term1;
+    __term1 = 1;
+    int __bin;
+    __bin = __term + __term1;
+    overflow_1 = __bin;
+    int __term2;
+    __term2 = overflow_1;
+    return __term2;
 }
 
 int constant_fold_underflow() {
     __entry:
-    int i_1;
-    i_1 = 18446744071562067968;
-    int j_1;
-    j_1 = i_1 - 1;
-    return j_1;
+    int underflow_1;
+    int __term;
+    __term = 18446744071562067968;
+    int __term1;
+    __term1 = 1;
+    int __bin;
+    __bin = __term - __term1;
+    underflow_1 = __bin;
+    int __term2;
+    __term2 = underflow_1;
+    return __term2;
 }
