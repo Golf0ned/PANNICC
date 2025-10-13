@@ -29,14 +29,7 @@ buildPassesFromFile(std::string passes_path) {
 
     std::string pass_str;
     while (buffer >> pass_str) {
-        if (pass_str == "mem2reg")
-            pm->addPass(std::make_unique<middleend::Mem2Reg>());
-        else if (pass_str == "simplify_cfg")
-            pm->addPass(std::make_unique<middleend::SimplifyCFG>());
-        else if (pass_str == "inst_combine")
-            pm->addPass(std::make_unique<middleend::InstCombine>());
-        else
-            continue;
+        pm->addPass(pass_str);
     }
 
     return std::move(pm);
