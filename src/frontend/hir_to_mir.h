@@ -15,6 +15,7 @@ namespace frontend {
 
         std::list<std::unique_ptr<mir::BasicBlock>> getResult();
         mir::Value *resolveAtom(Atom *a);
+        mir::Value *getLiteral(uint64_t value, mir::Type type);
         bool startOfBasicBlock();
         void createBasicBlock(std::unique_ptr<mir::Terminator> terminator);
         void connectBasicBlocks();
