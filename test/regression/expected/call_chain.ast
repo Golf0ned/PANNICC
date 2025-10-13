@@ -3,54 +3,34 @@ int first() {
 }
 
 int second() {
-    int res;
-    res = first();
-    res = res + 1;
-    return res;
+    return first() + 1;
 }
 
 int third() {
-    int res;
-    res = second();
-    res = res + 2;
-    return res;
+    return second() + 2;
 }
 
 int fourth() {
-    int res;
-    res = third();
-    res = res + 3;
-    return res;
+    return third() + 3;
 }
 
 int fifth() {
-    int res;
-    res = fourth();
-    res = res + 4;
-    return res;
+    return fourth() + 4;
 }
 
 int sixth() {
-    int res;
-    res = fifth();
-    res = res + 5;
-    return res;
+    return fifth() + 5;
 }
 
 int main() {
+    sixth();
     int res = 0;
-    int buf;
-    buf = first();
-    res = res + buf;
-    buf = second();
-    res = res + buf;
-    buf = third();
-    res = res + buf;
-    buf = fourth();
-    res = res + buf;
-    buf = fifth();
-    res = res + buf;
-    buf = sixth();
-    res = res + buf;
+    res = res + first();
+    res = res + second();
+    res = res + third();
+    res = res + fourth();
+    res = res + fifth();
+    res = res + sixth();
+    res = res + first() + second() + third() + fourth() + fifth() + sixth();
     return res;
 }

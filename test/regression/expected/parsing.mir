@@ -1,0 +1,127 @@
+define i32 @main() {
+entry:
+  %0 = alloca i32
+  store i32 0, ptr %0
+  br label 1
+
+1:
+  %2 = load ptr %0
+  ret i32 %2
+}
+
+define i32 @compound() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  store i32 9, ptr %2
+  %3 = alloca i32
+  store i32 123, ptr %3
+  %4 = alloca i32
+  %5 = load ptr %2
+  %6 = load ptr %3
+  %7 = mul i32 %5, i32 %6
+  store i32 %7, ptr %4
+  %8 = alloca i32
+  store i32 3, ptr %8
+  %9 = alloca i32
+  %10 = load ptr %4
+  %11 = load ptr %8
+  %12 = add i32 %10, i32 %11
+  store i32 %12, ptr %9
+  %13 = alloca i32
+  store i32 123, ptr %13
+  %14 = alloca i32
+  store i32 122, ptr %14
+  %15 = alloca i32
+  %16 = load ptr %13
+  %17 = load ptr %14
+  %18 = sub i32 %16, i32 %17
+  store i32 %18, ptr %15
+  %19 = alloca i32
+  %20 = load ptr %9
+  %21 = load ptr %15
+  %22 = and i32 %20, i32 %21
+  store i32 %22, ptr %19
+  %23 = load ptr %19
+  store i32 %23, ptr %1
+  %24 = alloca i32
+  %25 = alloca i32
+  store i32 1, ptr %25
+  %26 = alloca i32
+  store i32 2, ptr %26
+  %27 = alloca i32
+  store i32 3, ptr %27
+  %28 = alloca i32
+  %29 = load ptr %26
+  %30 = load ptr %27
+  %31 = mul i32 %29, i32 %30
+  store i32 %31, ptr %28
+  %32 = alloca i32
+  %33 = load ptr %25
+  %34 = load ptr %28
+  %35 = add i32 %33, i32 %34
+  store i32 %35, ptr %32
+  %36 = alloca i32
+  store i32 4, ptr %36
+  %37 = alloca i32
+  %38 = load ptr %32
+  %39 = load ptr %36
+  %40 = sub i32 %38, i32 %39
+  store i32 %40, ptr %37
+  %41 = load ptr %37
+  store i32 %41, ptr %24
+  %42 = alloca i32
+  %43 = load ptr %1
+  store i32 %43, ptr %42
+  %44 = alloca i32
+  store i32 2, ptr %44
+  %45 = alloca i32
+  %46 = load ptr %42
+  %47 = load ptr %44
+  %48 = add i32 %46, i32 %47
+  store i32 %48, ptr %45
+  %49 = alloca i32
+  store i32 3, ptr %49
+  %50 = alloca i32
+  %51 = load ptr %45
+  %52 = load ptr %49
+  %53 = add i32 %51, i32 %52
+  store i32 %53, ptr %50
+  %54 = alloca i32
+  store i32 4, ptr %54
+  %55 = alloca i32
+  %56 = load ptr %50
+  %57 = load ptr %54
+  %58 = add i32 %56, i32 %57
+  store i32 %58, ptr %55
+  %59 = alloca i32
+  store i32 5, ptr %59
+  %60 = alloca i32
+  %61 = load ptr %55
+  %62 = load ptr %59
+  %63 = add i32 %61, i32 %62
+  store i32 %63, ptr %60
+  %64 = alloca i32
+  store i32 6, ptr %64
+  %65 = alloca i32
+  %66 = load ptr %60
+  %67 = load ptr %64
+  %68 = add i32 %66, i32 %67
+  store i32 %68, ptr %65
+  %69 = alloca i32
+  %70 = load ptr %24
+  store i32 %70, ptr %69
+  %71 = alloca i32
+  %72 = load ptr %65
+  %73 = load ptr %69
+  %74 = add i32 %72, i32 %73
+  store i32 %74, ptr %71
+  %75 = load ptr %71
+  store i32 %75, ptr %0
+  br label 76
+
+76:
+  %77 = load ptr %0
+  ret i32 %77
+}

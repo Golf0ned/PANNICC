@@ -1,58 +1,94 @@
 int simplify_cfg_delete_orphaned() {
     __entry:
-    goto_if (1) __if_t __if_f;
+    int __term;
+    __term = 1;
+    goto_if (__term) __if_t __if_f;
     __if_t:
-    return 2;
+    int __term1;
+    __term1 = 2;
+    return __term1;
     goto __if_cont;
     __if_f:
-    return 3;
+    int __term2;
+    __term2 = 3;
+    return __term2;
     __if_cont:
 }
 
 int simplify_cfg_merge_straight_line() {
     __entry:
     int val_1;
-    val_1 = 0;
-    goto_if (1) __if_t __if_f;
+    int __term;
+    __term = 0;
+    val_1 = __term;
+    int __term1;
+    __term1 = 1;
+    goto_if (__term1) __if_t __if_f;
     __if_t:
-    goto_if (2) __if_t1 __if_cont1;
+    int __term2;
+    __term2 = 2;
+    goto_if (__term2) __if_t1 __if_cont1;
     __if_t1:
-    return 3;
+    int __term3;
+    __term3 = 3;
+    return __term3;
     __if_cont1:
-    val_1 = val_1 + 4;
+    int __term4;
+    __term4 = val_1;
+    int __term5;
+    __term5 = 4;
+    int __bin;
+    __bin = __term4 + __term5;
+    val_1 = __bin;
     goto __if_cont;
     __if_f:
-    return 5;
+    int __term6;
+    __term6 = 5;
+    return __term6;
     __if_cont:
-    return val_1;
+    int __term7;
+    __term7 = val_1;
+    return __term7;
 }
 
 int simplify_cfg_delete_empty() {
     __entry:
-    goto_if (1) __if_t __if_f;
+    int __term;
+    __term = 1;
+    goto_if (__term) __if_t __if_f;
     __if_t:
-    goto_if (2) __if_t1 __if_f1;
+    int __term1;
+    __term1 = 2;
+    goto_if (__term1) __if_t1 __if_f1;
     __if_t1:
     goto __if_cont1;
     __if_f1:
     __if_cont1:
     goto __if_cont;
     __if_f:
-    goto_if (3) __if_t2 __if_f2;
+    int __term2;
+    __term2 = 3;
+    goto_if (__term2) __if_t2 __if_f2;
     __if_t2:
     goto __if_cont2;
     __if_f2:
     __if_cont2:
     __if_cont:
-    return 4;
+    int __term3;
+    __term3 = 4;
+    return __term3;
 }
 
 int simplify_cfg_empty_loop() {
     __entry:
     __while_cond:
-    goto_if (0) __while_body __while_cont;
+    int __term;
+    __term = 0;
+    goto_if (__term) __while_body __while_cont;
     __while_body:
     goto __while_cond;
     __while_cont:
-    return 0;
+    int __term1;
+    __term1 = 0;
+    return __term1;
 }
