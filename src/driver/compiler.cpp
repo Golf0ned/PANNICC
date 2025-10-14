@@ -7,19 +7,23 @@
 #include "frontend/parser.h"
 #include "middleend/pass_manager.h"
 
+#define PRINT(fmt, ...) (std::println(std::cerr, fmt, ##__VA_ARGS__))
+#define ERROR(fmt, ...) (std::println(std::cerr, "ERROR: " fmt, ##__VA_ARGS__))
+
 enum class OutputLevel { AST, HIR, MIR };
 
 void printHelp(const std::string &program_name) {
-    std::println(std::cerr, "USAGE: {} [options] <file>", program_name);
-    std::println(std::cerr);
-    std::println(std::cerr, "OPTIONS:");
-    std::println(std::cerr, "  --help          Show this help message");
-    std::println(std::cerr, "  -o <file>           Opt level");
-    std::println(std::cerr);
-    std::println(std::cerr, "  --dump-ast      Print AST only");
-    std::println(std::cerr, "  --dump-hir      Print HIR only (desugared AST)");
-    std::println(std::cerr);
-    std::println(std::cerr, "  -O0|1           Opt level");
+    PRINT("USAGE: {} [options] <input-file>", program_name);
+    PRINT("");
+    PRINT("OPTIONS:");
+    PRINT("  --help               Show this help message");
+    PRINT("  -o <file>            Output file");
+    PRINT("");
+    PRINT("  --dump-ast           Print AST only");
+    PRINT("  --dump-hir           Print HIR only (desugared AST)");
+    PRINT("");
+    PRINT("  -O0|1                Opt level");
+    PRINT("  --passes=<passes>    Run comma-separated list of passes");
 }
 
 int main(int argc, char *argv[]) {
@@ -28,10 +32,9 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    std::filesystem::path input_file = "";
-    std::filesystem::path output_file;
+    std::filesystem::path input_file, output_file;
     OutputLevel output_level = OutputLevel::MIR;
-    middleend::PassManager pm = middleend::initializeO1();
+    auto pm = middleend::initializeO1();
 
     for (int i = 1; i < argc; i++) {
         const std::string arg = argv[i];
@@ -56,20 +59,24 @@ int main(int argc, char *argv[]) {
                 pm = middleend::initializeO1();
                 break;
             default:
-                std::println(std::cerr, "Error: invalid opt level \"-O{}\"",
-                             arg.back());
+                ERROR("invalid opt level \"{}\"", arg);
                 return 1;
             }
+        } else if (arg.starts_with("--passes=")) {
+            std::stringstream stream(arg.substr(9));
+            std::string pass;
+            while (std::getline(stream, pass, ',')) {
+                pm->addPass(pass);
+            }
         } else {
-            std::println(std::cerr, "Error: invalid option \"{}\"", arg);
+            ERROR("invalid option \"{}\"", arg);
             printHelp(argv[0]);
             return 1;
         }
     }
 
     if (!std::filesystem::exists(input_file)) {
-        std::println(std::cerr, "Error: file \"{}\" does not exist",
-                     input_file.c_str());
+        ERROR("file \"{}\" does not exist", input_file.c_str());
         return 1;
     }
 
@@ -104,9 +111,12 @@ int main(int argc, char *argv[]) {
 
     middleend::mir::Program mir = frontend::hirToMir(hir);
 
-    pm.runPasses(mir);
+    pm->runPasses(mir);
 
     std::println("{}", mir.toString());
 
     return 0;
 }
+
+#undef PRINT
+#undef ERROR
