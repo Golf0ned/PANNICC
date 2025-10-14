@@ -52,6 +52,9 @@ namespace middleend {
                             case mir::BinaryOp::MUL:
                                 folded_val = lhs * rhs;
                                 break;
+                            case mir::BinaryOp::SDIV:
+                                folded_val = lhs / rhs;
+                                break;
                             case mir::BinaryOp::AND:
                                 folded_val = lhs & rhs;
                                 break;
