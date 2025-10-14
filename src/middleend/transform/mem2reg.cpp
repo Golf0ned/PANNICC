@@ -97,7 +97,7 @@ namespace middleend {
 
                 for (auto [alloca, phi] : phis[bb]) {
                     reaching[alloca] = phi;
-                    for (auto succ : bb->getSuccessors().getEdges()) {
+                    for (auto succ : bb->getSuccessors().getUniqueEdges()) {
                         auto &succ_phis = phis[succ];
                         if (succ_phis.contains(alloca))
                             succ_phis[alloca]->setPredecessor(bb, phi);
@@ -124,7 +124,7 @@ namespace middleend {
                         auto alloca = store->getPtr();
                         auto value = store->getValue();
                         reaching[alloca] = value;
-                        for (auto succ : bb->getSuccessors().getEdges()) {
+                        for (auto succ : bb->getSuccessors().getUniqueEdges()) {
                             auto &succ_phis = phis[succ];
                             if (succ_phis.contains(alloca))
                                 succ_phis[alloca]->setPredecessor(bb, value);
@@ -157,7 +157,7 @@ namespace middleend {
                 }
 
                 visited.insert(bb);
-                for (auto succ : bb->getSuccessors().getEdges()) {
+                for (auto succ : bb->getSuccessors().getUniqueEdges()) {
                     if (visited.contains(succ))
                         continue;
                     worklist.push_back({succ, reaching});
