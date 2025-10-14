@@ -16,6 +16,12 @@ int mul() {
     return a * b;
 }
 
+int div() {
+    int a = 24;
+    int b = 6;
+    return a / b;
+}
+
 int bit_and() {
     int a = 31;
     int b = 4;

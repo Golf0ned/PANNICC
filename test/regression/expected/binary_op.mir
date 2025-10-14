@@ -97,6 +97,39 @@ entry:
   ret i32 %17
 }
 
+define i32 @div() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  store i32 24, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  %4 = alloca i32
+  %5 = alloca i32
+  store i32 6, ptr %5
+  %6 = load ptr %5
+  store i32 %6, ptr %4
+  %7 = alloca i32
+  %8 = load ptr %1
+  store i32 %8, ptr %7
+  %9 = alloca i32
+  %10 = load ptr %4
+  store i32 %10, ptr %9
+  %11 = alloca i32
+  %12 = load ptr %7
+  %13 = load ptr %9
+  %14 = sdiv i32 %12, i32 %13
+  store i32 %14, ptr %11
+  %15 = load ptr %11
+  store i32 %15, ptr %0
+  br label 16
+
+16:
+  %17 = load ptr %0
+  ret i32 %17
+}
+
 define i32 @bit_and() {
 entry:
   %0 = alloca i32
@@ -143,15 +176,14 @@ entry:
   store i32 %5, ptr %4
   %6 = alloca i32
   %7 = load ptr %4
-  %8 = sub i32 0, i32 %7
-  store i32 %8, ptr %6
-  %9 = load ptr %6
-  store i32 %9, ptr %0
-  br label 10
+  store i32 %7, ptr %6
+  %8 = load ptr %6
+  store i32 %8, ptr %0
+  br label 9
 
-10:
-  %11 = load ptr %0
-  ret i32 %11
+9:
+  %10 = load ptr %0
+  ret i32 %10
 }
 
 define i32 @unary_minus() {
