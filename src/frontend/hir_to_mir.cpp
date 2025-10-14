@@ -203,6 +203,7 @@ namespace frontend {
         case frontend::UnaryOp::PLUS:
             // do nothing lol
             un_op_res = value;
+            break;
         case frontend::UnaryOp::MINUS:
             // subtract value from 0
             auto zero = getLiteral(0, mir::Type::I32);
@@ -210,6 +211,7 @@ namespace frontend {
                 type, mir::BinaryOp::SUB, zero, value);
             un_op_res = negate.get();
             cur_instructions.push_back(std::move(negate));
+            break;
         }
 
         mir::InstructionAlloca *ptr =
