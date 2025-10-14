@@ -8,6 +8,7 @@ namespace middleend::mir {
         ADD,
         SUB,
         MUL,
+        SDIV,
         AND,
     };
 
@@ -15,12 +16,15 @@ namespace middleend::mir {
         SGT,
     };
 
+    // clang-format off
     const std::unordered_map<std::string, BinaryOp> strToBinaryOp = {
         {"add", BinaryOp::ADD},
         {"sub", BinaryOp::SUB},
         {"mul", BinaryOp::MUL},
+        {"sdiv", BinaryOp::SDIV},
         {"and", BinaryOp::AND},
     };
+    // clang-format on
 
     const std::unordered_map<std::string, CmpOp> strToCmpOp = {
         {"sgt", CmpOp::SGT},

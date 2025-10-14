@@ -11,6 +11,8 @@ namespace frontend {
             return "-";
         case BinaryOp::MUL:
             return "*";
+        case BinaryOp::DIV:
+            return "*";
         case BinaryOp::AND:
             return "&";
         }
@@ -35,6 +37,8 @@ namespace frontend {
             return middleend::mir::BinaryOp::SUB;
         case BinaryOp::MUL:
             return middleend::mir::BinaryOp::MUL;
+        case BinaryOp::DIV:
+            return middleend::mir::BinaryOp::SDIV;
         case BinaryOp::AND:
             return middleend::mir::BinaryOp::AND;
         }

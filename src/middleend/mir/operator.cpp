@@ -11,6 +11,8 @@ namespace middleend::mir {
             return "sub";
         case BinaryOp::MUL:
             return "mul";
+        case BinaryOp::SDIV:
+            return "sdiv";
         case BinaryOp::AND:
             return "and";
         }
