@@ -10,6 +10,7 @@ namespace frontend {
         ADD,
         SUB,
         MUL,
+        DIV,
         AND,
     };
 
@@ -18,12 +19,15 @@ namespace frontend {
         MINUS,
     };
 
+    // clang-format off
     const std::unordered_map<std::string, BinaryOp> strToBinaryOp = {
         {"+", BinaryOp::ADD},
         {"-", BinaryOp::SUB},
         {"*", BinaryOp::MUL},
+        {"/", BinaryOp::DIV},
         {"&", BinaryOp::AND},
     };
+    // clang-format on
 
     const std::unordered_map<std::string, UnaryOp> strToUnaryOp = {
         {"+", UnaryOp::PLUS},
