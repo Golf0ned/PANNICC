@@ -150,9 +150,10 @@ namespace frontend {
     struct expr_3;
     struct multiply
         : pegtl_try<pegtl::seq<ignorable, asterisk, ignorable, expr_2>> {};
-    // struct divide : pegtl::seq<expr_3, ignorable, slash, ignorable, expr_2>
-    // {};
-    struct expr_3 : pegtl::seq<expr_2, pegtl::star<multiply>> {};
+    struct divide : pegtl_try<pegtl::seq<ignorable, slash, ignorable, expr_2>> {
+    };
+    struct expr_3
+        : pegtl::seq<expr_2, pegtl::star<pegtl::sor<multiply, divide>>> {};
 
     // 4
     struct expr_4;
@@ -297,6 +298,17 @@ namespace frontend {
             auto left = popExpr();
             auto expr = std::make_unique<ast::BinaryOpExpr>(
                 BinaryOp::MUL, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<divide> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::DIV, std::move(left), std::move(right));
             parsed_exprs.push_back(std::move(expr));
         }
     };
