@@ -143,8 +143,10 @@ namespace frontend {
     struct unary_plus : pegtl_try<pegtl::seq<plus, ignorable, expr_2>> {};
     struct unary_minus : pegtl_try<pegtl::seq<minus, ignorable, expr_2>> {};
     // struct unary_logical_not : pegtl::seq<bang, ignorable, expr_2> {};
-    // struct unary_bitwise_not : pegtl::seq<tilde, ignorable, expr_2> {};
-    struct expr_2 : pegtl::sor<expr_1, unary_plus, unary_minus> {};
+    struct unary_bitwise_not : pegtl_try<pegtl::seq<tilde, ignorable, expr_2>> {
+    };
+    struct expr_2
+        : pegtl::sor<expr_1, unary_plus, unary_minus, unary_bitwise_not> {};
 
     // 3
     struct expr_3;
@@ -168,7 +170,17 @@ namespace frontend {
         : pegtl_try<pegtl::seq<ignorable, ampersand, ignorable, expr_4>> {};
     struct expr_8 : pegtl::seq<expr_4, pegtl::star<bitwise_and>> {};
 
-    struct expr : expr_8 {};
+    // 9
+    struct bitwise_xor
+        : pegtl_try<pegtl::seq<ignorable, caret, ignorable, expr_8>> {};
+    struct expr_9 : pegtl::seq<expr_8, pegtl::star<bitwise_xor>> {};
+
+    // 10
+    struct bitwise_or
+        : pegtl_try<pegtl::seq<ignorable, pipe, ignorable, expr_8>> {};
+    struct expr_10 : pegtl::seq<expr_9, pegtl::star<bitwise_or>> {};
+
+    struct expr : expr_10 {};
 
     struct type
         : pegtl::sor<pegtl_try<keyword_long_long>, pegtl_try<keyword_long>,
@@ -291,6 +303,16 @@ namespace frontend {
         }
     };
 
+    template <> struct action<unary_bitwise_not> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto back = popExpr();
+            auto expr = std::make_unique<ast::UnaryOpExpr>(UnaryOp::NOT,
+                                                           std::move(back));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
     template <> struct action<multiply> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
@@ -342,6 +364,28 @@ namespace frontend {
             auto left = popExpr();
             auto expr = std::make_unique<ast::BinaryOpExpr>(
                 BinaryOp::AND, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<bitwise_xor> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::XOR, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<bitwise_or> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::OR, std::move(left), std::move(right));
             parsed_exprs.push_back(std::move(expr));
         }
     };
