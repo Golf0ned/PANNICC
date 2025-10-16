@@ -15,6 +15,10 @@ namespace middleend::mir {
             return "sdiv";
         case BinaryOp::AND:
             return "and";
+        case BinaryOp::OR:
+            return "or";
+        case BinaryOp::XOR:
+            return "xor";
         }
         std::unreachable();
     }
