@@ -28,6 +28,18 @@ int bit_and() {
     return a & b;
 }
 
+int bit_or() {
+    int a = 12;
+    int b = 3;
+    return a | b;
+}
+
+int bit_xor() {
+    int a = 15;
+    int b = 4;
+    return a ^ b;
+}
+
 int unary_plus() {
     int a = 42;
     return +a;
@@ -36,4 +48,9 @@ int unary_plus() {
 int unary_minus() {
     int a = 42;
     return -a;
+}
+
+int unary_bitwise_not() {
+    int a = 42;
+    return ~a;
 }
