@@ -198,19 +198,28 @@ namespace frontend {
         auto type = toMir(Type::INT);
         mir::Value *value = resolveAtom(i->getValue().get());
 
-        mir::Value *un_op_res;
+        mir::Value *un_op_res, *literal;
+        std::unique_ptr<mir::InstructionBinaryOp> bin_op;
         switch (i->getOp()) {
-        case frontend::UnaryOp::PLUS:
+        case UnaryOp::PLUS:
             // do nothing lol
             un_op_res = value;
             break;
-        case frontend::UnaryOp::MINUS:
+        case UnaryOp::MINUS:
             // subtract value from 0
-            auto zero = getLiteral(0, mir::Type::I32);
-            auto negate = std::make_unique<mir::InstructionBinaryOp>(
-                type, mir::BinaryOp::SUB, zero, value);
-            un_op_res = negate.get();
-            cur_instructions.push_back(std::move(negate));
+            literal = getLiteral(0, mir::Type::I32);
+            bin_op = std::make_unique<mir::InstructionBinaryOp>(
+                type, mir::BinaryOp::SUB, literal, value);
+            un_op_res = bin_op.get();
+            cur_instructions.push_back(std::move(bin_op));
+            break;
+        case UnaryOp::NOT:
+            // xor with -1
+            literal = getLiteral(-1, mir::Type::I32);
+            bin_op = std::make_unique<mir::InstructionBinaryOp>(
+                type, mir::BinaryOp::XOR, value, literal);
+            un_op_res = bin_op.get();
+            cur_instructions.push_back(std::move(bin_op));
             break;
         }
 
