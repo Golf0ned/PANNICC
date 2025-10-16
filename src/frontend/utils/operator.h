@@ -12,11 +12,14 @@ namespace frontend {
         MUL,
         DIV,
         AND,
+        OR,
+        XOR,
     };
 
     enum class UnaryOp {
         PLUS,
         MINUS,
+        NOT,
     };
 
     // clang-format off
@@ -26,12 +29,15 @@ namespace frontend {
         {"*", BinaryOp::MUL},
         {"/", BinaryOp::DIV},
         {"&", BinaryOp::AND},
+        {"|", BinaryOp::OR},
+        {"^", BinaryOp::XOR},
     };
     // clang-format on
 
     const std::unordered_map<std::string, UnaryOp> strToUnaryOp = {
         {"+", UnaryOp::PLUS},
         {"-", UnaryOp::MINUS},
+        {"~", UnaryOp::NOT},
     };
 
     std::string toString(BinaryOp op);

@@ -10,6 +10,8 @@ namespace middleend::mir {
         MUL,
         SDIV,
         AND,
+        OR,
+        XOR,
     };
 
     enum class CmpOp {
@@ -23,6 +25,8 @@ namespace middleend::mir {
         {"mul", BinaryOp::MUL},
         {"sdiv", BinaryOp::SDIV},
         {"and", BinaryOp::AND},
+        {"or", BinaryOp::OR},
+        {"xor", BinaryOp::XOR},
     };
     // clang-format on
 
