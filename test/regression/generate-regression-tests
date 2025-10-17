@@ -2,7 +2,7 @@
 
 PANNICC_DIR="${HOME}/code/projects/PANNICC"
 
-PANNICC="${PANNICC_DIR}/debug/bin/pannicc"
+PANNICC="${PANNICC_DIR}/build/bin/pannicc"
 INPUT_DIR="${PANNICC_DIR}/test/regression/input"
 OUTPUT_DIR="${PANNICC_DIR}/test/regression/expected"
 
