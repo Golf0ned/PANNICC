@@ -6,8 +6,8 @@ namespace middleend {
     class NumberIR : public AnalysisPass {
     public:
         void run(mir::Program &p) override;
-        int bbCmp(mir::BasicBlock *first, mir::BasicBlock *second);
-        int instCmp(mir::Value *first, mir::Value *second);
+        uint64_t getNumber(mir::BasicBlock *bb);
+        uint64_t getNumber(mir::Value *i);
 
     private:
         std::unordered_map<mir::BasicBlock *, uint64_t> basic_block_ids;
