@@ -1,19 +1,19 @@
 #include <filesystem>
 #include <iostream>
-#include <print>
 
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"
 #include "middleend/pass_manager.h"
 
-#define PRINT(fmt, ...) (std::println(std::cerr, fmt, ##__VA_ARGS__))
-#define ERROR(fmt, ...) (std::println(std::cerr, "ERROR: " fmt, ##__VA_ARGS__))
+#define PRINT(str) (std::cerr << str << std::endl)
+#define ERROR(str) (std::cerr << "ERROR: " << str << std::endl)
+#define OUTPUT(str) (std::cout << str << std::endl)
 
 enum class OutputLevel { AST, HIR, MIR };
 
 void printHelp(const std::string &program_name) {
-    PRINT("USAGE: {} [options] <input-file>", program_name);
+    PRINT("USAGE: " + program_name + " [options] <input-file>");
     PRINT("");
     PRINT("OPTIONS:");
     PRINT("  --help               Show this help message");
@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
                 pm = middleend::initializeO1();
                 break;
             default:
-                ERROR("invalid opt level \"{}\"", arg);
+                ERROR("invalid opt level \"" + arg + "\"");
                 return 1;
             }
         } else if (arg.starts_with("--passes=")) {
@@ -69,14 +69,14 @@ int main(int argc, char *argv[]) {
                 pm->addPass(pass);
             }
         } else {
-            ERROR("invalid option \"{}\"", arg);
+            ERROR("invalid option \"" + arg + "\"");
             printHelp(argv[0]);
             return 1;
         }
     }
 
     if (!std::filesystem::exists(input_file)) {
-        ERROR("file \"{}\" does not exist", input_file.c_str());
+        ERROR("file \"" + input_file.string() + "\" does not exist");
         return 1;
     }
 
@@ -99,13 +99,13 @@ int main(int argc, char *argv[]) {
 
     frontend::ast::Program ast = frontend::parse(input_file);
     if (output_level == OutputLevel::AST) {
-        std::println("{}", ast.toString());
+        OUTPUT(ast.toString());
         return 0;
     }
 
     frontend::hir::Program hir = frontend::astToHir(ast);
     if (output_level == OutputLevel::HIR) {
-        std::println("{}", hir.toString());
+        OUTPUT(hir.toString());
         return 0;
     }
 
@@ -113,10 +113,11 @@ int main(int argc, char *argv[]) {
 
     pm->runPasses(mir);
 
-    std::println("{}", mir.toString());
+    OUTPUT(mir.toString());
 
     return 0;
 }
 
 #undef PRINT
 #undef ERROR
+#undef OUTPUT
