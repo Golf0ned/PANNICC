@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <map>
 #include <ranges>
 #include <unordered_set>
 
@@ -54,9 +56,10 @@ namespace middleend {
                 }
             }
 
-            std::unordered_map<mir::BasicBlock *,
-                               std::unordered_map<mir::InstructionAlloca *,
-                                                  mir::InstructionPhi *>>
+            std::unordered_map<
+                mir::BasicBlock *,
+                std::unordered_map<mir::InstructionAlloca *,
+                                   std::unique_ptr<mir::InstructionPhi>>>
                 phis;
             for (auto const &[alloca, def_blocks] : defs) {
                 mir::Type type = alloca->getAllocType();
@@ -70,9 +73,8 @@ namespace middleend {
                         if (visited.contains(bb))
                             continue;
 
-                        auto phi = std::make_unique<mir::InstructionPhi>(type);
-                        phis[bb][alloca] = phi.get();
-                        bb->getInstructions().push_front(std::move(phi));
+                        phis[bb][alloca] =
+                            std::make_unique<mir::InstructionPhi>(type);
 
                         visited.insert(bb);
                         if (!def_blocks.contains(bb))
@@ -95,12 +97,12 @@ namespace middleend {
                 auto reaching = std::move(worklist.back().second);
                 worklist.pop_back();
 
-                for (auto [alloca, phi] : phis[bb]) {
-                    reaching[alloca] = phi;
+                for (auto &[alloca, phi] : phis[bb]) {
+                    reaching[alloca] = phi.get();
                     for (auto succ : bb->getSuccessors().getUniqueEdges()) {
                         auto &succ_phis = phis[succ];
                         if (succ_phis.contains(alloca))
-                            succ_phis[alloca]->setPredecessor(bb, phi);
+                            succ_phis[alloca]->setPredecessor(bb, phi.get());
                     }
                 }
 
@@ -163,6 +165,63 @@ namespace middleend {
                     worklist.push_back({succ, reaching});
                 }
             }
+
+            //
+            // Finalize phis
+            //
+            auto cmp_phi = [&](std::unique_ptr<mir::InstructionPhi> &first,
+                               std::unique_ptr<mir::InstructionPhi> &second) {
+                auto first_preds = first->getPredecessors(),
+                     second_preds = second->getPredecessors();
+                auto first_size = first_preds.size(),
+                     second_size = second_preds.size();
+
+                if (first_size != second_size)
+                    return first_size < second_size;
+
+                std::map<uint64_t, uint64_t> first_map, second_map;
+                for (auto [bb, val] : first_preds)
+                    first_map[nir->getNumber(bb)] = nir->getNumber(val);
+                for (auto [bb, val] : second_preds)
+                    second_map[nir->getNumber(bb)] = nir->getNumber(val);
+
+                auto first_iter = first_map.begin(),
+                     second_iter = second_map.begin();
+                while (first_iter != first_map.end()) {
+                    if (*first_iter != *second_iter) {
+                        auto [first_bb, first_val] = *first_iter;
+                        auto [second_bb, second_val] = *second_iter;
+                        return first_bb < second_bb ||
+                               first_bb == second_bb && first_val < second_val;
+                    }
+                    first_iter++;
+                    second_iter++;
+                }
+
+                return false;
+            };
+            for (auto &[bb, map] : phis) {
+                std::vector<std::unique_ptr<mir::InstructionPhi>> to_sort;
+                for (auto &[_, phi] : map) {
+                    switch (phi->getPredecessors().size()) {
+                    default:
+                        to_sort.push_back(std::move(phi));
+                        continue;
+                    case 0: // empty phi: omit
+                        continue;
+                    case 1: // single branch phi: replace use with value
+                        ReplaceUsesVisitor visitor(
+                            phi.get(), phi->getPredecessors().begin()->second);
+                        for (auto &[use, _] : phi->getUses())
+                            use->accept(&visitor);
+                        continue;
+                    }
+                }
+
+                std::sort(to_sort.begin(), to_sort.end(), cmp_phi);
+                for (auto &phi : to_sort)
+                    bb->getInstructions().push_front(std::move(phi));
+            }
         }
     }
 
@@ -173,6 +232,13 @@ namespace middleend {
             if (dt) {
                 this->dt = dt;
                 required_analyses.push_back(dt);
+                continue;
+            }
+
+            auto nir = dynamic_cast<NumberIR *>(pass.get());
+            if (nir) {
+                this->nir = nir;
+                required_analyses.push_back(nir);
             }
         }
 
@@ -181,6 +247,13 @@ namespace middleend {
             this->dt = dt.get();
             required_analyses.push_back(dt.get());
             analyses.push_back(std::move(dt));
+        }
+
+        if (!this->nir) {
+            auto nir = std::make_unique<NumberIR>();
+            this->nir = nir.get();
+            required_analyses.push_back(nir.get());
+            analyses.push_back(std::move(nir));
         }
     }
 } // namespace middleend
