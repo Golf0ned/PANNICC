@@ -22,25 +22,15 @@ namespace middleend {
         }
     }
 
-    int NumberIR::bbCmp(mir::BasicBlock *first, mir::BasicBlock *second) {
-        uint64_t first_val = basic_block_ids.at(first);
-        uint64_t second_val = basic_block_ids.at(second);
-
-        if (first_val > second_val)
-            return 1;
-        if (first_val < second_val)
-            return -1;
-        return 0;
+    uint64_t NumberIR::getNumber(mir::BasicBlock *bb) {
+        return basic_block_ids.at(bb);
     }
 
-    int NumberIR::instCmp(mir::Value *first, mir::Value *second) {
-        uint64_t first_val = instruction_ids.at(first);
-        uint64_t second_val = instruction_ids.at(second);
-
-        if (first_val > second_val)
-            return 1;
-        if (first_val < second_val)
-            return -1;
-        return 0;
+    uint64_t NumberIR::getNumber(mir::Value *i) {
+        if (instruction_ids.contains(i))
+            return instruction_ids.at(i);
+        // If not found, -1
+        // that's always going to be mapped to a basic block so who cares
+        return -1;
     }
 } // namespace middleend
