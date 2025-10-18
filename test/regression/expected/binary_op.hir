@@ -74,6 +74,44 @@ int div() {
     return __bin;
 }
 
+int lshift() {
+    __entry:
+    int a_1;
+    int __term;
+    __term = 1;
+    a_1 = __term;
+    int b_1;
+    int __term1;
+    __term1 = 4;
+    b_1 = __term1;
+    int __term2;
+    __term2 = a_1;
+    int __term3;
+    __term3 = b_1;
+    int __bin;
+    __bin = __term2 << __term3;
+    return __bin;
+}
+
+int rshift() {
+    __entry:
+    int a_1;
+    int __term;
+    __term = 16;
+    a_1 = __term;
+    int b_1;
+    int __term1;
+    __term1 = 3;
+    b_1 = __term1;
+    int __term2;
+    __term2 = a_1;
+    int __term3;
+    __term3 = b_1;
+    int __bin;
+    __bin = __term2 >> __term3;
+    return __bin;
+}
+
 int bit_and() {
     __entry:
     int a_1;
