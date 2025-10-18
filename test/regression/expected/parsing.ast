@@ -6,3 +6,7 @@ int compound() {
     int j = 1 + 2 * 3 - 4;
     return i + 2 + 3 + 4 + 5 + 6 + j;
 }
+
+int parens() {
+    return 4 * (3 - (2 - 1));
+}
