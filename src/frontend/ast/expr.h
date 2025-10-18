@@ -24,6 +24,16 @@ namespace frontend::ast {
         std::unique_ptr<Atom> atom;
     };
 
+    class ParenExpr : public Expr {
+    public:
+        ParenExpr(std::unique_ptr<Expr> body);
+        std::unique_ptr<Expr> &getBody();
+        void accept(ExprVisitor *visitor);
+
+    private:
+        std::unique_ptr<Expr> body;
+    };
+
     class CallExpr : public Expr {
     public:
         CallExpr(std::unique_ptr<AtomIdentifier> callee);
@@ -66,6 +76,7 @@ namespace frontend::ast {
     public:
         virtual void visit(Expr *e) = 0;
         virtual void visit(TerminalExpr *e) = 0;
+        virtual void visit(ParenExpr *e) = 0;
         virtual void visit(CallExpr *e) = 0;
         virtual void visit(UnaryOpExpr *e) = 0;
         virtual void visit(BinaryOpExpr *e) = 0;

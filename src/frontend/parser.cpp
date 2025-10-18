@@ -122,6 +122,7 @@ namespace frontend {
     // Expression
     // Refer to operator precedence:
     // https://en.cppreference.com/w/c/language/operator_precedence.html
+    struct expr;
 
     // 0
     struct identifier
@@ -135,8 +136,10 @@ namespace frontend {
     struct call : pegtl::seq<identifier, ignorable, left_paren, ignorable,
                              // TODO: parameter list
                              right_paren> {};
+    struct parens
+        : pegtl::seq<left_paren, ignorable, expr, ignorable, right_paren> {};
     struct value : pegtl::sor<identifier, number> {};
-    struct expr_1 : pegtl::sor<pegtl_try<call>, value> {};
+    struct expr_1 : pegtl::sor<pegtl_try<call>, pegtl_try<parens>, value> {};
 
     // 2
     struct expr_2;
@@ -290,6 +293,15 @@ namespace frontend {
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto callee = popIdentifier();
             auto expr = std::make_unique<ast::CallExpr>(std::move(callee));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<parens> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto back = popExpr();
+            auto expr = std::make_unique<ast::ParenExpr>(std::move(back));
             parsed_exprs.push_back(std::move(expr));
         }
     };

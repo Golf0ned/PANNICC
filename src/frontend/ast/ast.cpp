@@ -168,6 +168,11 @@ namespace frontend::ast {
         res = e->getAtom()->toString(*symbol_table);
     }
 
+    void ToStringVisitor::visit(ParenExpr *e) {
+        e->getBody()->accept(this);
+        res = '(' + res + ')';
+    }
+
     void ToStringVisitor::visit(CallExpr *e) {
         // TODO: function params
         res = e->getCallee()->toString(*symbol_table) + "()";

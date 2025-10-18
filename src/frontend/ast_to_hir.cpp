@@ -256,6 +256,10 @@ namespace frontend {
         result.push_back(std::move(new_assign));
     }
 
+    void ASTToHIRVisitor::visit(ast::ParenExpr *e) {
+        e->getBody()->accept(this);
+    }
+
     void ASTToHIRVisitor::visit(ast::CallExpr *e) {
         auto type = Type::INT;
         auto var_declare = makeTemp("call");

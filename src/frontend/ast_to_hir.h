@@ -46,6 +46,7 @@ namespace frontend {
 
         void visit(ast::Expr *e) override;
         void visit(ast::TerminalExpr *e) override;
+        void visit(ast::ParenExpr *e) override;
         void visit(ast::CallExpr *e) override;
         void visit(ast::UnaryOpExpr *e) override;
         void visit(ast::BinaryOpExpr *e) override;

@@ -8,6 +8,12 @@ namespace frontend::ast {
 
     void TerminalExpr::accept(ExprVisitor *visitor) { visitor->visit(this); }
 
+    ParenExpr::ParenExpr(std::unique_ptr<Expr> body) : body(std::move(body)) {}
+
+    std::unique_ptr<Expr> &ParenExpr::getBody() { return body; }
+
+    void ParenExpr::accept(ExprVisitor *visitor) { visitor->visit(this); }
+
     CallExpr::CallExpr(std::unique_ptr<AtomIdentifier> callee)
         : callee(std::move(callee)) {}
 
