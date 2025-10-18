@@ -1,64 +1,143 @@
 int first() {
     __entry:
-    return 1;
+    int __term;
+    __term = 1;
+    return __term;
 }
 
 int second() {
     __entry:
-    int res_1;
-    res_1 = first();
-    res_1 = res_1 + 1;
-    return res_1;
+    int __call;
+    __call = first();
+    int __term;
+    __term = 1;
+    int __bin;
+    __bin = __call + __term;
+    return __bin;
 }
 
 int third() {
     __entry:
-    int res_1;
-    res_1 = second();
-    res_1 = res_1 + 2;
-    return res_1;
+    int __call;
+    __call = second();
+    int __term;
+    __term = 2;
+    int __bin;
+    __bin = __call + __term;
+    return __bin;
 }
 
 int fourth() {
     __entry:
-    int res_1;
-    res_1 = third();
-    res_1 = res_1 + 3;
-    return res_1;
+    int __call;
+    __call = third();
+    int __term;
+    __term = 3;
+    int __bin;
+    __bin = __call + __term;
+    return __bin;
 }
 
 int fifth() {
     __entry:
-    int res_1;
-    res_1 = fourth();
-    res_1 = res_1 + 4;
-    return res_1;
+    int __call;
+    __call = fourth();
+    int __term;
+    __term = 4;
+    int __bin;
+    __bin = __call + __term;
+    return __bin;
 }
 
 int sixth() {
     __entry:
-    int res_1;
-    res_1 = fifth();
-    res_1 = res_1 + 5;
-    return res_1;
+    int __call;
+    __call = fifth();
+    int __term;
+    __term = 5;
+    int __bin;
+    __bin = __call + __term;
+    return __bin;
 }
 
 int main() {
     __entry:
+    int __call;
+    __call = sixth();
     int res_1;
-    res_1 = 0;
-    int buf_1;
-    buf_1 = first();
-    res_1 = res_1 + buf_1;
-    buf_1 = second();
-    res_1 = res_1 + buf_1;
-    buf_1 = third();
-    res_1 = res_1 + buf_1;
-    buf_1 = fourth();
-    res_1 = res_1 + buf_1;
-    buf_1 = fifth();
-    res_1 = res_1 + buf_1;
-    buf_1 = sixth();
-    res_1 = res_1 + buf_1;
-    return res_1;
+    int __term;
+    __term = 0;
+    res_1 = __term;
+    int __term1;
+    __term1 = res_1;
+    int __call1;
+    __call1 = first();
+    int __bin;
+    __bin = __term1 + __call1;
+    res_1 = __bin;
+    int __term2;
+    __term2 = res_1;
+    int __call2;
+    __call2 = second();
+    int __bin1;
+    __bin1 = __term2 + __call2;
+    res_1 = __bin1;
+    int __term3;
+    __term3 = res_1;
+    int __call3;
+    __call3 = third();
+    int __bin2;
+    __bin2 = __term3 + __call3;
+    res_1 = __bin2;
+    int __term4;
+    __term4 = res_1;
+    int __call4;
+    __call4 = fourth();
+    int __bin3;
+    __bin3 = __term4 + __call4;
+    res_1 = __bin3;
+    int __term5;
+    __term5 = res_1;
+    int __call5;
+    __call5 = fifth();
+    int __bin4;
+    __bin4 = __term5 + __call5;
+    res_1 = __bin4;
+    int __term6;
+    __term6 = res_1;
+    int __call6;
+    __call6 = sixth();
+    int __bin5;
+    __bin5 = __term6 + __call6;
+    res_1 = __bin5;
+    int __term7;
+    __term7 = res_1;
+    int __call7;
+    __call7 = first();
+    int __bin6;
+    __bin6 = __term7 + __call7;
+    int __call8;
+    __call8 = second();
+    int __bin7;
+    __bin7 = __bin6 + __call8;
+    int __call9;
+    __call9 = third();
+    int __bin8;
+    __bin8 = __bin7 + __call9;
+    int __call10;
+    __call10 = fourth();
+    int __bin9;
+    __bin9 = __bin8 + __call10;
+    int __call11;
+    __call11 = fifth();
+    int __bin10;
+    __bin10 = __bin9 + __call11;
+    int __call12;
+    __call12 = sixth();
+    int __bin11;
+    __bin11 = __bin10 + __call12;
+    res_1 = __bin11;
+    int __term8;
+    __term8 = res_1;
+    return __term8;
 }

@@ -6,15 +6,24 @@
 #include "frontend/parser.h"
 #include "middleend/pass_manager.h"
 
+#define PRINT(str) (std::cerr << str << std::endl)
+#define ERROR(str) (std::cerr << "ERROR: " << str << std::endl)
+#define OUTPUT(str) (std::cout << str << std::endl)
+
+enum class OutputLevel { AST, HIR, MIR };
+
 void printHelp(const std::string &program_name) {
-    std::cerr << "USAGE: " << program_name << " [options] <file>" << std::endl;
-    std::cerr << std::endl;
-    std::cerr << "OPTIONS:" << std::endl;
-    std::cerr << "  --help          Show this help message" << std::endl;
-    std::cerr << std::endl;
-    std::cerr << "  --dump-ast      Print AST only" << std::endl;
-    std::cerr << "  --dump-hir      Print HIR only (desugared AST)"
-              << std::endl;
+    PRINT("USAGE: " + program_name + " [options] <input-file>");
+    PRINT("");
+    PRINT("OPTIONS:");
+    PRINT("  --help               Show this help message");
+    PRINT("  -o <file>            Output file");
+    PRINT("");
+    PRINT("  --dump-ast           Print AST only");
+    PRINT("  --dump-hir           Print HIR only (desugared AST)");
+    PRINT("");
+    PRINT("  -O0|1                Opt level");
+    PRINT("  --passes=<passes>    Run comma-separated list of passes");
 }
 
 int main(int argc, char *argv[]) {
@@ -23,10 +32,9 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    std::filesystem::path input_file = "";
-    bool ast_only = false;
-    bool hir_only = false;
-    middleend::PassManager pm = middleend::initializeO1();
+    std::filesystem::path input_file, output_file;
+    OutputLevel output_level = OutputLevel::MIR;
+    auto pm = middleend::initializeO1();
 
     for (int i = 1; i < argc; i++) {
         const std::string arg = argv[i];
@@ -36,10 +44,12 @@ int main(int argc, char *argv[]) {
         } else if (arg == "--help") {
             printHelp(argv[0]);
             return 1;
+        } else if (arg == "-o") {
+            output_file = argv[++i];
         } else if (arg == "--dump-ast") {
-            ast_only = true;
+            output_level = OutputLevel::AST;
         } else if (arg == "--dump-hir") {
-            hir_only = true;
+            output_level = OutputLevel::HIR;
         } else if (arg.starts_with("-O") && arg.size() == 3) {
             switch (arg.back()) {
             case '0':
@@ -49,41 +59,65 @@ int main(int argc, char *argv[]) {
                 pm = middleend::initializeO1();
                 break;
             default:
-                std::cerr << "Error: invalid opt level \"-O" << arg.back()
-                          << "\"" << std::endl;
+                ERROR("invalid opt level \"" + arg + "\"");
                 return 1;
             }
+        } else if (arg.starts_with("--passes=")) {
+            std::stringstream stream(arg.substr(9));
+            std::string pass;
+            while (std::getline(stream, pass, ',')) {
+                pm->addPass(pass);
+            }
         } else {
-            std::cerr << "Error: invalid option \"" << argv[i] << "\""
-                      << std::endl;
+            ERROR("invalid option \"" + arg + "\"");
             printHelp(argv[0]);
             return 1;
         }
     }
 
     if (!std::filesystem::exists(input_file)) {
-        std::cerr << "Error: file " << input_file << " does not exist"
-                  << std::endl;
+        ERROR("file \"" + input_file.string() + "\" does not exist");
         return 1;
     }
 
+    if (output_file.empty()) {
+        output_file = input_file.stem();
+        switch (output_level) {
+        case OutputLevel::AST:
+            output_file.replace_extension(".ast");
+            break;
+        case OutputLevel::HIR:
+            output_file.replace_extension(".hir");
+            break;
+        case OutputLevel::MIR:
+            output_file.replace_extension(".MIR");
+            break;
+        }
+    }
+
+    // TODO: check paths + write to paths
+
     frontend::ast::Program ast = frontend::parse(input_file);
-    if (ast_only) {
-        std::cout << ast.toString() << std::endl;
+    if (output_level == OutputLevel::AST) {
+        OUTPUT(ast.toString());
         return 0;
     }
 
     frontend::hir::Program hir = frontend::astToHir(ast);
-    if (hir_only) {
-        std::cout << hir.toString() << std::endl;
+    if (output_level == OutputLevel::HIR) {
+        OUTPUT(hir.toString());
         return 0;
     }
 
     middleend::mir::Program mir = frontend::hirToMir(hir);
 
-    pm.runPasses(mir);
+    pm->runPasses(mir);
 
-    std::cout << mir.toString() << std::endl;
+    OUTPUT(mir.toString());
 
     return 0;
 }
+
+#undef PRINT
+#undef ERROR
+#undef OUTPUT

@@ -1,3 +1,3 @@
 mem2reg
-instcombine
+inst_combine
 simplify_cfg

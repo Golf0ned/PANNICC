@@ -15,6 +15,7 @@ namespace frontend {
 
         std::list<std::unique_ptr<mir::BasicBlock>> getResult();
         mir::Value *resolveAtom(Atom *a);
+        mir::Value *getLiteral(uint64_t value, mir::Type type);
         bool startOfBasicBlock();
         void createBasicBlock(std::unique_ptr<mir::Terminator> terminator);
         void connectBasicBlocks();
@@ -23,6 +24,7 @@ namespace frontend {
         void visit(hir::Label *l) override;
         void visit(hir::InstructionDeclaration *i) override;
         void visit(hir::InstructionAssignValue *i) override;
+        void visit(hir::InstructionAssignUnaryOp *i) override;
         void visit(hir::InstructionAssignBinaryOp *i) override;
         void visit(hir::InstructionReturn *i) override;
         void visit(hir::InstructionCall *i) override;

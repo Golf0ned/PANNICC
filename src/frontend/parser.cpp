@@ -6,6 +6,7 @@
 #include <tao/pegtl/contrib/raw_string.hpp>
 
 #include "frontend/ast/ast.h"
+#include "frontend/ast/expr.h"
 #include "frontend/ast/instruction.h"
 #include "frontend/parser.h"
 #include "frontend/utils/atom.h"
@@ -16,27 +17,25 @@
 namespace pegtl = tao::pegtl;
 using namespace pegtl;
 
-template <typename Rule>
-using pegtl_apply_if_match = pegtl::seq<pegtl::at<Rule>, Rule>;
+template <typename Rule> using pegtl_try = pegtl::seq<pegtl::at<Rule>, Rule>;
 
 namespace frontend {
     enum class TokenType {
         NUMBER,
         IDENTIFIER,
-        BINARY_OP,
     };
 
     using Token = std::pair<std::string, TokenType>;
 
     std::unique_ptr<SymbolTable> symbol_table;
     std::vector<Token> parsed_tokens;
+    std::vector<std::unique_ptr<ast::Expr>> parsed_exprs;
     std::vector<std::unique_ptr<ast::Scope>> active_scopes;
 
     std::unique_ptr<Atom> popAtom() {
         auto [token_val, token_type] = parsed_tokens.back();
         parsed_tokens.pop_back();
         if (token_type == TokenType::NUMBER) {
-            // TODO: generalize for other types
             long long parsed_val = std::stoll(token_val);
             int32_t truncated = static_cast<int32_t>(parsed_val);
             uint64_t val =
@@ -54,10 +53,10 @@ namespace frontend {
             symbol_table->addSymbol(token_val));
     }
 
-    BinaryOp popBinOp() {
-        auto [token_val, token_type] = parsed_tokens.back();
-        parsed_tokens.pop_back();
-        return strToBinaryOp.at(token_val);
+    std::unique_ptr<ast::Expr> popExpr() {
+        auto expr = std::move(parsed_exprs.back());
+        parsed_exprs.pop_back();
+        return expr;
     }
 
     std::unique_ptr<ast::Instruction> popInstruction() {
@@ -99,8 +98,15 @@ namespace frontend {
     struct plus : pegtl::one<'+'> {};
     struct minus : pegtl::one<'-'> {};
     struct asterisk : pegtl::one<'*'> {};
+    struct slash : pegtl::one<'/'> {};
     struct ampersand : pegtl::one<'&'> {};
+    struct pipe : pegtl::one<'|'> {};
+    struct caret : pegtl::one<'^'> {};
+    struct tilde : pegtl::one<'~'> {};
+    struct bang : pegtl::one<'!'> {};
     struct equal : pegtl::one<'='> {};
+    struct greater : pegtl::one<'>'> {};
+    struct less : pegtl::one<'<'> {};
 
     // Ignorables
     struct comment
@@ -113,81 +119,128 @@ namespace frontend {
 
     struct ignorable : pegtl::star<pegtl::sor<whitespace_char, comment>> {};
 
-    // Values
+    // Expression
+    // Refer to operator precedence:
+    // https://en.cppreference.com/w/c/language/operator_precedence.html
+    struct expr;
+
+    // 0
     struct identifier
         : pegtl::seq<pegtl::plus<pegtl::sor<pegtl::alpha, pegtl::one<'_'>>>,
                      pegtl::star<pegtl::sor<pegtl::alnum, pegtl::one<'_'>>>> {};
 
     struct number : pegtl::seq<pegtl::opt<pegtl::sor<plus, minus>>,
                                pegtl::plus<pegtl::digit>> {};
-
+    // 1
+    struct expr_1;
+    struct call : pegtl::seq<identifier, ignorable, left_paren, ignorable,
+                             // TODO: parameter list
+                             right_paren> {};
+    struct parens
+        : pegtl::seq<left_paren, ignorable, expr, ignorable, right_paren> {};
     struct value : pegtl::sor<identifier, number> {};
+    struct expr_1 : pegtl::sor<pegtl_try<call>, pegtl_try<parens>, value> {};
 
-    struct binary_op : pegtl::sor<plus, minus, asterisk, ampersand> {};
+    // 2
+    struct expr_2;
+    struct unary_plus : pegtl_try<pegtl::seq<plus, ignorable, expr_2>> {};
+    struct unary_minus : pegtl_try<pegtl::seq<minus, ignorable, expr_2>> {};
+    // struct unary_logical_not : pegtl::seq<bang, ignorable, expr_2> {};
+    struct unary_bitwise_not : pegtl_try<pegtl::seq<tilde, ignorable, expr_2>> {
+    };
+    struct expr_2
+        : pegtl::sor<expr_1, unary_plus, unary_minus, unary_bitwise_not> {};
 
-    struct type : pegtl::sor<pegtl_apply_if_match<keyword_long_long>,
-                             pegtl_apply_if_match<keyword_long>,
-                             pegtl_apply_if_match<keyword_int>,
-                             pegtl_apply_if_match<keyword_short>> {};
+    // 3
+    struct expr_3;
+    struct multiply
+        : pegtl_try<pegtl::seq<ignorable, asterisk, ignorable, expr_2>> {};
+    struct divide : pegtl_try<pegtl::seq<ignorable, slash, ignorable, expr_2>> {
+    };
+    struct expr_3
+        : pegtl::seq<expr_2, pegtl::star<pegtl::sor<multiply, divide>>> {};
+
+    // 4
+    struct expr_4;
+    struct add : pegtl_try<pegtl::seq<ignorable, plus, ignorable, expr_3>> {};
+    struct subtract
+        : pegtl_try<pegtl::seq<ignorable, minus, ignorable, expr_3>> {};
+    struct expr_4 : pegtl::seq<expr_3, pegtl::star<pegtl::sor<add, subtract>>> {
+    };
+
+    // 5
+    struct expr_5;
+    struct left_shift
+        : pegtl_try<pegtl::seq<ignorable, less, less, ignorable, expr_4>> {};
+    struct right_shift
+        : pegtl_try<
+              pegtl::seq<ignorable, greater, greater, ignorable, expr_4>> {};
+    struct expr_5
+        : pegtl::seq<expr_4, pegtl::star<pegtl::sor<left_shift, right_shift>>> {
+    };
+
+    // 8
+    struct bitwise_and
+        : pegtl_try<pegtl::seq<ignorable, ampersand, ignorable, expr_5>> {};
+    struct expr_8 : pegtl::seq<expr_5, pegtl::star<bitwise_and>> {};
+
+    // 9
+    struct bitwise_xor
+        : pegtl_try<pegtl::seq<ignorable, caret, ignorable, expr_8>> {};
+    struct expr_9 : pegtl::seq<expr_8, pegtl::star<bitwise_xor>> {};
+
+    // 10
+    struct bitwise_or
+        : pegtl_try<pegtl::seq<ignorable, pipe, ignorable, expr_8>> {};
+    struct expr_10 : pegtl::seq<expr_9, pegtl::star<bitwise_or>> {};
+
+    struct expr : expr_10 {};
+
+    struct type
+        : pegtl::sor<pegtl_try<keyword_long_long>, pegtl_try<keyword_long>,
+                     pegtl_try<keyword_int>, pegtl_try<keyword_short>> {};
 
     // Instructions
     struct instruction_any;
     struct scope;
 
+    struct instruction_expr : pegtl::seq<expr, ignorable, semicolon> {};
+
     struct instruction_declaration
         : pegtl::seq<type, ignorable, identifier, ignorable, semicolon> {};
 
-    struct instruction_declaration_assign_value
+    struct instruction_declaration_assign
         : pegtl::seq<type, ignorable, identifier, ignorable, equal, ignorable,
-                     value, ignorable, semicolon> {};
+                     expr, ignorable, semicolon> {};
 
-    struct instruction_assign_value
-        : pegtl::seq<identifier, ignorable, equal, ignorable, value, ignorable,
+    struct instruction_assign
+        : pegtl::seq<identifier, ignorable, equal, ignorable, expr, ignorable,
                      semicolon> {};
 
-    struct instruction_assign_binary_op
-        : pegtl::seq<identifier, ignorable, equal, ignorable, value, ignorable,
-                     binary_op, ignorable, value, ignorable, semicolon> {};
-
     struct instruction_return
-        : pegtl::seq<keyword_return, ignorable, value, ignorable, semicolon> {};
-
-    struct instruction_call
-        : pegtl::seq<identifier, ignorable, left_paren, ignorable,
-                     // TODO: parameter list
-                     right_paren, ignorable, semicolon> {};
-
-    struct instruction_call_assign
-        : pegtl::seq<identifier, ignorable, equal, ignorable, identifier,
-                     ignorable, left_paren, ignorable,
-                     // TODO: parameter list
-                     right_paren, ignorable, semicolon> {};
+        : pegtl::seq<keyword_return, ignorable, expr, ignorable, semicolon> {};
 
     struct instruction_if
-        : pegtl::seq<keyword_if, ignorable, left_paren, ignorable, value,
+        : pegtl::seq<keyword_if, ignorable, left_paren, ignorable, expr,
                      ignorable, right_paren, ignorable, instruction_any> {};
 
     struct instruction_if_else
-        : pegtl::seq<keyword_if, ignorable, left_paren, ignorable, value,
+        : pegtl::seq<keyword_if, ignorable, left_paren, ignorable, expr,
                      ignorable, right_paren, ignorable, instruction_any,
                      ignorable, keyword_else, ignorable, instruction_any> {};
 
     struct instruction_while
-        : pegtl::seq<keyword_while, ignorable, left_paren, ignorable, value,
+        : pegtl::seq<keyword_while, ignorable, left_paren, ignorable, expr,
                      ignorable, right_paren, ignorable, instruction_any> {};
 
     struct instruction_any
-        : pegtl::sor<pegtl_apply_if_match<scope>,
-                     pegtl_apply_if_match<instruction_while>,
-                     pegtl_apply_if_match<instruction_if_else>,
-                     pegtl_apply_if_match<instruction_if>,
-                     pegtl_apply_if_match<instruction_return>,
-                     pegtl_apply_if_match<instruction_call>,
-                     pegtl_apply_if_match<instruction_call_assign>,
-                     pegtl_apply_if_match<instruction_declaration_assign_value>,
-                     pegtl_apply_if_match<instruction_declaration>,
-                     pegtl_apply_if_match<instruction_assign_value>,
-                     pegtl_apply_if_match<instruction_assign_binary_op>> {};
+        : pegtl::sor<pegtl_try<scope>, pegtl_try<instruction_while>,
+                     pegtl_try<instruction_if_else>, pegtl_try<instruction_if>,
+                     pegtl_try<instruction_return>,
+                     pegtl_try<instruction_declaration_assign>,
+                     pegtl_try<instruction_declaration>,
+                     pegtl_try<instruction_assign>,
+                     pegtl_try<instruction_expr>> {};
 
     // Program structure
     struct scope
@@ -208,7 +261,7 @@ namespace frontend {
     //
     // Action
     //
-    template <typename Rule> struct action : pegtl::nothing<Rule> {};
+    template <typename Rule> struct action {};
 
     // Value token actions
     template <> struct action<number> {
@@ -225,10 +278,160 @@ namespace frontend {
         }
     };
 
-    template <> struct action<binary_op> {
+    // Expr actions
+    template <> struct action<value> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
-            parsed_tokens.push_back({in.string(), TokenType::BINARY_OP});
+            auto value = popAtom();
+            auto expr = std::make_unique<ast::TerminalExpr>(std::move(value));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<call> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto callee = popIdentifier();
+            auto expr = std::make_unique<ast::CallExpr>(std::move(callee));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<parens> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto back = popExpr();
+            auto expr = std::make_unique<ast::ParenExpr>(std::move(back));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<unary_plus> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto back = popExpr();
+            auto expr = std::make_unique<ast::UnaryOpExpr>(UnaryOp::PLUS,
+                                                           std::move(back));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<unary_minus> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto back = popExpr();
+            auto expr = std::make_unique<ast::UnaryOpExpr>(UnaryOp::MINUS,
+                                                           std::move(back));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<unary_bitwise_not> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto back = popExpr();
+            auto expr = std::make_unique<ast::UnaryOpExpr>(UnaryOp::NOT,
+                                                           std::move(back));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<multiply> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::MUL, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<divide> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::DIV, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<add> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::ADD, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<subtract> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::SUB, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<left_shift> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::LSHIFT, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<right_shift> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::RSHIFT, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<bitwise_and> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::AND, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<bitwise_xor> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::XOR, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<bitwise_or> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::OR, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
         }
     };
 
@@ -253,6 +456,16 @@ namespace frontend {
         }
     };
 
+    template <> struct action<instruction_expr> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto expr = popExpr();
+
+            auto i = std::make_unique<ast::InstructionExpr>(std::move(expr));
+            active_scopes.back()->addInstruction(std::move(i));
+        }
+    };
+
     template <> struct action<instruction_declaration> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
@@ -265,41 +478,27 @@ namespace frontend {
         }
     };
 
-    template <> struct action<instruction_declaration_assign_value> {
+    template <> struct action<instruction_declaration_assign> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
-            auto value = popAtom();
+            auto value = popExpr();
             auto variable = popIdentifier();
             auto type = Type::INT;
 
-            auto i = std::make_unique<ast::InstructionDeclarationAssignValue>(
+            auto i = std::make_unique<ast::InstructionDeclarationAssign>(
                 type, std::move(variable), std::move(value));
             active_scopes.back()->addInstruction(std::move(i));
         }
     };
 
-    template <> struct action<instruction_assign_value> {
+    template <> struct action<instruction_assign> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
-            auto value = popAtom();
+            auto value = popExpr();
             auto variable = popIdentifier();
 
-            auto i = std::make_unique<ast::InstructionAssignValue>(
+            auto i = std::make_unique<ast::InstructionAssign>(
                 std::move(variable), std::move(value));
-            active_scopes.back()->addInstruction(std::move(i));
-        }
-    };
-
-    template <> struct action<instruction_assign_binary_op> {
-        template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
-            auto right = popAtom();
-            auto op = popBinOp();
-            auto left = popAtom();
-            auto variable = popIdentifier();
-
-            auto i = std::make_unique<ast::InstructionAssignBinaryOp>(
-                std::move(variable), op, std::move(left), std::move(right));
             active_scopes.back()->addInstruction(std::move(i));
         }
     };
@@ -307,31 +506,9 @@ namespace frontend {
     template <> struct action<instruction_return> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
-            auto value = popAtom();
+            auto value = popExpr();
 
             auto i = std::make_unique<ast::InstructionReturn>(std::move(value));
-            active_scopes.back()->addInstruction(std::move(i));
-        }
-    };
-
-    template <> struct action<instruction_call> {
-        template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
-            auto target = popIdentifier();
-
-            auto i = std::make_unique<ast::InstructionCall>(std::move(target));
-            active_scopes.back()->addInstruction(std::move(i));
-        }
-    };
-
-    template <> struct action<instruction_call_assign> {
-        template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
-            auto target = popIdentifier();
-            auto variable = popIdentifier();
-
-            auto i = std::make_unique<ast::InstructionCallAssign>(
-                std::move(variable), std::move(target));
             active_scopes.back()->addInstruction(std::move(i));
         }
     };
@@ -340,7 +517,7 @@ namespace frontend {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto t_branch = popInstruction();
-            auto cond = popAtom();
+            auto cond = popExpr();
 
             auto i = std::make_unique<ast::InstructionIf>(
                 std::move(cond), std::move(t_branch), nullptr);
@@ -353,7 +530,7 @@ namespace frontend {
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto f_branch = popInstruction();
             auto t_branch = popInstruction();
-            auto cond = popAtom();
+            auto cond = popExpr();
 
             auto i = std::make_unique<ast::InstructionIf>(
                 std::move(cond), std::move(t_branch), std::move(f_branch));
@@ -365,7 +542,7 @@ namespace frontend {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto body = popInstruction();
-            auto cond = popAtom();
+            auto cond = popExpr();
 
             auto i = std::make_unique<ast::InstructionWhile>(std::move(cond),
                                                              std::move(body));

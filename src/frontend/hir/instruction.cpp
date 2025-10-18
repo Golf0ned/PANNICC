@@ -39,6 +39,25 @@ namespace frontend::hir {
         visitor->visit(this);
     }
 
+    InstructionAssignUnaryOp::InstructionAssignUnaryOp(
+        std::unique_ptr<AtomIdentifier> variable, UnaryOp op,
+        std::unique_ptr<Atom> value)
+        : variable(std::move(variable)), op(op), value(std::move(value)) {}
+
+    std::unique_ptr<AtomIdentifier> &InstructionAssignUnaryOp::getVariable() {
+        return variable;
+    }
+
+    UnaryOp InstructionAssignUnaryOp::getOp() { return op; }
+
+    std::unique_ptr<Atom> &InstructionAssignUnaryOp::getValue() {
+        return value;
+    }
+
+    void InstructionAssignUnaryOp::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
+
     InstructionAssignBinaryOp::InstructionAssignBinaryOp(
         std::unique_ptr<AtomIdentifier> variable, BinaryOp op,
         std::unique_ptr<Atom> left, std::unique_ptr<Atom> right)

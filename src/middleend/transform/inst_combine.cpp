@@ -52,9 +52,26 @@ namespace middleend {
                             case mir::BinaryOp::MUL:
                                 folded_val = lhs * rhs;
                                 break;
+                            case mir::BinaryOp::SDIV:
+                                folded_val = lhs / rhs;
+                                break;
                             case mir::BinaryOp::AND:
                                 folded_val = lhs & rhs;
                                 break;
+                            case mir::BinaryOp::OR:
+                                folded_val = lhs | rhs;
+                                break;
+                            case mir::BinaryOp::XOR:
+                                folded_val = lhs ^ rhs;
+                                break;
+                            case mir::BinaryOp::SHL:
+                                folded_val = lhs << rhs;
+                                break;
+                            case mir::BinaryOp::ASHR:
+                                folded_val = lhs >> rhs;
+                                break;
+                            default:
+                                return false;
                             }
 
                             auto type = mir::Type::I32;

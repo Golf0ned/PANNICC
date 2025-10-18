@@ -11,6 +11,15 @@ namespace frontend::ast {
 
     void Scope::accept(InstructionVisitor *visitor) { visitor->visit(this); }
 
+    InstructionExpr::InstructionExpr(std::unique_ptr<Expr> expr)
+        : expr(std::move(expr)) {}
+
+    std::unique_ptr<Expr> &InstructionExpr::getExpr() { return expr; }
+
+    void InstructionExpr::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
+
     InstructionDeclaration::InstructionDeclaration(
         Type type, std::unique_ptr<AtomIdentifier> variable)
         : type(type), variable(std::move(variable)) {}
@@ -25,107 +34,56 @@ namespace frontend::ast {
         visitor->visit(this);
     }
 
-    InstructionDeclarationAssignValue::InstructionDeclarationAssignValue(
+    InstructionDeclarationAssign::InstructionDeclarationAssign(
         Type type, std::unique_ptr<AtomIdentifier> variable,
-        std::unique_ptr<Atom> value)
+        std::unique_ptr<Expr> value)
         : type(type), variable(std::move(variable)), value(std::move(value)) {}
 
-    Type InstructionDeclarationAssignValue::getType() { return type; }
+    Type InstructionDeclarationAssign::getType() { return type; }
 
     std::unique_ptr<AtomIdentifier> &
-    InstructionDeclarationAssignValue::getVariable() {
+    InstructionDeclarationAssign::getVariable() {
         return variable;
     }
 
-    std::unique_ptr<Atom> &InstructionDeclarationAssignValue::getValue() {
+    std::unique_ptr<Expr> &InstructionDeclarationAssign::getValue() {
         return value;
     }
 
-    void
-    InstructionDeclarationAssignValue::accept(InstructionVisitor *visitor) {
+    void InstructionDeclarationAssign::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
-    InstructionAssignValue::InstructionAssignValue(
-        std::unique_ptr<AtomIdentifier> variable, std::unique_ptr<Atom> value)
+    InstructionAssign::InstructionAssign(
+        std::unique_ptr<AtomIdentifier> variable, std::unique_ptr<Expr> value)
         : variable(std::move(variable)), value(std::move(value)) {}
 
-    std::unique_ptr<AtomIdentifier> &InstructionAssignValue::getVariable() {
+    std::unique_ptr<AtomIdentifier> &InstructionAssign::getVariable() {
         return variable;
     }
 
-    std::unique_ptr<Atom> &InstructionAssignValue::getValue() { return value; }
+    std::unique_ptr<Expr> &InstructionAssign::getValue() { return value; }
 
-    void InstructionAssignValue::accept(InstructionVisitor *visitor) {
+    void InstructionAssign::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
-    InstructionAssignBinaryOp::InstructionAssignBinaryOp(
-        std::unique_ptr<AtomIdentifier> variable, BinaryOp op,
-        std::unique_ptr<Atom> left, std::unique_ptr<Atom> right)
-        : variable(std::move(variable)), op(op), left(std::move(left)),
-          right(std::move(right)) {}
-
-    std::unique_ptr<AtomIdentifier> &InstructionAssignBinaryOp::getVariable() {
-        return variable;
-    }
-
-    BinaryOp InstructionAssignBinaryOp::getOp() { return op; }
-
-    std::unique_ptr<Atom> &InstructionAssignBinaryOp::getRight() {
-        return right;
-    }
-
-    std::unique_ptr<Atom> &InstructionAssignBinaryOp::getLeft() { return left; }
-
-    void InstructionAssignBinaryOp::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
-
-    InstructionReturn::InstructionReturn(std::unique_ptr<Atom> value)
+    InstructionReturn::InstructionReturn(std::unique_ptr<Expr> value)
         : value(std::move(value)) {}
 
-    std::unique_ptr<Atom> &InstructionReturn::getValue() { return value; }
+    std::unique_ptr<Expr> &InstructionReturn::getValue() { return value; }
 
     void InstructionReturn::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
-    InstructionCall::InstructionCall(std::unique_ptr<AtomIdentifier> target)
-        : target(std::move(target)) {}
-
-    std::unique_ptr<AtomIdentifier> &InstructionCall::getTarget() {
-        return target;
-    }
-
-    void InstructionCall::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
-
-    InstructionCallAssign::InstructionCallAssign(
-        std::unique_ptr<AtomIdentifier> variable,
-        std::unique_ptr<AtomIdentifier> target)
-        : variable(std::move(variable)), target(std::move(target)) {}
-
-    std::unique_ptr<AtomIdentifier> &InstructionCallAssign::getVariable() {
-        return variable;
-    }
-
-    std::unique_ptr<AtomIdentifier> &InstructionCallAssign::getTarget() {
-        return target;
-    }
-
-    void InstructionCallAssign::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
-
-    InstructionIf::InstructionIf(std::unique_ptr<Atom> cond,
+    InstructionIf::InstructionIf(std::unique_ptr<Expr> cond,
                                  std::unique_ptr<Instruction> t_branch,
                                  std::unique_ptr<Instruction> f_branch)
         : cond(std::move(cond)), t_branch(std::move(t_branch)),
           f_branch(std::move(f_branch)) {}
 
-    std::unique_ptr<Atom> &InstructionIf::getCond() { return cond; }
+    std::unique_ptr<Expr> &InstructionIf::getCond() { return cond; }
 
     std::unique_ptr<Instruction> &InstructionIf::getTBranch() {
         return t_branch;
@@ -135,15 +93,17 @@ namespace frontend::ast {
         return f_branch;
     }
 
+    bool InstructionIf::hasFBranch() { return f_branch != nullptr; }
+
     void InstructionIf::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
     }
 
-    InstructionWhile::InstructionWhile(std::unique_ptr<Atom> cond,
+    InstructionWhile::InstructionWhile(std::unique_ptr<Expr> cond,
                                        std::unique_ptr<Instruction> body)
         : cond(std::move(cond)), body(std::move(body)) {}
 
-    std::unique_ptr<Atom> &InstructionWhile::getCond() { return cond; }
+    std::unique_ptr<Expr> &InstructionWhile::getCond() { return cond; }
 
     std::unique_ptr<Instruction> &InstructionWhile::getBody() { return body; }
 

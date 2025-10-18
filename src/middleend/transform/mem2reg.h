@@ -1,6 +1,7 @@
 #pragma once
 
 #include "middleend/analysis/dominator_tree.h"
+#include "middleend/analysis/number_ir.h"
 #include "middleend/pass.h"
 
 namespace middleend {
@@ -12,5 +13,6 @@ namespace middleend {
 
     private:
         DominatorTree *dt;
+        NumberIR *nir;
     };
 } // namespace middleend

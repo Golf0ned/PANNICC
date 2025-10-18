@@ -1,4 +1,0 @@
-int main() {
-    __entry:
-    return 0;
-}

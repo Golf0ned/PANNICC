@@ -5,8 +5,7 @@ int scope() {
         {
             int before = 2;
             {
-                int in;
-                in = before + 3;
+                int in = before + 3;
             }
             int after = 4;
         }

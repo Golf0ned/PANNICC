@@ -1,79 +1,97 @@
 int fun_call() {
     __entry:
-    return 0;
+    int __term;
+    __term = 42;
+    return __term;
 }
 
 int mem2reg_basic() {
     __entry:
     int a_1;
-    a_1 = 1;
     int b_1;
-    b_1 = 2;
-    int c_1;
-    c_1 = 3;
-    int add_1;
-    add_1 = a_1 + b_1;
-    int sub_1;
-    sub_1 = c_1 - a_1;
-    int mul_1;
-    mul_1 = add_1 * sub_1;
-    int bit_and_1;
-    bit_and_1 = add_1 & 1;
-    int call_1;
-    call_1 = fun_call();
-    return bit_and_1;
+    int __term;
+    __term = 0;
+    a_1 = __term;
+    int __term1;
+    __term1 = 5;
+    a_1 = __term1;
+    int __term2;
+    __term2 = a_1;
+    b_1 = __term2;
+    int __term3;
+    __term3 = b_1;
+    return __term3;
 }
 
 int mem2reg_branching() {
     __entry:
-    int res_1;
-    res_1 = 0;
-    goto_if (res_1) __if_t __if_f;
+    int x_1;
+    int y_1;
+    int __call;
+    __call = fun_call();
+    x_1 = __call;
+    int __term;
+    __term = x_1;
+    int __term1;
+    __term1 = 42;
+    int __bin;
+    __bin = __term - __term1;
+    goto_if (__bin) __if_t __if_f;
     __if_t:
-    res_1 = 1;
-    goto_if (res_1) __if_t1 __if_f1;
-    __if_t1:
-    res_1 = 2;
-    goto __if_cont1;
-    __if_f1:
-    res_1 = 3;
-    __if_cont1:
-    res_1 = 4;
+    int __term2;
+    __term2 = 1;
+    y_1 = __term2;
     goto __if_cont;
     __if_f:
-    res_1 = 5;
+    int __term3;
+    __term3 = x_1;
+    int __term4;
+    __term4 = 2;
+    int __bin1;
+    __bin1 = __term3 + __term4;
+    y_1 = __bin1;
     __if_cont:
-    res_1 = 6;
-    return res_1;
+    int __term5;
+    __term5 = y_1;
+    return __term5;
 }
 
 int mem2reg_while() {
     __entry:
-    int mem_1;
-    mem_1 = 123;
-    int to_1;
-    to_1 = 456;
-    int reg_1;
-    reg_1 = 789;
+    int x_1;
+    int __term;
+    __term = 0;
+    x_1 = __term;
+    int y_1;
+    int __term1;
+    __term1 = 0;
+    y_1 = __term1;
     __while_cond:
-    goto_if (to_1) __while_body __while_cont;
+    int __term2;
+    __term2 = x_1;
+    int __term3;
+    __term3 = 10;
+    int __bin;
+    __bin = __term2 - __term3;
+    goto_if (__bin) __while_body __while_cont;
     __while_body:
-    int reg_2;
-    reg_2 = 432;
-    mem_1 = mem_1 + reg_2;
-    to_1 = to_1 - 2;
+    int __term4;
+    __term4 = y_1;
+    int __term5;
+    __term5 = x_1;
+    int __bin1;
+    __bin1 = __term4 + __term5;
+    y_1 = __bin1;
+    int __term6;
+    __term6 = x_1;
+    int __term7;
+    __term7 = 1;
+    int __bin2;
+    __bin2 = __term6 + __term7;
+    x_1 = __bin2;
     goto __while_cond;
     __while_cont:
-    goto_if (to_1) __if_t __if_cont;
-    __if_t:
-    return to_1;
-    __if_cont:
-    return 987654321;
-}
-
-int mem2reg_negative() {
-    __entry:
-    int a_1;
-    a_1 = 6 + 7;
-    return a_1;
+    int __term8;
+    __term8 = y_1;
+    return __term8;
 }

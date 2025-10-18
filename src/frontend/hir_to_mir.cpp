@@ -65,16 +65,20 @@ namespace frontend {
             return load_ptr;
         } else {
             auto value = a->getValue();
-            auto &typed_map = literal_map[type];
-            if (typed_map.contains(value))
-                return typed_map.at(value).get();
-
-            auto literal = std::make_unique<mir::Literal>(type, value);
-            auto literal_ptr = literal.get();
-
-            typed_map[value] = std::move(literal);
-            return literal_ptr;
+            return getLiteral(value, type);
         }
+    }
+
+    mir::Value *HIRToMIRVisitor::getLiteral(uint64_t value, mir::Type type) {
+        auto &typed_map = literal_map[type];
+        if (typed_map.contains(value))
+            return typed_map.at(value).get();
+
+        auto literal = std::make_unique<mir::Literal>(type, value);
+        auto literal_ptr = literal.get();
+
+        typed_map[value] = std::move(literal);
+        return literal_ptr;
     }
 
     bool HIRToMIRVisitor::startOfBasicBlock() { return new_basic_block; }
@@ -190,19 +194,54 @@ namespace frontend {
         cur_instructions.push_back(std::move(store));
     }
 
+    void HIRToMIRVisitor::visit(hir::InstructionAssignUnaryOp *i) {
+        auto type = toMir(Type::INT);
+        mir::Value *value = resolveAtom(i->getValue().get());
+
+        mir::Value *un_op_res, *literal;
+        std::unique_ptr<mir::InstructionBinaryOp> bin_op;
+        switch (i->getOp()) {
+        case UnaryOp::PLUS:
+            // do nothing lol
+            un_op_res = value;
+            break;
+        case UnaryOp::MINUS:
+            // subtract value from 0
+            literal = getLiteral(0, mir::Type::I32);
+            bin_op = std::make_unique<mir::InstructionBinaryOp>(
+                type, mir::BinaryOp::SUB, literal, value);
+            un_op_res = bin_op.get();
+            cur_instructions.push_back(std::move(bin_op));
+            break;
+        case UnaryOp::NOT:
+            // xor with -1
+            literal = getLiteral(-1, mir::Type::I32);
+            bin_op = std::make_unique<mir::InstructionBinaryOp>(
+                type, mir::BinaryOp::XOR, value, literal);
+            un_op_res = bin_op.get();
+            cur_instructions.push_back(std::move(bin_op));
+            break;
+        }
+
+        mir::InstructionAlloca *ptr =
+            value_mappings.at(i->getVariable()->getValue());
+        auto store = std::make_unique<mir::InstructionStore>(un_op_res, ptr);
+        cur_instructions.push_back(std::move(store));
+    }
+
     void HIRToMIRVisitor::visit(hir::InstructionAssignBinaryOp *i) {
         auto type = toMir(Type::INT);
         mir::Value *left = resolveAtom(i->getLeft().get());
         mir::Value *right = resolveAtom(i->getRight().get());
         mir::BinaryOp op = toMir(i->getOp());
-        auto binOp =
+        auto bin_op =
             std::make_unique<mir::InstructionBinaryOp>(type, op, left, right);
 
         mir::InstructionAlloca *ptr =
             value_mappings.at(i->getVariable()->getValue());
-        auto store = std::make_unique<mir::InstructionStore>(binOp.get(), ptr);
+        auto store = std::make_unique<mir::InstructionStore>(bin_op.get(), ptr);
 
-        cur_instructions.push_back(std::move(binOp));
+        cur_instructions.push_back(std::move(bin_op));
         cur_instructions.push_back(std::move(store));
     }
 

@@ -1,27 +1,19 @@
 int constant_fold() {
     int i = 1;
-    int j;
-    j = i + 13;
-    int k;
-    k = i + i;
-    int l;
-    l = j * k;
+    int j = i + 13;
+    int k = i + i;
+    int l = j * k;
     l = l + l;
-    int m;
-    m = l - i;
+    int m = l - i;
     return m;
 }
 
 int constant_fold_overflow() {
-    int i = 2147483647;
-    int j;
-    j = i + 1;
-    return j;
+    int overflow = 2147483647 + 1;
+    return overflow;
 }
 
 int constant_fold_underflow() {
-    int i = 18446744071562067968;
-    int j;
-    j = i - 1;
-    return j;
+    int underflow = 18446744071562067968 - 1;
+    return underflow;
 }
