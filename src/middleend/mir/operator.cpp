@@ -19,6 +19,10 @@ namespace middleend::mir {
             return "or";
         case BinaryOp::XOR:
             return "xor";
+        case BinaryOp::SHL:
+            return "shl";
+        case BinaryOp::ASHR:
+            return "ashr";
         }
         std::unreachable();
     }

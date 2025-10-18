@@ -19,6 +19,10 @@ namespace frontend {
             return "|";
         case BinaryOp::XOR:
             return "^";
+        case BinaryOp::LSHIFT:
+            return "<<";
+        case BinaryOp::RSHIFT:
+            return ">>";
         }
         std::unreachable();
     }
@@ -51,6 +55,10 @@ namespace frontend {
             return middleend::mir::BinaryOp::OR;
         case BinaryOp::XOR:
             return middleend::mir::BinaryOp::XOR;
+        case BinaryOp::LSHIFT:
+            return middleend::mir::BinaryOp::SHL;
+        case BinaryOp::RSHIFT:
+            return middleend::mir::BinaryOp::ASHR;
         }
         std::unreachable();
     }
