@@ -165,10 +165,21 @@ namespace frontend {
     struct expr_4 : pegtl::seq<expr_3, pegtl::star<pegtl::sor<add, subtract>>> {
     };
 
+    // 5
+    struct expr_5;
+    struct left_shift
+        : pegtl_try<pegtl::seq<ignorable, less, less, ignorable, expr_4>> {};
+    struct right_shift
+        : pegtl_try<
+              pegtl::seq<ignorable, greater, greater, ignorable, expr_4>> {};
+    struct expr_5
+        : pegtl::seq<expr_4, pegtl::star<pegtl::sor<left_shift, right_shift>>> {
+    };
+
     // 8
     struct bitwise_and
-        : pegtl_try<pegtl::seq<ignorable, ampersand, ignorable, expr_4>> {};
-    struct expr_8 : pegtl::seq<expr_4, pegtl::star<bitwise_and>> {};
+        : pegtl_try<pegtl::seq<ignorable, ampersand, ignorable, expr_5>> {};
+    struct expr_8 : pegtl::seq<expr_5, pegtl::star<bitwise_and>> {};
 
     // 9
     struct bitwise_xor
@@ -353,6 +364,28 @@ namespace frontend {
             auto left = popExpr();
             auto expr = std::make_unique<ast::BinaryOpExpr>(
                 BinaryOp::SUB, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<left_shift> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::LSHIFT, std::move(left), std::move(right));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<right_shift> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto right = popExpr();
+            auto left = popExpr();
+            auto expr = std::make_unique<ast::BinaryOpExpr>(
+                BinaryOp::RSHIFT, std::move(left), std::move(right));
             parsed_exprs.push_back(std::move(expr));
         }
     };
