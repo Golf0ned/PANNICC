@@ -125,3 +125,38 @@ entry:
   %77 = load ptr %0
   ret i32 %77
 }
+
+define i32 @parens() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  store i32 4, ptr %1
+  %2 = alloca i32
+  store i32 3, ptr %2
+  %3 = alloca i32
+  store i32 2, ptr %3
+  %4 = alloca i32
+  store i32 1, ptr %4
+  %5 = alloca i32
+  %6 = load ptr %3
+  %7 = load ptr %4
+  %8 = sub i32 %6, i32 %7
+  store i32 %8, ptr %5
+  %9 = alloca i32
+  %10 = load ptr %2
+  %11 = load ptr %5
+  %12 = sub i32 %10, i32 %11
+  store i32 %12, ptr %9
+  %13 = alloca i32
+  %14 = load ptr %1
+  %15 = load ptr %9
+  %16 = mul i32 %14, i32 %15
+  store i32 %16, ptr %13
+  %17 = load ptr %13
+  store i32 %17, ptr %0
+  br label 18
+
+18:
+  %19 = load ptr %0
+  ret i32 %19
+}

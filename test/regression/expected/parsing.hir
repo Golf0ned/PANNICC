@@ -69,3 +69,22 @@ int compound() {
     __bin12 = __bin11 + __term15;
     return __bin12;
 }
+
+int parens() {
+    __entry:
+    int __term;
+    __term = 4;
+    int __term1;
+    __term1 = 3;
+    int __term2;
+    __term2 = 2;
+    int __term3;
+    __term3 = 1;
+    int __bin;
+    __bin = __term2 - __term3;
+    int __bin1;
+    __bin1 = __term1 - __bin;
+    int __bin2;
+    __bin2 = __term * __bin1;
+    return __bin2;
+}
