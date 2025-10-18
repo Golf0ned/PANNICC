@@ -14,6 +14,8 @@ namespace frontend {
         AND,
         OR,
         XOR,
+        LSHIFT,
+        RSHIFT,
     };
 
     enum class UnaryOp {
@@ -31,6 +33,8 @@ namespace frontend {
         {"&", BinaryOp::AND},
         {"|", BinaryOp::OR},
         {"^", BinaryOp::XOR},
+        {"<<", BinaryOp::LSHIFT},
+        {">>", BinaryOp::RSHIFT},
     };
     // clang-format on
 
