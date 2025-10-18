@@ -22,6 +22,18 @@ int div() {
     return a / b;
 }
 
+int lshift() {
+    int a = 1;
+    int b = 4;
+    return a << b;
+}
+
+int rshift() {
+    int a = 16;
+    int b = 3;
+    return a >> b;
+}
+
 int bit_and() {
     int a = 31;
     int b = 4;

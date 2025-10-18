@@ -130,6 +130,72 @@ entry:
   ret i32 %17
 }
 
+define i32 @lshift() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  store i32 1, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  %4 = alloca i32
+  %5 = alloca i32
+  store i32 4, ptr %5
+  %6 = load ptr %5
+  store i32 %6, ptr %4
+  %7 = alloca i32
+  %8 = load ptr %1
+  store i32 %8, ptr %7
+  %9 = alloca i32
+  %10 = load ptr %4
+  store i32 %10, ptr %9
+  %11 = alloca i32
+  %12 = load ptr %7
+  %13 = load ptr %9
+  %14 = shl i32 %12, i32 %13
+  store i32 %14, ptr %11
+  %15 = load ptr %11
+  store i32 %15, ptr %0
+  br label 16
+
+16:
+  %17 = load ptr %0
+  ret i32 %17
+}
+
+define i32 @rshift() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  store i32 16, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  %4 = alloca i32
+  %5 = alloca i32
+  store i32 3, ptr %5
+  %6 = load ptr %5
+  store i32 %6, ptr %4
+  %7 = alloca i32
+  %8 = load ptr %1
+  store i32 %8, ptr %7
+  %9 = alloca i32
+  %10 = load ptr %4
+  store i32 %10, ptr %9
+  %11 = alloca i32
+  %12 = load ptr %7
+  %13 = load ptr %9
+  %14 = ashr i32 %12, i32 %13
+  store i32 %14, ptr %11
+  %15 = load ptr %11
+  store i32 %15, ptr %0
+  br label 16
+
+16:
+  %17 = load ptr %0
+  ret i32 %17
+}
+
 define i32 @bit_and() {
 entry:
   %0 = alloca i32
