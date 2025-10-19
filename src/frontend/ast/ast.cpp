@@ -123,6 +123,14 @@ namespace frontend::ast {
         res = prefix + variable + " = " + res + ";";
     }
 
+    void ToStringVisitor::visit(InstructionOpAssign *i) {
+        const std::string variable = i->getVariable()->toString(*symbol_table);
+        const std::string op = toString(i->getOp());
+        i->getValue()->accept(this);
+
+        res = prefix + variable + ' ' + op + "= " + res + ";";
+    }
+
     void ToStringVisitor::visit(InstructionReturn *i) {
         i->getValue()->accept(this);
         res = prefix + "return " + res + ";";
