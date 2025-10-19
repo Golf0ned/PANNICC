@@ -12,7 +12,7 @@ namespace frontend {
         case BinaryOp::MUL:
             return "*";
         case BinaryOp::DIV:
-            return "*";
+            return "/";
         case BinaryOp::AND:
             return "&";
         case BinaryOp::OR:
