@@ -66,3 +66,58 @@ int unary_bitwise_not() {
     int a = 42;
     return ~a;
 }
+
+int add_equals() {
+    int a = 1;
+    a += 2;
+    return a;
+}
+
+int sub_equals() {
+    int a = 10;
+    a -= 2;
+    return a;
+}
+
+int mul_equals() {
+    int a = 3;
+    a *= 4;
+    return a;
+}
+
+int div_equals() {
+    int a = 24;
+    a /= 6;
+    return a;
+}
+
+int lshift_equals() {
+    int a = 1;
+    a <<= 4;
+    return a;
+}
+
+int rshift_equals() {
+    int a = 16;
+    a >>= 3;
+    return a;
+}
+
+int bit_and_equals() {
+    int a = 31;
+    a &= 4;
+    return a;
+}
+
+int bit_or_equals() {
+    int a = 12;
+    a |= 3;
+    return a;
+}
+
+int bit_xor_equals() {
+    int a = 15;
+    a ^= 4;
+    return a;
+}
+
