@@ -40,6 +40,7 @@ namespace frontend {
         void visit(ast::InstructionDeclaration *i) override;
         void visit(ast::InstructionDeclarationAssign *i) override;
         void visit(ast::InstructionAssign *i) override;
+        void visit(ast::InstructionOpAssign *i) override;
         void visit(ast::InstructionReturn *i) override;
         void visit(ast::InstructionIf *i) override;
         void visit(ast::InstructionWhile *i) override;
