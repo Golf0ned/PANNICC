@@ -170,7 +170,7 @@ namespace frontend::ast {
         res = while_res;
     }
 
-    void ToStringVisitor::visit(Expr *e) { res = "[UNKNOWNM EXPRESSION]"; }
+    void ToStringVisitor::visit(Expr *e) { res = "[UNKNOWN EXPRESSION]"; }
 
     void ToStringVisitor::visit(TerminalExpr *e) {
         res = e->getAtom()->toString(*symbol_table);
