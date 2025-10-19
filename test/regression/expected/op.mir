@@ -365,3 +365,237 @@ entry:
   %11 = load ptr %0
   ret i32 %11
 }
+
+define i32 @add_equals() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  store i32 1, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  %4 = alloca i32
+  store i32 2, ptr %4
+  %5 = load ptr %1
+  %6 = load ptr %4
+  %7 = add i32 %5, i32 %6
+  store i32 %7, ptr %1
+  %8 = alloca i32
+  %9 = load ptr %1
+  store i32 %9, ptr %8
+  %10 = load ptr %8
+  store i32 %10, ptr %0
+  br label 11
+
+11:
+  %12 = load ptr %0
+  ret i32 %12
+}
+
+define i32 @sub_equals() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  store i32 10, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  %4 = alloca i32
+  store i32 2, ptr %4
+  %5 = load ptr %1
+  %6 = load ptr %4
+  %7 = sub i32 %5, i32 %6
+  store i32 %7, ptr %1
+  %8 = alloca i32
+  %9 = load ptr %1
+  store i32 %9, ptr %8
+  %10 = load ptr %8
+  store i32 %10, ptr %0
+  br label 11
+
+11:
+  %12 = load ptr %0
+  ret i32 %12
+}
+
+define i32 @mul_equals() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  store i32 3, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  %4 = alloca i32
+  store i32 4, ptr %4
+  %5 = load ptr %1
+  %6 = load ptr %4
+  %7 = mul i32 %5, i32 %6
+  store i32 %7, ptr %1
+  %8 = alloca i32
+  %9 = load ptr %1
+  store i32 %9, ptr %8
+  %10 = load ptr %8
+  store i32 %10, ptr %0
+  br label 11
+
+11:
+  %12 = load ptr %0
+  ret i32 %12
+}
+
+define i32 @div_equals() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  store i32 24, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  %4 = alloca i32
+  store i32 6, ptr %4
+  %5 = load ptr %1
+  %6 = load ptr %4
+  %7 = sdiv i32 %5, i32 %6
+  store i32 %7, ptr %1
+  %8 = alloca i32
+  %9 = load ptr %1
+  store i32 %9, ptr %8
+  %10 = load ptr %8
+  store i32 %10, ptr %0
+  br label 11
+
+11:
+  %12 = load ptr %0
+  ret i32 %12
+}
+
+define i32 @lshift_equals() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  store i32 1, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  %4 = alloca i32
+  store i32 4, ptr %4
+  %5 = load ptr %1
+  %6 = load ptr %4
+  %7 = shl i32 %5, i32 %6
+  store i32 %7, ptr %1
+  %8 = alloca i32
+  %9 = load ptr %1
+  store i32 %9, ptr %8
+  %10 = load ptr %8
+  store i32 %10, ptr %0
+  br label 11
+
+11:
+  %12 = load ptr %0
+  ret i32 %12
+}
+
+define i32 @rshift_equals() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  store i32 16, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  %4 = alloca i32
+  store i32 3, ptr %4
+  %5 = load ptr %1
+  %6 = load ptr %4
+  %7 = ashr i32 %5, i32 %6
+  store i32 %7, ptr %1
+  %8 = alloca i32
+  %9 = load ptr %1
+  store i32 %9, ptr %8
+  %10 = load ptr %8
+  store i32 %10, ptr %0
+  br label 11
+
+11:
+  %12 = load ptr %0
+  ret i32 %12
+}
+
+define i32 @bit_and_equals() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  store i32 31, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  %4 = alloca i32
+  store i32 4, ptr %4
+  %5 = load ptr %1
+  %6 = load ptr %4
+  %7 = and i32 %5, i32 %6
+  store i32 %7, ptr %1
+  %8 = alloca i32
+  %9 = load ptr %1
+  store i32 %9, ptr %8
+  %10 = load ptr %8
+  store i32 %10, ptr %0
+  br label 11
+
+11:
+  %12 = load ptr %0
+  ret i32 %12
+}
+
+define i32 @bit_or_equals() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  store i32 12, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  %4 = alloca i32
+  store i32 3, ptr %4
+  %5 = load ptr %1
+  %6 = load ptr %4
+  %7 = or i32 %5, i32 %6
+  store i32 %7, ptr %1
+  %8 = alloca i32
+  %9 = load ptr %1
+  store i32 %9, ptr %8
+  %10 = load ptr %8
+  store i32 %10, ptr %0
+  br label 11
+
+11:
+  %12 = load ptr %0
+  ret i32 %12
+}
+
+define i32 @bit_xor_equals() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  store i32 15, ptr %2
+  %3 = load ptr %2
+  store i32 %3, ptr %1
+  %4 = alloca i32
+  store i32 4, ptr %4
+  %5 = load ptr %1
+  %6 = load ptr %4
+  %7 = xor i32 %5, i32 %6
+  store i32 %7, ptr %1
+  %8 = alloca i32
+  %9 = load ptr %1
+  store i32 %9, ptr %8
+  %10 = load ptr %8
+  store i32 %10, ptr %0
+  br label 11
+
+11:
+  %12 = load ptr %0
+  ret i32 %12
+}

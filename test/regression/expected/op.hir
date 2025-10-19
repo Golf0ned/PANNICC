@@ -70,7 +70,7 @@ int div() {
     int __term3;
     __term3 = b_1;
     int __bin;
-    __bin = __term2 * __term3;
+    __bin = __term2 / __term3;
     return __bin;
 }
 
@@ -206,4 +206,130 @@ int unary_bitwise_not() {
     int __un;
     __un = ~__term1;
     return __un;
+}
+
+int add_equals() {
+    __entry:
+    int a_1;
+    int __term;
+    __term = 1;
+    a_1 = __term;
+    int __term1;
+    __term1 = 2;
+    a_1 = a_1 + __term1;
+    int __term2;
+    __term2 = a_1;
+    return __term2;
+}
+
+int sub_equals() {
+    __entry:
+    int a_1;
+    int __term;
+    __term = 10;
+    a_1 = __term;
+    int __term1;
+    __term1 = 2;
+    a_1 = a_1 - __term1;
+    int __term2;
+    __term2 = a_1;
+    return __term2;
+}
+
+int mul_equals() {
+    __entry:
+    int a_1;
+    int __term;
+    __term = 3;
+    a_1 = __term;
+    int __term1;
+    __term1 = 4;
+    a_1 = a_1 * __term1;
+    int __term2;
+    __term2 = a_1;
+    return __term2;
+}
+
+int div_equals() {
+    __entry:
+    int a_1;
+    int __term;
+    __term = 24;
+    a_1 = __term;
+    int __term1;
+    __term1 = 6;
+    a_1 = a_1 / __term1;
+    int __term2;
+    __term2 = a_1;
+    return __term2;
+}
+
+int lshift_equals() {
+    __entry:
+    int a_1;
+    int __term;
+    __term = 1;
+    a_1 = __term;
+    int __term1;
+    __term1 = 4;
+    a_1 = a_1 << __term1;
+    int __term2;
+    __term2 = a_1;
+    return __term2;
+}
+
+int rshift_equals() {
+    __entry:
+    int a_1;
+    int __term;
+    __term = 16;
+    a_1 = __term;
+    int __term1;
+    __term1 = 3;
+    a_1 = a_1 >> __term1;
+    int __term2;
+    __term2 = a_1;
+    return __term2;
+}
+
+int bit_and_equals() {
+    __entry:
+    int a_1;
+    int __term;
+    __term = 31;
+    a_1 = __term;
+    int __term1;
+    __term1 = 4;
+    a_1 = a_1 & __term1;
+    int __term2;
+    __term2 = a_1;
+    return __term2;
+}
+
+int bit_or_equals() {
+    __entry:
+    int a_1;
+    int __term;
+    __term = 12;
+    a_1 = __term;
+    int __term1;
+    __term1 = 3;
+    a_1 = a_1 | __term1;
+    int __term2;
+    __term2 = a_1;
+    return __term2;
+}
+
+int bit_xor_equals() {
+    __entry:
+    int a_1;
+    int __term;
+    __term = 15;
+    a_1 = __term;
+    int __term1;
+    __term1 = 4;
+    a_1 = a_1 ^ __term1;
+    int __term2;
+    __term2 = a_1;
+    return __term2;
 }
