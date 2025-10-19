@@ -169,6 +169,19 @@ namespace frontend {
         result.push_back(std::move(new_i));
     }
 
+    void ASTToHIRVisitor::visit(ast::InstructionOpAssign *i) {
+        auto left_variable = resolveUseScope(i->getVariable().get());
+        auto right_variable = resolveUseScope(i->getVariable().get());
+        auto op = i->getOp();
+        i->getValue()->accept(this);
+        auto value = std::make_unique<AtomIdentifier>(last_expr->getValue());
+
+        auto new_i = std::make_unique<hir::InstructionAssignBinaryOp>(
+            std::move(left_variable), op, std::move(right_variable),
+            std::move(value));
+        result.push_back(std::move(new_i));
+    }
+
     void ASTToHIRVisitor::visit(ast::InstructionReturn *i) {
         i->getValue()->accept(this);
         auto value = std::make_unique<AtomIdentifier>(last_expr->getValue());
