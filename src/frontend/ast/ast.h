@@ -51,6 +51,7 @@ namespace frontend::ast {
         void visit(InstructionDeclaration *i) override;
         void visit(InstructionDeclarationAssign *i) override;
         void visit(InstructionAssign *i) override;
+        void visit(InstructionOpAssign *i) override;
         void visit(InstructionReturn *i) override;
         void visit(InstructionIf *i) override;
         void visit(InstructionWhile *i) override;

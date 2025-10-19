@@ -78,6 +78,21 @@ namespace frontend::ast {
         std::unique_ptr<Expr> value;
     };
 
+    class InstructionOpAssign : public Instruction {
+    public:
+        InstructionOpAssign(std::unique_ptr<AtomIdentifier> variable,
+                            BinaryOp op, std::unique_ptr<Expr> value);
+        std::unique_ptr<AtomIdentifier> &getVariable();
+        BinaryOp getOp();
+        std::unique_ptr<Expr> &getValue();
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        std::unique_ptr<AtomIdentifier> variable;
+        BinaryOp op;
+        std::unique_ptr<Expr> value;
+    };
+
     class InstructionReturn : public Instruction {
     public:
         InstructionReturn(std::unique_ptr<Expr> value);
@@ -126,6 +141,7 @@ namespace frontend::ast {
         virtual void visit(InstructionDeclaration *i) = 0;
         virtual void visit(InstructionDeclarationAssign *i) = 0;
         virtual void visit(InstructionAssign *i) = 0;
+        virtual void visit(InstructionOpAssign *i) = 0;
         virtual void visit(InstructionReturn *i) = 0;
         virtual void visit(InstructionIf *i) = 0;
         virtual void visit(InstructionWhile *i) = 0;
