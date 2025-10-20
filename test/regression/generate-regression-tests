@@ -21,8 +21,6 @@ for test in ${INPUT_DIR}/*.c; do
         PARAMS=$(paste -sd, ${PASSES})
         $(${PANNICC} -O0 --passes=${PARAMS} ${test} > ${OUTPUT_DIR}/${INPUT}_opt.mir)
     fi
-
-    # TODO: generate tests with passes
 done
 
 exit 0
