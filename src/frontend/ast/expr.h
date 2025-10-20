@@ -38,14 +38,14 @@ namespace frontend::ast {
     class CallExpr : public Expr {
     public:
         CallExpr(std::unique_ptr<AtomIdentifier> callee,
-                 std::vector<std::unique_ptr<Atom>> arguments);
+                 std::vector<std::unique_ptr<Expr>> arguments);
         std::unique_ptr<AtomIdentifier> &getCallee();
-        std::vector<std::unique_ptr<Atom>> &getArguments();
+        std::vector<std::unique_ptr<Expr>> &getArguments();
         void accept(ExprVisitor *visitor);
 
     private:
         std::unique_ptr<AtomIdentifier> callee;
-        std::vector<std::unique_ptr<Atom>> arguments;
+        std::vector<std::unique_ptr<Expr>> arguments;
     };
 
     class UnaryOpExpr : public Expr {
