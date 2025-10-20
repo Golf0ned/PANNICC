@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "frontend/utils/atom.h"
 #include "frontend/utils/operator.h"
@@ -36,13 +37,15 @@ namespace frontend::ast {
 
     class CallExpr : public Expr {
     public:
-        CallExpr(std::unique_ptr<AtomIdentifier> callee);
+        CallExpr(std::unique_ptr<AtomIdentifier> callee,
+                 std::vector<std::unique_ptr<Atom>> arguments);
         std::unique_ptr<AtomIdentifier> &getCallee();
+        std::vector<std::unique_ptr<Atom>> &getArguments();
         void accept(ExprVisitor *visitor);
 
     private:
         std::unique_ptr<AtomIdentifier> callee;
-        // TODO: params
+        std::vector<std::unique_ptr<Atom>> arguments;
     };
 
     class UnaryOpExpr : public Expr {
