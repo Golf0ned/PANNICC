@@ -7,12 +7,16 @@
 
 namespace frontend::ast {
     Function::Function(Type type, std::unique_ptr<AtomIdentifier> name,
+                       std::vector<Parameter> parameters,
                        std::unique_ptr<Scope> body)
-        : type(type), name(std::move(name)), body(std::move(body)) {}
+        : type(type), name(std::move(name)), parameters(std::move(parameters)),
+          body(std::move(body)) {}
 
     Type Function::getType() { return type; }
 
     std::unique_ptr<AtomIdentifier> &Function::getName() { return name; }
+
+    std::vector<Parameter> &Function::getParameters() { return parameters; }
 
     std::unique_ptr<Scope> &Function::getBody() { return body; }
 
@@ -20,7 +24,16 @@ namespace frontend::ast {
         std::string type_str = ::frontend::toString(type);
         std::string name_str = name->toString(*symbol_table);
 
-        std::string res = type_str + " " + name_str + "()";
+        std::string res = type_str + " " + name_str + '(';
+        for (auto iter = parameters.begin(); iter != parameters.end(); iter++) {
+            if (iter != parameters.begin())
+                res += ", ";
+            auto &[param_type, param_name] = *iter;
+            res += ::frontend::toString(param_type) + ' ' +
+                   param_name->toString(*symbol_table);
+        }
+        res += ')';
+
         ToStringVisitor visitor = ToStringVisitor(symbol_table);
         body->accept(&visitor);
         res += " " + visitor.getResult();
@@ -182,8 +195,14 @@ namespace frontend::ast {
     }
 
     void ToStringVisitor::visit(CallExpr *e) {
-        // TODO: function params
-        res = e->getCallee()->toString(*symbol_table) + "()";
+        res = e->getCallee()->toString(*symbol_table) + '(';
+        auto &args = e->getArguments();
+        for (auto iter = args.begin(); iter != args.end(); iter++) {
+            if (iter != args.begin())
+                res += ", ";
+            res += iter->get()->toString(*symbol_table);
+        }
+        res += ')';
     }
 
     void ToStringVisitor::visit(UnaryOpExpr *e) {

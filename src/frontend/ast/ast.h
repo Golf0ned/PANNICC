@@ -9,19 +9,23 @@
 #include "frontend/utils/type.h"
 
 namespace frontend::ast {
+    using Parameter = std::pair<Type, std::unique_ptr<AtomIdentifier>>;
+
     class Function {
     public:
         Function(Type type, std::unique_ptr<AtomIdentifier> name,
+                 std::vector<Parameter> parameters,
                  std::unique_ptr<Scope> body);
         Type getType();
         std::unique_ptr<AtomIdentifier> &getName();
+        std::vector<Parameter> &getParameters();
         std::unique_ptr<Scope> &getBody();
         std::string toString(SymbolTable *symbol_table);
 
     private:
         Type type;
         std::unique_ptr<AtomIdentifier> name;
-        // TODO: params
+        std::vector<Parameter> parameters;
         std::unique_ptr<Scope> body;
     };
 
