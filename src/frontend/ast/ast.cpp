@@ -195,14 +195,15 @@ namespace frontend::ast {
     }
 
     void ToStringVisitor::visit(CallExpr *e) {
-        res = e->getCallee()->toString(*symbol_table) + '(';
+        std::string expr_res = e->getCallee()->toString(*symbol_table) + '(';
         auto &args = e->getArguments();
         for (auto iter = args.begin(); iter != args.end(); iter++) {
             if (iter != args.begin())
-                res += ", ";
-            res += iter->get()->toString(*symbol_table);
+                expr_res += ", ";
+            iter->get()->accept(this);
+            expr_res += res;
         }
-        res += ')';
+        res = expr_res + ')';
     }
 
     void ToStringVisitor::visit(UnaryOpExpr *e) {

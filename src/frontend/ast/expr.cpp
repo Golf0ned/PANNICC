@@ -15,12 +15,12 @@ namespace frontend::ast {
     void ParenExpr::accept(ExprVisitor *visitor) { visitor->visit(this); }
 
     CallExpr::CallExpr(std::unique_ptr<AtomIdentifier> callee,
-                       std::vector<std::unique_ptr<Atom>> arguments)
+                       std::vector<std::unique_ptr<Expr>> arguments)
         : callee(std::move(callee)), arguments(std::move(arguments)) {}
 
     std::unique_ptr<AtomIdentifier> &CallExpr::getCallee() { return callee; }
 
-    std::vector<std::unique_ptr<Atom>> &CallExpr::getArguments() {
+    std::vector<std::unique_ptr<Expr>> &CallExpr::getArguments() {
         return arguments;
     }
 
