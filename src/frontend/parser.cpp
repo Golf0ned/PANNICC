@@ -32,6 +32,8 @@ namespace frontend {
     std::vector<std::unique_ptr<ast::Expr>> parsed_exprs;
     std::vector<std::unique_ptr<ast::Scope>> active_scopes;
     BinaryOp last_op_equals;
+    std::vector<std::unique_ptr<ast::Expr>> active_args;
+    std::vector<ast::Parameter> active_params;
 
     std::unique_ptr<Atom> popAtom() {
         auto [token_val, token_type] = parsed_tokens.back();
@@ -120,6 +122,10 @@ namespace frontend {
 
     struct ignorable : pegtl::star<pegtl::sor<whitespace_char, comment>> {};
 
+    // Comma separable list
+    template <typename Rule>
+    using pegtl_comma_list = pegtl::list<Rule, pegtl::seq<comma, ignorable>>;
+
     // Expression
     // Refer to operator precedence:
     // https://en.cppreference.com/w/c/language/operator_precedence.html
@@ -134,9 +140,10 @@ namespace frontend {
                                pegtl::plus<pegtl::digit>> {};
     // 1
     struct expr_1;
-    struct call : pegtl::seq<identifier, ignorable, left_paren, ignorable,
-                             // TODO: parameter list
-                             right_paren> {};
+    struct call_arg : pegtl::seq<expr, ignorable> {};
+    struct call
+        : pegtl::seq<identifier, ignorable, left_paren, ignorable,
+                     pegtl::opt<pegtl_comma_list<call_arg>>, right_paren> {};
     struct parens
         : pegtl::seq<left_paren, ignorable, expr, ignorable, right_paren> {};
     struct value : pegtl::sor<identifier, number> {};
@@ -268,10 +275,12 @@ namespace frontend {
                      pegtl::star<pegtl::seq<instruction_any, ignorable>>,
                      right_brace> {};
 
-    struct function : pegtl::seq<type, ignorable, identifier, ignorable,
-                                 left_paren, ignorable,
-                                 // TODO: parameter list
-                                 right_paren, ignorable, scope, ignorable> {};
+    struct function_param : pegtl::seq<type, ignorable, identifier, ignorable> {
+    };
+    struct function
+        : pegtl::seq<type, ignorable, identifier, ignorable, left_paren,
+                     ignorable, pegtl::opt<pegtl_comma_list<function_param>>,
+                     right_paren, ignorable, scope, ignorable> {};
 
     struct entry_point
         : pegtl::seq<ignorable, pegtl::star<function>, ignorable> {};
@@ -308,11 +317,21 @@ namespace frontend {
         }
     };
 
+    template <> struct action<call_arg> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto arg = popExpr();
+            active_args.push_back(std::move(arg));
+        }
+    };
+
     template <> struct action<call> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto callee = popIdentifier();
-            auto expr = std::make_unique<ast::CallExpr>(std::move(callee));
+            auto expr = std::make_unique<ast::CallExpr>(std::move(callee),
+                                                        std::move(active_args));
+            active_args.clear();
             parsed_exprs.push_back(std::move(expr));
         }
     };
@@ -646,15 +665,27 @@ namespace frontend {
     };
 
     // Function
+    template <> struct action<function_param> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            auto param_name = popIdentifier();
+            auto param_type = Type::INT;
+            active_params.push_back({param_type, std::move(param_name)});
+        }
+    };
+
     template <> struct action<function> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto body = popScope();
+
             auto name = popIdentifier();
             auto type = Type::INT;
 
-            res.push_back(
-                ast::Function(type, std::move(name), std::move(body)));
+            res.push_back(ast::Function(type, std::move(name),
+                                        std::move(active_params),
+                                        std::move(body)));
+            active_params.clear();
         }
     };
 
