@@ -274,6 +274,13 @@ namespace frontend {
     }
 
     void ASTToHIRVisitor::visit(ast::CallExpr *e) {
+        std::vector<std::unique_ptr<Atom>> args;
+        for (auto &arg : e->getArguments()) {
+            arg->accept(this);
+            args.push_back(
+                std::make_unique<AtomIdentifier>(last_expr->getValue()));
+        }
+
         auto type = Type::INT;
         auto var_declare = makeTemp("call");
         auto var_assign =
@@ -286,7 +293,8 @@ namespace frontend {
 
         auto new_assign = std::make_unique<hir::InstructionCallAssign>(
             std::move(var_assign),
-            createUnscopedIdentifier(e->getCallee()->toString(*old_table)));
+            createUnscopedIdentifier(e->getCallee()->toString(*old_table)),
+            std::move(args));
         result.push_back(std::move(new_assign));
     }
 
@@ -344,13 +352,18 @@ namespace frontend {
             auto name = visitor.createUnscopedIdentifier(
                 f.getName()->toString(*old_table));
 
-            // TODO: params
+            std::vector<hir::Parameter> params;
+            for (auto &[param_type, param_name] : f.getParameters()) {
+                params.push_back({param_type, visitor.resolveDeclarationScope(
+                                                  param_name.get())});
+            }
 
             f.getBody()->accept(&visitor);
             visitor.addReturnIfMissing(f);
             auto body = visitor.getResult();
 
-            hir::Function hir_function(type, std::move(name), std::move(body));
+            hir::Function hir_function(type, std::move(name), std::move(params),
+                                       std::move(body));
             functions.push_back(std::move(hir_function));
             visitor.clearResult();
         }
