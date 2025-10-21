@@ -2,12 +2,16 @@
 
 namespace frontend::hir {
     Function::Function(Type type, std::unique_ptr<AtomIdentifier> name,
+                       std::vector<Parameter> parameters,
                        std::vector<std::unique_ptr<Instruction>> body)
-        : type(type), name(std::move(name)), body(std::move(body)) {}
+        : type(type), name(std::move(name)), parameters(std::move(parameters)),
+          body(std::move(body)) {}
 
     Type Function::getType() { return type; }
 
     std::unique_ptr<AtomIdentifier> &Function::getName() { return name; }
+
+    std::vector<Parameter> &Function::getParameters() { return parameters; }
 
     std::vector<std::unique_ptr<Instruction>> &Function::getBody() {
         return body;
@@ -17,7 +21,16 @@ namespace frontend::hir {
         std::string type_str = ::frontend::toString(type);
         std::string name_str = name->toString(*symbol_table);
 
-        std::string res = type_str + " " + name_str + "() {\n";
+        std::string res = type_str + " " + name_str + "(";
+        for (auto iter = parameters.begin(); iter != parameters.end(); iter++) {
+            if (iter != parameters.begin())
+                res += ", ";
+            auto &[param_type, param_name] = *iter;
+            res += ::frontend::toString(param_type) + ' ' +
+                   param_name->toString(*symbol_table);
+        }
+        res += ") {\n";
+
         ToStringVisitor visitor = ToStringVisitor(symbol_table);
         for (auto &i : body) {
             i->accept(&visitor);
@@ -104,15 +117,27 @@ namespace frontend::hir {
 
     void ToStringVisitor::visit(InstructionCall *i) {
         const std::string callee = i->getCallee()->toString(*symbol_table);
-
-        res = "    " + callee + '(' + ");";
+        res = "    " + callee + '(';
+        auto &args = i->getArguments();
+        for (auto iter = args.begin(); iter != args.end(); iter++) {
+            if (iter != args.begin())
+                res += ", ";
+            res += iter->get()->toString(*symbol_table);
+        }
+        res += ");";
     }
 
     void ToStringVisitor::visit(InstructionCallAssign *i) {
         const std::string variable = i->getVariable()->toString(*symbol_table);
         const std::string callee = i->getCallee()->toString(*symbol_table);
-
-        res = "    " + variable + " = " + callee + '(' + ");";
+        res = "    " + variable + " = " + callee + '(';
+        auto &args = i->getArguments();
+        for (auto iter = args.begin(); iter != args.end(); iter++) {
+            if (iter != args.begin())
+                res += ", ";
+            res += iter->get()->toString(*symbol_table);
+        }
+        res += ");";
     }
 
     void ToStringVisitor::visit(InstructionBranch *i) {
