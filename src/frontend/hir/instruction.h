@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "frontend/utils/atom.h"
 #include "frontend/utils/operator.h"
@@ -96,25 +97,31 @@ namespace frontend::hir {
 
     class InstructionCall : public Instruction {
     public:
-        InstructionCall(std::unique_ptr<AtomIdentifier> callee);
+        InstructionCall(std::unique_ptr<AtomIdentifier> callee,
+                        std::vector<std::unique_ptr<Atom>> arguments);
         std::unique_ptr<AtomIdentifier> &getCallee();
+        std::vector<std::unique_ptr<Atom>> &getArguments();
         void accept(InstructionVisitor *visitor);
 
     private:
         std::unique_ptr<AtomIdentifier> callee;
+        std::vector<std::unique_ptr<Atom>> arguments;
     };
 
     class InstructionCallAssign : public Instruction {
     public:
         InstructionCallAssign(std::unique_ptr<AtomIdentifier> variable,
-                              std::unique_ptr<AtomIdentifier> callee);
+                              std::unique_ptr<AtomIdentifier> callee,
+                              std::vector<std::unique_ptr<Atom>> arguments);
         std::unique_ptr<AtomIdentifier> &getVariable();
         std::unique_ptr<AtomIdentifier> &getCallee();
+        std::vector<std::unique_ptr<Atom>> &getArguments();
         void accept(InstructionVisitor *visitor);
 
     private:
         std::unique_ptr<AtomIdentifier> variable;
         std::unique_ptr<AtomIdentifier> callee;
+        std::vector<std::unique_ptr<Atom>> arguments;
     };
 
     class InstructionBranch : public Instruction {

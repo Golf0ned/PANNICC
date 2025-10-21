@@ -89,11 +89,17 @@ namespace frontend::hir {
         visitor->visit(this);
     }
 
-    InstructionCall::InstructionCall(std::unique_ptr<AtomIdentifier> callee)
-        : callee(std::move(callee)) {}
+    InstructionCall::InstructionCall(
+        std::unique_ptr<AtomIdentifier> callee,
+        std::vector<std::unique_ptr<Atom>> arguments)
+        : callee(std::move(callee)), arguments(std::move(arguments)) {}
 
     std::unique_ptr<AtomIdentifier> &InstructionCall::getCallee() {
         return callee;
+    }
+
+    std::vector<std::unique_ptr<Atom>> &InstructionCall::getArguments() {
+        return arguments;
     }
 
     void InstructionCall::accept(InstructionVisitor *visitor) {
@@ -102,8 +108,10 @@ namespace frontend::hir {
 
     InstructionCallAssign::InstructionCallAssign(
         std::unique_ptr<AtomIdentifier> variable,
-        std::unique_ptr<AtomIdentifier> callee)
-        : variable(std::move(variable)), callee(std::move(callee)) {}
+        std::unique_ptr<AtomIdentifier> callee,
+        std::vector<std::unique_ptr<Atom>> arguments)
+        : variable(std::move(variable)), callee(std::move(callee)),
+          arguments(std::move(arguments)) {}
 
     std::unique_ptr<AtomIdentifier> &InstructionCallAssign::getVariable() {
         return variable;
@@ -111,6 +119,10 @@ namespace frontend::hir {
 
     std::unique_ptr<AtomIdentifier> &InstructionCallAssign::getCallee() {
         return callee;
+    }
+
+    std::vector<std::unique_ptr<Atom>> &InstructionCallAssign::getArguments() {
+        return arguments;
     }
 
     void InstructionCallAssign::accept(InstructionVisitor *visitor) {
