@@ -98,12 +98,20 @@ namespace middleend::mir {
     }
 
     std::string Function::toString() {
-        // TODO: function params
-        std::string res = "define " + ::middleend::mir::toString(type) + " @" +
-                          name + "() {\n";
-
         NumberIR nir;
         nir.run(this);
+
+        std::string res =
+            "define " + ::middleend::mir::toString(type) + " @" + name + "(";
+
+        ToStringVisitor visitor(&nir);
+        for (auto iter = parameters.begin(); iter != parameters.end(); iter++) {
+            if (iter != parameters.begin())
+                res += ", ";
+            res += visitor.valueToTypedString(iter->get());
+        }
+
+        res += ") {\n";
 
         for (auto iter = basic_blocks.begin(); iter != basic_blocks.end();
              iter++) {
@@ -155,7 +163,6 @@ namespace middleend::mir {
         Literal *l = dynamic_cast<Literal *>(v);
         if (l)
             return std::to_string(l->getValue());
-        // TODO: function params
         return "%" + std::to_string(nir->getNumber(v));
     }
 
@@ -177,7 +184,16 @@ namespace middleend::mir {
         std::string f_type = toString(i->getCallee()->getType());
         std::string f_name = i->getCallee()->getName();
 
-        result = var + " = call " + f_type + " @" + f_name;
+        result = var + " = call " + f_type + " @" + f_name + '(';
+
+        auto &args = i->getArguments();
+        for (auto iter = args.begin(); iter != args.end(); iter++) {
+            if (iter != args.begin())
+                result += ", ";
+            result += valueToTypedString(*iter);
+        }
+
+        result += ')';
     }
 
     void ToStringVisitor::visit(InstructionAlloca *i) {
