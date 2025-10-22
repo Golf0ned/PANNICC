@@ -1,0 +1,37 @@
+int foo(int a_0, int b_0) {
+    __entry:
+    int __term;
+    __term = a_0;
+    int __term1;
+    __term1 = a_0;
+    int __term2;
+    __term2 = b_0;
+    int __bin;
+    __bin = __term1 * __term2;
+    int __bin1;
+    __bin1 = __term + __bin;
+    return __bin1;
+}
+
+int bar(int c_0, int d_0) {
+    __entry:
+    int a_1;
+    int __term;
+    __term = c_0;
+    int __term1;
+    __term1 = d_0;
+    int __call;
+    __call = foo(__term, __term1);
+    a_1 = __call;
+    int __term2;
+    __term2 = d_0;
+    int __term3;
+    __term3 = c_0;
+    int __call1;
+    __call1 = foo(__term2, __term3);
+    int __term4;
+    __term4 = a_1;
+    int __bin;
+    __bin = __call1 + __term4;
+    return __bin;
+}

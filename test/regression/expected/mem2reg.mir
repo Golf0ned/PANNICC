@@ -48,7 +48,7 @@ entry:
   %1 = alloca i32
   %2 = alloca i32
   %3 = alloca i32
-  %4 = call i32 @fun_call
+  %4 = call i32 @fun_call()
   store i32 %4, ptr %3
   %5 = load ptr %3
   store i32 %5, ptr %1

@@ -1,0 +1,6 @@
+int foo(int a, int b) { return a + a * b; }
+
+int bar(int c, int d) {
+    int a = foo(c, d);
+    return foo(d, c) + a;
+}
