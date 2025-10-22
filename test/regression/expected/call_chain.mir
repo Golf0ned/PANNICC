@@ -16,7 +16,7 @@ define i32 @second() {
 entry:
   %0 = alloca i32
   %1 = alloca i32
-  %2 = call i32 @first
+  %2 = call i32 @first()
   store i32 %2, ptr %1
   %3 = alloca i32
   store i32 1, ptr %3
@@ -38,7 +38,7 @@ define i32 @third() {
 entry:
   %0 = alloca i32
   %1 = alloca i32
-  %2 = call i32 @second
+  %2 = call i32 @second()
   store i32 %2, ptr %1
   %3 = alloca i32
   store i32 2, ptr %3
@@ -60,7 +60,7 @@ define i32 @fourth() {
 entry:
   %0 = alloca i32
   %1 = alloca i32
-  %2 = call i32 @third
+  %2 = call i32 @third()
   store i32 %2, ptr %1
   %3 = alloca i32
   store i32 3, ptr %3
@@ -82,7 +82,7 @@ define i32 @fifth() {
 entry:
   %0 = alloca i32
   %1 = alloca i32
-  %2 = call i32 @fourth
+  %2 = call i32 @fourth()
   store i32 %2, ptr %1
   %3 = alloca i32
   store i32 4, ptr %3
@@ -104,7 +104,7 @@ define i32 @sixth() {
 entry:
   %0 = alloca i32
   %1 = alloca i32
-  %2 = call i32 @fifth
+  %2 = call i32 @fifth()
   store i32 %2, ptr %1
   %3 = alloca i32
   store i32 5, ptr %3
@@ -126,7 +126,7 @@ define i32 @main() {
 entry:
   %0 = alloca i32
   %1 = alloca i32
-  %2 = call i32 @sixth
+  %2 = call i32 @sixth()
   store i32 %2, ptr %1
   %3 = alloca i32
   %4 = alloca i32
@@ -137,7 +137,7 @@ entry:
   %7 = load ptr %3
   store i32 %7, ptr %6
   %8 = alloca i32
-  %9 = call i32 @first
+  %9 = call i32 @first()
   store i32 %9, ptr %8
   %10 = alloca i32
   %11 = load ptr %6
@@ -150,7 +150,7 @@ entry:
   %16 = load ptr %3
   store i32 %16, ptr %15
   %17 = alloca i32
-  %18 = call i32 @second
+  %18 = call i32 @second()
   store i32 %18, ptr %17
   %19 = alloca i32
   %20 = load ptr %15
@@ -163,7 +163,7 @@ entry:
   %25 = load ptr %3
   store i32 %25, ptr %24
   %26 = alloca i32
-  %27 = call i32 @third
+  %27 = call i32 @third()
   store i32 %27, ptr %26
   %28 = alloca i32
   %29 = load ptr %24
@@ -176,7 +176,7 @@ entry:
   %34 = load ptr %3
   store i32 %34, ptr %33
   %35 = alloca i32
-  %36 = call i32 @fourth
+  %36 = call i32 @fourth()
   store i32 %36, ptr %35
   %37 = alloca i32
   %38 = load ptr %33
@@ -189,7 +189,7 @@ entry:
   %43 = load ptr %3
   store i32 %43, ptr %42
   %44 = alloca i32
-  %45 = call i32 @fifth
+  %45 = call i32 @fifth()
   store i32 %45, ptr %44
   %46 = alloca i32
   %47 = load ptr %42
@@ -202,7 +202,7 @@ entry:
   %52 = load ptr %3
   store i32 %52, ptr %51
   %53 = alloca i32
-  %54 = call i32 @sixth
+  %54 = call i32 @sixth()
   store i32 %54, ptr %53
   %55 = alloca i32
   %56 = load ptr %51
@@ -215,7 +215,7 @@ entry:
   %61 = load ptr %3
   store i32 %61, ptr %60
   %62 = alloca i32
-  %63 = call i32 @first
+  %63 = call i32 @first()
   store i32 %63, ptr %62
   %64 = alloca i32
   %65 = load ptr %60
@@ -223,7 +223,7 @@ entry:
   %67 = add i32 %65, i32 %66
   store i32 %67, ptr %64
   %68 = alloca i32
-  %69 = call i32 @second
+  %69 = call i32 @second()
   store i32 %69, ptr %68
   %70 = alloca i32
   %71 = load ptr %64
@@ -231,7 +231,7 @@ entry:
   %73 = add i32 %71, i32 %72
   store i32 %73, ptr %70
   %74 = alloca i32
-  %75 = call i32 @third
+  %75 = call i32 @third()
   store i32 %75, ptr %74
   %76 = alloca i32
   %77 = load ptr %70
@@ -239,7 +239,7 @@ entry:
   %79 = add i32 %77, i32 %78
   store i32 %79, ptr %76
   %80 = alloca i32
-  %81 = call i32 @fourth
+  %81 = call i32 @fourth()
   store i32 %81, ptr %80
   %82 = alloca i32
   %83 = load ptr %76
@@ -247,7 +247,7 @@ entry:
   %85 = add i32 %83, i32 %84
   store i32 %85, ptr %82
   %86 = alloca i32
-  %87 = call i32 @fifth
+  %87 = call i32 @fifth()
   store i32 %87, ptr %86
   %88 = alloca i32
   %89 = load ptr %82
@@ -255,7 +255,7 @@ entry:
   %91 = add i32 %89, i32 %90
   store i32 %91, ptr %88
   %92 = alloca i32
-  %93 = call i32 @sixth
+  %93 = call i32 @sixth()
   store i32 %93, ptr %92
   %94 = alloca i32
   %95 = load ptr %88

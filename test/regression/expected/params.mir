@@ -1,0 +1,83 @@
+define i32 @foo(i32 %0, i32 %1) {
+entry:
+  %2 = alloca i32
+  store i32 %0, ptr %3
+  %3 = alloca i32
+  store i32 %1, ptr %4
+  %4 = alloca i32
+  %5 = alloca i32
+  %6 = load ptr %3
+  store i32 %6, ptr %5
+  %7 = alloca i32
+  %8 = load ptr %3
+  store i32 %8, ptr %7
+  %9 = alloca i32
+  %10 = load ptr %4
+  store i32 %10, ptr %9
+  %11 = alloca i32
+  %12 = load ptr %7
+  %13 = load ptr %9
+  %14 = mul i32 %12, i32 %13
+  store i32 %14, ptr %11
+  %15 = alloca i32
+  %16 = load ptr %5
+  %17 = load ptr %11
+  %18 = add i32 %16, i32 %17
+  store i32 %18, ptr %15
+  %19 = load ptr %15
+  store i32 %19, ptr %2
+  br label 20
+
+20:
+  %21 = load ptr %2
+  ret i32 %21
+}
+
+define i32 @bar(i32 %0, i32 %1) {
+entry:
+  %2 = alloca i32
+  store i32 %0, ptr %3
+  %3 = alloca i32
+  store i32 %1, ptr %4
+  %4 = alloca i32
+  %5 = alloca i32
+  %6 = alloca i32
+  %7 = load ptr %3
+  store i32 %7, ptr %6
+  %8 = alloca i32
+  %9 = load ptr %4
+  store i32 %9, ptr %8
+  %10 = alloca i32
+  %11 = load ptr %6
+  %12 = load ptr %8
+  %13 = call i32 @foo(i32 %11, i32 %12)
+  store i32 %13, ptr %10
+  %14 = load ptr %10
+  store i32 %14, ptr %5
+  %15 = alloca i32
+  %16 = load ptr %4
+  store i32 %16, ptr %15
+  %17 = alloca i32
+  %18 = load ptr %3
+  store i32 %18, ptr %17
+  %19 = alloca i32
+  %20 = load ptr %15
+  %21 = load ptr %17
+  %22 = call i32 @foo(i32 %20, i32 %21)
+  store i32 %22, ptr %19
+  %23 = alloca i32
+  %24 = load ptr %5
+  store i32 %24, ptr %23
+  %25 = alloca i32
+  %26 = load ptr %19
+  %27 = load ptr %23
+  %28 = add i32 %26, i32 %27
+  store i32 %28, ptr %25
+  %29 = load ptr %25
+  store i32 %29, ptr %2
+  br label 30
+
+30:
+  %31 = load ptr %2
+  ret i32 %31
+}

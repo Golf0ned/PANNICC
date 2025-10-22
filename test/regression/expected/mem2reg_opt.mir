@@ -16,7 +16,7 @@ entry:
 
 define i32 @mem2reg_branching() {
 entry:
-  %0 = call i32 @fun_call
+  %0 = call i32 @fun_call()
   %1 = sub i32 %0, i32 42
   br i32 %1, label 2, label 3
 
