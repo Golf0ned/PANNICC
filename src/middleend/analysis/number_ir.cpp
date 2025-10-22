@@ -8,6 +8,10 @@ namespace middleend {
 
     void NumberIR::run(mir::Function *f) {
         uint64_t counter = 0;
+
+        for (auto &param : f->getParameters())
+            value_ids[param.get()] = counter++;
+
         auto entry = f->getEntryBlock();
         for (auto &bb : f->getBasicBlocks()) {
             basic_block_ids[bb.get()] = bb.get() == entry ? -1 : counter++;
