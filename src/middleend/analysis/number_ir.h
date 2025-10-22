@@ -6,11 +6,12 @@ namespace middleend {
     class NumberIR : public AnalysisPass {
     public:
         void run(mir::Program &p) override;
+        void run(mir::Function *f);
         uint64_t getNumber(mir::BasicBlock *bb);
         uint64_t getNumber(mir::Value *i);
 
     private:
         std::unordered_map<mir::BasicBlock *, uint64_t> basic_block_ids;
-        std::unordered_map<mir::Value *, uint64_t> instruction_ids;
+        std::unordered_map<mir::Value *, uint64_t> value_ids;
     };
 } // namespace middleend
