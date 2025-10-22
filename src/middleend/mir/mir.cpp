@@ -1,5 +1,6 @@
 #include <map>
 
+#include "middleend/analysis/number_ir.h"
 #include "middleend/mir/instruction.h"
 #include "middleend/mir/mir.h"
 #include "middleend/mir/type.h"
@@ -53,16 +54,13 @@ namespace middleend::mir {
 
     BasicBlockEdges &BasicBlock::getSuccessors() { return successors; }
 
-    std::string BasicBlock::toString(
-        const std::unordered_map<BasicBlock *, uint64_t> &basic_block_ids,
-        const std::unordered_map<Value *, uint64_t> &instruction_ids) {
-        std::string name = basic_block_ids.at(this) == -1
-                               ? "entry"
-                               : std::to_string(basic_block_ids.at(this));
+    std::string BasicBlock::toString(NumberIR *nir) {
+        uint64_t block_id = nir->getNumber(this);
+        std::string name = block_id == -1 ? "entry" : std::to_string(block_id);
 
         std::string res = name + ":\n";
 
-        ToStringVisitor visitor(basic_block_ids, instruction_ids);
+        ToStringVisitor visitor(nir);
         for (auto &i : body) {
             i->accept(&visitor);
             res += "  " + visitor.getResult() + '\n';
@@ -104,29 +102,14 @@ namespace middleend::mir {
         std::string res = "define " + ::middleend::mir::toString(type) + " @" +
                           name + "() {\n";
 
-        uint64_t counter = 0;
-        std::unordered_map<BasicBlock *, uint64_t> basic_block_ids;
-        std::unordered_map<Value *, uint64_t> instruction_ids;
-        for (auto &bb : basic_blocks) {
-            basic_block_ids[bb.get()] =
-                bb.get() == entry_block ? -1 : counter++;
-
-            for (auto &i : bb->getInstructions()) {
-                auto v = dynamic_cast<Value *>(i.get());
-                if (v)
-                    instruction_ids[v] = counter++;
-            }
-
-            auto t = dynamic_cast<Value *>(bb->getTerminator().get());
-            if (t)
-                instruction_ids[t] = counter++;
-        }
+        NumberIR nir;
+        nir.run(this);
 
         for (auto iter = basic_blocks.begin(); iter != basic_blocks.end();
              iter++) {
             if (iter != basic_blocks.begin())
                 res += "\n\n";
-            res += iter->get()->toString(basic_block_ids, instruction_ids);
+            res += iter->get()->toString(&nir);
         }
         res += "\n}";
         return res;
@@ -163,10 +146,7 @@ namespace middleend::mir {
         return res;
     }
 
-    ToStringVisitor::ToStringVisitor(
-        const std::unordered_map<BasicBlock *, uint64_t> &basic_block_ids,
-        const std::unordered_map<Value *, uint64_t> &instruction_ids)
-        : basic_block_ids(basic_block_ids), instruction_ids(instruction_ids) {}
+    ToStringVisitor::ToStringVisitor(NumberIR *nir) : nir(nir) {}
 
     std::string ToStringVisitor::getResult() { return result; }
 
@@ -176,7 +156,7 @@ namespace middleend::mir {
         if (l)
             return std::to_string(l->getValue());
         // TODO: function params
-        return "%" + std::to_string(instruction_ids.at(v));
+        return "%" + std::to_string(nir->getNumber(v));
     }
 
     std::string ToStringVisitor::valueToTypedString(Value *v) {
@@ -226,7 +206,7 @@ namespace middleend::mir {
         std::string type = toString(i->getType());
 
         auto comp = [&](BasicBlock *a, BasicBlock *b) {
-            return basic_block_ids[a] < basic_block_ids[b];
+            return nir->getNumber(a) < nir->getNumber(b);
         };
 
         auto pairs = i->getPredecessors();
@@ -239,7 +219,7 @@ namespace middleend::mir {
                 result += ", ";
             std::string value = valueToString(iter->second);
             std::string bb_name =
-                '%' + std::to_string(basic_block_ids.at(iter->first));
+                '%' + std::to_string(nir->getNumber(iter->first));
             result += "[ " + value + ", " + bb_name + " ]";
         }
     }
@@ -251,16 +231,16 @@ namespace middleend::mir {
     }
 
     void ToStringVisitor::visit(TerminatorBranch *t) {
-        std::string bb = std::to_string(basic_block_ids.at(t->getSuccessor()));
+        std::string bb = std::to_string(nir->getNumber(t->getSuccessor()));
         result = "br label " + bb;
     }
 
     void ToStringVisitor::visit(TerminatorCondBranch *t) {
         std::string cond = valueToTypedString(t->getCond());
         std::string bb_true =
-            std::to_string(basic_block_ids.at(t->getTSuccessor()));
+            std::to_string(nir->getNumber(t->getTSuccessor()));
         std::string bb_false =
-            std::to_string(basic_block_ids.at(t->getFSuccessor()));
+            std::to_string(nir->getNumber(t->getFSuccessor()));
         result = "br " + cond + ", label " + bb_true + ", label " + bb_false;
     }
 } // namespace middleend::mir

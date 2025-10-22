@@ -8,6 +8,10 @@
 #include "middleend/mir/instruction.h"
 #include "middleend/mir/type.h"
 
+namespace middleend {
+    class NumberIR;
+}
+
 namespace middleend::mir {
     using LiteralMap = std::unordered_map<
         Type, std::unordered_map<uint64_t, std::unique_ptr<Literal>>>;
@@ -35,9 +39,7 @@ namespace middleend::mir {
         std::unique_ptr<Terminator> &getTerminator();
         BasicBlockEdges &getPredecessors();
         BasicBlockEdges &getSuccessors();
-        std::string toString(
-            const std::unordered_map<BasicBlock *, uint64_t> &basic_block_ids,
-            const std::unordered_map<Value *, uint64_t> &instruction_ids);
+        std::string toString(NumberIR *nir);
 
     private:
         std::list<std::unique_ptr<Instruction>> body;
@@ -83,9 +85,7 @@ namespace middleend::mir {
 
     class ToStringVisitor : public InstructionVisitor {
     public:
-        ToStringVisitor(
-            const std::unordered_map<BasicBlock *, uint64_t> &basic_block_ids,
-            const std::unordered_map<Value *, uint64_t> &instruction_ids);
+        ToStringVisitor(NumberIR *nir);
         std::string getResult();
 
         std::string valueToString(Value *v);
@@ -104,7 +104,6 @@ namespace middleend::mir {
 
     private:
         std::string result;
-        std::unordered_map<BasicBlock *, uint64_t> basic_block_ids;
-        std::unordered_map<Value *, uint64_t> instruction_ids;
+        NumberIR *nir;
     };
 } // namespace middleend::mir
