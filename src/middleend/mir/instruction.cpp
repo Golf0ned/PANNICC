@@ -42,10 +42,13 @@ namespace middleend::mir {
         visitor->visit(this);
     }
 
-    InstructionCall::InstructionCall(Type type, Function *callee)
-        : Value(type), callee(callee) {}
+    InstructionCall::InstructionCall(Type type, Function *callee,
+                                     std::vector<Value *> arguments)
+        : Value(type), callee(callee), arguments(arguments) {}
 
     Function *InstructionCall::getCallee() { return callee; }
+
+    std::vector<Value *> &InstructionCall::getArguments() { return arguments; }
 
     void InstructionCall::accept(InstructionVisitor *visitor) {
         visitor->visit(this);
