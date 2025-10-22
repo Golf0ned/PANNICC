@@ -12,24 +12,20 @@ namespace mir = middleend::mir;
 namespace frontend {
     std::unordered_map<uint64_t, mir::Function *> lowered_functions;
 
-    HIRToMIRVisitor::HIRToMIRVisitor(mir::Type function_type,
-                                     mir::LiteralMap &literal_map)
-        : new_basic_block(true), function_type(function_type),
-          literal_map(literal_map) {
-        // TODO: handle void
-        auto ret_val = std::make_unique<mir::InstructionAlloca>(function_type);
-        ret_alloca = ret_val.get();
-        cur_instructions.push_back(std::move(ret_val));
-    }
-
     mir::Program hirToMir(hir::Program &hir) {
         mir::LiteralMap literal_map;
         std::list<std::unique_ptr<mir::Function>> functions;
 
         for (auto &f : hir.getFunctions()) {
             mir::Type function_type = toMir(f.getType());
-
             HIRToMIRVisitor visitor(function_type, literal_map);
+
+            std::vector<std::unique_ptr<mir::Value>> params;
+            for (auto &[param_type, param_name] : f.getParameters()) {
+                auto param = visitor.addParameter(param_type, param_name.get());
+                params.push_back(std::move(param));
+            }
+
             for (auto &i : f.getBody()) {
                 if (visitor.startOfBasicBlock() &&
                     !dynamic_cast<hir::Label *>(i.get()))
@@ -44,15 +40,41 @@ namespace frontend {
             mir::BasicBlock *entry = basic_blocks.front().get();
 
             auto fun = std::make_unique<mir::Function>(
-                function_type, name, std::move(basic_blocks), entry);
+                function_type, name, std::move(params), std::move(basic_blocks),
+                entry);
             lowered_functions[name_atom->getValue()] = fun.get();
             functions.push_back(std::move(fun));
         }
         return mir::Program(std::move(functions), std::move(literal_map));
     }
 
+    HIRToMIRVisitor::HIRToMIRVisitor(mir::Type function_type,
+                                     mir::LiteralMap &literal_map)
+        : new_basic_block(true), function_type(function_type),
+          literal_map(literal_map) {
+        // TODO: handle void
+        auto ret_val = std::make_unique<mir::InstructionAlloca>(function_type);
+        ret_alloca = ret_val.get();
+        cur_instructions.push_back(std::move(ret_val));
+    }
+
     std::list<std::unique_ptr<mir::BasicBlock>> HIRToMIRVisitor::getResult() {
         return std::move(basic_blocks);
+    }
+
+    std::unique_ptr<mir::Value>
+    HIRToMIRVisitor::addParameter(Type type, AtomIdentifier *name) {
+        auto t = toMir(type);
+        auto param = std::make_unique<mir::Value>(t);
+        auto alloca = std::make_unique<mir::InstructionAlloca>(t);
+        auto store =
+            std::make_unique<mir::InstructionStore>(param.get(), alloca.get());
+        value_mappings[name->getValue()] = alloca.get();
+
+        cur_instructions.push_back(std::move(store));
+        cur_instructions.push_back(std::move(alloca));
+
+        return param;
     }
 
     mir::Value *HIRToMIRVisitor::resolveAtom(Atom *a) {

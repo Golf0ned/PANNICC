@@ -73,7 +73,7 @@ namespace middleend::mir {
     }
 
     Function::Function(Type type, std::string name,
-                       std::vector<std::unique_ptr<Value *>> parameters,
+                       std::vector<std::unique_ptr<Value>> parameters,
                        std::list<std::unique_ptr<BasicBlock>> basic_blocks,
                        BasicBlock *entry_block)
         : type(type), name(name), parameters(std::move(parameters)),
@@ -83,7 +83,7 @@ namespace middleend::mir {
 
     std::string Function::getName() { return name; }
 
-    std::vector<std::unique_ptr<Value *>> &Function::getParameters() {
+    std::vector<std::unique_ptr<Value>> &Function::getParameters() {
         return parameters;
     }
 
