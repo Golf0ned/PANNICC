@@ -14,6 +14,8 @@ namespace frontend {
         HIRToMIRVisitor(mir::Type function_type, mir::LiteralMap &literal_map);
 
         std::list<std::unique_ptr<mir::BasicBlock>> getResult();
+        std::unique_ptr<mir::Value> addParameter(Type type,
+                                                 AtomIdentifier *name);
         mir::Value *resolveAtom(Atom *a);
         mir::Value *getLiteral(uint64_t value, mir::Type type);
         bool startOfBasicBlock();
