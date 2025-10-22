@@ -283,7 +283,15 @@ namespace frontend {
         auto type = toMir(Type::INT);
         mir::Function *callee =
             lowered_functions.at(i->getCallee()->getValue());
-        auto call = std::make_unique<mir::InstructionCall>(type, callee);
+
+        std::vector<mir::Value *> args;
+        for (auto &arg : i->getArguments()) {
+            mir::Value *arg_val = resolveAtom(arg.get());
+            args.push_back(arg_val);
+        }
+
+        auto call = std::make_unique<mir::InstructionCall>(type, callee,
+                                                           std::move(args));
 
         cur_instructions.push_back(std::move(call));
     }
@@ -292,7 +300,15 @@ namespace frontend {
         auto type = toMir(Type::INT);
         mir::Function *callee =
             lowered_functions.at(i->getCallee()->getValue());
-        auto call = std::make_unique<mir::InstructionCall>(type, callee);
+
+        std::vector<mir::Value *> args;
+        for (auto &arg : i->getArguments()) {
+            mir::Value *arg_val = resolveAtom(arg.get());
+            args.push_back(arg_val);
+        }
+
+        auto call = std::make_unique<mir::InstructionCall>(type, callee,
+                                                           std::move(args));
 
         mir::InstructionAlloca *ptr =
             value_mappings.at(i->getVariable()->getValue());
