@@ -35,12 +35,15 @@ namespace middleend::mir {
 
     class InstructionCall : public Instruction, public Value {
     public:
-        InstructionCall(Type type, Function *callee);
+        InstructionCall(Type type, Function *callee,
+                        std::vector<Value *> arguments);
         Function *getCallee();
+        std::vector<Value *> &getArguments();
         void accept(InstructionVisitor *visitor);
 
     private:
         Function *callee;
+        std::vector<Value *> arguments;
     };
 
     class InstructionAlloca : public Instruction, public Value {
