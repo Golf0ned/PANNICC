@@ -23,15 +23,11 @@ int mem2reg_basic() {
     return __term3;
 }
 
-int mem2reg_branching() {
+int mem2reg_branching(int x_0) {
     __entry:
-    int x_1;
     int y_1;
-    int __call;
-    __call = fun_call();
-    x_1 = __call;
     int __term;
-    __term = x_1;
+    __term = x_0;
     int __term1;
     __term1 = 42;
     int __bin;
@@ -44,7 +40,7 @@ int mem2reg_branching() {
     goto __if_cont;
     __if_f:
     int __term3;
-    __term3 = x_1;
+    __term3 = x_0;
     int __term4;
     __term4 = 2;
     int __bin1;

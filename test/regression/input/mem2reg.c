@@ -11,11 +11,9 @@ int mem2reg_basic() {
     return b;
 }
 
-int mem2reg_branching() {
-    int x;
+int mem2reg_branching(int x) {
     int y;
 
-    x = fun_call();
     if (x - 42)
         y = 1;
     else
