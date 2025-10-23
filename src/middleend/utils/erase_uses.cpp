@@ -7,7 +7,10 @@ namespace middleend {
         i->delUse(i->getRight());
     }
 
-    void EraseUsesVisitor::visit(mir::InstructionCall *i) {}
+    void EraseUsesVisitor::visit(mir::InstructionCall *i) {
+        for (auto val : i->getArguments())
+            i->delUse(val);
+    }
 
     void EraseUsesVisitor::visit(mir::InstructionAlloca *i) {}
 

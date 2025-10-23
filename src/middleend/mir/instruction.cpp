@@ -44,7 +44,10 @@ namespace middleend::mir {
 
     InstructionCall::InstructionCall(Type type, Function *callee,
                                      std::vector<Value *> arguments)
-        : Value(type), callee(callee), arguments(arguments) {}
+        : Value(type), callee(callee), arguments(arguments) {
+        for (auto val : arguments)
+            addUse(val);
+    }
 
     Function *InstructionCall::getCallee() { return callee; }
 
