@@ -12,7 +12,17 @@ namespace middleend {
             i->setRight(new_value);
     }
 
-    void ReplaceUsesVisitor::visit(mir::InstructionCall *i) {}
+    void ReplaceUsesVisitor::visit(mir::InstructionCall *i) {
+        auto &args = i->getArguments();
+        for (auto iter = args.begin(); iter != args.end(); iter++) {
+            auto val = *iter;
+            if (val == old_value) {
+                i->delUse(val);
+                i->addUse(new_value);
+                *iter = new_value;
+            }
+        }
+    }
 
     void ReplaceUsesVisitor::visit(mir::InstructionAlloca *i) {}
 
@@ -26,7 +36,7 @@ namespace middleend {
     void ReplaceUsesVisitor::visit(mir::InstructionPhi *i) {
         for (auto &[bb, val] : i->getPredecessors()) {
             if (val == old_value)
-                i->getPredecessors()[bb] = new_value;
+                i->setPredecessor(bb, new_value);
         }
     }
 
