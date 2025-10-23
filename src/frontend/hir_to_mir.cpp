@@ -71,8 +71,8 @@ namespace frontend {
             std::make_unique<mir::InstructionStore>(param.get(), alloca.get());
         value_mappings[name->getValue()] = alloca.get();
 
-        cur_instructions.push_back(std::move(store));
         cur_instructions.push_back(std::move(alloca));
+        cur_instructions.push_back(std::move(store));
 
         return param;
     }
