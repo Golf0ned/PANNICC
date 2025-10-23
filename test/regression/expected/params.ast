@@ -1,8 +1,27 @@
-int foo(int a, int b) {
-    return a + a * b;
+int fun1(int a) {
+    return a * a;
 }
 
-int bar(int c, int d) {
-    int a = foo(c, d);
-    return foo(d, c) + a;
+int fun2(int a, int b) {
+    return fun1(a) + 2 * a * b + fun1(b);
+}
+
+int fun3(int a, int b, int c, int x) {
+    return a * fun1(x) + b * x + c;
+}
+
+int call1() {
+    return fun1(5);
+}
+
+int call2(int foo, int bar) {
+    return fun2(foo, bar);
+}
+
+int call3(int foo, int bar) {
+    return fun3(foo, bar, 1, 0);
+}
+
+int call4() {
+    return fun1(10) - 100;
 }
