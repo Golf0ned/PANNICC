@@ -3,11 +3,9 @@
 #include "backend/lir/data_size.h"
 
 namespace backend::lir {
-    namespace mir = middleend::mir;
-
-    DataSize fromMir(mir::Type type) {
+    DataSize fromMir(middleend::mir::Type type) {
         switch (type) {
-        case mir::Type::I32:
+        case middleend::mir::Type::I32:
             return DataSize::DOUBLEWORD;
         default:
             std::unreachable();

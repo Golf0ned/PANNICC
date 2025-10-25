@@ -4,22 +4,23 @@
 #include "middleend/mir/mir.h"
 #include "middleend/mir/value.h"
 
-namespace mir = middleend::mir;
-
 namespace frontend {
-    mir::Program hirToMir(hir::Program &hir);
+    middleend::mir::Program hirToMir(hir::Program &hir);
 
     class HIRToMIRVisitor : public hir::InstructionVisitor {
     public:
-        HIRToMIRVisitor(mir::Type function_type, mir::LiteralMap &literal_map);
+        HIRToMIRVisitor(middleend::mir::Type function_type,
+                        middleend::mir::LiteralMap &literal_map);
 
-        std::list<std::unique_ptr<mir::BasicBlock>> getResult();
-        std::unique_ptr<mir::Value> addParameter(Type type,
-                                                 AtomIdentifier *name);
-        mir::Value *resolveAtom(Atom *a);
-        mir::Value *getLiteral(uint64_t value, mir::Type type);
+        std::list<std::unique_ptr<middleend::mir::BasicBlock>> getResult();
+        std::unique_ptr<middleend::mir::Value>
+        addParameter(Type type, AtomIdentifier *name);
+        middleend::mir::Value *resolveAtom(Atom *a);
+        middleend::mir::Value *getLiteral(uint64_t value,
+                                          middleend::mir::Type type);
         bool startOfBasicBlock();
-        void createBasicBlock(std::unique_ptr<mir::Terminator> terminator);
+        void createBasicBlock(
+            std::unique_ptr<middleend::mir::Terminator> terminator);
         void connectBasicBlocks();
 
         void visit(hir::Instruction *i) override;
@@ -35,15 +36,18 @@ namespace frontend {
         void visit(hir::InstructionBranchCond *i) override;
 
     private:
-        mir::Type function_type;
-        mir::InstructionAlloca *ret_alloca;
-        std::list<std::unique_ptr<mir::Instruction>> cur_instructions;
-        std::list<std::unique_ptr<mir::BasicBlock>> basic_blocks;
-        mir::LiteralMap &literal_map;
+        middleend::mir::Type function_type;
+        middleend::mir::InstructionAlloca *ret_alloca;
+        std::list<std::unique_ptr<middleend::mir::Instruction>>
+            cur_instructions;
+        std::list<std::unique_ptr<middleend::mir::BasicBlock>> basic_blocks;
+        middleend::mir::LiteralMap &literal_map;
         bool new_basic_block;
         std::vector<uint64_t> labels;
-        std::unordered_map<uint64_t, mir::InstructionAlloca *> value_mappings;
-        std::vector<std::pair<mir::Instruction *, std::vector<uint64_t>>>
+        std::unordered_map<uint64_t, middleend::mir::InstructionAlloca *>
+            value_mappings;
+        std::vector<
+            std::pair<middleend::mir::Instruction *, std::vector<uint64_t>>>
             instruction_to_bbs;
     };
 } // namespace frontend
