@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/lir/data_size.h"
 #include "backend/lir/operand.h"
 
 namespace backend::lir {
@@ -11,9 +12,37 @@ namespace backend::lir {
         virtual ~Instruction() = default;
     };
 
-    class InstructionMov : public Instruction {};
-    class InstructionPush : public Instruction {};
-    class InstructionPop : public Instruction {};
+    class InstructionMov : public Instruction {
+    public:
+        InstructionMov(DataSize size, Operand *dst, Operand *src);
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        DataSize size;
+        Operand *dst;
+        Operand *src;
+    };
+
+    class InstructionPush : public Instruction {
+    public:
+        InstructionPush(DataSize size, Operand *src);
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        DataSize size;
+        Operand *src;
+    };
+
+    class InstructionPop : public Instruction {
+    public:
+        InstructionPop(DataSize size, Operand *dst);
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        DataSize size;
+        Operand *dst;
+    };
+
     // class InstructionNeg : public Instruction {};
     // class InstructionNot : public Instruction {};
     // class InstructionLea : public Instruction {};
@@ -31,8 +60,18 @@ namespace backend::lir {
     // class InstructionJmp : public Instruction {};
     // class InstructionJe : public Instruction {};
     // class InstructionJg : public Instruction {};
-    class InstructionCall : public Instruction {};
-    class InstructionRet : public Instruction {};
+    class InstructionCall : public Instruction {
+    public:
+        InstructionCall(std::string label);
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        std::string label;
+    };
+    class InstructionRet : public Instruction {
+    public:
+        void accept(InstructionVisitor *visitor);
+    };
 
     class InstructionVisitor {
     public:
