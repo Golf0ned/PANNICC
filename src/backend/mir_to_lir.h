@@ -2,16 +2,36 @@
 
 #include "backend/lir/lir.h"
 #include "middleend/mir/mir.h"
+#include "middleend/mir/operator.h"
 
 namespace backend {
     lir::Program mirToLir(middleend::mir::Program &mir);
 
-    class MIRToLIRVisitor : public middleend::mir::InstructionVisitor {
+    class Node {};
+
+    class RegisterNode : public Node {
     public:
-        MIRToLIRVisitor();
+        RegisterNode();
 
-        std::list<std::unique_ptr<lir::Instruction>> getResult();
+    private:
+        std::string name;
+        Node *source;
+    };
+    class ImmediateNode : public Node {
+    public:
+    private:
+        uint64_t value;
+    };
+    class OpNode : public Node {
+    public:
+    private:
+        middleend::mir::BinaryOp op;
+        Node *left;
+        Node *right;
+    };
 
+    class TreeGenVisitor : public middleend::mir::InstructionVisitor {
+    public:
         virtual void visit(middleend::mir::InstructionBinaryOp *i);
         virtual void visit(middleend::mir::InstructionCall *i);
         virtual void visit(middleend::mir::InstructionAlloca *i);
