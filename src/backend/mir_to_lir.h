@@ -1,6 +1,7 @@
 #pragma once
 
 #include "backend/lir/lir.h"
+#include "middleend/analysis/number_ir.h"
 #include "middleend/mir/mir.h"
 #include "middleend/mir/operator.h"
 
@@ -11,27 +12,74 @@ namespace backend {
 
     class RegisterNode : public Node {
     public:
-        RegisterNode();
+        RegisterNode(std::string name);
+        void setSource(std::unique_ptr<Node> new_node);
 
     private:
         std::string name;
-        Node *source;
+        std::unique_ptr<Node> source;
     };
+
     class ImmediateNode : public Node {
     public:
+        ImmediateNode(uint64_t value);
+
     private:
         uint64_t value;
     };
+
     class OpNode : public Node {
     public:
+        OpNode(middleend::mir::BinaryOp op);
+        void setLeft(std::unique_ptr<Node> new_node);
+        void setRight(std::unique_ptr<Node> new_node);
+
     private:
         middleend::mir::BinaryOp op;
-        Node *left;
-        Node *right;
+        std::unique_ptr<Node> left;
+        std::unique_ptr<Node> right;
+    };
+
+    class AllocaNode : public Node {
+    public:
+        void setSize(std::unique_ptr<Node> new_node);
+
+    private:
+        std::unique_ptr<Node> size;
+    };
+
+    class LoadNode : public Node {
+    public:
+        void setPtr(std::unique_ptr<Node> new_node);
+
+    private:
+        std::unique_ptr<Node> ptr;
+    };
+
+    class StoreNode : public Node {
+    public:
+        void setSource(std::unique_ptr<Node> new_node);
+        void setPtr(std::unique_ptr<Node> new_node);
+
+    private:
+        std::unique_ptr<Node> source;
+        std::unique_ptr<Node> ptr;
+    };
+
+    class ReturnNode : public Node {
+    public:
+        void setSource(std::unique_ptr<Node> new_node);
+
+    private:
+        std::unique_ptr<Node> source;
     };
 
     class TreeGenVisitor : public middleend::mir::InstructionVisitor {
     public:
+        TreeGenVisitor(middleend::mir::Program &p);
+
+        std::unique_ptr<Node> resolveValue(middleend::mir::Value *v);
+
         virtual void visit(middleend::mir::InstructionBinaryOp *i);
         virtual void visit(middleend::mir::InstructionCall *i);
         virtual void visit(middleend::mir::InstructionAlloca *i);
@@ -44,5 +92,8 @@ namespace backend {
         virtual void visit(middleend::mir::TerminatorCondBranch *t);
 
     private:
+        middleend::NumberIR nir;
+        std::list<std::unique_ptr<Node>> cur_context;
+        std::list<std::list<std::unique_ptr<Node>>> contexts;
     };
 } // namespace backend
