@@ -1,6 +1,10 @@
 #include "backend/lir/instruction.h"
 
 namespace backend::lir {
+    Label::Label(std::string name) : name(name) {}
+
+    std::string Label::getName() { return name; }
+
     InstructionMov::InstructionMov(DataSize size, Operand *dst, Operand *src)
         : size(size), dst(dst), src(src) {}
 

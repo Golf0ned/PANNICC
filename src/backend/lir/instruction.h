@@ -12,6 +12,15 @@ namespace backend::lir {
         virtual ~Instruction() = default;
     };
 
+    class Label : public Instruction {
+    public:
+        Label(std::string name);
+        std::string getName();
+
+    private:
+        std::string name;
+    };
+
     class InstructionMov : public Instruction {
     public:
         InstructionMov(DataSize size, Operand *dst, Operand *src);

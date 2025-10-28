@@ -6,23 +6,14 @@
 #include "backend/lir/instruction.h"
 
 namespace backend::lir {
-    class Block {
-    public:
-        Block(std::string label, std::list<std::unique_ptr<Instruction>> body);
-        std::string getLabel();
-        std::list<std::unique_ptr<Instruction>> &getBody();
-
-    private:
-        std::string label;
-        std::list<std::unique_ptr<Instruction>> body;
-    };
-
     class Program {
     public:
-        Program(std::list<std::unique_ptr<Block>> blocks);
-        std::list<std::unique_ptr<Block>> &getBlocks();
+        Program(std::list<std::unique_ptr<Instruction>> instructions);
+        std::list<std::unique_ptr<Instruction>> &getInstructions();
+        std::string toString();
 
     private:
-        std::list<std::unique_ptr<Block>> blocks;
+        std::list<std::unique_ptr<Instruction>> instructions;
+        OperandManager om;
     };
 } // namespace backend::lir
