@@ -1,13 +1,20 @@
 #include "backend/mir_to_lir.h"
+#include "middleend/utils/traversal.h"
 
 namespace backend {
     lir::Program mirToLir(middleend::mir::Program &mir) {
-        // Generate linearized IR?
-
-        // Generate trees
-        // - make all the atomic trees per basic block
+        // Generate trees per instruction
         // - make sure to add a node for copyToReg + copyFromReg
-        // - preserve phis
+        TreeGenVisitor visitor(mir);
+        for (auto &f : mir.getFunctions()) {
+            auto linearized = middleend::traverseLeastBranches(f.get());
+            for (auto *bb : linearized) {
+                for (auto &i : bb->getInstructions()) {
+                    i->accept(&visitor);
+                }
+            }
+            // TODO: reset visitor?
+        }
 
         // Merge trees
 
