@@ -93,6 +93,7 @@ namespace backend {
         void startFunction(middleend::mir::Function *f);
         void endFunction();
         void startBasicBlock(middleend::mir::BasicBlock *bb);
+        void setNextBasicBlock(middleend::mir::BasicBlock *bb);
         std::unique_ptr<Node> resolveValue(middleend::mir::Value *v);
 
         virtual void visit(middleend::mir::InstructionBinaryOp *i);
@@ -108,6 +109,8 @@ namespace backend {
 
     private:
         middleend::NumberIR nir;
+        std::string function_name;
+        middleend::mir::BasicBlock *next_block;
         std::list<std::unique_ptr<Node>> function_trees;
         std::list<std::list<std::unique_ptr<Node>>> program_trees;
     };
