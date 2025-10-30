@@ -66,18 +66,33 @@ namespace backend {
         std::unique_ptr<Node> ptr;
     };
 
-    class ReturnNode : public Node {
+    class PhiNode : public Node {
     public:
-        void setSource(std::unique_ptr<Node> new_node);
+        PhiNode(std::unique_ptr<Node> to,
+                std::list<std::unique_ptr<Node>> from);
 
     private:
-        std::unique_ptr<Node> source;
+        std::unique_ptr<Node> to;
+        std::list<std::unique_ptr<Node>> from;
+    };
+
+    class AsmNode : public Node {
+    public:
+        AsmNode(std::list<std::unique_ptr<lir::Instruction>> assembly);
+
+    private:
+        std::list<std::unique_ptr<lir::Instruction>> assembly;
     };
 
     class TreeGenVisitor : public middleend::mir::InstructionVisitor {
     public:
         TreeGenVisitor(middleend::mir::Program &p);
 
+        std::list<std::list<std::unique_ptr<Node>>> getResult();
+
+        void startFunction(middleend::mir::Function *f);
+        void endFunction();
+        void startBasicBlock(middleend::mir::BasicBlock *bb);
         std::unique_ptr<Node> resolveValue(middleend::mir::Value *v);
 
         virtual void visit(middleend::mir::InstructionBinaryOp *i);
@@ -93,7 +108,7 @@ namespace backend {
 
     private:
         middleend::NumberIR nir;
-        std::list<std::unique_ptr<Node>> cur_context;
-        std::list<std::list<std::unique_ptr<Node>>> contexts;
+        std::list<std::unique_ptr<Node>> function_trees;
+        std::list<std::list<std::unique_ptr<Node>>> program_trees;
     };
 } // namespace backend
