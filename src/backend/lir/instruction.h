@@ -16,6 +16,7 @@ namespace backend::lir {
     public:
         Label(std::string name);
         std::string getName();
+        void accept(InstructionVisitor *visitor);
 
     private:
         std::string name;
