@@ -1,4 +1,5 @@
 #include <deque>
+#include <ranges>
 
 #include "middleend/mir/mir.h"
 #include "middleend/utils/traversal.h"
@@ -62,7 +63,9 @@ namespace middleend {
                 visited.insert(cur);
 
                 mir::BasicBlock *next = nullptr;
-                for (auto succ : cur->getSuccessors().getEdges()) {
+                auto successors = cur->getSuccessors().getEdges();
+                std::ranges::reverse_view reverse_edges{successors};
+                for (auto succ : reverse_edges) {
                     if (visited.contains(succ))
                         continue;
 
