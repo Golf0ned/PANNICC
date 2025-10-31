@@ -194,12 +194,13 @@ namespace backend {
     void TreeGenVisitor::visit(middleend::mir::TerminatorCondBranch *t) {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
-        if (t->getTSuccessor() == next_block)
-            throw std::domain_error("true branch should never be next block");
-
-        // TODO: generate cond jump for TSuccessor
-        if (t->getFSuccessor() != next_block) {
-            // TODO: generate jump for FSuccessor
+        if (t->getTSuccessor() == next_block) {
+            // TODO: generate inverted cond jump for FSuccessor
+        } else {
+            // TODO: generate cond jump for TSuccessor
+            if (t->getFSuccessor() != next_block) {
+                // TODO: generate jump for FSuccessor
+            }
         }
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
