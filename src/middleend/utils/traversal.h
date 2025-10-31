@@ -13,5 +13,5 @@ namespace middleend {
                                                  TraversalOrderMap &tom);
     std::list<mir::BasicBlock *> traversePostorder(mir::Function *f);
 
-    std::list<mir::BasicBlock *> traverseLeastBranches(mir::Function *f);
+    std::list<mir::BasicBlock *> traverseTraces(mir::Function *f);
 } // namespace middleend
