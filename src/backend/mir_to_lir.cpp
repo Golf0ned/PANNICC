@@ -6,8 +6,7 @@ namespace backend {
         // Generate trees per instruction
         TreeGenVisitor visitor(mir);
         for (auto &f : mir.getFunctions()) {
-            // TODO: implement traaverseLeastBranches
-            auto linearized = middleend::traverseLeastBranches(f.get());
+            auto linearized = middleend::traverseTraces(f.get());
 
             visitor.startFunction(f.get());
             for (auto *bb : linearized) {
