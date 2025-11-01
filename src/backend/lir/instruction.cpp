@@ -26,6 +26,26 @@ namespace backend::lir {
         visitor->visit(this);
     }
 
+    InstructionCmp::InstructionCmp(Operand *src_1, Operand *src_2)
+        : src_1(src_1), src_2(src_2) {}
+
+    void InstructionCmp::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
+
+    InstructionJmp::InstructionJmp(std::string label) : label(label) {}
+
+    void InstructionJmp::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
+
+    InstructionCJmp::InstructionCJmp(ConditionCode cmp, std::string label)
+        : cmp(cmp), label(label) {}
+
+    void InstructionCJmp::accept(InstructionVisitor *visitor) {
+        visitor->visit(this);
+    }
+
     InstructionCall::InstructionCall(std::string label) : label(label) {}
 
     void InstructionCall::accept(InstructionVisitor *visitor) {
