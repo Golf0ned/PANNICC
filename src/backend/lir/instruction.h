@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/lir/condition_code.h"
 #include "backend/lir/data_size.h"
 #include "backend/lir/operand.h"
 
@@ -65,11 +66,36 @@ namespace backend::lir {
     // class InstructionXor : public Instruction {};
     // class InstructionSal : public Instruction {};
     // class InstructionSar : public Instruction {};
-    // class InstructionCmp : public Instruction {};
     // class InstructionTest : public Instruction {};
-    // class InstructionJmp : public Instruction {};
-    // class InstructionJe : public Instruction {};
-    // class InstructionJg : public Instruction {};
+
+    class InstructionCmp : public Instruction {
+    public:
+        InstructionCmp(Operand *src_1, Operand *src_2);
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        Operand *src_1;
+        Operand *src_2;
+    };
+
+    class InstructionJmp : public Instruction {
+    public:
+        InstructionJmp(std::string label);
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        std::string label;
+    };
+
+    class InstructionCJmp : public Instruction {
+    public:
+        InstructionCJmp(ConditionCode cmp, std::string label);
+        void accept(InstructionVisitor *visitor);
+
+    private:
+        ConditionCode cmp;
+        std::string label;
+    };
 
     class InstructionCall : public Instruction {
     public:
@@ -90,23 +116,9 @@ namespace backend::lir {
         virtual void visit(InstructionMov *i) = 0;
         virtual void visit(InstructionPush *i) = 0;
         virtual void visit(InstructionPop *i) = 0;
-        // virtual void visit(InstructionNeg *i) = 0;
-        // virtual void visit(InstructionNot *i) = 0;
-        // virtual void visit(InstructionLea *i) = 0;
-        // virtual void visit(InstructionAdd *i) = 0;
-        // virtual void visit(InstructionSub *i) = 0;
-        // virtual void visit(InstructionIMul *i) = 0;
-        // virtual void visit(InstructionIDiv *i) = 0;
-        // virtual void visit(InstructionAnd *i) = 0;
-        // virtual void visit(InstructionOr *i) = 0;
-        // virtual void visit(InstructionXor *i) = 0;
-        // virtual void visit(InstructionSal *i) = 0;
-        // virtual void visit(InstructionSar *i) = 0;
-        // virtual void visit(InstructionCmp *i) = 0;
-        // virtual void visit(InstructionTest *i) = 0;
-        // virtual void visit(InstructionJmp *i) = 0;
-        // virtual void visit(InstructionJe *i) = 0;
-        // virtual void visit(InstructionJg *i) = 0;
+        virtual void visit(InstructionCmp *i) = 0;
+        virtual void visit(InstructionJmp *i) = 0;
+        virtual void visit(InstructionCJmp *i) = 0;
         virtual void visit(InstructionCall *i) = 0;
         virtual void visit(InstructionRet *i) = 0;
     };
