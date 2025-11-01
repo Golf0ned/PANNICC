@@ -4,14 +4,21 @@
 namespace backend {
     lir::Program mirToLir(middleend::mir::Program &mir) {
         // Generate trees per instruction
-        TreeGenVisitor visitor(mir);
+        lir::OperandManager om;
+        TreeGenVisitor visitor(mir, om);
         for (auto &f : mir.getFunctions()) {
             auto linearized = middleend::traverseTraces(f.get());
 
             visitor.startFunction(f.get());
-            for (auto *bb : linearized) {
-                visitor.startBasicBlock(bb);
-                for (auto &i : bb->getInstructions())
+            auto &bbs = f->getBasicBlocks();
+            for (auto iter = bbs.begin(); iter != bbs.end(); iter++) {
+                auto next = std::next(iter);
+
+                auto bb = iter->get();
+                auto next_bb = next == bbs.end() ? nullptr : next->get();
+
+                visitor.startBasicBlock(bb, next_bb);
+                for (auto &i : iter->get()->getInstructions())
                     i->accept(&visitor);
             }
             visitor.endFunction();
@@ -37,8 +44,9 @@ namespace backend {
         return std::move(lir);
     }
 
-    TreeGenVisitor::TreeGenVisitor(middleend::mir::Program &p)
-        : next_block(nullptr) {
+    TreeGenVisitor::TreeGenVisitor(middleend::mir::Program &p,
+                                   lir::OperandManager &om)
+        : next_block(nullptr), om(om) {
         nir.run(p);
     }
 
@@ -65,7 +73,10 @@ namespace backend {
         function_trees.clear();
     }
 
-    void TreeGenVisitor::startBasicBlock(middleend::mir::BasicBlock *bb) {
+    void TreeGenVisitor::startBasicBlock(middleend::mir::BasicBlock *bb,
+                                         middleend::mir::BasicBlock *next_bb) {
+        next_block = next_bb;
+
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
         std::string label_name =
@@ -182,8 +193,11 @@ namespace backend {
     void TreeGenVisitor::visit(middleend::mir::TerminatorBranch *t) {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
-        if (t->getSuccessor() != next_block) {
-            // TODO: generate branch
+        auto succ = t->getSuccessor();
+        if (succ != next_block) {
+            auto jmp = std::make_unique<lir::InstructionJmp>(
+                std::to_string(nir.getNumber(succ)));
+            instructions.push_back(std::move(jmp));
         }
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
@@ -194,12 +208,30 @@ namespace backend {
     void TreeGenVisitor::visit(middleend::mir::TerminatorCondBranch *t) {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
-        if (t->getTSuccessor() == next_block) {
-            // TODO: generate inverted cond jump for FSuccessor
+        // TODO: replace with test cond, cond
+        auto cond = nir.getNumber(t->getCond());
+        auto cmp = std::make_unique<lir::InstructionCmp>(
+            om.getRegister(std::to_string(cond)), om.getImmediate(0));
+        instructions.push_back(std::move(cmp));
+
+        auto t_succ = t->getTSuccessor(), f_succ = t->getFSuccessor();
+        auto cond_code = lir::ConditionCode::EQ;
+
+        // If next_block is t_succ, inverse cjump to f_succ
+        // If next_block is f_succ, cjump to t_succ
+        // If next_block is neither, cjump to t_succ + jmp to f_succ
+        if (t_succ == next_block) {
+            auto cjmp = std::make_unique<lir::InstructionCJmp>(
+                lir::invert(cond_code), std::to_string(nir.getNumber(f_succ)));
+            instructions.push_back(std::move(cjmp));
         } else {
-            // TODO: generate cond jump for TSuccessor
-            if (t->getFSuccessor() != next_block) {
-                // TODO: generate jump for FSuccessor
+            auto cjmp = std::make_unique<lir::InstructionCJmp>(
+                cond_code, std::to_string(nir.getNumber(t_succ)));
+            instructions.push_back(std::move(cjmp));
+            if (f_succ != next_block) {
+                auto jmp = std::make_unique<lir::InstructionJmp>(
+                    std::to_string(nir.getNumber(f_succ)));
+                instructions.push_back(std::move(jmp));
             }
         }
 
