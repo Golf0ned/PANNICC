@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <iostream>
 
+#include "backend/mir_to_lir.h"
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"
@@ -113,7 +114,9 @@ int main(int argc, char *argv[]) {
 
     pm->runPasses(mir);
 
-    OUTPUT(mir.toString());
+    // OUTPUT(mir.toString());
+
+    backend::lir::Program lir = backend::mirToLir(mir);
 
     return 0;
 }
