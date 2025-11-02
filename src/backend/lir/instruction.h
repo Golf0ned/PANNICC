@@ -9,7 +9,7 @@ namespace backend::lir {
 
     class Instruction {
     public:
-        virtual void accept(InstructionVisitor *visitor) = 0;
+        virtual void accept(InstructionVisitor *v) = 0;
         virtual ~Instruction() = default;
     };
 
@@ -17,7 +17,7 @@ namespace backend::lir {
     public:
         Label(std::string name);
         std::string getName();
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *v);
 
     private:
         std::string name;
@@ -26,7 +26,7 @@ namespace backend::lir {
     class InstructionMov : public Instruction {
     public:
         InstructionMov(DataSize size, Operand *dst, Operand *src);
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *v);
 
     private:
         DataSize size;
@@ -37,7 +37,7 @@ namespace backend::lir {
     class InstructionPush : public Instruction {
     public:
         InstructionPush(DataSize size, Operand *src);
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *v);
 
     private:
         DataSize size;
@@ -47,7 +47,7 @@ namespace backend::lir {
     class InstructionPop : public Instruction {
     public:
         InstructionPop(DataSize size, Operand *dst);
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *v);
 
     private:
         DataSize size;
@@ -71,7 +71,7 @@ namespace backend::lir {
     class InstructionCmp : public Instruction {
     public:
         InstructionCmp(Operand *src_1, Operand *src_2);
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *v);
 
     private:
         Operand *src_1;
@@ -81,7 +81,7 @@ namespace backend::lir {
     class InstructionJmp : public Instruction {
     public:
         InstructionJmp(std::string label);
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *v);
 
     private:
         std::string label;
@@ -90,7 +90,7 @@ namespace backend::lir {
     class InstructionCJmp : public Instruction {
     public:
         InstructionCJmp(ConditionCode cmp, std::string label);
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *v);
 
     private:
         ConditionCode cmp;
@@ -100,14 +100,14 @@ namespace backend::lir {
     class InstructionCall : public Instruction {
     public:
         InstructionCall(std::string label);
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *v);
 
     private:
         std::string label;
     };
     class InstructionRet : public Instruction {
     public:
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *v);
     };
 
     class InstructionVisitor {
