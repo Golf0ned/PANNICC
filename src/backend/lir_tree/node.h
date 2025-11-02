@@ -6,14 +6,19 @@
 #include "middleend/mir/operator.h"
 
 namespace backend::lir_tree {
+    class NodeVisitor;
+
     class Node {
     public:
+        virtual void accept(NodeVisitor *v) = 0;
+        virtual ~Node() = default;
     };
 
     class RegisterNode : public Node {
     public:
         RegisterNode(std::string name);
         void setSource(std::unique_ptr<Node> new_node);
+        void accept(NodeVisitor *v);
 
     private:
         std::string name;
@@ -23,6 +28,7 @@ namespace backend::lir_tree {
     class ImmediateNode : public Node {
     public:
         ImmediateNode(uint64_t value);
+        void accept(NodeVisitor *v);
 
     private:
         uint64_t value;
@@ -33,6 +39,7 @@ namespace backend::lir_tree {
         OpNode(middleend::mir::BinaryOp op);
         void setLeft(std::unique_ptr<Node> new_node);
         void setRight(std::unique_ptr<Node> new_node);
+        void accept(NodeVisitor *v);
 
     private:
         middleend::mir::BinaryOp op;
@@ -43,6 +50,7 @@ namespace backend::lir_tree {
     class AllocaNode : public Node {
     public:
         void setSize(std::unique_ptr<Node> new_node);
+        void accept(NodeVisitor *v);
 
     private:
         std::unique_ptr<Node> size;
@@ -51,6 +59,7 @@ namespace backend::lir_tree {
     class LoadNode : public Node {
     public:
         void setPtr(std::unique_ptr<Node> new_node);
+        void accept(NodeVisitor *v);
 
     private:
         std::unique_ptr<Node> ptr;
@@ -60,6 +69,7 @@ namespace backend::lir_tree {
     public:
         void setSource(std::unique_ptr<Node> new_node);
         void setPtr(std::unique_ptr<Node> new_node);
+        void accept(NodeVisitor *v);
 
     private:
         std::unique_ptr<Node> source;
@@ -70,6 +80,7 @@ namespace backend::lir_tree {
     public:
         PhiNode(std::unique_ptr<Node> to,
                 std::list<std::unique_ptr<Node>> from);
+        void accept(NodeVisitor *v);
 
     private:
         std::unique_ptr<Node> to;
@@ -80,6 +91,7 @@ namespace backend::lir_tree {
     public:
         AsmNode(std::list<std::unique_ptr<lir::Instruction>> assembly);
         std::list<std::unique_ptr<lir::Instruction>> &getAssembly();
+        void accept(NodeVisitor *v);
 
     private:
         std::list<std::unique_ptr<lir::Instruction>> assembly;
