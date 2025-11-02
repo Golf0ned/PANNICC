@@ -1,0 +1,40 @@
+#pragma once
+
+#include "backend/lir/operand.h"
+#include "backend/lir_tree/node.h"
+#include "middleend/analysis/number_ir.h"
+#include "middleend/mir/mir.h"
+
+namespace backend::lir_tree {
+    class TreeGenVisitor : public middleend::mir::InstructionVisitor {
+    public:
+        TreeGenVisitor(middleend::mir::Program &p, lir::OperandManager &om);
+
+        std::list<std::list<std::unique_ptr<Node>>> getResult();
+
+        void startFunction(middleend::mir::Function *f);
+        void endFunction();
+        void startBasicBlock(middleend::mir::BasicBlock *bb,
+                             middleend::mir::BasicBlock *next_bb);
+        std::unique_ptr<Node> resolveValue(middleend::mir::Value *v);
+
+        virtual void visit(middleend::mir::InstructionBinaryOp *i);
+        virtual void visit(middleend::mir::InstructionCall *i);
+        virtual void visit(middleend::mir::InstructionAlloca *i);
+        virtual void visit(middleend::mir::InstructionLoad *i);
+        virtual void visit(middleend::mir::InstructionStore *i);
+        virtual void visit(middleend::mir::InstructionPhi *i);
+
+        virtual void visit(middleend::mir::TerminatorReturn *t);
+        virtual void visit(middleend::mir::TerminatorBranch *t);
+        virtual void visit(middleend::mir::TerminatorCondBranch *t);
+
+    private:
+        middleend::NumberIR nir;
+        lir::OperandManager &om;
+        std::string function_name;
+        middleend::mir::BasicBlock *next_block;
+        std::list<std::unique_ptr<Node>> function_trees;
+        std::list<std::list<std::unique_ptr<Node>>> program_trees;
+    };
+} // namespace backend::lir_tree
