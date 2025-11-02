@@ -79,8 +79,22 @@ namespace backend::lir_tree {
     class AsmNode : public Node {
     public:
         AsmNode(std::list<std::unique_ptr<lir::Instruction>> assembly);
+        std::list<std::unique_ptr<lir::Instruction>> &getAssembly();
 
     private:
         std::list<std::unique_ptr<lir::Instruction>> assembly;
+    };
+
+    class NodeVisitor {
+    public:
+        virtual void visit(Node *n) = 0;
+        virtual void visit(RegisterNode *n) = 0;
+        virtual void visit(ImmediateNode *n) = 0;
+        virtual void visit(OpNode *n) = 0;
+        virtual void visit(AllocaNode *n) = 0;
+        virtual void visit(LoadNode *n) = 0;
+        virtual void visit(StoreNode *n) = 0;
+        virtual void visit(PhiNode *n) = 0;
+        virtual void visit(AsmNode *n) = 0;
     };
 } // namespace backend::lir_tree
