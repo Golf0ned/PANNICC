@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
 
     pm->runPasses(mir);
 
-    // OUTPUT(mir.toString());
+    OUTPUT(mir.toString());
 
     backend::lir::Program lir = backend::mirToLir(mir);
 
