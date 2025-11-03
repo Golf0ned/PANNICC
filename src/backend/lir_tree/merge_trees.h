@@ -3,11 +3,9 @@
 #include "backend/lir_tree/node.h"
 
 namespace backend::lir_tree {
-    class TreeTileVisitor : public NodeVisitor {
+    class TreeMergeVisitor : public NodeVisitor {
     public:
-        TreeTileVisitor(lir::OperandManager &om);
-
-        std::list<std::unique_ptr<lir::Instruction>> getResult();
+        std::list<std::list<Tree>> getResult();
 
         virtual void visit(Node *n);
         virtual void visit(RegisterNode *n);
@@ -20,12 +18,7 @@ namespace backend::lir_tree {
         virtual void visit(AsmNode *n);
 
     private:
-        lir::OperandManager &om;
-        std::list<std::unique_ptr<lir::Instruction>> assembly;
-    };
-
-    class Tile {
-    public:
-    private:
+        std::list<Tree> current_trees;
+        std::list<std::list<Tree>> merged_trees;
     };
 } // namespace backend::lir_tree

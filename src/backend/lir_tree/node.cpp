@@ -59,4 +59,10 @@ namespace backend::lir_tree {
     }
 
     void AsmNode::accept(NodeVisitor *v) { v->visit(this); }
+
+    Tree::Tree(std::unique_ptr<Node> root) : root(std::move(root)) {}
+
+    std::unique_ptr<Node> &Tree::getRoot() { return root; }
+
+    std::list<std::unique_ptr<Node> *> &Tree::getLeaves() { return leaves; }
 } // namespace backend::lir_tree

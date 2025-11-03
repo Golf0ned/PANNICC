@@ -7,7 +7,7 @@ namespace backend::lir_tree {
         nir.run(p);
     }
 
-    std::list<std::list<std::unique_ptr<Node>>> TreeGenVisitor::getResult() {
+    std::list<std::list<Tree>> TreeGenVisitor::getResult() {
         return std::move(program_trees);
     }
 
@@ -22,7 +22,7 @@ namespace backend::lir_tree {
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
 
-        function_trees.push_back(std::move(assembly));
+        function_trees.emplace_back(std::move(assembly));
     }
 
     void TreeGenVisitor::endFunction() {
@@ -43,7 +43,7 @@ namespace backend::lir_tree {
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
 
-        function_trees.push_back(std::move(assembly));
+        function_trees.emplace_back(std::move(assembly));
     }
 
     std::unique_ptr<Node>
@@ -66,7 +66,7 @@ namespace backend::lir_tree {
             std::make_unique<RegisterNode>(std::to_string(nir.getNumber(i)));
         reg->setSource(std::move(op));
 
-        function_trees.push_back(std::move(reg));
+        function_trees.emplace_back(std::move(reg));
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionCall *i) {
@@ -81,7 +81,7 @@ namespace backend::lir_tree {
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
 
-        function_trees.push_back(std::move(assembly));
+        function_trees.emplace_back(std::move(assembly));
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionAlloca *i) {
@@ -95,7 +95,7 @@ namespace backend::lir_tree {
             std::make_unique<RegisterNode>(std::to_string(nir.getNumber(i)));
         reg->setSource(std::move(alloca));
 
-        function_trees.push_back(std::move(reg));
+        function_trees.emplace_back(std::move(reg));
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionLoad *i) {
@@ -108,7 +108,7 @@ namespace backend::lir_tree {
             std::make_unique<RegisterNode>(std::to_string(nir.getNumber(i)));
         reg->setSource(std::move(load));
 
-        function_trees.push_back(std::move(reg));
+        function_trees.emplace_back(std::move(reg));
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionStore *i) {
@@ -119,7 +119,7 @@ namespace backend::lir_tree {
         store->setSource(std::move(source));
         store->setPtr(std::move(ptr));
 
-        function_trees.push_back(std::move(store));
+        function_trees.emplace_back(std::move(store));
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionPhi *i) {
@@ -130,7 +130,7 @@ namespace backend::lir_tree {
 
         auto phi = std::make_unique<PhiNode>(std::move(to), std::move(from));
 
-        function_trees.push_back(std::move(phi));
+        function_trees.emplace_back(std::move(phi));
     }
 
     void TreeGenVisitor::visit(middleend::mir::TerminatorReturn *t) {
@@ -143,7 +143,7 @@ namespace backend::lir_tree {
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
 
-        function_trees.push_back(std::move(assembly));
+        function_trees.emplace_back(std::move(assembly));
     }
 
     void TreeGenVisitor::visit(middleend::mir::TerminatorBranch *t) {
@@ -158,7 +158,7 @@ namespace backend::lir_tree {
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
 
-        function_trees.push_back(std::move(assembly));
+        function_trees.emplace_back(std::move(assembly));
     }
 
     void TreeGenVisitor::visit(middleend::mir::TerminatorCondBranch *t) {
@@ -193,6 +193,6 @@ namespace backend::lir_tree {
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
 
-        function_trees.push_back(std::move(assembly));
+        function_trees.emplace_back(std::move(assembly));
     }
 } // namespace backend::lir_tree
