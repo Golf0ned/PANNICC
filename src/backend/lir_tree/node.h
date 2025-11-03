@@ -109,4 +109,15 @@ namespace backend::lir_tree {
         virtual void visit(PhiNode *n) = 0;
         virtual void visit(AsmNode *n) = 0;
     };
+
+    class Tree {
+    public:
+        Tree(std::unique_ptr<Node> root);
+        std::unique_ptr<Node> &getRoot();
+        std::list<std::unique_ptr<Node> *> &getLeaves();
+
+    private:
+        std::unique_ptr<Node> root;
+        std::list<std::unique_ptr<Node> *> leaves;
+    };
 } // namespace backend::lir_tree
