@@ -29,18 +29,20 @@ namespace backend {
         }
 
         // Merge trees
-        lir_tree::TreeMergeVisitor tmv;
+        lir_tree::TreeMerger tmv;
         auto program_trees = tgv.getResult();
-        for (auto &fn_trees : program_trees)
+        for (auto &fn_trees : program_trees) {
             for (auto &tree : fn_trees)
-                tree.getRoot()->accept(&tmv);
+                tmv.consumeTree(tree);
+            tmv.mergeTrees();
+        }
 
         // Tile trees
         lir_tree::TreeTileVisitor ttv(om);
         auto merged_trees = tmv.getResult();
-        for (auto &fn_trees : merged_trees)
-            for (auto &tree : fn_trees)
-                tree.getRoot()->accept(&ttv);
+        for (auto &tree : merged_trees) {
+            tree.getRoot()->accept(&ttv);
+        }
 
         // Final cleanup
         auto instructions = ttv.getResult();
