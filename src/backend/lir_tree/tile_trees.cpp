@@ -9,19 +9,33 @@ namespace backend::lir_tree {
 
     void TreeTileVisitor::visit(Node *n) {}
 
-    void TreeTileVisitor::visit(RegisterNode *n) {}
+    void TreeTileVisitor::visit(RegisterNode *n) {
+        // TODO
+    }
 
-    void TreeTileVisitor::visit(ImmediateNode *n) {}
+    void TreeTileVisitor::visit(ImmediateNode *n) {
+        // TODO
+    }
 
-    void TreeTileVisitor::visit(OpNode *n) {}
+    void TreeTileVisitor::visit(OpNode *n) {
+        // TODO
+    }
 
-    void TreeTileVisitor::visit(AllocaNode *n) {}
+    void TreeTileVisitor::visit(AllocaNode *n) {
+        // TODO
+    }
 
-    void TreeTileVisitor::visit(LoadNode *n) {}
+    void TreeTileVisitor::visit(LoadNode *n) {
+        // TODO
+    }
 
-    void TreeTileVisitor::visit(StoreNode *n) {}
+    void TreeTileVisitor::visit(StoreNode *n) {
+        // TODO
+    }
 
-    void TreeTileVisitor::visit(PhiNode *n) {}
+    void TreeTileVisitor::visit(PhiNode *n) {
+        // TODO
+    }
 
     void TreeTileVisitor::visit(AsmNode *n) {
         assembly.splice(assembly.end(), n->getAssembly());
