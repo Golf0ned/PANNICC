@@ -11,7 +11,7 @@
 #define ERROR(str) (std::cerr << "ERROR: " << str << std::endl)
 #define OUTPUT(str) (std::cout << str << std::endl)
 
-enum class OutputLevel { AST, HIR, MIR };
+enum class OutputLevel { AST, HIR, MIR, LIR };
 
 void printHelp(const std::string &program_name) {
     PRINT("USAGE: " + program_name + " [options] <input-file>");
@@ -23,6 +23,7 @@ void printHelp(const std::string &program_name) {
     PRINT("  --dump-ast           Print AST only");
     PRINT("  --dump-hir           Print HIR only (desugared AST)");
     PRINT("");
+    PRINT("  --dump-mir           Print MIR only (after passes)");
     PRINT("  -O0|1                Opt level");
     PRINT("  --passes=<passes>    Run comma-separated list of passes");
 }
@@ -34,7 +35,7 @@ int main(int argc, char *argv[]) {
     }
 
     std::filesystem::path input_file, output_file;
-    OutputLevel output_level = OutputLevel::MIR;
+    OutputLevel output_level = OutputLevel::LIR;
     auto pm = middleend::initializeO1();
 
     for (int i = 1; i < argc; i++) {
@@ -51,6 +52,8 @@ int main(int argc, char *argv[]) {
             output_level = OutputLevel::AST;
         } else if (arg == "--dump-hir") {
             output_level = OutputLevel::HIR;
+        } else if (arg == "--dump-mir") {
+            output_level = OutputLevel::MIR;
         } else if (arg.starts_with("-O") && arg.size() == 3) {
             switch (arg.back()) {
             case '0':
@@ -91,7 +94,10 @@ int main(int argc, char *argv[]) {
             output_file.replace_extension(".hir");
             break;
         case OutputLevel::MIR:
-            output_file.replace_extension(".MIR");
+            output_file.replace_extension(".mir");
+            break;
+        case OutputLevel::LIR:
+            output_file.replace_extension(".lir");
             break;
         }
     }
@@ -113,10 +119,16 @@ int main(int argc, char *argv[]) {
     middleend::mir::Program mir = frontend::hirToMir(hir);
 
     pm->runPasses(mir);
-
-    OUTPUT(mir.toString());
+    if (output_level == OutputLevel::MIR) {
+        OUTPUT(mir.toString());
+        return 0;
+    }
 
     backend::lir::Program lir = backend::mirToLir(mir);
+    if (output_level == OutputLevel::LIR) {
+        OUTPUT(lir.toString());
+        return 0;
+    }
 
     return 0;
 }
