@@ -214,6 +214,7 @@ namespace middleend {
                             phi.get(), phi->getPredecessors().begin()->second);
                         for (auto &[use, _] : phi->getUses())
                             use->accept(&visitor);
+                        phi->accept(&erase);
                         continue;
                     }
                 }

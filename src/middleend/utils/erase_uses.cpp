@@ -2,7 +2,6 @@
 
 namespace middleend {
     void EraseUsesVisitor::visit(mir::InstructionBinaryOp *i) {
-        auto i_ptr = static_cast<mir::Value *>(i);
         i->delUse(i->getLeft());
         i->delUse(i->getRight());
     }
