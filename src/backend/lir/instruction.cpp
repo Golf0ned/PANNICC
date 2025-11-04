@@ -7,8 +7,11 @@ namespace backend::lir {
 
     void Label::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionMov::InstructionMov(DataSize size, Operand *dst, Operand *src)
-        : size(size), dst(dst), src(src) {}
+    InstructionMov::InstructionMov(Extend extend, DataSize src_size,
+                                   DataSize dst_size, Operand *src,
+                                   Operand *dst)
+        : extend(extend), src_size(src_size), dst_size(dst_size), src(src),
+          dst(dst) {}
 
     void InstructionMov::accept(InstructionVisitor *v) { v->visit(this); }
 
@@ -22,8 +25,9 @@ namespace backend::lir {
 
     void InstructionPop::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionCmp::InstructionCmp(Operand *src_1, Operand *src_2)
-        : src_1(src_1), src_2(src_2) {}
+    InstructionCmp::InstructionCmp(DataSize size, Operand *src_1,
+                                   Operand *src_2)
+        : size(size), src_1(src_1), src_2(src_2) {}
 
     void InstructionCmp::accept(InstructionVisitor *v) { v->visit(this); }
 
