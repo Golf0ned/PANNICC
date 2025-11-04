@@ -3,6 +3,14 @@
 #include "middleend/mir/type.h"
 
 namespace backend::lir {
+    enum class Extend {
+        NONE,
+        ZERO,
+        SIGN,
+    };
+
+    char toChar(Extend extend);
+
     enum class DataSize {
         BYTE,
         WORD,
