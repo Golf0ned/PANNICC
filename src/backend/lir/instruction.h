@@ -25,13 +25,16 @@ namespace backend::lir {
 
     class InstructionMov : public Instruction {
     public:
-        InstructionMov(DataSize size, Operand *dst, Operand *src);
+        InstructionMov(Extend extend, DataSize src_size, DataSize dst_size,
+                       Operand *src, Operand *dst);
         void accept(InstructionVisitor *v);
 
     private:
-        DataSize size;
-        Operand *dst;
+        Extend extend;
+        DataSize src_size;
+        DataSize dst_size;
         Operand *src;
+        Operand *dst;
     };
 
     class InstructionPush : public Instruction {
@@ -70,10 +73,11 @@ namespace backend::lir {
 
     class InstructionCmp : public Instruction {
     public:
-        InstructionCmp(Operand *src_1, Operand *src_2);
+        InstructionCmp(DataSize size, Operand *src_1, Operand *src_2);
         void accept(InstructionVisitor *v);
 
     private:
+        DataSize size;
         Operand *src_1;
         Operand *src_2;
     };
@@ -105,6 +109,7 @@ namespace backend::lir {
     private:
         std::string label;
     };
+
     class InstructionRet : public Instruction {
     public:
         void accept(InstructionVisitor *v);
