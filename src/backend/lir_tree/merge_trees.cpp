@@ -4,14 +4,11 @@ namespace backend::lir_tree {
     std::list<Tree> TreeMerger::getResult() { return std::move(merged_trees); }
 
     void TreeMerger::consumeTree(Tree &t) {
-        auto asm_tree = dynamic_cast<AsmNode *>(t.getRoot().get());
-        if (!asm_tree) {
-            current_trees.push_back(std::move(t));
-            return;
-        }
+        current_trees.push_back(std::move(t));
 
-        mergeTrees();
-        merged_trees.push_back(std::move(t));
+        auto asm_tree = dynamic_cast<AsmNode *>(t.getRoot().get());
+        if (asm_tree)
+            mergeTrees();
     }
 
     void TreeMerger::mergeTrees() {

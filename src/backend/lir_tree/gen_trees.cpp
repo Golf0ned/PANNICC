@@ -18,6 +18,7 @@ namespace backend::lir_tree {
 
         auto label = std::make_unique<lir::Label>(function_name);
         instructions.push_back(std::move(label));
+
         // TODO: push callee-saved registers? (maybe wait for regalloc)
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
@@ -54,6 +55,13 @@ namespace backend::lir_tree {
         return std::make_unique<RegisterNode>(std::to_string(nir.getNumber(v)));
     }
 
+    lir::Operand *TreeGenVisitor::resolveOperand(middleend::mir::Value *v) {
+        auto literal = dynamic_cast<middleend::mir::Literal *>(v);
+        if (literal)
+            return om.getImmediate(literal->getValue());
+        return om.getRegister(std::to_string(nir.getNumber(v)));
+    }
+
     void TreeGenVisitor::visit(middleend::mir::InstructionBinaryOp *i) {
         auto left = resolveValue(i->getLeft());
         auto right = resolveValue(i->getRight());
@@ -70,13 +78,44 @@ namespace backend::lir_tree {
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionCall *i) {
+        // TODO: windows does it differently lmao
+        // clang-format off
+        lir::RegisterNum arg_registers[6] = {
+            lir::RegisterNum::RDI,
+            lir::RegisterNum::RSI,
+            lir::RegisterNum::RDX,
+            lir::RegisterNum::RCX,
+            lir::RegisterNum::R8,
+            lir::RegisterNum::R9,
+        };
+        // clang-format on
+
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
-        // TODO: push ret label?
         // TODO: push caller-saved registers
-        // TODO: move params into registers
+
+        auto args = i->getArguments();
+        for (int arg_num = 0; arg_num < args.size(); arg_num++) {
+            auto src = resolveOperand(args[arg_num]);
+            auto src_size = lir::fromMir(i->getType());
+            if (arg_num < 6) {
+                auto dst = om.getRegister(arg_registers[arg_num]);
+                auto dst_size = lir::DataSize::QUADWORD;
+                auto extend = src_size == dst_size ? lir::Extend::NONE
+                                                   : lir::Extend::SIGN;
+                auto mov = std::make_unique<lir::InstructionMov>(
+                    extend, src_size, dst_size, src, dst);
+                instructions.push_back(std::move(mov));
+            } else {
+                auto push =
+                    std::make_unique<lir::InstructionPush>(src_size, src);
+                instructions.push_back(std::move(push));
+            }
+        }
+        // TODO: allocate stack space?
         // TODO: call function label
-        // TODO: ret label?
+        // TODO: move return value into variable
+
         // TODO: restore caller-saved registers
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
@@ -136,9 +175,8 @@ namespace backend::lir_tree {
     void TreeGenVisitor::visit(middleend::mir::TerminatorReturn *t) {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
+        // TODO: deallocate stack space?
         // TODO: restore callee-saved registers
-        // TODO: reset stack pointer
-        // TODO: pop base pointer
         // TODO: generate ret
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
@@ -165,9 +203,9 @@ namespace backend::lir_tree {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
         // TODO: replace with test cond, cond
-        auto cond = nir.getNumber(t->getCond());
+        auto cond = resolveOperand(t->getCond());
         auto cmp = std::make_unique<lir::InstructionCmp>(
-            om.getRegister(std::to_string(cond)), om.getImmediate(0));
+            lir::DataSize::DOUBLEWORD, cond, om.getImmediate(0));
         instructions.push_back(std::move(cmp));
 
         auto t_succ = t->getTSuccessor(), f_succ = t->getFSuccessor();
