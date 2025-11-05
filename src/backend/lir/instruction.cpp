@@ -45,4 +45,15 @@ namespace backend::lir {
     void InstructionCall::accept(InstructionVisitor *v) { v->visit(this); }
 
     void InstructionRet::accept(InstructionVisitor *v) { v->visit(this); }
+
+    InstructionPhi::InstructionPhi(std::list<Operand *> src, Operand *dst)
+        : src(std::move(src)), dst(dst) {}
+
+    void InstructionPhi::accept(InstructionVisitor *v) { v->visit(this); }
+
+    InstructionVirtual::InstructionVirtual(std::unique_ptr<Instruction> i)
+        : instruction(std::move(i)) {}
+
+    void InstructionVirtual::accept(InstructionVisitor *v) { v->visit(this); }
+
 } // namespace backend::lir
