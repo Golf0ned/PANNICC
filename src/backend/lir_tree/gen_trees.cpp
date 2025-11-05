@@ -19,10 +19,16 @@ namespace backend::lir_tree {
         auto label = std::make_unique<lir::Label>(function_name);
         instructions.push_back(std::move(label));
 
-        // TODO: push callee-saved registers? (maybe wait for regalloc)
+        for (auto reg : lir::getCalleeSavedRegisters()) {
+            auto src = om.getRegister(reg);
+            auto push = std::make_unique<lir::InstructionPush>(
+                lir::DataSize::QUADWORD, src);
+            auto virt =
+                std::make_unique<lir::InstructionVirtual>(std::move(push));
+            instructions.push_back(std::move(virt));
+        }
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
-
         function_trees.emplace_back(std::move(assembly));
     }
 
@@ -43,7 +49,6 @@ namespace backend::lir_tree {
         instructions.push_back(std::move(label));
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
-
         function_trees.emplace_back(std::move(assembly));
     }
 
@@ -78,21 +83,17 @@ namespace backend::lir_tree {
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionCall *i) {
-        // TODO: windows does it differently lmao
-        // clang-format off
-        lir::RegisterNum arg_registers[6] = {
-            lir::RegisterNum::RDI,
-            lir::RegisterNum::RSI,
-            lir::RegisterNum::RDX,
-            lir::RegisterNum::RCX,
-            lir::RegisterNum::R8,
-            lir::RegisterNum::R9,
-        };
-        // clang-format on
-
+        auto &arg_registers = lir::getArgRegisters();
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
-        // TODO: push caller-saved registers
+        for (auto reg : lir::getCallerSavedRegisters()) {
+            auto src = om.getRegister(reg);
+            auto push = std::make_unique<lir::InstructionPush>(
+                lir::DataSize::QUADWORD, src);
+            auto virt =
+                std::make_unique<lir::InstructionVirtual>(std::move(push));
+            instructions.push_back(std::move(virt));
+        }
 
         auto args = i->getArguments();
         for (int arg_num = 0; arg_num < args.size(); arg_num++) {
@@ -112,14 +113,31 @@ namespace backend::lir_tree {
                 instructions.push_back(std::move(push));
             }
         }
-        // TODO: allocate stack space?
-        // TODO: call function label
-        // TODO: move return value into variable
 
-        // TODO: restore caller-saved registers
+        // TODO: allocate stack space?
+
+        auto function_name = i->getCallee()->getName();
+        auto call = std::make_unique<lir::InstructionCall>(function_name);
+        instructions.push_back(std::move(call));
+
+        auto src = om.getRegister(lir::RegisterNum::RAX);
+        auto src_size = lir::DataSize::QUADWORD;
+        auto dst = resolveOperand(i);
+        auto dst_size = lir::DataSize::QUADWORD;
+        auto mov_ret = std::make_unique<lir::InstructionMov>(
+            lir::Extend::NONE, src_size, dst_size, src, dst);
+        instructions.push_back(std::move(mov_ret));
+
+        for (auto reg : lir::getCallerSavedRegisters()) {
+            auto src = om.getRegister(reg);
+            auto pop = std::make_unique<lir::InstructionPop>(
+                lir::DataSize::QUADWORD, src);
+            auto virt =
+                std::make_unique<lir::InstructionVirtual>(std::move(pop));
+            instructions.push_back(std::move(virt));
+        }
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
-
         function_trees.emplace_back(std::move(assembly));
     }
 
@@ -176,11 +194,20 @@ namespace backend::lir_tree {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
         // TODO: deallocate stack space?
-        // TODO: restore callee-saved registers
-        // TODO: generate ret
+
+        for (auto reg : lir::getCalleeSavedRegisters()) {
+            auto src = om.getRegister(reg);
+            auto pop = std::make_unique<lir::InstructionPop>(
+                lir::DataSize::QUADWORD, src);
+            auto virt =
+                std::make_unique<lir::InstructionVirtual>(std::move(pop));
+            instructions.push_back(std::move(virt));
+        }
+
+        auto ret = std::make_unique<lir::InstructionRet>();
+        instructions.push_back(std::move(ret));
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
-
         function_trees.emplace_back(std::move(assembly));
     }
 
@@ -195,7 +222,6 @@ namespace backend::lir_tree {
         }
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
-
         function_trees.emplace_back(std::move(assembly));
     }
 
@@ -230,7 +256,6 @@ namespace backend::lir_tree {
         }
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
-
         function_trees.emplace_back(std::move(assembly));
     }
 } // namespace backend::lir_tree
