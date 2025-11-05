@@ -1,5 +1,7 @@
 #pragma once
 
+#include <list>
+
 #include "backend/lir/condition_code.h"
 #include "backend/lir/data_size.h"
 #include "backend/lir/operand.h"
@@ -115,6 +117,25 @@ namespace backend::lir {
         void accept(InstructionVisitor *v);
     };
 
+    class InstructionPhi : public Instruction {
+    public:
+        InstructionPhi(std::list<Operand *> src, Operand *dst);
+        void accept(InstructionVisitor *v);
+
+    private:
+        std::list<Operand *> src;
+        Operand *dst;
+    };
+
+    class InstructionVirtual : public Instruction {
+    public:
+        InstructionVirtual(std::unique_ptr<Instruction> i);
+        void accept(InstructionVisitor *v);
+
+    private:
+        std::unique_ptr<Instruction> instruction;
+    };
+
     class InstructionVisitor {
     public:
         virtual void visit(Instruction *i) = 0;
@@ -126,5 +147,8 @@ namespace backend::lir {
         virtual void visit(InstructionCJmp *i) = 0;
         virtual void visit(InstructionCall *i) = 0;
         virtual void visit(InstructionRet *i) = 0;
+
+        virtual void visit(InstructionPhi *i) = 0;
+        virtual void visit(InstructionVirtual *i) = 0;
     };
 } // namespace backend::lir
