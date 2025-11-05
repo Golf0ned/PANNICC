@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace backend::lir {
     class Operand {
@@ -54,6 +55,10 @@ namespace backend::lir {
         R14D,
         R15D,
     };
+
+    const std::vector<RegisterNum> &getArgRegisters();
+    const std::vector<RegisterNum> &getCalleeSavedRegisters();
+    const std::vector<RegisterNum> &getCallerSavedRegisters();
 
     class Register : public Operand {
     public:

@@ -3,6 +3,34 @@
 #include "backend/lir/operand.h"
 
 namespace backend::lir {
+    // TODO: support different calling convention (looking at you, windows)
+    // Also applies to callee and caller saved registers
+    const std::vector<RegisterNum> &getArgRegisters() {
+        static std::vector<RegisterNum> arg_registers = {
+            RegisterNum::RDI, RegisterNum::RSI, RegisterNum::RDX,
+            RegisterNum::RCX, RegisterNum::R8,  RegisterNum::R9,
+        };
+        return arg_registers;
+    }
+
+    const std::vector<RegisterNum> &getCallerSavedRegisters() {
+        static std::vector<RegisterNum> caller_saved = {
+            RegisterNum::RAX, RegisterNum::RDI, RegisterNum::RSI,
+            RegisterNum::RDX, RegisterNum::RCX, RegisterNum::R8,
+            RegisterNum::R9,  RegisterNum::R10, RegisterNum::R11,
+        };
+        return caller_saved;
+    }
+
+    const std::vector<RegisterNum> &getCalleeSavedRegisters() {
+        static std::vector<RegisterNum> callee_saved = {
+            RegisterNum::RBX, RegisterNum::RSP, RegisterNum::RBP,
+            RegisterNum::R12, RegisterNum::R13, RegisterNum::R14,
+            RegisterNum::R15,
+        };
+        return callee_saved;
+    }
+
     Immediate::Immediate(uint64_t value) : value(value) {}
 
     uint64_t Immediate::getValue() { return value; }
