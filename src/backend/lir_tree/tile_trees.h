@@ -16,7 +16,6 @@ namespace backend::lir_tree {
         virtual void visit(AllocaNode *n);
         virtual void visit(LoadNode *n);
         virtual void visit(StoreNode *n);
-        virtual void visit(PhiNode *n);
         virtual void visit(AsmNode *n);
 
     private:

@@ -33,10 +33,6 @@ namespace backend::lir_tree {
         // TODO
     }
 
-    void TreeTileVisitor::visit(PhiNode *n) {
-        // TODO
-    }
-
     void TreeTileVisitor::visit(AsmNode *n) {
         assembly.splice(assembly.end(), n->getAssembly());
     }
