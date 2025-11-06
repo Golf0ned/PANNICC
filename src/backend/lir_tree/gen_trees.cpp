@@ -180,14 +180,18 @@ namespace backend::lir_tree {
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionPhi *i) {
-        auto to = resolveValue(i);
-        std::list<std::unique_ptr<Node>> from;
+        std::list<std::unique_ptr<lir::Instruction>> instructions;
+
+        auto to = resolveOperand(i);
+        std::list<lir::Operand *> from;
         for (auto &[_, v] : i->getPredecessors())
-            from.push_back(resolveValue(v));
+            from.push_back(resolveOperand(v));
 
-        auto phi = std::make_unique<PhiNode>(std::move(to), std::move(from));
+        auto phi = std::make_unique<lir::InstructionPhi>(std::move(from), to);
+        instructions.push_back(std::move(phi));
 
-        function_trees.emplace_back(std::move(phi));
+        auto assembly = std::make_unique<AsmNode>(std::move(instructions));
+        function_trees.emplace_back(std::move(assembly));
     }
 
     void TreeGenVisitor::visit(middleend::mir::TerminatorReturn *t) {
