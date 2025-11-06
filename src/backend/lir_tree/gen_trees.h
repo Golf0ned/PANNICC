@@ -16,7 +16,7 @@ namespace backend::lir_tree {
         void endFunction();
         void startBasicBlock(middleend::mir::BasicBlock *bb,
                              middleend::mir::BasicBlock *next_bb);
-        std::unique_ptr<Node> resolveValue(middleend::mir::Value *v);
+        std::shared_ptr<Node> resolveValue(middleend::mir::Value *v);
         lir::Operand *resolveOperand(middleend::mir::Value *v);
 
         virtual void visit(middleend::mir::InstructionBinaryOp *i);

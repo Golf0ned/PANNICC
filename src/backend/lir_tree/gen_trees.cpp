@@ -52,12 +52,12 @@ namespace backend::lir_tree {
         function_trees.emplace_back(std::move(assembly));
     }
 
-    std::unique_ptr<Node>
+    std::shared_ptr<Node>
     TreeGenVisitor::resolveValue(middleend::mir::Value *v) {
         auto literal = dynamic_cast<middleend::mir::Literal *>(v);
         if (literal)
-            return std::make_unique<ImmediateNode>(literal->getValue());
-        return std::make_unique<RegisterNode>(std::to_string(nir.getNumber(v)));
+            return std::make_shared<ImmediateNode>(literal->getValue());
+        return std::make_shared<RegisterNode>(std::to_string(nir.getNumber(v)));
     }
 
     lir::Operand *TreeGenVisitor::resolveOperand(middleend::mir::Value *v) {
@@ -71,15 +71,20 @@ namespace backend::lir_tree {
         auto left = resolveValue(i->getLeft());
         auto right = resolveValue(i->getRight());
 
-        auto op = std::make_unique<OpNode>(i->getOp());
+        auto left_leaf = left;
+        auto right_leaf = right;
+
+        auto op = std::make_shared<OpNode>(i->getOp());
         op->setLeft(std::move(left));
         op->setRight(std::move(right));
 
         auto reg =
-            std::make_unique<RegisterNode>(std::to_string(nir.getNumber(i)));
+            std::make_shared<RegisterNode>(std::to_string(nir.getNumber(i)));
         reg->setSource(std::move(op));
 
-        function_trees.emplace_back(std::move(reg));
+        auto &tree = function_trees.emplace_back(std::move(reg));
+        tree.getLeaves().insert(left_leaf);
+        tree.getLeaves().insert(right_leaf);
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionCall *i) {
@@ -143,13 +148,15 @@ namespace backend::lir_tree {
 
     void TreeGenVisitor::visit(middleend::mir::InstructionAlloca *i) {
         // TODO: get size properly, this sucks a lot
-        auto size = std::make_unique<ImmediateNode>(8);
+        auto size = std::make_shared<ImmediateNode>(8);
 
-        auto alloca = std::make_unique<AllocaNode>();
+        auto size_leaf = size;
+
+        auto alloca = std::make_shared<AllocaNode>();
         alloca->setSize(std::move(size));
 
         auto reg =
-            std::make_unique<RegisterNode>(std::to_string(nir.getNumber(i)));
+            std::make_shared<RegisterNode>(std::to_string(nir.getNumber(i)));
         reg->setSource(std::move(alloca));
 
         function_trees.emplace_back(std::move(reg));
@@ -158,25 +165,33 @@ namespace backend::lir_tree {
     void TreeGenVisitor::visit(middleend::mir::InstructionLoad *i) {
         auto ptr = resolveValue(i->getPtr());
 
-        auto load = std::make_unique<LoadNode>();
+        auto ptr_leaf = ptr;
+
+        auto load = std::make_shared<LoadNode>();
         load->setPtr(std::move(ptr));
 
         auto reg =
-            std::make_unique<RegisterNode>(std::to_string(nir.getNumber(i)));
+            std::make_shared<RegisterNode>(std::to_string(nir.getNumber(i)));
         reg->setSource(std::move(load));
 
-        function_trees.emplace_back(std::move(reg));
+        auto &tree = function_trees.emplace_back(std::move(reg));
+        tree.getLeaves().insert(ptr_leaf);
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionStore *i) {
         auto source = resolveValue(i->getValue());
         auto ptr = resolveValue(i->getPtr());
 
-        auto store = std::make_unique<StoreNode>();
+        auto source_leaf = source;
+        auto ptr_leaf = ptr;
+
+        auto store = std::make_shared<StoreNode>();
         store->setSource(std::move(source));
         store->setPtr(std::move(ptr));
 
-        function_trees.emplace_back(std::move(store));
+        auto &tree = function_trees.emplace_back(std::move(store));
+        tree.getLeaves().insert(source_leaf);
+        tree.getLeaves().insert(ptr_leaf);
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionPhi *i) {
