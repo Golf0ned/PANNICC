@@ -31,11 +31,8 @@ namespace backend {
         // Merge trees
         lir_tree::TreeMerger tmv;
         auto program_trees = tgv.getResult();
-        for (auto &fn_trees : program_trees) {
-            for (auto &tree : fn_trees)
-                tmv.consumeTree(tree);
-            tmv.mergeTrees();
-        }
+        for (auto &fn_trees : program_trees)
+            tmv.mergeTrees(fn_trees);
 
         // Tile trees
         lir_tree::TreeTileVisitor ttv(om);

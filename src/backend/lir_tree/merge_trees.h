@@ -7,11 +7,9 @@ namespace backend::lir_tree {
     public:
         std::list<Tree> getResult();
 
-        void consumeTree(Tree &t);
-        void mergeTrees();
+        void mergeTrees(std::list<Tree> &trees);
 
     private:
-        std::list<Tree> current_trees;
         std::list<Tree> merged_trees;
     };
 } // namespace backend::lir_tree
