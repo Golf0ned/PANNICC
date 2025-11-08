@@ -10,7 +10,7 @@ namespace backend::lir_tree {
     public:
         TreeGenVisitor(middleend::mir::Program &p, lir::OperandManager &om);
 
-        std::list<std::list<Tree>> getResult();
+        std::list<Forest> getResult();
 
         void startFunction(middleend::mir::Function *f);
         void endFunction();
@@ -35,7 +35,7 @@ namespace backend::lir_tree {
         lir::OperandManager &om;
         std::string function_name;
         middleend::mir::BasicBlock *next_block;
-        std::list<Tree> function_trees;
-        std::list<std::list<Tree>> program_trees;
+        Forest function_trees;
+        std::list<Forest> program_trees;
     };
 } // namespace backend::lir_tree
