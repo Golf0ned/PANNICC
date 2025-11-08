@@ -1,7 +1,6 @@
 #pragma once
 
 #include <list>
-#include <unordered_set>
 
 #include "backend/lir/instruction.h"
 #include "middleend/mir/operator.h"
@@ -99,14 +98,20 @@ namespace backend::lir_tree {
         virtual void visit(AsmNode *n) = 0;
     };
 
-    class Tree {
+    class Forest {
     public:
-        Tree(std::shared_ptr<Node> root);
-        std::shared_ptr<Node> &getRoot();
-        std::unordered_set<std::shared_ptr<Node>> &getLeaves();
+        void insertAsm(std::shared_ptr<Node> tree);
+        void insertTree(std::shared_ptr<Node> tree,
+                        std::vector<std::shared_ptr<Node>> leaves,
+                        bool has_memory_instruction);
+        std::shared_ptr<Node> pop();
+        std::vector<std::shared_ptr<Node>> &getLeaves(Node *tree);
+        bool empty();
 
     private:
-        std::shared_ptr<Node> root;
-        std::unordered_set<std::shared_ptr<Node>> leaves;
+        std::list<std::shared_ptr<Node>> trees;
+        std::unordered_map<Node *, std::vector<std::shared_ptr<Node>>>
+            tree_leaves;
+        std::unordered_map<Node *, bool> tree_has_memory_instruction;
     };
 } // namespace backend::lir_tree

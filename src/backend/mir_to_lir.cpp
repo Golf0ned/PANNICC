@@ -38,7 +38,7 @@ namespace backend {
         lir_tree::TreeTileVisitor ttv(om);
         auto merged_trees = tmv.getResult();
         for (auto &tree : merged_trees) {
-            tree.getRoot()->accept(&ttv);
+            tree->accept(&ttv);
         }
 
         // Final cleanup

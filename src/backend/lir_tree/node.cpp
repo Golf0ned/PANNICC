@@ -54,11 +54,27 @@ namespace backend::lir_tree {
 
     void AsmNode::accept(NodeVisitor *v) { v->visit(this); }
 
-    Tree::Tree(std::shared_ptr<Node> root) : root(std::move(root)) {}
-
-    std::shared_ptr<Node> &Tree::getRoot() { return root; }
-
-    std::unordered_set<std::shared_ptr<Node>> &Tree::getLeaves() {
-        return leaves;
+    void Forest::insertAsm(std::shared_ptr<Node> tree) {
+        trees.push_back(std::move(tree));
     }
+
+    void Forest::insertTree(std::shared_ptr<Node> tree,
+                            std::vector<std::shared_ptr<Node>> leaves,
+                            bool has_memory_instruction) {
+        tree_leaves[tree.get()] = std::move(leaves);
+        tree_has_memory_instruction[tree.get()] = has_memory_instruction;
+        trees.push_back(std::move(tree));
+    }
+
+    std::shared_ptr<Node> Forest::pop() {
+        auto res = std::move(trees.back());
+        trees.pop_back();
+        return std::move(res);
+    }
+
+    std::vector<std::shared_ptr<Node>> &Forest::getLeaves(Node *tree) {
+        return tree_leaves.at(tree);
+    }
+
+    bool Forest::empty() { return trees.empty(); }
 } // namespace backend::lir_tree
