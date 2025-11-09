@@ -14,27 +14,64 @@ namespace backend::lir_tree {
             while (changed) {
                 changed = false;
 
-                for (auto iter = cur.begin(); iter != cur.end(); iter++) {
-                    auto tree = iter->get();
-                    for (auto &leaf : trees.getLeaves(tree)) {
-                        auto &uses_stack = uses[leaf.get()];
-                        if (uses_stack.back() != tree)
+                // TODO: think about how we can even compare things
+                auto t1_iter = cur.begin();
+                while (t1_iter != cur.end()) {
+                    auto t1 = t1_iter->get();
+                    for (auto &t2 : trees.getLeaves(t1)) {
+                        auto &t2_uses = uses[t2.get()];
+                        if (t2_uses.back() != t1)
                             continue;
 
-                        // TODO: iterate from (tree, leaf]
-                        bool can_merge = true;
-                        auto inner_iter = iter;
-                        while (inner_iter->get() != leaf.get()) {
-                            // TODO: skip if cur uses leaf
-                            // TODO: skip if cur is a leaf of a leaf
-                            // TODO: skip if mem instruction and leaf has mem
-                            //       instruction
-                        }
+                        t2_uses.pop_back();
+                        if (t2_uses.size() > 1 &&
+                            *std::prev(t2_uses.end(), 2) == t1)
+                            continue;
 
-                        if (can_merge) {
-                            // TODO: do merge
+                        auto t2_iter = t1_iter;
+                        bool t2_seen = false;
+                        while (!t2_seen) {
+                            auto cur_tree = *(++t2_iter);
+                            t2_seen = t2 == cur_tree;
+
+                            auto cur_uses_t2 = [&]() {
+                                for (auto cur_leaf :
+                                     trees.getLeaves(cur_tree.get())) {
+                                    if (cur_leaf == t2)
+                                        return false;
+                                }
+                                return true;
+                            };
+
+                            auto cur_is_t2_leaf = [&]() {
+                                for (auto t2_leaf : trees.getLeaves(t2.get())) {
+                                    if (t2_leaf == cur_tree)
+                                        return false;
+                                }
+                                return true;
+                            };
+
+                            auto maybe_aliases_memory = [&]() {
+                                return trees.hasMemoryInstruction(t2.get()) &&
+                                       trees.hasMemoryInstruction(
+                                           cur_tree.get());
+                            };
+
+                            // clang-format off
+                            if (false
+                                || cur_uses_t2()
+                                || cur_is_t2_leaf()
+                                || maybe_aliases_memory()
+                            ) {
+                                // clang-format on
+                                continue;
+                            }
+
+                            // TODO: merge
                         }
                     }
+
+                    t1_iter++;
                 }
             }
         };

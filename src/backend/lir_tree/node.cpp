@@ -62,7 +62,9 @@ namespace backend::lir_tree {
                             std::vector<std::shared_ptr<Node>> leaves,
                             bool has_memory_instruction) {
         tree_leaves[tree.get()] = std::move(leaves);
-        tree_has_memory_instruction[tree.get()] = has_memory_instruction;
+        if (has_memory_instruction) {
+            trees_with_memory_instruction.insert(tree.get());
+        }
         trees.push_back(std::move(tree));
     }
 
@@ -74,6 +76,10 @@ namespace backend::lir_tree {
 
     std::vector<std::shared_ptr<Node>> &Forest::getLeaves(Node *tree) {
         return tree_leaves.at(tree);
+    }
+
+    bool Forest::hasMemoryInstruction(Node *tree) {
+        return trees_with_memory_instruction.contains(tree);
     }
 
     bool Forest::empty() { return trees.empty(); }
