@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <unordered_set>
 
 #include "backend/lir/instruction.h"
 #include "middleend/mir/operator.h"
@@ -106,12 +107,13 @@ namespace backend::lir_tree {
                         bool has_memory_instruction);
         std::shared_ptr<Node> pop();
         std::vector<std::shared_ptr<Node>> &getLeaves(Node *tree);
+        bool hasMemoryInstruction(Node *tree);
         bool empty();
 
     private:
         std::list<std::shared_ptr<Node>> trees;
         std::unordered_map<Node *, std::vector<std::shared_ptr<Node>>>
             tree_leaves;
-        std::unordered_map<Node *, bool> tree_has_memory_instruction;
+        std::unordered_set<Node *> trees_with_memory_instruction;
     };
 } // namespace backend::lir_tree
