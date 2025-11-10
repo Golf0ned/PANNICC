@@ -19,6 +19,7 @@ namespace backend::lir_tree {
     public:
         RegisterNode(std::string name);
         void setSource(std::shared_ptr<Node> new_node);
+        bool sameReg(RegisterNode *other);
         void accept(NodeVisitor *v);
 
     private:

@@ -7,6 +7,10 @@ namespace backend::lir_tree {
         source = std::move(new_node);
     }
 
+    bool RegisterNode::sameReg(RegisterNode *other) {
+        return name == other->name;
+    }
+
     void RegisterNode::accept(NodeVisitor *v) { v->visit(this); }
 
     ImmediateNode::ImmediateNode(uint64_t value) : value(value) {}
