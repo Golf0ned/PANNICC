@@ -1,6 +1,19 @@
 #include "backend/lir_tree/merge_trees.h"
+#include "backend/lir_tree/node.h"
 
 namespace backend::lir_tree {
+    bool sameReg(std::shared_ptr<Node> &t1, std::shared_ptr<Node> &t2) {
+        auto t1_reg = dynamic_cast<RegisterNode *>(t1.get());
+        if (!t1_reg)
+            return false;
+
+        auto t2_reg = dynamic_cast<RegisterNode *>(t2.get());
+        if (!t2_reg)
+            return false;
+
+        return t1_reg->sameReg(t2_reg);
+    }
+
     std::list<std::shared_ptr<Node>> TreeMerger::getResult() {
         return std::move(merged_trees);
     }
@@ -14,7 +27,6 @@ namespace backend::lir_tree {
             while (changed) {
                 changed = false;
 
-                // TODO: think about how we can even compare things
                 auto t1_iter = cur.begin();
                 while (t1_iter != cur.end()) {
                     auto t1 = t1_iter->get();
@@ -23,21 +35,20 @@ namespace backend::lir_tree {
                         if (t2_uses.back() != t1)
                             continue;
 
-                        t2_uses.pop_back();
                         if (t2_uses.size() > 1 &&
-                            *std::prev(t2_uses.end(), 2) == t1)
+                            t2_uses.back() == *std::prev(t2_uses.end(), 2))
                             continue;
 
                         auto t2_iter = t1_iter;
                         bool t2_seen = false;
                         while (!t2_seen) {
                             auto cur_tree = *(++t2_iter);
-                            t2_seen = t2 == cur_tree;
+                            t2_seen = sameReg(t2, cur_tree);
 
                             auto cur_uses_t2 = [&]() {
                                 for (auto cur_leaf :
                                      trees.getLeaves(cur_tree.get())) {
-                                    if (cur_leaf == t2)
+                                    if (sameReg(cur_leaf, t2))
                                         return false;
                                 }
                                 return true;
@@ -45,7 +56,7 @@ namespace backend::lir_tree {
 
                             auto cur_is_t2_leaf = [&]() {
                                 for (auto t2_leaf : trees.getLeaves(t2.get())) {
-                                    if (t2_leaf == cur_tree)
+                                    if (sameReg(t2_leaf, cur_tree))
                                         return false;
                                 }
                                 return true;
@@ -68,6 +79,13 @@ namespace backend::lir_tree {
                             }
 
                             // TODO: merge
+                            // - (TODO: add virtual replace function in Node)
+                            // - update child ptr
+                            // - update skip list
+                            // - propagate memory instruction bool
+                            //
+                            // - update uses list
+                            // - remove merged from cur
                         }
                     }
 
