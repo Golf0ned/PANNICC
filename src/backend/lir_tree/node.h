@@ -18,8 +18,10 @@ namespace backend::lir_tree {
     class RegisterNode : public Node {
     public:
         RegisterNode(std::string name);
+        std::string getName();
         void setSource(std::shared_ptr<Node> new_node);
         bool sameReg(RegisterNode *other);
+        void consume(RegisterNode *other);
         void accept(NodeVisitor *v);
 
     private:
@@ -109,6 +111,7 @@ namespace backend::lir_tree {
         std::shared_ptr<Node> pop();
         std::vector<std::shared_ptr<Node>> &getLeaves(Node *tree);
         bool hasMemoryInstruction(Node *tree);
+        void propagateMemoryInstruction(Node *tree);
         bool empty();
 
     private:
