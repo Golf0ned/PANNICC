@@ -3,12 +3,18 @@
 namespace backend::lir_tree {
     RegisterNode::RegisterNode(std::string name) : name(name) {}
 
+    std::string RegisterNode::getName() { return name; }
+
     void RegisterNode::setSource(std::shared_ptr<Node> new_node) {
         source = std::move(new_node);
     }
 
     bool RegisterNode::sameReg(RegisterNode *other) {
         return name == other->name;
+    }
+
+    void RegisterNode::consume(RegisterNode *other) {
+        source = std::move(other->source);
     }
 
     void RegisterNode::accept(NodeVisitor *v) { v->visit(this); }
@@ -84,6 +90,10 @@ namespace backend::lir_tree {
 
     bool Forest::hasMemoryInstruction(Node *tree) {
         return trees_with_memory_instruction.contains(tree);
+    }
+
+    void Forest::propagateMemoryInstruction(Node *tree) {
+        trees_with_memory_instruction.insert(tree);
     }
 
     bool Forest::empty() { return trees.empty(); }

@@ -1,7 +1,15 @@
+#include <algorithm>
+#include <cassert>
+
 #include "backend/lir_tree/merge_trees.h"
 #include "backend/lir_tree/node.h"
 
 namespace backend::lir_tree {
+    std::string regToString(Node *node) {
+        auto reg = static_cast<RegisterNode *>(node);
+        return reg->getName();
+    }
+
     bool sameReg(std::shared_ptr<Node> &t1, std::shared_ptr<Node> &t2) {
         auto t1_reg = dynamic_cast<RegisterNode *>(t1.get());
         if (!t1_reg)
@@ -14,12 +22,14 @@ namespace backend::lir_tree {
         return t1_reg->sameReg(t2_reg);
     }
 
+    void consume(std::shared_ptr<Node> &from, std::shared_ptr<Node> &to) {}
+
     std::list<std::shared_ptr<Node>> TreeMerger::getResult() {
         return std::move(merged_trees);
     }
 
     void TreeMerger::mergeTrees(Forest &trees) {
-        std::unordered_map<Node *, std::list<Node *>> uses;
+        std::unordered_map<std::string, std::list<Node *>> uses;
         std::list<std::shared_ptr<Node>> cur;
 
         auto try_merge = [&]() {
@@ -31,7 +41,7 @@ namespace backend::lir_tree {
                 while (t1_iter != cur.end()) {
                     auto t1 = t1_iter->get();
                     for (auto &t2 : trees.getLeaves(t1)) {
-                        auto &t2_uses = uses[t2.get()];
+                        auto &t2_uses = uses[regToString(t2.get())];
                         if (t2_uses.back() != t1)
                             continue;
 
@@ -78,14 +88,30 @@ namespace backend::lir_tree {
                                 continue;
                             }
 
-                            // TODO: merge
-                            // - (TODO: add virtual replace function in Node)
-                            // - update child ptr
-                            // - update skip list
-                            // - propagate memory instruction bool
-                            //
-                            // - update uses list
-                            // - remove merged from cur
+                            auto t2_reg = static_cast<RegisterNode *>(t2.get());
+                            auto cur_reg =
+                                static_cast<RegisterNode *>(cur_tree.get());
+                            t2_reg->consume(cur_reg);
+
+                            auto &t1_leaves = trees.getLeaves(t1);
+                            t1_leaves.erase(std::find(t1_leaves.begin(),
+                                                      t1_leaves.end(), t2));
+                            for (auto &leaf : trees.getLeaves(cur_reg))
+                                t1_leaves.push_back(std::move(leaf));
+
+                            if (trees.hasMemoryInstruction(t1) &&
+                                trees.hasMemoryInstruction(t2.get()))
+                                trees.propagateMemoryInstruction(t1);
+
+                            for (auto &leaf : trees.getLeaves(cur_reg)) {
+                                auto leaf_uses = uses[regToString(leaf.get())];
+                                assert(leaf_uses.back() == cur_reg);
+                                leaf_uses.pop_back();
+                                leaf_uses.push_back(t1);
+                            }
+
+                            cur.erase(
+                                std::find(cur.begin(), cur.end(), cur_tree));
                         }
                     }
 
@@ -99,8 +125,8 @@ namespace backend::lir_tree {
 
             auto asm_tree = dynamic_cast<AsmNode *>(tree.get());
             if (!asm_tree) {
-                for (auto &node : trees.getLeaves(tree.get()))
-                    uses[node.get()].push_front(tree.get());
+                for (auto &leaf : trees.getLeaves(tree.get()))
+                    uses[regToString(leaf.get())].push_front(tree.get());
                 cur.push_back(std::move(tree));
                 continue;
             }
