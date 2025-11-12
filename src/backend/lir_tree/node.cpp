@@ -5,6 +5,12 @@ namespace backend::lir_tree {
 
     std::string RegisterNode::getName() { return name; }
 
+    Node *RegisterNode::getSource() {
+        if (!source)
+            return nullptr;
+        return source.get();
+    }
+
     void RegisterNode::setSource(std::shared_ptr<Node> new_node) {
         source = std::move(new_node);
     }
@@ -21,9 +27,25 @@ namespace backend::lir_tree {
 
     ImmediateNode::ImmediateNode(uint64_t value) : value(value) {}
 
+    uint64_t ImmediateNode::getValue() { return value; }
+
     void ImmediateNode::accept(NodeVisitor *v) { v->visit(this); }
 
     OpNode::OpNode(middleend::mir::BinaryOp op) : op(op) {}
+
+    middleend::mir::BinaryOp OpNode::getOp() { return op; }
+
+    Node *OpNode::getLeft() {
+        if (!left)
+            return nullptr;
+        return left.get();
+    }
+
+    Node *OpNode::getRight() {
+        if (!right)
+            return nullptr;
+        return right.get();
+    }
 
     void OpNode::setLeft(std::shared_ptr<Node> new_node) {
         left = std::move(new_node);
@@ -35,17 +57,41 @@ namespace backend::lir_tree {
 
     void OpNode::accept(NodeVisitor *v) { v->visit(this); }
 
+    Node *AllocaNode::getSize() {
+        if (!size)
+            return nullptr;
+        return size.get();
+    }
+
     void AllocaNode::setSize(std::shared_ptr<Node> new_node) {
         size = std::move(new_node);
     }
 
     void AllocaNode::accept(NodeVisitor *v) { v->visit(this); }
 
+    Node *LoadNode::getPtr() {
+        if (!ptr)
+            return nullptr;
+        return ptr.get();
+    }
+
     void LoadNode::setPtr(std::shared_ptr<Node> new_node) {
         ptr = std::move(new_node);
     }
 
     void LoadNode::accept(NodeVisitor *v) { v->visit(this); }
+
+    Node *StoreNode::getSource() {
+        if (!source)
+            return nullptr;
+        return source.get();
+    }
+
+    Node *StoreNode::getPtr() {
+        if (!ptr)
+            return nullptr;
+        return ptr.get();
+    }
 
     void StoreNode::setSource(std::shared_ptr<Node> new_node) {
         source = std::move(new_node);
@@ -63,6 +109,64 @@ namespace backend::lir_tree {
     }
 
     void AsmNode::accept(NodeVisitor *v) { v->visit(this); }
+
+    PrintNodeVisitor::PrintNodeVisitor(lir::OperandManager &om) : om(om) {}
+
+    std::string PrintNodeVisitor::getResult() { return result; }
+
+    void PrintNodeVisitor::visit(Node *n) {}
+
+    void PrintNodeVisitor::visit(RegisterNode *n) {
+        if (!n->getSource()) {
+            result = "%" + n->getName();
+            return;
+        }
+
+        n->getSource()->accept(this);
+        result = "%" + n->getName() + "(" + result + ")";
+    }
+
+    void PrintNodeVisitor::visit(ImmediateNode *n) {
+        result = "imm(" + std::to_string(n->getValue()) + ")";
+    }
+
+    void PrintNodeVisitor::visit(OpNode *n) {
+        std::string op = middleend::mir::toString(n->getOp());
+
+        n->getLeft()->accept(this);
+        std::string left = result;
+
+        n->getRight()->accept(this);
+        std::string right = result;
+
+        result = op + "(" + left + ", " + right + ")";
+    }
+
+    void PrintNodeVisitor::visit(AllocaNode *n) {
+        n->getSize()->accept(this);
+        std::string size = result;
+
+        result = "alloca(" + size + ")";
+    }
+
+    void PrintNodeVisitor::visit(LoadNode *n) {
+        n->getPtr()->accept(this);
+        std::string ptr = result;
+
+        result = "load(" + ptr + ")";
+    }
+
+    void PrintNodeVisitor::visit(StoreNode *n) {
+        n->getSource()->accept(this);
+        std::string source = result;
+
+        n->getPtr()->accept(this);
+        std::string ptr = result;
+
+        result = "store(" + source + ", " + ptr + ")";
+    }
+
+    void PrintNodeVisitor::visit(AsmNode *n) { result = "AsmNode"; }
 
     void Forest::insertAsm(std::shared_ptr<Node> tree) {
         trees.push_back(std::move(tree));
@@ -97,4 +201,16 @@ namespace backend::lir_tree {
     }
 
     bool Forest::empty() { return trees.empty(); }
+
+    std::string Forest::toString(lir::OperandManager &om) {
+        PrintNodeVisitor pnv(om);
+        std::string res;
+        for (auto tree : trees) {
+            tree->accept(&pnv);
+            res += pnv.getResult() + '\n';
+        }
+
+        return res;
+    }
+
 } // namespace backend::lir_tree
