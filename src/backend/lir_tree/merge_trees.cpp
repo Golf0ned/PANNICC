@@ -52,7 +52,7 @@ namespace backend::lir_tree {
                         auto t2_iter = t1_iter;
                         bool t2_seen = false;
                         while (!t2_seen) {
-                            auto cur_tree = *(++t2_iter);
+                            auto &cur_tree = *(++t2_iter);
                             t2_seen = sameReg(t2, cur_tree);
 
                             auto cur_uses_t2 = [&]() {
@@ -112,6 +112,7 @@ namespace backend::lir_tree {
 
                             cur.erase(
                                 std::find(cur.begin(), cur.end(), cur_tree));
+                            changed = true;
                         }
                     }
 
