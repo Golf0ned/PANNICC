@@ -24,6 +24,8 @@ namespace backend {
                 tgv.startBasicBlock(bb, next_bb);
                 for (auto &i : iter->get()->getInstructions())
                     i->accept(&tgv);
+
+                bb->getTerminator()->accept(&tgv);
             }
             tgv.endFunction();
         }
