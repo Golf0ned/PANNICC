@@ -19,6 +19,7 @@ namespace backend::lir_tree {
     public:
         RegisterNode(std::string name);
         std::string getName();
+        Node *getSource();
         void setSource(std::shared_ptr<Node> new_node);
         bool sameReg(RegisterNode *other);
         void consume(RegisterNode *other);
@@ -32,6 +33,7 @@ namespace backend::lir_tree {
     class ImmediateNode : public Node {
     public:
         ImmediateNode(uint64_t value);
+        uint64_t getValue();
         void accept(NodeVisitor *v);
 
     private:
@@ -41,6 +43,9 @@ namespace backend::lir_tree {
     class OpNode : public Node {
     public:
         OpNode(middleend::mir::BinaryOp op);
+        middleend::mir::BinaryOp getOp();
+        Node *getLeft();
+        Node *getRight();
         void setLeft(std::shared_ptr<Node> new_node);
         void setRight(std::shared_ptr<Node> new_node);
         void accept(NodeVisitor *v);
@@ -53,6 +58,7 @@ namespace backend::lir_tree {
 
     class AllocaNode : public Node {
     public:
+        Node *getSize();
         void setSize(std::shared_ptr<Node> new_node);
         void accept(NodeVisitor *v);
 
@@ -62,6 +68,7 @@ namespace backend::lir_tree {
 
     class LoadNode : public Node {
     public:
+        Node *getPtr();
         void setPtr(std::shared_ptr<Node> new_node);
         void accept(NodeVisitor *v);
 
@@ -71,6 +78,8 @@ namespace backend::lir_tree {
 
     class StoreNode : public Node {
     public:
+        Node *getSource();
+        Node *getPtr();
         void setSource(std::shared_ptr<Node> new_node);
         void setPtr(std::shared_ptr<Node> new_node);
         void accept(NodeVisitor *v);
@@ -102,6 +111,26 @@ namespace backend::lir_tree {
         virtual void visit(AsmNode *n) = 0;
     };
 
+    class PrintNodeVisitor : public NodeVisitor {
+    public:
+        PrintNodeVisitor(lir::OperandManager &om);
+
+        std::string getResult();
+
+        virtual void visit(Node *n);
+        virtual void visit(RegisterNode *n);
+        virtual void visit(ImmediateNode *n);
+        virtual void visit(OpNode *n);
+        virtual void visit(AllocaNode *n);
+        virtual void visit(LoadNode *n);
+        virtual void visit(StoreNode *n);
+        virtual void visit(AsmNode *n);
+
+    private:
+        lir::OperandManager &om;
+        std::string result;
+    };
+
     class Forest {
     public:
         void insertAsm(std::shared_ptr<Node> tree);
@@ -113,6 +142,7 @@ namespace backend::lir_tree {
         bool hasMemoryInstruction(Node *tree);
         void propagateMemoryInstruction(Node *tree);
         bool empty();
+        std::string toString(lir::OperandManager &om);
 
     private:
         std::list<std::shared_ptr<Node>> trees;
