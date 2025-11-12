@@ -28,6 +28,25 @@ namespace backend::lir_tree {
             instructions.push_back(std::move(virt));
         }
 
+        auto &params = f->getParameters();
+        auto &arg_registers = lir::getArgRegisters();
+        for (int param_num = 0; param_num < params.size(); param_num++) {
+            auto extend = lir::Extend::NONE;
+            auto dst_size = lir::DataSize::QUADWORD;
+            auto dst = resolveOperand(params[param_num].get());
+            if (param_num < 6) {
+                auto src = om.getRegister(arg_registers[param_num]);
+                auto src_size = lir::DataSize::QUADWORD;
+                auto mov = std::make_unique<lir::InstructionMov>(
+                    extend, src_size, dst_size, src, dst);
+                instructions.push_back(std::move(mov));
+            } else {
+                auto src_size = lir::fromMir(params[param_num]->getType());
+                auto pop = std::make_unique<lir::InstructionPop>(src_size, dst);
+                instructions.push_back(std::move(pop));
+            }
+        }
+
         auto assembly = std::make_shared<AsmNode>(std::move(instructions));
         function_trees.insertAsm(std::move(assembly));
     }
@@ -101,7 +120,7 @@ namespace backend::lir_tree {
         auto args = i->getArguments();
         for (int arg_num = 0; arg_num < args.size(); arg_num++) {
             auto src = resolveOperand(args[arg_num]);
-            auto src_size = lir::fromMir(i->getType());
+            auto src_size = lir::fromMir(args[arg_num]->getType());
             if (arg_num < 6) {
                 auto dst = om.getRegister(arg_registers[arg_num]);
                 auto dst_size = lir::DataSize::QUADWORD;
@@ -207,6 +226,14 @@ namespace backend::lir_tree {
 
     void TreeGenVisitor::visit(middleend::mir::TerminatorReturn *t) {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
+
+        auto src = resolveOperand(t->getValue());
+        auto src_size = lir::DataSize::QUADWORD;
+        auto dst = om.getRegister(lir::RegisterNum::RAX);
+        auto dst_size = lir::DataSize::QUADWORD;
+        auto mov_ret = std::make_unique<lir::InstructionMov>(
+            lir::Extend::NONE, src_size, dst_size, src, dst);
+        instructions.push_back(std::move(mov_ret));
 
         // TODO: deallocate stack space?
 
