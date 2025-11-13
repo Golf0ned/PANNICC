@@ -110,13 +110,13 @@ namespace backend::lir_tree {
 
     void AsmNode::accept(NodeVisitor *v) { v->visit(this); }
 
-    PrintNodeVisitor::PrintNodeVisitor(lir::OperandManager &om) : om(om) {}
+    ToStringVisitor::ToStringVisitor(lir::OperandManager &om) : om(om) {}
 
-    std::string PrintNodeVisitor::getResult() { return result; }
+    std::string ToStringVisitor::getResult() { return result; }
 
-    void PrintNodeVisitor::visit(Node *n) {}
+    void ToStringVisitor::visit(Node *n) {}
 
-    void PrintNodeVisitor::visit(RegisterNode *n) {
+    void ToStringVisitor::visit(RegisterNode *n) {
         if (!n->getSource()) {
             result = "%" + n->getName();
             return;
@@ -126,11 +126,11 @@ namespace backend::lir_tree {
         result = "%" + n->getName() + "(" + result + ")";
     }
 
-    void PrintNodeVisitor::visit(ImmediateNode *n) {
+    void ToStringVisitor::visit(ImmediateNode *n) {
         result = "imm(" + std::to_string(n->getValue()) + ")";
     }
 
-    void PrintNodeVisitor::visit(OpNode *n) {
+    void ToStringVisitor::visit(OpNode *n) {
         std::string op = middleend::mir::toString(n->getOp());
 
         n->getLeft()->accept(this);
@@ -142,21 +142,21 @@ namespace backend::lir_tree {
         result = op + "(" + left + ", " + right + ")";
     }
 
-    void PrintNodeVisitor::visit(AllocaNode *n) {
+    void ToStringVisitor::visit(AllocaNode *n) {
         n->getSize()->accept(this);
         std::string size = result;
 
         result = "alloca(" + size + ")";
     }
 
-    void PrintNodeVisitor::visit(LoadNode *n) {
+    void ToStringVisitor::visit(LoadNode *n) {
         n->getPtr()->accept(this);
         std::string ptr = result;
 
         result = "load(" + ptr + ")";
     }
 
-    void PrintNodeVisitor::visit(StoreNode *n) {
+    void ToStringVisitor::visit(StoreNode *n) {
         n->getSource()->accept(this);
         std::string source = result;
 
@@ -166,7 +166,7 @@ namespace backend::lir_tree {
         result = "store(" + source + ", " + ptr + ")";
     }
 
-    void PrintNodeVisitor::visit(AsmNode *n) { result = "AsmNode"; }
+    void ToStringVisitor::visit(AsmNode *n) { result = "AsmNode"; }
 
     void Forest::insertAsm(std::shared_ptr<Node> tree) {
         trees.push_back(std::move(tree));
@@ -189,7 +189,7 @@ namespace backend::lir_tree {
     }
 
     std::vector<std::shared_ptr<Node>> &Forest::getLeaves(Node *tree) {
-        return tree_leaves.at(tree);
+        return tree_leaves[tree];
     }
 
     bool Forest::hasMemoryInstruction(Node *tree) {
@@ -203,14 +203,13 @@ namespace backend::lir_tree {
     bool Forest::empty() { return trees.empty(); }
 
     std::string Forest::toString(lir::OperandManager &om) {
-        PrintNodeVisitor pnv(om);
+        ToStringVisitor tsv(om);
         std::string res;
         for (auto tree : trees) {
-            tree->accept(&pnv);
-            res += pnv.getResult() + '\n';
+            tree->accept(&tsv);
+            res += tsv.getResult() + '\n';
         }
 
         return res;
     }
-
 } // namespace backend::lir_tree

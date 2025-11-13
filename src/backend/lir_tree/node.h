@@ -111,9 +111,9 @@ namespace backend::lir_tree {
         virtual void visit(AsmNode *n) = 0;
     };
 
-    class PrintNodeVisitor : public NodeVisitor {
+    class ToStringVisitor : public NodeVisitor {
     public:
-        PrintNodeVisitor(lir::OperandManager &om);
+        ToStringVisitor(lir::OperandManager &om);
 
         std::string getResult();
 
