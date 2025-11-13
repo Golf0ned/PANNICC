@@ -101,7 +101,8 @@ namespace backend::lir_tree {
             std::make_shared<RegisterNode>(std::to_string(nir.getNumber(i)));
         reg->setSource(std::move(op));
 
-        function_trees.insertTree(std::move(reg), {left, right}, false);
+        function_trees.insertTree(std::move(reg), {left_leaf, right_leaf},
+                                  false);
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionCall *i) {
