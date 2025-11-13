@@ -1,7 +1,10 @@
-#include "backend/mir_to_lir.h"
+#include <iostream>
+
 #include "backend/lir_tree/gen_trees.h"
 #include "backend/lir_tree/merge_trees.h"
+#include "backend/lir_tree/node.h"
 #include "backend/lir_tree/tile_trees.h"
+#include "backend/mir_to_lir.h"
 #include "middleend/utils/traversal.h"
 
 namespace backend {
@@ -33,12 +36,21 @@ namespace backend {
         // Merge trees
         lir_tree::TreeMerger tmv;
         auto program_trees = tgv.getResult();
+        std::cout << "***BEFORE***" << std::endl;
         for (auto &fn_trees : program_trees)
-            tmv.mergeTrees(fn_trees);
+            std::cout << fn_trees.toString(om) << std::endl;
+        for (auto &fn_trees : program_trees)
+            tmv.mergeTrees(fn_trees, om);
 
         // Tile trees
         lir_tree::TreeTileVisitor ttv(om);
         auto merged_trees = tmv.getResult();
+        lir_tree::ToStringVisitor tsv(om);
+        std::cout << "***AFTER***" << std::endl;
+        for (auto &node : merged_trees) {
+            node->accept(&tsv);
+            std::cout << tsv.getResult() << std::endl;
+        }
         for (auto &tree : merged_trees) {
             tree->accept(&ttv);
         }
