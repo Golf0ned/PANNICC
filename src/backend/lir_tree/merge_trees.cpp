@@ -15,13 +15,13 @@ namespace backend::lir_tree {
         std::unordered_map<std::string, std::list<Node *>> uses;
         std::list<std::shared_ptr<Node>> context;
 
-        auto try_merge = [&]() {
+        auto try_merge_context = [&]() {
             bool changed = true;
             while (changed) {
                 changed = false;
 
-                auto t1_iter = context.begin();
-                while (t1_iter != context.end()) {
+                for (auto t1_iter = context.begin(); t1_iter != context.end();
+                     t1_iter++) {
                     auto t1 = t1_iter->get();
                     auto t1_reg = dynamic_cast<RegisterNode *>(t1);
                     if (!t1_reg)
@@ -34,6 +34,7 @@ namespace backend::lir_tree {
                         auto t2_reg = dynamic_cast<RegisterNode *>(t2);
                         if (!t2_reg)
                             continue;
+                        std::cout << "trying to merge" << std::endl;
 
                         auto &t2_uses = uses[t2_reg->getName()];
                         if (t2_uses.back() != t1)
@@ -55,8 +56,12 @@ namespace backend::lir_tree {
                                     dynamic_cast<RegisterNode *>(
                                         cur_leaf.get());
                                 if (cur_leaf_reg &&
-                                    t2_reg->sameReg(cur_leaf_reg))
+                                    t2_reg->sameReg(cur_leaf_reg)) {
+                                    std::cout
+                                        << "cannot merge: cur is use of t2"
+                                        << std::endl;
                                     goto cannot_merge;
+                                }
                             }
 
                             // Cannot merge if cur defines a reg used by t2
@@ -66,56 +71,60 @@ namespace backend::lir_tree {
                                         dynamic_cast<RegisterNode *>(
                                             t2_leaf.get());
                                     if (t2_leaf_reg &&
-                                        t2_leaf_reg->sameReg(cur_reg))
+                                        t2_leaf_reg->sameReg(cur_reg)) {
+                                        std::cout << "cannot merge: cur "
+                                                     "defines reg used by t2"
+                                                  << std::endl;
                                         goto cannot_merge;
+                                    }
                                 }
                             }
 
                             if (trees.hasMemoryInstruction(t2) &&
-                                trees.hasMemoryInstruction(cur))
+                                trees.hasMemoryInstruction(cur)) {
+                                std::cout << "cannot merge: maybe aliases"
+                                          << std::endl;
                                 goto cannot_merge;
+                            }
+
+                        cannot_merge:
+
+                            if (!cur_reg)
+                                continue;
 
                             t2_seen = t2_reg->sameReg(cur_reg);
-                        }
-
-                    cannot_merge:
-
-                        if (!t2_seen)
-                            continue;
-
-                        std::cout << "merging" << std::endl;
-
-                        auto cur = cur_iter->get();
-                        auto cur_reg = static_cast<RegisterNode *>(cur);
-
-                        t2_reg->consume(cur_reg);
-
-                        t1_leaves.erase(std::find(t1_leaves.begin(),
-                                                  t1_leaves.end(), *t2_iter));
-                        for (auto &leaf : trees.getLeaves(cur_reg))
-                            t1_leaves.push_back(std::move(leaf));
-
-                        if (trees.hasMemoryInstruction(t1) &&
-                            trees.hasMemoryInstruction(t2))
-                            trees.propagateMemoryInstruction(t1);
-
-                        for (auto &cur_leaf : trees.getLeaves(cur)) {
-                            auto cur_leaf_reg =
-                                dynamic_cast<RegisterNode *>(cur);
-                            if (!cur_leaf_reg)
+                            if (t2_seen)
                                 continue;
-                            auto cur_leaf_uses = uses[cur_leaf_reg->getName()];
-                            assert(cur_leaf_uses.back() == cur_reg);
-                            cur_leaf_uses.pop_back();
-                            cur_leaf_uses.push_back(t1);
+
+                            std::cout << "merging" << std::endl;
+
+                            t2_reg->consume(cur_reg);
+
+                            t1_leaves.erase(std::find(
+                                t1_leaves.begin(), t1_leaves.end(), *t2_iter));
+                            for (auto &leaf : trees.getLeaves(cur_reg))
+                                t1_leaves.push_back(std::move(leaf));
+
+                            if (trees.hasMemoryInstruction(t1) &&
+                                trees.hasMemoryInstruction(t2))
+                                trees.propagateMemoryInstruction(t1);
+
+                            for (auto &cur_leaf : trees.getLeaves(cur)) {
+                                auto cur_leaf_reg =
+                                    dynamic_cast<RegisterNode *>(cur);
+                                if (!cur_leaf_reg)
+                                    continue;
+                                auto cur_leaf_uses =
+                                    uses[cur_leaf_reg->getName()];
+                                *std::find(cur_leaf_uses.begin(),
+                                           cur_leaf_uses.end(), cur) = t1;
+                            }
+
+                            context.erase(std::find(context.begin(),
+                                                    context.end(), *cur_iter));
+                            changed = true;
                         }
-
-                        context.erase(std::find(context.begin(), context.end(),
-                                                *cur_iter));
-                        changed = true;
                     }
-
-                    t1_iter++;
                 }
             }
         };
@@ -134,7 +143,7 @@ namespace backend::lir_tree {
                 continue;
             }
 
-            try_merge();
+            try_merge_context();
             merged_trees.splice(merged_trees.end(), context);
 
             merged_trees.push_back(std::move(tree));
@@ -142,7 +151,7 @@ namespace backend::lir_tree {
         }
 
         // try merge one more time
-        try_merge();
+        try_merge_context();
         merged_trees.splice(merged_trees.end(), context);
     }
 } // namespace backend::lir_tree
