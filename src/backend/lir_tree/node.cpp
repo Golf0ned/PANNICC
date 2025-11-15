@@ -11,7 +11,7 @@ namespace backend::lir_tree {
         return source.get();
     }
 
-    void RegisterNode::setSource(std::shared_ptr<Node> new_node) {
+    void RegisterNode::setSource(std::unique_ptr<Node> new_node) {
         source = std::move(new_node);
     }
 
@@ -47,11 +47,11 @@ namespace backend::lir_tree {
         return right.get();
     }
 
-    void OpNode::setLeft(std::shared_ptr<Node> new_node) {
+    void OpNode::setLeft(std::unique_ptr<Node> new_node) {
         left = std::move(new_node);
     }
 
-    void OpNode::setRight(std::shared_ptr<Node> new_node) {
+    void OpNode::setRight(std::unique_ptr<Node> new_node) {
         right = std::move(new_node);
     }
 
@@ -63,7 +63,7 @@ namespace backend::lir_tree {
         return size.get();
     }
 
-    void AllocaNode::setSize(std::shared_ptr<Node> new_node) {
+    void AllocaNode::setSize(std::unique_ptr<Node> new_node) {
         size = std::move(new_node);
     }
 
@@ -75,7 +75,7 @@ namespace backend::lir_tree {
         return ptr.get();
     }
 
-    void LoadNode::setPtr(std::shared_ptr<Node> new_node) {
+    void LoadNode::setPtr(std::unique_ptr<Node> new_node) {
         ptr = std::move(new_node);
     }
 
@@ -93,10 +93,10 @@ namespace backend::lir_tree {
         return ptr.get();
     }
 
-    void StoreNode::setSource(std::shared_ptr<Node> new_node) {
+    void StoreNode::setSource(std::unique_ptr<Node> new_node) {
         source = std::move(new_node);
     }
-    void StoreNode::setPtr(std::shared_ptr<Node> new_node) {
+    void StoreNode::setPtr(std::unique_ptr<Node> new_node) {
         ptr = std::move(new_node);
     }
     void StoreNode::accept(NodeVisitor *v) { v->visit(this); }
@@ -168,12 +168,12 @@ namespace backend::lir_tree {
 
     void ToStringVisitor::visit(AsmNode *n) { result = "AsmNode"; }
 
-    void Forest::insertAsm(std::shared_ptr<Node> tree) {
+    void Forest::insertAsm(std::unique_ptr<Node> tree) {
         trees.push_back(std::move(tree));
     }
 
-    void Forest::insertTree(std::shared_ptr<Node> tree,
-                            std::vector<std::shared_ptr<Node>> leaves,
+    void Forest::insertTree(std::unique_ptr<Node> tree,
+                            std::vector<Node *> leaves,
                             bool has_memory_instruction) {
         tree_leaves[tree.get()] = std::move(leaves);
         if (has_memory_instruction) {
@@ -182,13 +182,13 @@ namespace backend::lir_tree {
         trees.push_back(std::move(tree));
     }
 
-    std::shared_ptr<Node> Forest::pop() {
+    std::unique_ptr<Node> Forest::pop() {
         auto res = std::move(trees.back());
         trees.pop_back();
         return std::move(res);
     }
 
-    std::vector<std::shared_ptr<Node>> &Forest::getLeaves(Node *tree) {
+    std::vector<Node *> &Forest::getLeaves(Node *tree) {
         return tree_leaves[tree];
     }
 
@@ -205,7 +205,7 @@ namespace backend::lir_tree {
     std::string Forest::toString(lir::OperandManager &om) {
         ToStringVisitor tsv(om);
         std::string res;
-        for (auto tree : trees) {
+        for (auto &tree : trees) {
             tree->accept(&tsv);
             res += tsv.getResult() + '\n';
         }

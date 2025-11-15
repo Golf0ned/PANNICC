@@ -47,7 +47,7 @@ namespace backend::lir_tree {
             }
         }
 
-        auto assembly = std::make_shared<AsmNode>(std::move(instructions));
+        auto assembly = std::make_unique<AsmNode>(std::move(instructions));
         function_trees.insertAsm(std::move(assembly));
     }
 
@@ -67,16 +67,16 @@ namespace backend::lir_tree {
         auto label = std::make_unique<lir::Label>(label_name);
         instructions.push_back(std::move(label));
 
-        auto assembly = std::make_shared<AsmNode>(std::move(instructions));
+        auto assembly = std::make_unique<AsmNode>(std::move(instructions));
         function_trees.insertAsm(std::move(assembly));
     }
 
-    std::shared_ptr<Node>
+    std::unique_ptr<Node>
     TreeGenVisitor::resolveValue(middleend::mir::Value *v) {
         auto literal = dynamic_cast<middleend::mir::Literal *>(v);
         if (literal)
-            return std::make_shared<ImmediateNode>(literal->getValue());
-        return std::make_shared<RegisterNode>(std::to_string(nir.getNumber(v)));
+            return std::make_unique<ImmediateNode>(literal->getValue());
+        return std::make_unique<RegisterNode>(std::to_string(nir.getNumber(v)));
     }
 
     lir::Operand *TreeGenVisitor::resolveOperand(middleend::mir::Value *v) {
@@ -90,15 +90,15 @@ namespace backend::lir_tree {
         auto left = resolveValue(i->getLeft());
         auto right = resolveValue(i->getRight());
 
-        auto left_leaf = left;
-        auto right_leaf = right;
+        auto left_leaf = left.get();
+        auto right_leaf = right.get();
 
-        auto op = std::make_shared<OpNode>(i->getOp());
+        auto op = std::make_unique<OpNode>(i->getOp());
         op->setLeft(std::move(left));
         op->setRight(std::move(right));
 
         auto reg =
-            std::make_shared<RegisterNode>(std::to_string(nir.getNumber(i)));
+            std::make_unique<RegisterNode>(std::to_string(nir.getNumber(i)));
         reg->setSource(std::move(op));
 
         function_trees.insertTree(std::move(reg), {left_leaf, right_leaf},
@@ -160,36 +160,36 @@ namespace backend::lir_tree {
             instructions.push_back(std::move(virt));
         }
 
-        auto assembly = std::make_shared<AsmNode>(std::move(instructions));
+        auto assembly = std::make_unique<AsmNode>(std::move(instructions));
         function_trees.insertAsm(std::move(assembly));
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionAlloca *i) {
         // TODO: get size properly, this sucks a lot
-        auto size = std::make_shared<ImmediateNode>(8);
+        auto size = std::make_unique<ImmediateNode>(8);
 
-        auto size_leaf = size;
+        auto size_leaf = size.get();
 
-        auto alloca = std::make_shared<AllocaNode>();
+        auto alloca = std::make_unique<AllocaNode>();
         alloca->setSize(std::move(size));
 
         auto reg =
-            std::make_shared<RegisterNode>(std::to_string(nir.getNumber(i)));
+            std::make_unique<RegisterNode>(std::to_string(nir.getNumber(i)));
         reg->setSource(std::move(alloca));
 
-        function_trees.insertTree(std::move(reg), {}, false);
+        function_trees.insertTree(std::move(reg), {size_leaf}, false);
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionLoad *i) {
         auto ptr = resolveValue(i->getPtr());
 
-        auto ptr_leaf = ptr;
+        auto ptr_leaf = ptr.get();
 
-        auto load = std::make_shared<LoadNode>();
+        auto load = std::make_unique<LoadNode>();
         load->setPtr(std::move(ptr));
 
         auto reg =
-            std::make_shared<RegisterNode>(std::to_string(nir.getNumber(i)));
+            std::make_unique<RegisterNode>(std::to_string(nir.getNumber(i)));
         reg->setSource(std::move(load));
 
         function_trees.insertTree(std::move(reg), {ptr_leaf}, false);
@@ -199,10 +199,10 @@ namespace backend::lir_tree {
         auto source = resolveValue(i->getValue());
         auto ptr = resolveValue(i->getPtr());
 
-        auto source_leaf = source;
-        auto ptr_leaf = ptr;
+        auto source_leaf = source.get();
+        auto ptr_leaf = ptr.get();
 
-        auto store = std::make_shared<StoreNode>();
+        auto store = std::make_unique<StoreNode>();
         store->setSource(std::move(source));
         store->setPtr(std::move(ptr));
 
@@ -221,7 +221,7 @@ namespace backend::lir_tree {
         auto phi = std::make_unique<lir::InstructionPhi>(std::move(from), to);
         instructions.push_back(std::move(phi));
 
-        auto assembly = std::make_shared<AsmNode>(std::move(instructions));
+        auto assembly = std::make_unique<AsmNode>(std::move(instructions));
         function_trees.insertAsm(std::move(assembly));
     }
 
@@ -250,7 +250,7 @@ namespace backend::lir_tree {
         auto ret = std::make_unique<lir::InstructionRet>();
         instructions.push_back(std::move(ret));
 
-        auto assembly = std::make_shared<AsmNode>(std::move(instructions));
+        auto assembly = std::make_unique<AsmNode>(std::move(instructions));
         function_trees.insertAsm(std::move(assembly));
     }
 
@@ -264,7 +264,7 @@ namespace backend::lir_tree {
             instructions.push_back(std::move(jmp));
         }
 
-        auto assembly = std::make_shared<AsmNode>(std::move(instructions));
+        auto assembly = std::make_unique<AsmNode>(std::move(instructions));
         function_trees.insertAsm(std::move(assembly));
     }
 
@@ -298,7 +298,7 @@ namespace backend::lir_tree {
             }
         }
 
-        auto assembly = std::make_shared<AsmNode>(std::move(instructions));
+        auto assembly = std::make_unique<AsmNode>(std::move(instructions));
         function_trees.insertAsm(std::move(assembly));
     }
 } // namespace backend::lir_tree
