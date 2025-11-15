@@ -20,14 +20,14 @@ namespace backend::lir_tree {
         RegisterNode(std::string name);
         std::string getName();
         Node *getSource();
-        void setSource(std::shared_ptr<Node> new_node);
+        void setSource(std::unique_ptr<Node> new_node);
         bool sameReg(RegisterNode *other);
         void consume(RegisterNode *other);
         void accept(NodeVisitor *v);
 
     private:
         std::string name;
-        std::shared_ptr<Node> source;
+        std::unique_ptr<Node> source;
     };
 
     class ImmediateNode : public Node {
@@ -46,47 +46,47 @@ namespace backend::lir_tree {
         middleend::mir::BinaryOp getOp();
         Node *getLeft();
         Node *getRight();
-        void setLeft(std::shared_ptr<Node> new_node);
-        void setRight(std::shared_ptr<Node> new_node);
+        void setLeft(std::unique_ptr<Node> new_node);
+        void setRight(std::unique_ptr<Node> new_node);
         void accept(NodeVisitor *v);
 
     private:
         middleend::mir::BinaryOp op;
-        std::shared_ptr<Node> left;
-        std::shared_ptr<Node> right;
+        std::unique_ptr<Node> left;
+        std::unique_ptr<Node> right;
     };
 
     class AllocaNode : public Node {
     public:
         Node *getSize();
-        void setSize(std::shared_ptr<Node> new_node);
+        void setSize(std::unique_ptr<Node> new_node);
         void accept(NodeVisitor *v);
 
     private:
-        std::shared_ptr<Node> size;
+        std::unique_ptr<Node> size;
     };
 
     class LoadNode : public Node {
     public:
         Node *getPtr();
-        void setPtr(std::shared_ptr<Node> new_node);
+        void setPtr(std::unique_ptr<Node> new_node);
         void accept(NodeVisitor *v);
 
     private:
-        std::shared_ptr<Node> ptr;
+        std::unique_ptr<Node> ptr;
     };
 
     class StoreNode : public Node {
     public:
         Node *getSource();
         Node *getPtr();
-        void setSource(std::shared_ptr<Node> new_node);
-        void setPtr(std::shared_ptr<Node> new_node);
+        void setSource(std::unique_ptr<Node> new_node);
+        void setPtr(std::unique_ptr<Node> new_node);
         void accept(NodeVisitor *v);
 
     private:
-        std::shared_ptr<Node> source;
-        std::shared_ptr<Node> ptr;
+        std::unique_ptr<Node> source;
+        std::unique_ptr<Node> ptr;
     };
 
     class AsmNode : public Node {
@@ -133,21 +133,19 @@ namespace backend::lir_tree {
 
     class Forest {
     public:
-        void insertAsm(std::shared_ptr<Node> tree);
-        void insertTree(std::shared_ptr<Node> tree,
-                        std::vector<std::shared_ptr<Node>> leaves,
+        void insertAsm(std::unique_ptr<Node> tree);
+        void insertTree(std::unique_ptr<Node> tree, std::vector<Node *> leaves,
                         bool has_memory_instruction);
-        std::shared_ptr<Node> pop();
-        std::vector<std::shared_ptr<Node>> &getLeaves(Node *tree);
+        std::unique_ptr<Node> pop();
+        std::vector<Node *> &getLeaves(Node *tree);
         bool hasMemoryInstruction(Node *tree);
         void propagateMemoryInstruction(Node *tree);
         bool empty();
         std::string toString(lir::OperandManager &om);
 
     private:
-        std::list<std::shared_ptr<Node>> trees;
-        std::unordered_map<Node *, std::vector<std::shared_ptr<Node>>>
-            tree_leaves;
+        std::list<std::unique_ptr<Node>> trees;
+        std::unordered_map<Node *, std::vector<Node *>> tree_leaves;
         std::unordered_set<Node *> trees_with_memory_instruction;
     };
 } // namespace backend::lir_tree
