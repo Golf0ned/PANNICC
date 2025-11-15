@@ -5,11 +5,11 @@
 namespace backend::lir_tree {
     class TreeMerger {
     public:
-        std::list<std::shared_ptr<Node>> getResult();
+        std::list<std::unique_ptr<Node>> getResult();
 
         void mergeTrees(Forest &trees, lir::OperandManager &om);
 
     private:
-        std::list<std::shared_ptr<Node>> merged_trees;
+        std::list<std::unique_ptr<Node>> merged_trees;
     };
 } // namespace backend::lir_tree

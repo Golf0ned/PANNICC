@@ -36,9 +36,6 @@ namespace backend {
         // Merge trees
         lir_tree::TreeMerger tmv;
         auto program_trees = tgv.getResult();
-        std::cout << "***BEFORE***" << std::endl;
-        for (auto &fn_trees : program_trees)
-            std::cout << fn_trees.toString(om) << std::endl;
         for (auto &fn_trees : program_trees)
             tmv.mergeTrees(fn_trees, om);
 
@@ -46,11 +43,13 @@ namespace backend {
         lir_tree::TreeTileVisitor ttv(om);
         auto merged_trees = tmv.getResult();
         lir_tree::ToStringVisitor tsv(om);
-        std::cout << "***AFTER***" << std::endl;
+
+        // Temporary print output
         for (auto &node : merged_trees) {
             node->accept(&tsv);
             std::cout << tsv.getResult() << std::endl;
         }
+
         for (auto &tree : merged_trees) {
             tree->accept(&ttv);
         }

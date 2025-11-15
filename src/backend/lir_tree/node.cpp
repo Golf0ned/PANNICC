@@ -173,7 +173,7 @@ namespace backend::lir_tree {
     }
 
     void Forest::insertTree(std::unique_ptr<Node> tree,
-                            std::vector<Node *> leaves,
+                            std::list<Node *> leaves,
                             bool has_memory_instruction) {
         tree_leaves[tree.get()] = std::move(leaves);
         if (has_memory_instruction) {
@@ -188,15 +188,15 @@ namespace backend::lir_tree {
         return std::move(res);
     }
 
-    std::vector<Node *> &Forest::getLeaves(Node *tree) {
+    std::list<Node *> &Forest::getLeaves(Node *tree) {
         return tree_leaves[tree];
     }
 
-    bool Forest::hasMemoryInstruction(Node *tree) {
+    bool Forest::hasMemInst(Node *tree) {
         return trees_with_memory_instruction.contains(tree);
     }
 
-    void Forest::propagateMemoryInstruction(Node *tree) {
+    void Forest::setMemInst(Node *tree) {
         trees_with_memory_instruction.insert(tree);
     }
 
