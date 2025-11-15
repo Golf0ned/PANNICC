@@ -134,18 +134,18 @@ namespace backend::lir_tree {
     class Forest {
     public:
         void insertAsm(std::unique_ptr<Node> tree);
-        void insertTree(std::unique_ptr<Node> tree, std::vector<Node *> leaves,
+        void insertTree(std::unique_ptr<Node> tree, std::list<Node *> leaves,
                         bool has_memory_instruction);
         std::unique_ptr<Node> pop();
-        std::vector<Node *> &getLeaves(Node *tree);
-        bool hasMemoryInstruction(Node *tree);
-        void propagateMemoryInstruction(Node *tree);
+        std::list<Node *> &getLeaves(Node *tree);
+        bool hasMemInst(Node *tree);
+        void setMemInst(Node *tree);
         bool empty();
         std::string toString(lir::OperandManager &om);
 
     private:
         std::list<std::unique_ptr<Node>> trees;
-        std::unordered_map<Node *, std::vector<Node *>> tree_leaves;
+        std::unordered_map<Node *, std::list<Node *>> tree_leaves;
         std::unordered_set<Node *> trees_with_memory_instruction;
     };
 } // namespace backend::lir_tree
