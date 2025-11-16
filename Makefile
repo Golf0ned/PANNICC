@@ -16,7 +16,7 @@ debug:
 	cmake --build $(DEBUG_DIR)
 
 test: build
-	cd $(BUILD_DIR) && ./bin/regression_tests | grep . | grep -vE "Skipped|SKIPPED"
+	cd $(BUILD_DIR) && ./bin/regression_tests | grep -e "\["
 
 clean:
 	if [ -d "$(BUILD_DIR)" ]; then cmake --build $(BUILD_DIR) --target clean; fi
