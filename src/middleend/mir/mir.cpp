@@ -11,7 +11,7 @@ namespace middleend::mir {
 
     const std::vector<BasicBlock *> BasicBlockEdges::getEdges() {
         std::vector<BasicBlock *> res;
-        for (auto [bb, count] : edges)
+        for (auto &[bb, count] : edges)
             for (int i = 0; i < count; i++)
                 res.push_back(bb);
         return res;
@@ -19,7 +19,7 @@ namespace middleend::mir {
 
     const std::unordered_set<BasicBlock *> BasicBlockEdges::getUniqueEdges() {
         std::unordered_set<BasicBlock *> res;
-        for (auto [bb, _] : edges)
+        for (auto &[bb, _] : edges)
             res.insert(bb);
         return res;
     }
