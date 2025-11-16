@@ -5,7 +5,6 @@ int simplify_cfg_delete_orphaned() {
         return 3;
 }
 
-
 int simplify_cfg_merge_straight_line() {
     int val = 0;
     if (1) {
