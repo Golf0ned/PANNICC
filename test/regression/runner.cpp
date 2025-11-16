@@ -5,13 +5,11 @@
 
 #include "gtest/gtest.h"
 
+#include "backend/mir_to_lir.h"
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"
 #include "middleend/pass_manager.h"
-#include "middleend/transform/inst_combine.h"
-#include "middleend/transform/mem2reg.h"
-#include "middleend/transform/simplify_cfg.h"
 
 namespace fs = std::filesystem;
 
@@ -99,6 +97,27 @@ TEST_P(RegressionTest, MIRWithPasses) {
     auto mir = frontend::hirToMir(hir);
     pm->runPasses(mir);
     compareIfFileExists(mir.toString(), mir_opt_path);
+}
+
+TEST_P(RegressionTest, LIR) {
+    auto ast = frontend::parse(input_path);
+    auto hir = frontend::astToHir(ast);
+    auto mir = frontend::hirToMir(hir);
+    auto lir = backend::mirToLir(mir);
+    SUCCEED();
+}
+
+TEST_P(RegressionTest, LIRWithPasses) {
+    auto pm = buildPassesFromFile(passes_path);
+    if (!pm)
+        GTEST_SKIP();
+
+    auto ast = frontend::parse(input_path);
+    auto hir = frontend::astToHir(ast);
+    auto mir = frontend::hirToMir(hir);
+    pm->runPasses(mir);
+    auto lir = backend::mirToLir(mir);
+    SUCCEED();
 }
 
 std::vector<std::string> discoverTests(std::string input_dir) {

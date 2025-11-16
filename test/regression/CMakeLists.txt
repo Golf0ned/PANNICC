@@ -2,6 +2,7 @@ add_executable(regression_tests runner.cpp)
 
 target_link_libraries(regression_tests PRIVATE
     gtest_main
+    backend
     frontend
     middleend
 )
