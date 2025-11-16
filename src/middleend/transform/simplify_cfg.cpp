@@ -22,7 +22,7 @@ namespace middleend {
                         if (preds.getSize() || bb == f->getEntryBlock())
                             return false;
 
-                        for (auto succ : succs.getUniqueEdges())
+                        for (auto succ : succs.getEdges())
                             succ->getPredecessors().removeEdge(bb);
 
                         to_drop.push_back(std::move(*iter));
@@ -90,7 +90,7 @@ namespace middleend {
                             return false;
 
                         succ_preds.removeEdge(bb);
-                        for (auto pred : preds.getUniqueEdges()) {
+                        for (auto pred : preds.getEdges()) {
                             // Replace succ preds
                             succ_preds.addEdge(pred);
 
