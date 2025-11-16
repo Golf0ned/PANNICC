@@ -34,7 +34,8 @@ namespace middleend {
                         if (preds.getSize() != 1)
                             return false;
                         auto pred = preds.getEdges()[0];
-                        if (pred->getSuccessors().getSize() != 1)
+                        if (pred == f->getEntryBlock() ||
+                            pred->getSuccessors().getSize() != 1)
                             return false;
 
                         auto &pred_insts = pred->getInstructions();
