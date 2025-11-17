@@ -2,29 +2,29 @@ define i32 @simplify_cfg_delete_orphaned() {
 entry:
   %0 = alloca i32
   %1 = alloca i32
-  store i32 1, ptr %1
-  %2 = load ptr %1
-  br i32 %2, label 3, label 6
+  %2 = alloca i32
+  %3 = alloca i32
+  store i32 1, ptr %0
+  %4 = load ptr %0
+  br i32 %4, label 5, label 7
 
-3:
-  %4 = alloca i32
-  store i32 2, ptr %4
-  %5 = load ptr %4
-  store i32 %5, ptr %0
+5:
+  store i32 2, ptr %1
+  %6 = load ptr %1
+  store i32 %6, ptr %3
   br label 10
 
-6:
-  %7 = alloca i32
-  store i32 3, ptr %7
-  %8 = load ptr %7
-  store i32 %8, ptr %0
+7:
+  store i32 3, ptr %2
+  %8 = load ptr %2
+  store i32 %8, ptr %3
   br label 10
 
 9:
   br label 10
 
 10:
-  %11 = load ptr %0
+  %11 = load ptr %3
   ret i32 %11
 }
 
@@ -33,58 +33,58 @@ entry:
   %0 = alloca i32
   %1 = alloca i32
   %2 = alloca i32
-  store i32 0, ptr %2
-  %3 = load ptr %2
-  store i32 %3, ptr %1
+  %3 = alloca i32
   %4 = alloca i32
-  store i32 1, ptr %4
-  %5 = load ptr %4
-  br i32 %5, label 6, label 20
-
-6:
+  %5 = alloca i32
+  %6 = alloca i32
   %7 = alloca i32
-  store i32 2, ptr %7
-  %8 = load ptr %7
-  br i32 %8, label 9, label 12
-
-9:
-  %10 = alloca i32
-  store i32 3, ptr %10
-  %11 = load ptr %10
-  store i32 %11, ptr %0
-  br label 27
+  %8 = alloca i32
+  %9 = alloca i32
+  store i32 0, ptr %1
+  %10 = load ptr %1
+  store i32 %10, ptr %0
+  store i32 1, ptr %2
+  %11 = load ptr %2
+  br i32 %11, label 12, label 22
 
 12:
-  %13 = alloca i32
-  %14 = load ptr %1
-  store i32 %14, ptr %13
-  %15 = alloca i32
-  store i32 4, ptr %15
-  %16 = load ptr %13
-  %17 = load ptr %15
-  %18 = add i32 %16, i32 %17
-  store i32 %18, ptr %13
-  %19 = load ptr %13
-  store i32 %19, ptr %1
-  br label 23
+  store i32 2, ptr %3
+  %13 = load ptr %3
+  br i32 %13, label 14, label 16
 
-20:
-  %21 = alloca i32
-  store i32 5, ptr %21
-  %22 = load ptr %21
-  store i32 %22, ptr %0
+14:
+  store i32 3, ptr %4
+  %15 = load ptr %4
+  store i32 %15, ptr %9
   br label 27
 
-23:
-  %24 = alloca i32
-  %25 = load ptr %1
-  store i32 %25, ptr %24
-  %26 = load ptr %24
-  store i32 %26, ptr %0
+16:
+  %17 = load ptr %0
+  store i32 %17, ptr %5
+  store i32 4, ptr %6
+  %18 = load ptr %5
+  %19 = load ptr %6
+  %20 = add i32 %18, i32 %19
+  store i32 %20, ptr %5
+  %21 = load ptr %5
+  store i32 %21, ptr %0
+  br label 24
+
+22:
+  store i32 5, ptr %7
+  %23 = load ptr %7
+  store i32 %23, ptr %9
+  br label 27
+
+24:
+  %25 = load ptr %0
+  store i32 %25, ptr %8
+  %26 = load ptr %8
+  store i32 %26, ptr %9
   br label 27
 
 27:
-  %28 = load ptr %0
+  %28 = load ptr %9
   ret i32 %28
 }
 
@@ -92,74 +92,74 @@ define i32 @simplify_cfg_delete_empty() {
 entry:
   %0 = alloca i32
   %1 = alloca i32
-  store i32 1, ptr %1
-  %2 = load ptr %1
-  br i32 %2, label 3, label 9
-
-3:
+  %2 = alloca i32
+  %3 = alloca i32
   %4 = alloca i32
-  store i32 2, ptr %4
-  %5 = load ptr %4
-  br i32 %5, label 6, label 7
+  store i32 1, ptr %0
+  %5 = load ptr %0
+  br i32 %5, label 6, label 11
 
 6:
-  br label 8
-
-7:
-  br label 8
+  store i32 2, ptr %1
+  %7 = load ptr %1
+  br i32 %7, label 8, label 9
 
 8:
-  br label 15
+  br label 10
 
 9:
-  %10 = alloca i32
-  store i32 3, ptr %10
-  %11 = load ptr %10
-  br i32 %11, label 12, label 13
+  br label 10
 
-12:
-  br label 14
+10:
+  br label 16
+
+11:
+  store i32 3, ptr %2
+  %12 = load ptr %2
+  br i32 %12, label 13, label 14
 
 13:
-  br label 14
+  br label 15
 
 14:
   br label 15
 
 15:
-  %16 = alloca i32
-  store i32 4, ptr %16
-  %17 = load ptr %16
-  store i32 %17, ptr %0
+  br label 16
+
+16:
+  store i32 4, ptr %3
+  %17 = load ptr %3
+  store i32 %17, ptr %4
   br label 18
 
 18:
-  %19 = load ptr %0
+  %19 = load ptr %4
   ret i32 %19
 }
 
 define i32 @simplify_cfg_empty_loop() {
 entry:
   %0 = alloca i32
-  br label 1
-
-1:
+  %1 = alloca i32
   %2 = alloca i32
-  store i32 0, ptr %2
-  %3 = load ptr %2
-  br i32 %3, label 4, label 5
+  br label 3
 
-4:
-  br label 1
+3:
+  store i32 0, ptr %0
+  %4 = load ptr %0
+  br i32 %4, label 5, label 6
 
 5:
-  %6 = alloca i32
-  store i32 0, ptr %6
-  %7 = load ptr %6
-  store i32 %7, ptr %0
+  br label 3
+
+6:
+  store i32 0, ptr %1
+  %7 = load ptr %1
+  store i32 %7, ptr %2
   br label 8
 
 8:
-  %9 = load ptr %0
+  %9 = load ptr %2
   ret i32 %9
 }
