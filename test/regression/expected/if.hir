@@ -1,172 +1,169 @@
 int if_basic() {
     __entry:
     int cond_1;
-    int __term;
-    __term = 1;
-    cond_1 = __term;
-    int __term1;
-    __term1 = cond_1;
-    goto_if (__term1) __if_t __if_cont;
+    int __v;
+    __v = 1;
+    cond_1 = __v;
+    int __v1;
+    __v1 = cond_1;
+    goto_if (__v1) __if_t __if_cont;
     __if_t:
-    int __term2;
-    __term2 = cond_1;
-    int __term3;
-    __term3 = 100;
-    int __bin;
-    __bin = __term2 + __term3;
-    cond_1 = __bin;
+    int __v2;
+    __v2 = cond_1;
+    int __v3;
+    __v3 = 100;
+    __v2 = __v2 + __v3;
+    cond_1 = __v2;
     __if_cont:
-    int __term4;
-    __term4 = cond_1;
-    return __term4;
+    int __v4;
+    __v4 = cond_1;
+    return __v4;
 }
 
 int if_basic_else() {
     __entry:
     int cond_1;
-    int __term;
-    __term = 1;
-    cond_1 = __term;
-    int __term1;
-    __term1 = cond_1;
-    goto_if (__term1) __if_t __if_f;
+    int __v;
+    __v = 1;
+    cond_1 = __v;
+    int __v1;
+    __v1 = cond_1;
+    goto_if (__v1) __if_t __if_f;
     __if_t:
-    int __term2;
-    __term2 = cond_1;
-    int __term3;
-    __term3 = 3;
-    int __bin;
-    __bin = __term2 + __term3;
-    cond_1 = __bin;
+    int __v2;
+    __v2 = cond_1;
+    int __v3;
+    __v3 = 3;
+    __v2 = __v2 + __v3;
+    cond_1 = __v2;
     goto __if_cont;
     __if_f:
-    int __term4;
-    __term4 = cond_1;
-    int __term5;
-    __term5 = 100;
-    int __bin1;
-    __bin1 = __term4 + __term5;
-    cond_1 = __bin1;
+    int __v4;
+    __v4 = cond_1;
+    int __v5;
+    __v5 = 100;
+    __v4 = __v4 + __v5;
+    cond_1 = __v4;
     __if_cont:
-    int __term6;
-    __term6 = cond_1;
-    return __term6;
+    int __v6;
+    __v6 = cond_1;
+    return __v6;
 }
 
 int if_no_braces() {
     __entry:
     int cond_1;
-    int __term;
-    __term = 1;
-    cond_1 = __term;
-    int __term1;
-    __term1 = cond_1;
-    goto_if (__term1) __if_t __if_f;
+    int __v;
+    __v = 1;
+    cond_1 = __v;
+    int __v1;
+    __v1 = cond_1;
+    goto_if (__v1) __if_t __if_f;
     __if_t:
-    int __term2;
-    __term2 = cond_1;
-    return __term2;
+    int __v2;
+    __v2 = cond_1;
+    return __v2;
     goto __if_cont;
     __if_f:
-    int __term3;
-    __term3 = cond_1;
-    return __term3;
+    int __v3;
+    __v3 = cond_1;
+    return __v3;
     __if_cont:
 }
 
 int if_chain() {
     __entry:
     int cond_1;
-    int __term;
-    __term = 1;
-    cond_1 = __term;
+    int __v;
+    __v = 1;
+    cond_1 = __v;
     int cond_2_1;
-    int __term1;
-    __term1 = 2;
-    cond_2_1 = __term1;
-    int __term2;
-    __term2 = cond_1;
-    goto_if (__term2) __if_t __if_cont;
+    int __v1;
+    __v1 = 2;
+    cond_2_1 = __v1;
+    int __v2;
+    __v2 = cond_1;
+    goto_if (__v2) __if_t __if_cont;
     __if_t:
-    int __term3;
-    __term3 = cond_2_1;
-    goto_if (__term3) __if_t1 __if_cont1;
+    int __v3;
+    __v3 = cond_2_1;
+    goto_if (__v3) __if_t1 __if_cont1;
     __if_t1:
-    int __term4;
-    __term4 = 0;
-    return __term4;
+    int __v4;
+    __v4 = 0;
+    return __v4;
     __if_cont1:
     __if_cont:
-    int __term5;
-    __term5 = 1;
-    return __term5;
+    int __v5;
+    __v5 = 1;
+    return __v5;
 }
 
 int if_chain_many() {
     __entry:
     int cond_1;
-    int __term;
-    __term = 1;
-    cond_1 = __term;
+    int __v;
+    __v = 1;
+    cond_1 = __v;
     int cond_2_1;
-    int __term1;
-    __term1 = 2;
-    cond_2_1 = __term1;
+    int __v1;
+    __v1 = 2;
+    cond_2_1 = __v1;
     int cond_3_1;
-    int __term2;
-    __term2 = 0;
-    cond_3_1 = __term2;
-    int __term3;
-    __term3 = cond_1;
-    goto_if (__term3) __if_t __if_cont;
+    int __v2;
+    __v2 = 0;
+    cond_3_1 = __v2;
+    int __v3;
+    __v3 = cond_1;
+    goto_if (__v3) __if_t __if_cont;
     __if_t:
-    int __term4;
-    __term4 = cond_2_1;
-    goto_if (__term4) __if_t1 __if_cont1;
+    int __v4;
+    __v4 = cond_2_1;
+    goto_if (__v4) __if_t1 __if_cont1;
     __if_t1:
-    int __term5;
-    __term5 = cond_3_1;
-    goto_if (__term5) __if_t2 __if_f;
+    int __v5;
+    __v5 = cond_3_1;
+    goto_if (__v5) __if_t2 __if_f;
     __if_t2:
-    int __term6;
-    __term6 = 0;
-    return __term6;
+    int __v6;
+    __v6 = 0;
+    return __v6;
     goto __if_cont2;
     __if_f:
-    int __term7;
-    __term7 = 3;
-    return __term7;
+    int __v7;
+    __v7 = 3;
+    return __v7;
     __if_cont2:
     __if_cont1:
     __if_cont:
-    int __term8;
-    __term8 = 1;
-    return __term8;
+    int __v8;
+    __v8 = 1;
+    return __v8;
 }
 
 int if_else_if() {
     __entry:
-    int __term;
-    __term = 1;
-    goto_if (__term) __if_t __if_f;
+    int __v;
+    __v = 1;
+    goto_if (__v) __if_t __if_f;
     __if_t:
-    int __term1;
-    __term1 = 2;
-    return __term1;
+    int __v1;
+    __v1 = 2;
+    return __v1;
     goto __if_cont;
     __if_f:
-    int __term2;
-    __term2 = 3;
-    goto_if (__term2) __if_t1 __if_f1;
+    int __v2;
+    __v2 = 3;
+    goto_if (__v2) __if_t1 __if_f1;
     __if_t1:
-    int __term3;
-    __term3 = 4;
-    return __term3;
+    int __v3;
+    __v3 = 4;
+    return __v3;
     goto __if_cont1;
     __if_f1:
-    int __term4;
-    __term4 = 5;
-    return __term4;
+    int __v4;
+    __v4 = 5;
+    return __v4;
     __if_cont1:
     __if_cont:
 }

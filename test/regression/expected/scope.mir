@@ -22,50 +22,48 @@ entry:
   store i32 %12, ptr %11
   %13 = alloca i32
   store i32 3, ptr %13
-  %14 = alloca i32
-  %15 = load ptr %11
-  %16 = load ptr %13
-  %17 = add i32 %15, i32 %16
-  store i32 %17, ptr %14
-  %18 = load ptr %14
-  store i32 %18, ptr %10
+  %14 = load ptr %11
+  %15 = load ptr %13
+  %16 = add i32 %14, i32 %15
+  store i32 %16, ptr %11
+  %17 = load ptr %11
+  store i32 %17, ptr %10
+  %18 = alloca i32
   %19 = alloca i32
-  %20 = alloca i32
-  store i32 4, ptr %20
-  %21 = load ptr %20
-  store i32 %21, ptr %19
+  store i32 4, ptr %19
+  %20 = load ptr %19
+  store i32 %20, ptr %18
+  %21 = alloca i32
   %22 = alloca i32
-  %23 = alloca i32
-  store i32 5, ptr %23
-  %24 = load ptr %23
-  store i32 %24, ptr %22
-  %25 = alloca i32
-  %26 = load ptr %22
-  store i32 %26, ptr %25
-  %27 = alloca i32
-  %28 = load ptr %4
-  store i32 %28, ptr %27
-  %29 = alloca i32
-  %30 = load ptr %25
-  %31 = load ptr %27
-  %32 = add i32 %30, i32 %31
-  store i32 %32, ptr %29
-  %33 = load ptr %29
-  store i32 %33, ptr %22
-  %34 = alloca i32
+  store i32 5, ptr %22
+  %23 = load ptr %22
+  store i32 %23, ptr %21
+  %24 = alloca i32
+  %25 = load ptr %21
+  store i32 %25, ptr %24
+  %26 = alloca i32
+  %27 = load ptr %4
+  store i32 %27, ptr %26
+  %28 = load ptr %24
+  %29 = load ptr %26
+  %30 = add i32 %28, i32 %29
+  store i32 %30, ptr %24
+  %31 = load ptr %24
+  store i32 %31, ptr %21
+  %32 = alloca i32
+  %33 = alloca i32
+  store i32 6, ptr %33
+  %34 = load ptr %33
+  store i32 %34, ptr %32
   %35 = alloca i32
-  store i32 6, ptr %35
+  store i32 0, ptr %35
   %36 = load ptr %35
-  store i32 %36, ptr %34
-  %37 = alloca i32
-  store i32 0, ptr %37
-  %38 = load ptr %37
-  store i32 %38, ptr %0
-  br label 39
+  store i32 %36, ptr %0
+  br label 37
 
-39:
-  %40 = load ptr %0
-  ret i32 %40
+37:
+  %38 = load ptr %0
+  ret i32 %38
 }
 
 define i32 @scope_reassign_variable() {
@@ -81,52 +79,49 @@ entry:
   store i32 %5, ptr %4
   %6 = alloca i32
   store i32 1, ptr %6
-  %7 = alloca i32
-  %8 = load ptr %4
-  %9 = load ptr %6
-  %10 = add i32 %8, i32 %9
-  store i32 %10, ptr %7
-  %11 = load ptr %7
-  store i32 %11, ptr %1
+  %7 = load ptr %4
+  %8 = load ptr %6
+  %9 = add i32 %7, i32 %8
+  store i32 %9, ptr %4
+  %10 = load ptr %4
+  store i32 %10, ptr %1
+  %11 = alloca i32
   %12 = alloca i32
-  %13 = alloca i32
-  store i32 3, ptr %13
-  %14 = load ptr %13
-  store i32 %14, ptr %12
-  %15 = alloca i32
-  %16 = load ptr %12
-  store i32 %16, ptr %15
-  %17 = alloca i32
-  store i32 4, ptr %17
-  %18 = alloca i32
-  %19 = load ptr %15
-  %20 = load ptr %17
-  %21 = add i32 %19, i32 %20
-  store i32 %21, ptr %18
-  %22 = load ptr %18
-  store i32 %22, ptr %12
+  store i32 3, ptr %12
+  %13 = load ptr %12
+  store i32 %13, ptr %11
+  %14 = alloca i32
+  %15 = load ptr %11
+  store i32 %15, ptr %14
+  %16 = alloca i32
+  store i32 4, ptr %16
+  %17 = load ptr %14
+  %18 = load ptr %16
+  %19 = add i32 %17, i32 %18
+  store i32 %19, ptr %14
+  %20 = load ptr %14
+  store i32 %20, ptr %11
+  %21 = alloca i32
+  %22 = load ptr %1
+  store i32 %22, ptr %21
   %23 = alloca i32
-  %24 = load ptr %1
-  store i32 %24, ptr %23
-  %25 = alloca i32
-  store i32 5, ptr %25
-  %26 = alloca i32
-  %27 = load ptr %23
-  %28 = load ptr %25
-  %29 = add i32 %27, i32 %28
-  store i32 %29, ptr %26
-  %30 = load ptr %26
-  store i32 %30, ptr %1
-  %31 = alloca i32
-  %32 = load ptr %1
-  store i32 %32, ptr %31
-  %33 = load ptr %31
-  store i32 %33, ptr %0
-  br label 34
+  store i32 5, ptr %23
+  %24 = load ptr %21
+  %25 = load ptr %23
+  %26 = add i32 %24, i32 %25
+  store i32 %26, ptr %21
+  %27 = load ptr %21
+  store i32 %27, ptr %1
+  %28 = alloca i32
+  %29 = load ptr %1
+  store i32 %29, ptr %28
+  %30 = load ptr %28
+  store i32 %30, ptr %0
+  br label 31
 
-34:
-  %35 = load ptr %0
-  ret i32 %35
+31:
+  %32 = load ptr %0
+  ret i32 %32
 }
 
 define i32 @scope_reassign_in_parallel_scopes() {

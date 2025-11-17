@@ -1,110 +1,100 @@
 int fun1(int a_0) {
     __entry:
-    int __term;
-    __term = a_0;
-    int __term1;
-    __term1 = a_0;
-    int __bin;
-    __bin = __term * __term1;
-    return __bin;
+    int __v;
+    __v = a_0;
+    int __v1;
+    __v1 = a_0;
+    __v = __v * __v1;
+    return __v;
 }
 
 int fun2(int a_0, int b_0) {
     __entry:
-    int __term;
-    __term = a_0;
-    int __call;
-    __call = fun1(__term);
-    int __term1;
-    __term1 = 2;
-    int __term2;
-    __term2 = a_0;
-    int __bin;
-    __bin = __term1 * __term2;
-    int __term3;
-    __term3 = b_0;
-    int __bin1;
-    __bin1 = __bin * __term3;
-    int __bin2;
-    __bin2 = __call + __bin1;
-    int __term4;
-    __term4 = b_0;
-    int __call1;
-    __call1 = fun1(__term4);
-    int __bin3;
-    __bin3 = __bin2 + __call1;
-    return __bin3;
+    int __v;
+    __v = a_0;
+    int __v1;
+    __v1 = fun1(__v);
+    int __v2;
+    __v2 = 2;
+    int __v3;
+    __v3 = a_0;
+    __v2 = __v2 * __v3;
+    int __v4;
+    __v4 = b_0;
+    __v2 = __v2 * __v4;
+    __v1 = __v1 + __v2;
+    int __v5;
+    __v5 = b_0;
+    int __v6;
+    __v6 = fun1(__v5);
+    __v1 = __v1 + __v6;
+    return __v1;
 }
 
 int fun3(int a_0, int b_0, int c_0, int x_0) {
     __entry:
-    int __term;
-    __term = a_0;
-    int __term1;
-    __term1 = x_0;
-    int __call;
-    __call = fun1(__term1);
-    int __bin;
-    __bin = __term * __call;
-    int __term2;
-    __term2 = b_0;
-    int __term3;
-    __term3 = x_0;
-    int __bin1;
-    __bin1 = __term2 * __term3;
-    int __bin2;
-    __bin2 = __bin + __bin1;
-    int __term4;
-    __term4 = c_0;
-    int __bin3;
-    __bin3 = __bin2 + __term4;
-    return __bin3;
+    int __v;
+    __v = a_0;
+    int __v1;
+    __v1 = x_0;
+    int __v2;
+    __v2 = fun1(__v1);
+    __v = __v * __v2;
+    int __v3;
+    __v3 = b_0;
+    int __v4;
+    __v4 = x_0;
+    __v3 = __v3 * __v4;
+    __v = __v + __v3;
+    int __v5;
+    __v5 = c_0;
+    __v = __v + __v5;
+    return __v;
 }
 
 int call1() {
     __entry:
-    int __term;
-    __term = 5;
-    int __call;
-    __call = fun1(__term);
-    return __call;
+    int __v;
+    __v = 5;
+    int __v1;
+    __v1 = fun1(__v);
+    return __v1;
 }
 
 int call2(int foo_0, int bar_0) {
     __entry:
-    int __term;
-    __term = foo_0;
-    int __term1;
-    __term1 = bar_0;
-    int __call;
-    __call = fun2(__term, __term1);
-    return __call;
+    int __v;
+    __v = foo_0;
+    int __v1;
+    __v1 = bar_0;
+    int __v2;
+    __v2 = fun2(__v, __v1);
+    return __v2;
 }
 
 int call3(int foo_0, int bar_0) {
     __entry:
-    int __term;
-    __term = foo_0;
-    int __term1;
-    __term1 = bar_0;
-    int __term2;
-    __term2 = 1;
-    int __term3;
-    __term3 = 0;
-    int __call;
-    __call = fun3(__term, __term1, __term2, __term3);
-    return __call;
+    int __v;
+    __v = foo_0;
+    int __v1;
+    __v1 = bar_0;
+    int __v2;
+    __v2 = 1;
+    int __v3;
+    __v3 = 0;
+    int __v4;
+    __v4 = fun3(__v, __v1, __v2, __v3);
+    return __v4;
 }
 
 int call4() {
     __entry:
-    int __term;
-    __term = 10;
-    int __call;
-    __call = fun1(__term);
-    int __term1;
-    __term1 = 100;
-    int __bin;
-    __bin = __call - __term1;
-    return __bin;
+    int __v;
+    __v = 10;
+    int __v1;
+    __v1 = fun1(__v);
+    int __v2;
+    __v2 = 100;
+    __v1 = __v1 - __v2;
+    return __v1;
 }

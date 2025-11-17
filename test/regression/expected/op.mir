@@ -17,18 +17,17 @@ entry:
   %9 = alloca i32
   %10 = load ptr %4
   store i32 %10, ptr %9
-  %11 = alloca i32
-  %12 = load ptr %7
-  %13 = load ptr %9
-  %14 = add i32 %12, i32 %13
-  store i32 %14, ptr %11
-  %15 = load ptr %11
-  store i32 %15, ptr %0
-  br label 16
+  %11 = load ptr %7
+  %12 = load ptr %9
+  %13 = add i32 %11, i32 %12
+  store i32 %13, ptr %7
+  %14 = load ptr %7
+  store i32 %14, ptr %0
+  br label 15
 
-16:
-  %17 = load ptr %0
-  ret i32 %17
+15:
+  %16 = load ptr %0
+  ret i32 %16
 }
 
 define i32 @sub() {
@@ -50,18 +49,17 @@ entry:
   %9 = alloca i32
   %10 = load ptr %4
   store i32 %10, ptr %9
-  %11 = alloca i32
-  %12 = load ptr %7
-  %13 = load ptr %9
-  %14 = sub i32 %12, i32 %13
-  store i32 %14, ptr %11
-  %15 = load ptr %11
-  store i32 %15, ptr %0
-  br label 16
+  %11 = load ptr %7
+  %12 = load ptr %9
+  %13 = sub i32 %11, i32 %12
+  store i32 %13, ptr %7
+  %14 = load ptr %7
+  store i32 %14, ptr %0
+  br label 15
 
-16:
-  %17 = load ptr %0
-  ret i32 %17
+15:
+  %16 = load ptr %0
+  ret i32 %16
 }
 
 define i32 @mul() {
@@ -83,18 +81,17 @@ entry:
   %9 = alloca i32
   %10 = load ptr %4
   store i32 %10, ptr %9
-  %11 = alloca i32
-  %12 = load ptr %7
-  %13 = load ptr %9
-  %14 = mul i32 %12, i32 %13
-  store i32 %14, ptr %11
-  %15 = load ptr %11
-  store i32 %15, ptr %0
-  br label 16
+  %11 = load ptr %7
+  %12 = load ptr %9
+  %13 = mul i32 %11, i32 %12
+  store i32 %13, ptr %7
+  %14 = load ptr %7
+  store i32 %14, ptr %0
+  br label 15
 
-16:
-  %17 = load ptr %0
-  ret i32 %17
+15:
+  %16 = load ptr %0
+  ret i32 %16
 }
 
 define i32 @div() {
@@ -116,18 +113,17 @@ entry:
   %9 = alloca i32
   %10 = load ptr %4
   store i32 %10, ptr %9
-  %11 = alloca i32
-  %12 = load ptr %7
-  %13 = load ptr %9
-  %14 = sdiv i32 %12, i32 %13
-  store i32 %14, ptr %11
-  %15 = load ptr %11
-  store i32 %15, ptr %0
-  br label 16
+  %11 = load ptr %7
+  %12 = load ptr %9
+  %13 = sdiv i32 %11, i32 %12
+  store i32 %13, ptr %7
+  %14 = load ptr %7
+  store i32 %14, ptr %0
+  br label 15
 
-16:
-  %17 = load ptr %0
-  ret i32 %17
+15:
+  %16 = load ptr %0
+  ret i32 %16
 }
 
 define i32 @lshift() {
@@ -149,18 +145,17 @@ entry:
   %9 = alloca i32
   %10 = load ptr %4
   store i32 %10, ptr %9
-  %11 = alloca i32
-  %12 = load ptr %7
-  %13 = load ptr %9
-  %14 = shl i32 %12, i32 %13
-  store i32 %14, ptr %11
-  %15 = load ptr %11
-  store i32 %15, ptr %0
-  br label 16
+  %11 = load ptr %7
+  %12 = load ptr %9
+  %13 = shl i32 %11, i32 %12
+  store i32 %13, ptr %7
+  %14 = load ptr %7
+  store i32 %14, ptr %0
+  br label 15
 
-16:
-  %17 = load ptr %0
-  ret i32 %17
+15:
+  %16 = load ptr %0
+  ret i32 %16
 }
 
 define i32 @rshift() {
@@ -182,18 +177,17 @@ entry:
   %9 = alloca i32
   %10 = load ptr %4
   store i32 %10, ptr %9
-  %11 = alloca i32
-  %12 = load ptr %7
-  %13 = load ptr %9
-  %14 = ashr i32 %12, i32 %13
-  store i32 %14, ptr %11
-  %15 = load ptr %11
-  store i32 %15, ptr %0
-  br label 16
+  %11 = load ptr %7
+  %12 = load ptr %9
+  %13 = ashr i32 %11, i32 %12
+  store i32 %13, ptr %7
+  %14 = load ptr %7
+  store i32 %14, ptr %0
+  br label 15
 
-16:
-  %17 = load ptr %0
-  ret i32 %17
+15:
+  %16 = load ptr %0
+  ret i32 %16
 }
 
 define i32 @bit_and() {
@@ -215,18 +209,17 @@ entry:
   %9 = alloca i32
   %10 = load ptr %4
   store i32 %10, ptr %9
-  %11 = alloca i32
-  %12 = load ptr %7
-  %13 = load ptr %9
-  %14 = and i32 %12, i32 %13
-  store i32 %14, ptr %11
-  %15 = load ptr %11
-  store i32 %15, ptr %0
-  br label 16
+  %11 = load ptr %7
+  %12 = load ptr %9
+  %13 = and i32 %11, i32 %12
+  store i32 %13, ptr %7
+  %14 = load ptr %7
+  store i32 %14, ptr %0
+  br label 15
 
-16:
-  %17 = load ptr %0
-  ret i32 %17
+15:
+  %16 = load ptr %0
+  ret i32 %16
 }
 
 define i32 @bit_or() {
@@ -248,18 +241,17 @@ entry:
   %9 = alloca i32
   %10 = load ptr %4
   store i32 %10, ptr %9
-  %11 = alloca i32
-  %12 = load ptr %7
-  %13 = load ptr %9
-  %14 = or i32 %12, i32 %13
-  store i32 %14, ptr %11
-  %15 = load ptr %11
-  store i32 %15, ptr %0
-  br label 16
+  %11 = load ptr %7
+  %12 = load ptr %9
+  %13 = or i32 %11, i32 %12
+  store i32 %13, ptr %7
+  %14 = load ptr %7
+  store i32 %14, ptr %0
+  br label 15
 
-16:
-  %17 = load ptr %0
-  ret i32 %17
+15:
+  %16 = load ptr %0
+  ret i32 %16
 }
 
 define i32 @bit_xor() {
@@ -281,18 +273,17 @@ entry:
   %9 = alloca i32
   %10 = load ptr %4
   store i32 %10, ptr %9
-  %11 = alloca i32
-  %12 = load ptr %7
-  %13 = load ptr %9
-  %14 = xor i32 %12, i32 %13
-  store i32 %14, ptr %11
-  %15 = load ptr %11
-  store i32 %15, ptr %0
-  br label 16
+  %11 = load ptr %7
+  %12 = load ptr %9
+  %13 = xor i32 %11, i32 %12
+  store i32 %13, ptr %7
+  %14 = load ptr %7
+  store i32 %14, ptr %0
+  br label 15
 
-16:
-  %17 = load ptr %0
-  ret i32 %17
+15:
+  %16 = load ptr %0
+  ret i32 %16
 }
 
 define i32 @unary_plus() {
@@ -306,16 +297,15 @@ entry:
   %4 = alloca i32
   %5 = load ptr %1
   store i32 %5, ptr %4
-  %6 = alloca i32
+  %6 = load ptr %4
+  store i32 %6, ptr %4
   %7 = load ptr %4
-  store i32 %7, ptr %6
-  %8 = load ptr %6
-  store i32 %8, ptr %0
-  br label 9
+  store i32 %7, ptr %0
+  br label 8
 
-9:
-  %10 = load ptr %0
-  ret i32 %10
+8:
+  %9 = load ptr %0
+  ret i32 %9
 }
 
 define i32 @unary_minus() {
@@ -329,17 +319,16 @@ entry:
   %4 = alloca i32
   %5 = load ptr %1
   store i32 %5, ptr %4
-  %6 = alloca i32
-  %7 = load ptr %4
-  %8 = sub i32 0, i32 %7
-  store i32 %8, ptr %6
-  %9 = load ptr %6
-  store i32 %9, ptr %0
-  br label 10
+  %6 = load ptr %4
+  %7 = sub i32 0, i32 %6
+  store i32 %7, ptr %4
+  %8 = load ptr %4
+  store i32 %8, ptr %0
+  br label 9
 
-10:
-  %11 = load ptr %0
-  ret i32 %11
+9:
+  %10 = load ptr %0
+  ret i32 %10
 }
 
 define i32 @unary_bitwise_not() {
@@ -353,17 +342,16 @@ entry:
   %4 = alloca i32
   %5 = load ptr %1
   store i32 %5, ptr %4
-  %6 = alloca i32
-  %7 = load ptr %4
-  %8 = xor i32 %7, i32 -1
-  store i32 %8, ptr %6
-  %9 = load ptr %6
-  store i32 %9, ptr %0
-  br label 10
+  %6 = load ptr %4
+  %7 = xor i32 %6, i32 -1
+  store i32 %7, ptr %4
+  %8 = load ptr %4
+  store i32 %8, ptr %0
+  br label 9
 
-10:
-  %11 = load ptr %0
-  ret i32 %11
+9:
+  %10 = load ptr %0
+  ret i32 %10
 }
 
 define i32 @add_equals() {

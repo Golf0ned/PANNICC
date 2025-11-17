@@ -1,335 +1,323 @@
 int add() {
     __entry:
     int a_1;
-    int __term;
-    __term = 1;
-    a_1 = __term;
+    int __v;
+    __v = 1;
+    a_1 = __v;
     int b_1;
-    int __term1;
-    __term1 = 2;
-    b_1 = __term1;
-    int __term2;
-    __term2 = a_1;
-    int __term3;
-    __term3 = b_1;
-    int __bin;
-    __bin = __term2 + __term3;
-    return __bin;
+    int __v1;
+    __v1 = 2;
+    b_1 = __v1;
+    int __v2;
+    __v2 = a_1;
+    int __v3;
+    __v3 = b_1;
+    __v2 = __v2 + __v3;
+    return __v2;
 }
 
 int sub() {
     __entry:
     int a_1;
-    int __term;
-    __term = 10;
-    a_1 = __term;
+    int __v;
+    __v = 10;
+    a_1 = __v;
     int b_1;
-    int __term1;
-    __term1 = 1;
-    b_1 = __term1;
-    int __term2;
-    __term2 = a_1;
-    int __term3;
-    __term3 = b_1;
-    int __bin;
-    __bin = __term2 - __term3;
-    return __bin;
+    int __v1;
+    __v1 = 1;
+    b_1 = __v1;
+    int __v2;
+    __v2 = a_1;
+    int __v3;
+    __v3 = b_1;
+    __v2 = __v2 - __v3;
+    return __v2;
 }
 
 int mul() {
     __entry:
     int a_1;
-    int __term;
-    __term = 3;
-    a_1 = __term;
+    int __v;
+    __v = 3;
+    a_1 = __v;
     int b_1;
-    int __term1;
-    __term1 = 4;
-    b_1 = __term1;
-    int __term2;
-    __term2 = a_1;
-    int __term3;
-    __term3 = b_1;
-    int __bin;
-    __bin = __term2 * __term3;
-    return __bin;
+    int __v1;
+    __v1 = 4;
+    b_1 = __v1;
+    int __v2;
+    __v2 = a_1;
+    int __v3;
+    __v3 = b_1;
+    __v2 = __v2 * __v3;
+    return __v2;
 }
 
 int div() {
     __entry:
     int a_1;
-    int __term;
-    __term = 24;
-    a_1 = __term;
+    int __v;
+    __v = 24;
+    a_1 = __v;
     int b_1;
-    int __term1;
-    __term1 = 6;
-    b_1 = __term1;
-    int __term2;
-    __term2 = a_1;
-    int __term3;
-    __term3 = b_1;
-    int __bin;
-    __bin = __term2 / __term3;
-    return __bin;
+    int __v1;
+    __v1 = 6;
+    b_1 = __v1;
+    int __v2;
+    __v2 = a_1;
+    int __v3;
+    __v3 = b_1;
+    __v2 = __v2 / __v3;
+    return __v2;
 }
 
 int lshift() {
     __entry:
     int a_1;
-    int __term;
-    __term = 1;
-    a_1 = __term;
+    int __v;
+    __v = 1;
+    a_1 = __v;
     int b_1;
-    int __term1;
-    __term1 = 4;
-    b_1 = __term1;
-    int __term2;
-    __term2 = a_1;
-    int __term3;
-    __term3 = b_1;
-    int __bin;
-    __bin = __term2 << __term3;
-    return __bin;
+    int __v1;
+    __v1 = 4;
+    b_1 = __v1;
+    int __v2;
+    __v2 = a_1;
+    int __v3;
+    __v3 = b_1;
+    __v2 = __v2 << __v3;
+    return __v2;
 }
 
 int rshift() {
     __entry:
     int a_1;
-    int __term;
-    __term = 16;
-    a_1 = __term;
+    int __v;
+    __v = 16;
+    a_1 = __v;
     int b_1;
-    int __term1;
-    __term1 = 3;
-    b_1 = __term1;
-    int __term2;
-    __term2 = a_1;
-    int __term3;
-    __term3 = b_1;
-    int __bin;
-    __bin = __term2 >> __term3;
-    return __bin;
+    int __v1;
+    __v1 = 3;
+    b_1 = __v1;
+    int __v2;
+    __v2 = a_1;
+    int __v3;
+    __v3 = b_1;
+    __v2 = __v2 >> __v3;
+    return __v2;
 }
 
 int bit_and() {
     __entry:
     int a_1;
-    int __term;
-    __term = 31;
-    a_1 = __term;
+    int __v;
+    __v = 31;
+    a_1 = __v;
     int b_1;
-    int __term1;
-    __term1 = 4;
-    b_1 = __term1;
-    int __term2;
-    __term2 = a_1;
-    int __term3;
-    __term3 = b_1;
-    int __bin;
-    __bin = __term2 & __term3;
-    return __bin;
+    int __v1;
+    __v1 = 4;
+    b_1 = __v1;
+    int __v2;
+    __v2 = a_1;
+    int __v3;
+    __v3 = b_1;
+    __v2 = __v2 & __v3;
+    return __v2;
 }
 
 int bit_or() {
     __entry:
     int a_1;
-    int __term;
-    __term = 12;
-    a_1 = __term;
+    int __v;
+    __v = 12;
+    a_1 = __v;
     int b_1;
-    int __term1;
-    __term1 = 3;
-    b_1 = __term1;
-    int __term2;
-    __term2 = a_1;
-    int __term3;
-    __term3 = b_1;
-    int __bin;
-    __bin = __term2 | __term3;
-    return __bin;
+    int __v1;
+    __v1 = 3;
+    b_1 = __v1;
+    int __v2;
+    __v2 = a_1;
+    int __v3;
+    __v3 = b_1;
+    __v2 = __v2 | __v3;
+    return __v2;
 }
 
 int bit_xor() {
     __entry:
     int a_1;
-    int __term;
-    __term = 15;
-    a_1 = __term;
+    int __v;
+    __v = 15;
+    a_1 = __v;
     int b_1;
-    int __term1;
-    __term1 = 4;
-    b_1 = __term1;
-    int __term2;
-    __term2 = a_1;
-    int __term3;
-    __term3 = b_1;
-    int __bin;
-    __bin = __term2 ^ __term3;
-    return __bin;
+    int __v1;
+    __v1 = 4;
+    b_1 = __v1;
+    int __v2;
+    __v2 = a_1;
+    int __v3;
+    __v3 = b_1;
+    __v2 = __v2 ^ __v3;
+    return __v2;
 }
 
 int unary_plus() {
     __entry:
     int a_1;
-    int __term;
-    __term = 42;
-    a_1 = __term;
-    int __term1;
-    __term1 = a_1;
-    int __un;
-    __un = +__term1;
-    return __un;
+    int __v;
+    __v = 42;
+    a_1 = __v;
+    int __v1;
+    __v1 = a_1;
+    __v1 = +__v1;
+    return __v1;
 }
 
 int unary_minus() {
     __entry:
     int a_1;
-    int __term;
-    __term = 42;
-    a_1 = __term;
-    int __term1;
-    __term1 = a_1;
-    int __un;
-    __un = -__term1;
-    return __un;
+    int __v;
+    __v = 42;
+    a_1 = __v;
+    int __v1;
+    __v1 = a_1;
+    __v1 = -__v1;
+    return __v1;
 }
 
 int unary_bitwise_not() {
     __entry:
     int a_1;
-    int __term;
-    __term = 42;
-    a_1 = __term;
-    int __term1;
-    __term1 = a_1;
-    int __un;
-    __un = ~__term1;
-    return __un;
+    int __v;
+    __v = 42;
+    a_1 = __v;
+    int __v1;
+    __v1 = a_1;
+    __v1 = ~__v1;
+    return __v1;
 }
 
 int add_equals() {
     __entry:
     int a_1;
-    int __term;
-    __term = 1;
-    a_1 = __term;
-    int __term1;
-    __term1 = 2;
-    a_1 = a_1 + __term1;
-    int __term2;
-    __term2 = a_1;
-    return __term2;
+    int __v;
+    __v = 1;
+    a_1 = __v;
+    int __v1;
+    __v1 = 2;
+    a_1 = a_1 + __v1;
+    int __v2;
+    __v2 = a_1;
+    return __v2;
 }
 
 int sub_equals() {
     __entry:
     int a_1;
-    int __term;
-    __term = 10;
-    a_1 = __term;
-    int __term1;
-    __term1 = 2;
-    a_1 = a_1 - __term1;
-    int __term2;
-    __term2 = a_1;
-    return __term2;
+    int __v;
+    __v = 10;
+    a_1 = __v;
+    int __v1;
+    __v1 = 2;
+    a_1 = a_1 - __v1;
+    int __v2;
+    __v2 = a_1;
+    return __v2;
 }
 
 int mul_equals() {
     __entry:
     int a_1;
-    int __term;
-    __term = 3;
-    a_1 = __term;
-    int __term1;
-    __term1 = 4;
-    a_1 = a_1 * __term1;
-    int __term2;
-    __term2 = a_1;
-    return __term2;
+    int __v;
+    __v = 3;
+    a_1 = __v;
+    int __v1;
+    __v1 = 4;
+    a_1 = a_1 * __v1;
+    int __v2;
+    __v2 = a_1;
+    return __v2;
 }
 
 int div_equals() {
     __entry:
     int a_1;
-    int __term;
-    __term = 24;
-    a_1 = __term;
-    int __term1;
-    __term1 = 6;
-    a_1 = a_1 / __term1;
-    int __term2;
-    __term2 = a_1;
-    return __term2;
+    int __v;
+    __v = 24;
+    a_1 = __v;
+    int __v1;
+    __v1 = 6;
+    a_1 = a_1 / __v1;
+    int __v2;
+    __v2 = a_1;
+    return __v2;
 }
 
 int lshift_equals() {
     __entry:
     int a_1;
-    int __term;
-    __term = 1;
-    a_1 = __term;
-    int __term1;
-    __term1 = 4;
-    a_1 = a_1 << __term1;
-    int __term2;
-    __term2 = a_1;
-    return __term2;
+    int __v;
+    __v = 1;
+    a_1 = __v;
+    int __v1;
+    __v1 = 4;
+    a_1 = a_1 << __v1;
+    int __v2;
+    __v2 = a_1;
+    return __v2;
 }
 
 int rshift_equals() {
     __entry:
     int a_1;
-    int __term;
-    __term = 16;
-    a_1 = __term;
-    int __term1;
-    __term1 = 3;
-    a_1 = a_1 >> __term1;
-    int __term2;
-    __term2 = a_1;
-    return __term2;
+    int __v;
+    __v = 16;
+    a_1 = __v;
+    int __v1;
+    __v1 = 3;
+    a_1 = a_1 >> __v1;
+    int __v2;
+    __v2 = a_1;
+    return __v2;
 }
 
 int bit_and_equals() {
     __entry:
     int a_1;
-    int __term;
-    __term = 31;
-    a_1 = __term;
-    int __term1;
-    __term1 = 4;
-    a_1 = a_1 & __term1;
-    int __term2;
-    __term2 = a_1;
-    return __term2;
+    int __v;
+    __v = 31;
+    a_1 = __v;
+    int __v1;
+    __v1 = 4;
+    a_1 = a_1 & __v1;
+    int __v2;
+    __v2 = a_1;
+    return __v2;
 }
 
 int bit_or_equals() {
     __entry:
     int a_1;
-    int __term;
-    __term = 12;
-    a_1 = __term;
-    int __term1;
-    __term1 = 3;
-    a_1 = a_1 | __term1;
-    int __term2;
-    __term2 = a_1;
-    return __term2;
+    int __v;
+    __v = 12;
+    a_1 = __v;
+    int __v1;
+    __v1 = 3;
+    a_1 = a_1 | __v1;
+    int __v2;
+    __v2 = a_1;
+    return __v2;
 }
 
 int bit_xor_equals() {
     __entry:
     int a_1;
-    int __term;
-    __term = 15;
-    a_1 = __term;
-    int __term1;
-    __term1 = 4;
-    a_1 = a_1 ^ __term1;
-    int __term2;
-    __term2 = a_1;
-    return __term2;
+    int __v;
+    __v = 15;
+    a_1 = __v;
+    int __v1;
+    __v1 = 4;
+    a_1 = a_1 ^ __v1;
+    int __v2;
+    __v2 = a_1;
+    return __v2;
 }

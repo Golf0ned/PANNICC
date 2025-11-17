@@ -1,143 +1,126 @@
 int first() {
     __entry:
-    int __term;
-    __term = 1;
-    return __term;
+    int __v;
+    __v = 1;
+    return __v;
 }
 
 int second() {
     __entry:
-    int __call;
-    __call = first();
-    int __term;
-    __term = 1;
-    int __bin;
-    __bin = __call + __term;
-    return __bin;
+    int __v;
+    __v = first();
+    int __v1;
+    __v1 = 1;
+    __v = __v + __v1;
+    return __v;
 }
 
 int third() {
     __entry:
-    int __call;
-    __call = second();
-    int __term;
-    __term = 2;
-    int __bin;
-    __bin = __call + __term;
-    return __bin;
+    int __v;
+    __v = second();
+    int __v1;
+    __v1 = 2;
+    __v = __v + __v1;
+    return __v;
 }
 
 int fourth() {
     __entry:
-    int __call;
-    __call = third();
-    int __term;
-    __term = 3;
-    int __bin;
-    __bin = __call + __term;
-    return __bin;
+    int __v;
+    __v = third();
+    int __v1;
+    __v1 = 3;
+    __v = __v + __v1;
+    return __v;
 }
 
 int fifth() {
     __entry:
-    int __call;
-    __call = fourth();
-    int __term;
-    __term = 4;
-    int __bin;
-    __bin = __call + __term;
-    return __bin;
+    int __v;
+    __v = fourth();
+    int __v1;
+    __v1 = 4;
+    __v = __v + __v1;
+    return __v;
 }
 
 int sixth() {
     __entry:
-    int __call;
-    __call = fifth();
-    int __term;
-    __term = 5;
-    int __bin;
-    __bin = __call + __term;
-    return __bin;
+    int __v;
+    __v = fifth();
+    int __v1;
+    __v1 = 5;
+    __v = __v + __v1;
+    return __v;
 }
 
 int main() {
     __entry:
-    int __call;
-    __call = sixth();
+    int __v;
+    __v = sixth();
     int res_1;
-    int __term;
-    __term = 0;
-    res_1 = __term;
-    int __term1;
-    __term1 = res_1;
-    int __call1;
-    __call1 = first();
-    int __bin;
-    __bin = __term1 + __call1;
-    res_1 = __bin;
-    int __term2;
-    __term2 = res_1;
-    int __call2;
-    __call2 = second();
-    int __bin1;
-    __bin1 = __term2 + __call2;
-    res_1 = __bin1;
-    int __term3;
-    __term3 = res_1;
-    int __call3;
-    __call3 = third();
-    int __bin2;
-    __bin2 = __term3 + __call3;
-    res_1 = __bin2;
-    int __term4;
-    __term4 = res_1;
-    int __call4;
-    __call4 = fourth();
-    int __bin3;
-    __bin3 = __term4 + __call4;
-    res_1 = __bin3;
-    int __term5;
-    __term5 = res_1;
-    int __call5;
-    __call5 = fifth();
-    int __bin4;
-    __bin4 = __term5 + __call5;
-    res_1 = __bin4;
-    int __term6;
-    __term6 = res_1;
-    int __call6;
-    __call6 = sixth();
-    int __bin5;
-    __bin5 = __term6 + __call6;
-    res_1 = __bin5;
-    int __term7;
-    __term7 = res_1;
-    int __call7;
-    __call7 = first();
-    int __bin6;
-    __bin6 = __term7 + __call7;
-    int __call8;
-    __call8 = second();
-    int __bin7;
-    __bin7 = __bin6 + __call8;
-    int __call9;
-    __call9 = third();
-    int __bin8;
-    __bin8 = __bin7 + __call9;
-    int __call10;
-    __call10 = fourth();
-    int __bin9;
-    __bin9 = __bin8 + __call10;
-    int __call11;
-    __call11 = fifth();
-    int __bin10;
-    __bin10 = __bin9 + __call11;
-    int __call12;
-    __call12 = sixth();
-    int __bin11;
-    __bin11 = __bin10 + __call12;
-    res_1 = __bin11;
-    int __term8;
-    __term8 = res_1;
-    return __term8;
+    int __v1;
+    __v1 = 0;
+    res_1 = __v1;
+    int __v2;
+    __v2 = res_1;
+    int __v3;
+    __v3 = first();
+    __v2 = __v2 + __v3;
+    res_1 = __v2;
+    int __v4;
+    __v4 = res_1;
+    int __v5;
+    __v5 = second();
+    __v4 = __v4 + __v5;
+    res_1 = __v4;
+    int __v6;
+    __v6 = res_1;
+    int __v7;
+    __v7 = third();
+    __v6 = __v6 + __v7;
+    res_1 = __v6;
+    int __v8;
+    __v8 = res_1;
+    int __v9;
+    __v9 = fourth();
+    __v8 = __v8 + __v9;
+    res_1 = __v8;
+    int __v10;
+    __v10 = res_1;
+    int __v11;
+    __v11 = fifth();
+    __v10 = __v10 + __v11;
+    res_1 = __v10;
+    int __v12;
+    __v12 = res_1;
+    int __v13;
+    __v13 = sixth();
+    __v12 = __v12 + __v13;
+    res_1 = __v12;
+    int __v14;
+    __v14 = res_1;
+    int __v15;
+    __v15 = first();
+    __v14 = __v14 + __v15;
+    int __v16;
+    __v16 = second();
+    __v14 = __v14 + __v16;
+    int __v17;
+    __v17 = third();
+    __v14 = __v14 + __v17;
+    int __v18;
+    __v18 = fourth();
+    __v14 = __v14 + __v18;
+    int __v19;
+    __v19 = fifth();
+    __v14 = __v14 + __v19;
+    int __v20;
+    __v20 = sixth();
+    __v14 = __v14 + __v20;
+    res_1 = __v14;
+    int __v21;
+    __v21 = res_1;
+    return __v21;
 }
