@@ -35,8 +35,12 @@ namespace backend::lir_tree {
                         if (!t2_reg)
                             continue;
 
-                        auto &t2_uses = uses[t2_reg->getName()];
-                        if (t2_uses.size() > 1 && t2_uses.back() != t1)
+                        auto t2_uses_iter = uses.find(t2_reg->getName());
+                        if (t2_uses_iter == uses.end())
+                            continue;
+
+                        auto &t2_uses = t2_uses_iter->second;
+                        if (t2_uses.empty() || t2_uses.back() != t1)
                             continue;
 
                         if (t2_uses.size() > 1 &&
