@@ -10,7 +10,7 @@ entry:
   %5 = load ptr %1
   store i32 %5, ptr %4
   %6 = load ptr %4
-  br i32 %6, label 7, label 16
+  br i32 %6, label 7, label 15
 
 7:
   %8 = alloca i32
@@ -18,26 +18,25 @@ entry:
   store i32 %9, ptr %8
   %10 = alloca i32
   store i32 100, ptr %10
-  %11 = alloca i32
-  %12 = load ptr %8
-  %13 = load ptr %10
-  %14 = add i32 %12, i32 %13
-  store i32 %14, ptr %11
-  %15 = load ptr %11
-  store i32 %15, ptr %1
-  br label 16
+  %11 = load ptr %8
+  %12 = load ptr %10
+  %13 = add i32 %11, i32 %12
+  store i32 %13, ptr %8
+  %14 = load ptr %8
+  store i32 %14, ptr %1
+  br label 15
 
-16:
-  %17 = alloca i32
-  %18 = load ptr %1
-  store i32 %18, ptr %17
-  %19 = load ptr %17
-  store i32 %19, ptr %0
-  br label 20
+15:
+  %16 = alloca i32
+  %17 = load ptr %1
+  store i32 %17, ptr %16
+  %18 = load ptr %16
+  store i32 %18, ptr %0
+  br label 19
 
-20:
-  %21 = load ptr %0
-  ret i32 %21
+19:
+  %20 = load ptr %0
+  ret i32 %20
 }
 
 define i32 @if_basic_else() {
@@ -52,7 +51,7 @@ entry:
   %5 = load ptr %1
   store i32 %5, ptr %4
   %6 = load ptr %4
-  br i32 %6, label 7, label 16
+  br i32 %6, label 7, label 15
 
 7:
   %8 = alloca i32
@@ -60,41 +59,39 @@ entry:
   store i32 %9, ptr %8
   %10 = alloca i32
   store i32 3, ptr %10
-  %11 = alloca i32
-  %12 = load ptr %8
-  %13 = load ptr %10
-  %14 = add i32 %12, i32 %13
-  store i32 %14, ptr %11
-  %15 = load ptr %11
-  store i32 %15, ptr %1
-  br label 25
+  %11 = load ptr %8
+  %12 = load ptr %10
+  %13 = add i32 %11, i32 %12
+  store i32 %13, ptr %8
+  %14 = load ptr %8
+  store i32 %14, ptr %1
+  br label 23
 
-16:
-  %17 = alloca i32
-  %18 = load ptr %1
-  store i32 %18, ptr %17
-  %19 = alloca i32
-  store i32 100, ptr %19
-  %20 = alloca i32
-  %21 = load ptr %17
-  %22 = load ptr %19
-  %23 = add i32 %21, i32 %22
-  store i32 %23, ptr %20
-  %24 = load ptr %20
-  store i32 %24, ptr %1
-  br label 25
+15:
+  %16 = alloca i32
+  %17 = load ptr %1
+  store i32 %17, ptr %16
+  %18 = alloca i32
+  store i32 100, ptr %18
+  %19 = load ptr %16
+  %20 = load ptr %18
+  %21 = add i32 %19, i32 %20
+  store i32 %21, ptr %16
+  %22 = load ptr %16
+  store i32 %22, ptr %1
+  br label 23
 
-25:
-  %26 = alloca i32
-  %27 = load ptr %1
-  store i32 %27, ptr %26
-  %28 = load ptr %26
-  store i32 %28, ptr %0
-  br label 29
+23:
+  %24 = alloca i32
+  %25 = load ptr %1
+  store i32 %25, ptr %24
+  %26 = load ptr %24
+  store i32 %26, ptr %0
+  br label 27
 
-29:
-  %30 = load ptr %0
-  ret i32 %30
+27:
+  %28 = load ptr %0
+  ret i32 %28
 }
 
 define i32 @if_no_braces() {

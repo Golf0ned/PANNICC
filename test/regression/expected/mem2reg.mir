@@ -53,47 +53,45 @@ entry:
   store i32 %5, ptr %4
   %6 = alloca i32
   store i32 42, ptr %6
-  %7 = alloca i32
-  %8 = load ptr %4
-  %9 = load ptr %6
-  %10 = sub i32 %8, i32 %9
-  store i32 %10, ptr %7
-  %11 = load ptr %7
-  br i32 %11, label 12, label 15
+  %7 = load ptr %4
+  %8 = load ptr %6
+  %9 = sub i32 %7, i32 %8
+  store i32 %9, ptr %4
+  %10 = load ptr %4
+  br i32 %10, label 11, label 14
 
-12:
-  %13 = alloca i32
-  store i32 1, ptr %13
-  %14 = load ptr %13
-  store i32 %14, ptr %3
-  br label 24
+11:
+  %12 = alloca i32
+  store i32 1, ptr %12
+  %13 = load ptr %12
+  store i32 %13, ptr %3
+  br label 22
 
-15:
-  %16 = alloca i32
-  %17 = load ptr %2
-  store i32 %17, ptr %16
-  %18 = alloca i32
-  store i32 2, ptr %18
-  %19 = alloca i32
-  %20 = load ptr %16
-  %21 = load ptr %18
-  %22 = add i32 %20, i32 %21
-  store i32 %22, ptr %19
-  %23 = load ptr %19
-  store i32 %23, ptr %3
-  br label 24
+14:
+  %15 = alloca i32
+  %16 = load ptr %2
+  store i32 %16, ptr %15
+  %17 = alloca i32
+  store i32 2, ptr %17
+  %18 = load ptr %15
+  %19 = load ptr %17
+  %20 = add i32 %18, i32 %19
+  store i32 %20, ptr %15
+  %21 = load ptr %15
+  store i32 %21, ptr %3
+  br label 22
 
-24:
-  %25 = alloca i32
-  %26 = load ptr %3
-  store i32 %26, ptr %25
-  %27 = load ptr %25
-  store i32 %27, ptr %1
-  br label 28
+22:
+  %23 = alloca i32
+  %24 = load ptr %3
+  store i32 %24, ptr %23
+  %25 = load ptr %23
+  store i32 %25, ptr %1
+  br label 26
 
-28:
-  %29 = load ptr %1
-  ret i32 %29
+26:
+  %27 = load ptr %1
+  ret i32 %27
 }
 
 define i32 @mem2reg_while() {
@@ -117,51 +115,48 @@ entry:
   store i32 %9, ptr %8
   %10 = alloca i32
   store i32 10, ptr %10
-  %11 = alloca i32
-  %12 = load ptr %8
-  %13 = load ptr %10
-  %14 = sub i32 %12, i32 %13
-  store i32 %14, ptr %11
-  %15 = load ptr %11
-  br i32 %15, label 16, label 34
+  %11 = load ptr %8
+  %12 = load ptr %10
+  %13 = sub i32 %11, i32 %12
+  store i32 %13, ptr %8
+  %14 = load ptr %8
+  br i32 %14, label 15, label 31
 
-16:
-  %17 = alloca i32
-  %18 = load ptr %4
-  store i32 %18, ptr %17
-  %19 = alloca i32
-  %20 = load ptr %1
-  store i32 %20, ptr %19
-  %21 = alloca i32
-  %22 = load ptr %17
-  %23 = load ptr %19
-  %24 = add i32 %22, i32 %23
-  store i32 %24, ptr %21
-  %25 = load ptr %21
-  store i32 %25, ptr %4
+15:
+  %16 = alloca i32
+  %17 = load ptr %4
+  store i32 %17, ptr %16
+  %18 = alloca i32
+  %19 = load ptr %1
+  store i32 %19, ptr %18
+  %20 = load ptr %16
+  %21 = load ptr %18
+  %22 = add i32 %20, i32 %21
+  store i32 %22, ptr %16
+  %23 = load ptr %16
+  store i32 %23, ptr %4
+  %24 = alloca i32
+  %25 = load ptr %1
+  store i32 %25, ptr %24
   %26 = alloca i32
-  %27 = load ptr %1
-  store i32 %27, ptr %26
-  %28 = alloca i32
-  store i32 1, ptr %28
-  %29 = alloca i32
-  %30 = load ptr %26
-  %31 = load ptr %28
-  %32 = add i32 %30, i32 %31
-  store i32 %32, ptr %29
-  %33 = load ptr %29
-  store i32 %33, ptr %1
+  store i32 1, ptr %26
+  %27 = load ptr %24
+  %28 = load ptr %26
+  %29 = add i32 %27, i32 %28
+  store i32 %29, ptr %24
+  %30 = load ptr %24
+  store i32 %30, ptr %1
   br label 7
 
-34:
-  %35 = alloca i32
-  %36 = load ptr %4
-  store i32 %36, ptr %35
-  %37 = load ptr %35
-  store i32 %37, ptr %0
-  br label 38
+31:
+  %32 = alloca i32
+  %33 = load ptr %4
+  store i32 %33, ptr %32
+  %34 = load ptr %32
+  store i32 %34, ptr %0
+  br label 35
 
-38:
-  %39 = load ptr %0
-  ret i32 %39
+35:
+  %36 = load ptr %0
+  ret i32 %36
 }

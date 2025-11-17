@@ -39,7 +39,7 @@ entry:
   %4 = alloca i32
   store i32 1, ptr %4
   %5 = load ptr %4
-  br i32 %5, label 6, label 21
+  br i32 %5, label 6, label 20
 
 6:
   %7 = alloca i32
@@ -52,7 +52,7 @@ entry:
   store i32 3, ptr %10
   %11 = load ptr %10
   store i32 %11, ptr %0
-  br label 28
+  br label 27
 
 12:
   %13 = alloca i32
@@ -60,33 +60,32 @@ entry:
   store i32 %14, ptr %13
   %15 = alloca i32
   store i32 4, ptr %15
-  %16 = alloca i32
-  %17 = load ptr %13
-  %18 = load ptr %15
-  %19 = add i32 %17, i32 %18
-  store i32 %19, ptr %16
-  %20 = load ptr %16
-  store i32 %20, ptr %1
-  br label 24
+  %16 = load ptr %13
+  %17 = load ptr %15
+  %18 = add i32 %16, i32 %17
+  store i32 %18, ptr %13
+  %19 = load ptr %13
+  store i32 %19, ptr %1
+  br label 23
 
-21:
-  %22 = alloca i32
-  store i32 5, ptr %22
-  %23 = load ptr %22
-  store i32 %23, ptr %0
-  br label 28
+20:
+  %21 = alloca i32
+  store i32 5, ptr %21
+  %22 = load ptr %21
+  store i32 %22, ptr %0
+  br label 27
 
-24:
-  %25 = alloca i32
-  %26 = load ptr %1
-  store i32 %26, ptr %25
-  %27 = load ptr %25
-  store i32 %27, ptr %0
-  br label 28
+23:
+  %24 = alloca i32
+  %25 = load ptr %1
+  store i32 %25, ptr %24
+  %26 = load ptr %24
+  store i32 %26, ptr %0
+  br label 27
 
-28:
-  %29 = load ptr %0
-  ret i32 %29
+27:
+  %28 = load ptr %0
+  ret i32 %28
 }
 
 define i32 @simplify_cfg_delete_empty() {
