@@ -31,11 +31,11 @@ namespace frontend {
                 i->accept(&visitor);
             }
             visitor.connectBasicBlocks();
+            middleend::mir::BasicBlock *entry = visitor.createEntryBlock();
             auto basic_blocks = visitor.getResult();
 
             auto &name_atom = f.getName();
             std::string name = name_atom->toString(*hir.getSymbolTable().get());
-            middleend::mir::BasicBlock *entry = basic_blocks.front().get();
 
             auto fun = std::make_unique<middleend::mir::Function>(
                 function_type, name, std::move(params), std::move(basic_blocks),
@@ -187,6 +187,13 @@ namespace frontend {
         }
     }
 
+    middleend::mir::BasicBlock *HIRToMIRVisitor::createEntryBlock() {
+        auto &entry_block_body = basic_blocks.front()->getInstructions();
+        entry_block_body.splice(entry_block_body.begin(), allocas);
+
+        return basic_blocks.front().get();
+    }
+
     void HIRToMIRVisitor::visit(hir::Instruction *i) {}
 
     void HIRToMIRVisitor::visit(hir::Label *l) {
@@ -211,7 +218,7 @@ namespace frontend {
         auto alloca = std::make_unique<middleend::mir::InstructionAlloca>(t);
         value_mappings[i->getVariable()->getValue()] = alloca.get();
 
-        cur_instructions.push_back(std::move(alloca));
+        allocas.push_back(std::move(alloca));
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionAssignValue *i) {

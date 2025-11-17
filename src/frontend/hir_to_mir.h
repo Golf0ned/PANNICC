@@ -22,6 +22,7 @@ namespace frontend {
         void createBasicBlock(
             std::unique_ptr<middleend::mir::Terminator> terminator);
         void connectBasicBlocks();
+        middleend::mir::BasicBlock *createEntryBlock();
 
         void visit(hir::Instruction *i) override;
         void visit(hir::Label *l) override;
@@ -38,6 +39,7 @@ namespace frontend {
     private:
         middleend::mir::Type function_type;
         middleend::mir::InstructionAlloca *ret_alloca;
+        std::list<std::unique_ptr<middleend::mir::Instruction>> allocas;
         std::list<std::unique_ptr<middleend::mir::Instruction>>
             cur_instructions;
         std::list<std::unique_ptr<middleend::mir::BasicBlock>> basic_blocks;
