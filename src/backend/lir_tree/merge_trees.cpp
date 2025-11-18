@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <cassert>
-#include <iostream>
 
 #include "backend/lir_tree/merge_trees.h"
 #include "backend/lir_tree/node.h"
@@ -24,9 +23,6 @@ namespace backend::lir_tree {
                 for (auto t1_iter = context.begin(); t1_iter != context.end();
                      t1_iter++) {
                     auto t1 = t1_iter->get();
-                    auto t1_reg = dynamic_cast<RegisterNode *>(t1);
-                    if (!t1_reg)
-                        continue;
 
                     auto &t1_leaves = trees.getLeaves(t1);
                     for (auto t2_iter = t1_leaves.begin();
@@ -57,7 +53,7 @@ namespace backend::lir_tree {
 
                             auto cur_reg = dynamic_cast<RegisterNode *>(cur);
 
-                            auto t2_uses_cur = [&]() {
+                            auto cur_uses_t2 = [&]() {
                                 for (auto &cur_leaf : trees.getLeaves(cur)) {
                                     auto cur_leaf_reg =
                                         dynamic_cast<RegisterNode *>(cur_leaf);
@@ -90,7 +86,7 @@ namespace backend::lir_tree {
 
                             // clang-format off
                             if (false
-                                || t2_uses_cur()
+                                || cur_uses_t2()
                                 || cur_is_t2_leaf()
                                 || maybe_aliases()
                             ) {
@@ -102,7 +98,7 @@ namespace backend::lir_tree {
                                 continue;
 
                             t2_seen = t2_reg->sameReg(cur_reg);
-                            if (t2_seen)
+                            if (!t2_seen)
                                 continue;
 
                             // Transfer info from cur to t2
@@ -136,7 +132,6 @@ namespace backend::lir_tree {
 
                             changed = true;
                             t2_iter = t1_leaves.begin();
-
                             break;
                         }
                     }
