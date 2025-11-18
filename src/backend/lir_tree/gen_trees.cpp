@@ -177,7 +177,7 @@ namespace backend::lir_tree {
             std::make_unique<RegisterNode>(std::to_string(nir.getNumber(i)));
         reg->setSource(std::move(alloca));
 
-        function_trees.insertTree(std::move(reg), {size_leaf}, false);
+        function_trees.insertTree(std::move(reg), {size_leaf}, true);
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionLoad *i) {
@@ -192,7 +192,7 @@ namespace backend::lir_tree {
             std::make_unique<RegisterNode>(std::to_string(nir.getNumber(i)));
         reg->setSource(std::move(load));
 
-        function_trees.insertTree(std::move(reg), {ptr_leaf}, false);
+        function_trees.insertTree(std::move(reg), {ptr_leaf}, true);
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionStore *i) {
