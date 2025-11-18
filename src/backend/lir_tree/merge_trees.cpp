@@ -6,8 +6,8 @@
 
 namespace backend::lir_tree {
     std::list<std::unique_ptr<Node>> TreeMerger::getResult() {
-        merged_trees.reverse();
-        return std::move(merged_trees);
+        program_trees.reverse();
+        return std::move(program_trees);
     }
 
     void TreeMerger::mergeTrees(Forest &trees, lir::OperandManager &om) {
@@ -154,14 +154,15 @@ namespace backend::lir_tree {
             }
 
             try_merge_context();
-            merged_trees.splice(merged_trees.end(), context);
+            function_trees.splice(function_trees.end(), context);
 
-            merged_trees.push_back(std::move(tree));
+            function_trees.push_back(std::move(tree));
             // uses.clear();
         }
 
         // try merge one more time
         try_merge_context();
-        merged_trees.splice(merged_trees.end(), context);
+        function_trees.splice(function_trees.end(), context);
+        program_trees.splice(program_trees.begin(), function_trees);
     }
 } // namespace backend::lir_tree
