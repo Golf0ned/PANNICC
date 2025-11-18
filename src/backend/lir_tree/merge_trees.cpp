@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 
 #include "backend/lir_tree/merge_trees.h"
 #include "backend/lir_tree/node.h"
@@ -56,33 +57,46 @@ namespace backend::lir_tree {
 
                             auto cur_reg = dynamic_cast<RegisterNode *>(cur);
 
-                            // Cannot merge if cur is a use of t2
-                            for (auto cur_leaf : trees.getLeaves(cur)) {
-                                auto cur_leaf_reg =
-                                    dynamic_cast<RegisterNode *>(cur_leaf);
-                                if (cur_leaf_reg &&
-                                    t2_reg->sameReg(cur_leaf_reg)) {
-                                    goto cannot_merge;
+                            auto t2_uses_cur = [&]() {
+                                for (auto &cur_leaf : trees.getLeaves(cur)) {
+                                    auto cur_leaf_reg =
+                                        dynamic_cast<RegisterNode *>(cur_leaf);
+                                    if (cur_leaf_reg &&
+                                        t2_reg->sameReg(cur_leaf_reg)) {
+                                        return true;
+                                    }
                                 }
-                            }
+                                return false;
+                            };
 
-                            // Cannot merge if cur defines a reg used by t2
-                            if (cur_reg) {
-                                for (auto t2_leaf : trees.getLeaves(t2)) {
+                            auto cur_is_t2_leaf = [&]() {
+                                if (!cur_reg)
+                                    return false;
+                                for (auto &t2_leaf : trees.getLeaves(t2)) {
                                     auto t2_leaf_reg =
                                         dynamic_cast<RegisterNode *>(t2_leaf);
                                     if (t2_leaf_reg &&
                                         t2_leaf_reg->sameReg(cur_reg)) {
-                                        goto cannot_merge;
+                                        return true;
                                     }
                                 }
-                            }
+                                return false;
+                            };
 
-                            if (trees.hasMemInst(t2) && trees.hasMemInst(cur)) {
-                                goto cannot_merge;
-                            }
+                            auto maybe_aliases = [&]() {
+                                return trees.hasMemInst(t1) &&
+                                       trees.hasMemInst(cur);
+                            };
 
-                        cannot_merge:
+                            // clang-format off
+                            if (false
+                                || t2_uses_cur()
+                                || cur_is_t2_leaf()
+                                || maybe_aliases()
+                            ) {
+                                // clang-format on
+                                break;
+                            }
 
                             if (!cur_reg)
                                 continue;
@@ -122,6 +136,7 @@ namespace backend::lir_tree {
 
                             changed = true;
                             t2_iter = t1_leaves.begin();
+
                             break;
                         }
                     }
