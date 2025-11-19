@@ -10,6 +10,8 @@ namespace backend::lir_tree {
         std::list<std::unique_ptr<lir::Instruction>> getResult();
 
         void tile(Node *tree);
+        void recursiveTile(RegisterNode *tree);
+        void recursiveTile(StoreNode *tree);
 
     private:
         lir::OperandManager &om;
