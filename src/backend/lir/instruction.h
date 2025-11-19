@@ -130,15 +130,22 @@ namespace backend::lir {
     class InstructionVirtual : public Instruction {
     public:
         InstructionVirtual(std::unique_ptr<Instruction> i);
+        std::unique_ptr<Instruction> &getInstruction();
         void accept(InstructionVisitor *v);
 
     private:
         std::unique_ptr<Instruction> instruction;
     };
 
+    class InstructionUnknown : public Instruction {
+    public:
+        void accept(InstructionVisitor *v);
+    };
+
     class InstructionVisitor {
     public:
         virtual void visit(Instruction *i) = 0;
+        virtual void visit(Label *l) = 0;
         virtual void visit(InstructionMov *i) = 0;
         virtual void visit(InstructionPush *i) = 0;
         virtual void visit(InstructionPop *i) = 0;
@@ -150,5 +157,6 @@ namespace backend::lir {
 
         virtual void visit(InstructionPhi *i) = 0;
         virtual void visit(InstructionVirtual *i) = 0;
+        virtual void visit(InstructionUnknown *i) = 0;
     };
 } // namespace backend::lir
