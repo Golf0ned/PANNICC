@@ -14,15 +14,23 @@ namespace backend::lir_tree {
             return;
         }
 
-        auto reg_node = dynamic_cast<AsmNode *>(tree);
+        auto reg_node = dynamic_cast<RegisterNode *>(tree);
         if (reg_node) {
+            recursiveTile(reg_node);
         }
 
-        auto store_node = dynamic_cast<AsmNode *>(tree);
+        auto store_node = dynamic_cast<StoreNode *>(tree);
         if (store_node) {
+            recursiveTile(store_node);
         }
 
         auto unknown = std::make_unique<lir::InstructionUnknown>();
         assembly.push_back(std::move(unknown));
     }
+
+    void TreeTiler::recursiveTile(RegisterNode *tree) {
+        auto source = tree->getSource();
+    }
+
+    void TreeTiler::recursiveTile(StoreNode *tree) {}
 } // namespace backend::lir_tree
