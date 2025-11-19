@@ -1,39 +1,28 @@
 #include "backend/lir_tree/tile_trees.h"
 
 namespace backend::lir_tree {
-    TreeTileVisitor::TreeTileVisitor(lir::OperandManager &om) : om(om) {}
+    TreeTiler::TreeTiler(lir::OperandManager &om) : om(om) {}
 
-    std::list<std::unique_ptr<lir::Instruction>> TreeTileVisitor::getResult() {
+    std::list<std::unique_ptr<lir::Instruction>> TreeTiler::getResult() {
         return std::move(assembly);
     }
 
-    void TreeTileVisitor::visit(Node *n) {}
+    void TreeTiler::tile(Node *tree) {
+        auto asm_node = dynamic_cast<AsmNode *>(tree);
+        if (asm_node) {
+            assembly.splice(assembly.end(), asm_node->getAssembly());
+            return;
+        }
 
-    void TreeTileVisitor::visit(RegisterNode *n) {
-        // TODO
-    }
+        auto reg_node = dynamic_cast<AsmNode *>(tree);
+        if (reg_node) {
+        }
 
-    void TreeTileVisitor::visit(ImmediateNode *n) {
-        // TODO
-    }
+        auto store_node = dynamic_cast<AsmNode *>(tree);
+        if (store_node) {
+        }
 
-    void TreeTileVisitor::visit(OpNode *n) {
-        // TODO
-    }
-
-    void TreeTileVisitor::visit(AllocaNode *n) {
-        // TODO
-    }
-
-    void TreeTileVisitor::visit(LoadNode *n) {
-        // TODO
-    }
-
-    void TreeTileVisitor::visit(StoreNode *n) {
-        // TODO
-    }
-
-    void TreeTileVisitor::visit(AsmNode *n) {
-        assembly.splice(assembly.end(), n->getAssembly());
+        auto unknown = std::make_unique<lir::InstructionUnknown>();
+        assembly.push_back(std::move(unknown));
     }
 } // namespace backend::lir_tree
