@@ -78,16 +78,35 @@ namespace backend::lir {
         std::string name;
     };
 
+    class Address : public Operand {
+    public:
+        Address(Register *base, Register *index, Immediate *scale,
+                Immediate *displacement);
+        Register *getBase();
+        Register *getIndex();
+        Immediate *getScale();
+        Immediate *getDisplacement();
+
+    private:
+        Register *base;
+        Register *index;
+        Immediate *scale;
+        Immediate *displacement;
+    };
+
     class OperandManager {
     public:
         Immediate *getImmediate(uint64_t value);
         Register *getRegister(RegisterNum reg);
         VirtualRegister *getRegister(std::string name);
+        Address *getAddress(Register *base, Register *index, Immediate *scale,
+                            Immediate *displacement);
 
     private:
         std::unordered_map<uint64_t, std::unique_ptr<Immediate>> immediates;
         std::unordered_map<RegisterNum, std::unique_ptr<Register>> registers;
         std::unordered_map<std::string, std::unique_ptr<VirtualRegister>>
             virtual_registers;
+        std::vector<std::unique_ptr<Address>> addresses;
     };
 } // namespace backend::lir
