@@ -165,19 +165,12 @@ namespace backend::lir_tree {
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionAlloca *i) {
-        // TODO: get size properly, this sucks a lot
-        auto size = std::make_unique<ImmediateNode>(8);
+        std::list<std::unique_ptr<lir::Instruction>> instructions;
 
-        auto size_leaf = size.get();
+        // TODO: add virtual stack ptr push
 
-        auto alloca = std::make_unique<AllocaNode>();
-        alloca->setSize(std::move(size));
-
-        auto reg =
-            std::make_unique<RegisterNode>(std::to_string(nir.getNumber(i)));
-        reg->setSource(std::move(alloca));
-
-        function_trees.insertTree(std::move(reg), {size_leaf}, true);
+        auto assembly = std::make_unique<AsmNode>(std::move(instructions));
+        function_trees.insertAsm(std::move(assembly));
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionLoad *i) {
