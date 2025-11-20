@@ -44,6 +44,18 @@ namespace backend::lir {
 
     std::string VirtualRegister::getName() { return name; }
 
+    Address::Address(Register *base, Register *index, Immediate *scale,
+                     Immediate *displacement)
+        : base(base), index(index), scale(scale), displacement(displacement) {}
+
+    Register *Address::getBase() { return base; }
+
+    Register *Address::getIndex() { return index; }
+
+    Immediate *Address::getScale() { return scale; }
+
+    Immediate *Address::getDisplacement() { return displacement; }
+
     Immediate *OperandManager::getImmediate(uint64_t value) {
         if (!immediates.contains(value))
             immediates.insert({value, std::make_unique<Immediate>(value)});
@@ -64,5 +76,13 @@ namespace backend::lir {
             virtual_registers.insert(
                 {name, std::make_unique<VirtualRegister>(name)});
         return virtual_registers.at(name).get();
+    }
+
+    Address *OperandManager::getAddress(Register *base, Register *index,
+                                        Immediate *scale,
+                                        Immediate *displacement) {
+        addresses.push_back(
+            std::make_unique<Address>(base, index, scale, displacement));
+        return addresses.back().get();
     }
 } // namespace backend::lir
