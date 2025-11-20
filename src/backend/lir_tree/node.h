@@ -9,6 +9,17 @@
 namespace backend::lir_tree {
     class NodeVisitor;
 
+    enum class NodeType {
+        NONE,
+        REGISTER,
+        IMMEDIATE,
+        ADDRESS,
+        OP,
+        LOAD,
+        STORE,
+        ASM,
+    };
+
     class Node {
     public:
         virtual void accept(NodeVisitor *v) = 0;
@@ -40,6 +51,13 @@ namespace backend::lir_tree {
         uint64_t value;
     };
 
+    class AddressNode : public Node {
+    public:
+        // TODO
+    private:
+        // TODO
+    };
+
     class OpNode : public Node {
     public:
         OpNode(middleend::mir::BinaryOp op);
@@ -54,16 +72,6 @@ namespace backend::lir_tree {
         middleend::mir::BinaryOp op;
         std::unique_ptr<Node> left;
         std::unique_ptr<Node> right;
-    };
-
-    class AllocaNode : public Node {
-    public:
-        Node *getSize();
-        void setSize(std::unique_ptr<Node> new_node);
-        void accept(NodeVisitor *v);
-
-    private:
-        std::unique_ptr<Node> size;
     };
 
     class LoadNode : public Node {
@@ -105,7 +113,6 @@ namespace backend::lir_tree {
         virtual void visit(RegisterNode *n) = 0;
         virtual void visit(ImmediateNode *n) = 0;
         virtual void visit(OpNode *n) = 0;
-        virtual void visit(AllocaNode *n) = 0;
         virtual void visit(LoadNode *n) = 0;
         virtual void visit(StoreNode *n) = 0;
         virtual void visit(AsmNode *n) = 0;
@@ -121,7 +128,6 @@ namespace backend::lir_tree {
         virtual void visit(RegisterNode *n);
         virtual void visit(ImmediateNode *n);
         virtual void visit(OpNode *n);
-        virtual void visit(AllocaNode *n);
         virtual void visit(LoadNode *n);
         virtual void visit(StoreNode *n);
         virtual void visit(AsmNode *n);

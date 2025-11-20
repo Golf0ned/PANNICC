@@ -57,18 +57,6 @@ namespace backend::lir_tree {
 
     void OpNode::accept(NodeVisitor *v) { v->visit(this); }
 
-    Node *AllocaNode::getSize() {
-        if (!size)
-            return nullptr;
-        return size.get();
-    }
-
-    void AllocaNode::setSize(std::unique_ptr<Node> new_node) {
-        size = std::move(new_node);
-    }
-
-    void AllocaNode::accept(NodeVisitor *v) { v->visit(this); }
-
     Node *LoadNode::getPtr() {
         if (!ptr)
             return nullptr;
@@ -140,13 +128,6 @@ namespace backend::lir_tree {
         std::string right = result;
 
         result = op + "(" + left + ", " + right + ")";
-    }
-
-    void ToStringVisitor::visit(AllocaNode *n) {
-        n->getSize()->accept(this);
-        std::string size = result;
-
-        result = "alloca(" + size + ")";
     }
 
     void ToStringVisitor::visit(LoadNode *n) {
