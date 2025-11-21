@@ -17,7 +17,11 @@ namespace backend::lir {
 
     std::string ToStringVisitor::getResult() { return result; }
 
-    void ToStringVisitor::visit(Instruction *i) {}
+    void ToStringVisitor::visit(Instruction *i) {
+        if (!result.empty())
+            result += '\n';
+        result += "[unknown]";
+    }
 
     void ToStringVisitor::visit(Label *l) {
         if (!result.empty())
@@ -82,11 +86,5 @@ namespace backend::lir {
     void ToStringVisitor::visit(InstructionVirtual *i) {
         i->getInstruction()->accept(this);
         result += "    # [virtual]";
-    }
-
-    void ToStringVisitor::visit(InstructionUnknown *i) {
-        if (!result.empty())
-            result += '\n';
-        result += "[unknown]";
     }
 } // namespace backend::lir
