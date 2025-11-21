@@ -47,6 +47,12 @@ namespace backend::lir {
         result += "pop [TODO]";
     }
 
+    void ToStringVisitor::visit(InstructionBinaryOp *i) {
+        if (!result.empty())
+            result += '\n';
+        result += "binop [TODO]";
+    }
+
     void ToStringVisitor::visit(InstructionCmp *i) {
         if (!result.empty())
             result += '\n';

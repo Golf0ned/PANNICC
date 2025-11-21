@@ -26,6 +26,7 @@ namespace backend::lir {
         virtual void visit(InstructionMov *i);
         virtual void visit(InstructionPush *i);
         virtual void visit(InstructionPop *i);
+        virtual void visit(InstructionBinaryOp *i);
         virtual void visit(InstructionCmp *i);
         virtual void visit(InstructionJmp *i);
         virtual void visit(InstructionCJmp *i);
