@@ -37,5 +37,6 @@ namespace backend::lir_tree {
         middleend::mir::BasicBlock *next_block;
         Forest function_trees;
         std::list<Forest> program_trees;
+        uint64_t stack_space;
     };
 } // namespace backend::lir_tree
