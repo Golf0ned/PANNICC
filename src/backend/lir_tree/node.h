@@ -28,7 +28,7 @@ namespace backend::lir_tree {
 
     class RegisterNode : public Node {
     public:
-        RegisterNode(std::string name);
+        RegisterNode(std::string name, std::unique_ptr<Node> source);
         std::string getName();
         Node *getSource();
         void setSource(std::unique_ptr<Node> new_node);
@@ -53,14 +53,21 @@ namespace backend::lir_tree {
 
     class AddressNode : public Node {
     public:
-        // TODO
+        AddressNode(std::unique_ptr<Node> base, std::unique_ptr<Node> index,
+                    uint64_t scale, uint64_t displacement);
+        void accept(NodeVisitor *v);
+
     private:
-        // TODO
+        std::unique_ptr<Node> base;
+        std::unique_ptr<Node> index;
+        uint64_t scale;
+        uint64_t displacement;
     };
 
     class OpNode : public Node {
     public:
-        OpNode(middleend::mir::BinaryOp op);
+        OpNode(middleend::mir::BinaryOp op, std::unique_ptr<Node> left,
+               std::unique_ptr<Node> right);
         middleend::mir::BinaryOp getOp();
         Node *getLeft();
         Node *getRight();
@@ -76,6 +83,7 @@ namespace backend::lir_tree {
 
     class LoadNode : public Node {
     public:
+        LoadNode(std::unique_ptr<Node> ptr);
         Node *getPtr();
         void setPtr(std::unique_ptr<Node> new_node);
         void accept(NodeVisitor *v);
@@ -86,6 +94,7 @@ namespace backend::lir_tree {
 
     class StoreNode : public Node {
     public:
+        StoreNode(std::unique_ptr<Node> source, std::unique_ptr<Node> ptr);
         Node *getSource();
         Node *getPtr();
         void setSource(std::unique_ptr<Node> new_node);
