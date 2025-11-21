@@ -76,7 +76,8 @@ namespace backend::lir_tree {
         auto literal = dynamic_cast<middleend::mir::Literal *>(v);
         if (literal)
             return std::make_unique<ImmediateNode>(literal->getValue());
-        return std::make_unique<RegisterNode>(std::to_string(nir.getNumber(v)));
+        return std::make_unique<RegisterNode>(std::to_string(nir.getNumber(v)),
+                                              nullptr);
     }
 
     lir::Operand *TreeGenVisitor::resolveOperand(middleend::mir::Value *v) {
@@ -93,13 +94,11 @@ namespace backend::lir_tree {
         auto left_leaf = left.get();
         auto right_leaf = right.get();
 
-        auto op = std::make_unique<OpNode>(i->getOp());
-        op->setLeft(std::move(left));
-        op->setRight(std::move(right));
+        auto op = std::make_unique<OpNode>(i->getOp(), std::move(left),
+                                           std::move(right));
 
-        auto reg =
-            std::make_unique<RegisterNode>(std::to_string(nir.getNumber(i)));
-        reg->setSource(std::move(op));
+        auto reg = std::make_unique<RegisterNode>(
+            std::to_string(nir.getNumber(i)), std::move(op));
 
         function_trees.insertTree(std::move(reg), {left_leaf, right_leaf},
                                   false);
@@ -178,12 +177,10 @@ namespace backend::lir_tree {
 
         auto ptr_leaf = ptr.get();
 
-        auto load = std::make_unique<LoadNode>();
-        load->setPtr(std::move(ptr));
+        auto load = std::make_unique<LoadNode>(std::move(ptr));
 
-        auto reg =
-            std::make_unique<RegisterNode>(std::to_string(nir.getNumber(i)));
-        reg->setSource(std::move(load));
+        auto reg = std::make_unique<RegisterNode>(
+            std::to_string(nir.getNumber(i)), std::move(load));
 
         function_trees.insertTree(std::move(reg), {ptr_leaf}, true);
     }
@@ -195,9 +192,8 @@ namespace backend::lir_tree {
         auto source_leaf = source.get();
         auto ptr_leaf = ptr.get();
 
-        auto store = std::make_unique<StoreNode>();
-        store->setSource(std::move(source));
-        store->setPtr(std::move(ptr));
+        auto store =
+            std::make_unique<StoreNode>(std::move(source), std::move(ptr));
 
         function_trees.insertTree(std::move(store), {source_leaf, ptr_leaf},
                                   true);
