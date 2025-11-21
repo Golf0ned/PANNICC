@@ -97,6 +97,20 @@ namespace backend::lir_tree {
         result = "imm(" + std::to_string(n->getValue()) + ")";
     }
 
+    void ToStringVisitor::visit(AddressNode *n) {
+        n->getBase()->accept(this);
+        std::string base = result;
+
+        n->getIndex()->accept(this);
+        std::string index = result;
+
+        std::string scale = std::to_string(n->getScale());
+        std::string displacement = std::to_string(n->getDisplacement());
+
+        result = "addr(" + base + ", " + index + ", " + scale + ", " +
+                 displacement + ")";
+    }
+
     void ToStringVisitor::visit(OpNode *n) {
         std::string op = middleend::mir::toString(n->getOp());
 
@@ -136,9 +150,8 @@ namespace backend::lir_tree {
                             std::list<Node *> leaves,
                             bool has_memory_instruction) {
         tree_leaves[tree.get()] = std::move(leaves);
-        if (has_memory_instruction) {
+        if (has_memory_instruction)
             trees_with_memory_instruction.insert(tree.get());
-        }
         trees.push_back(std::move(tree));
     }
 

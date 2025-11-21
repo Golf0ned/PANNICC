@@ -118,6 +118,7 @@ namespace backend::lir_tree {
     public:
         virtual void visit(Node *n) = 0;
         virtual void visit(RegisterNode *n) = 0;
+        virtual void visit(AddressNode *n) = 0;
         virtual void visit(ImmediateNode *n) = 0;
         virtual void visit(OpNode *n) = 0;
         virtual void visit(LoadNode *n) = 0;
@@ -134,6 +135,7 @@ namespace backend::lir_tree {
         virtual void visit(Node *n);
         virtual void visit(RegisterNode *n);
         virtual void visit(ImmediateNode *n);
+        virtual void visit(AddressNode *n);
         virtual void visit(OpNode *n);
         virtual void visit(LoadNode *n);
         virtual void visit(StoreNode *n);
