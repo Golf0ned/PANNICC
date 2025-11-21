@@ -1,7 +1,8 @@
 #include "backend/lir_tree/node.h"
 
 namespace backend::lir_tree {
-    RegisterNode::RegisterNode(std::string name) : name(name) {}
+    RegisterNode::RegisterNode(std::string name, std::unique_ptr<Node> source)
+        : name(name), source(std::move(source)) {}
 
     std::string RegisterNode::getName() { return name; }
 
@@ -31,7 +32,17 @@ namespace backend::lir_tree {
 
     void ImmediateNode::accept(NodeVisitor *v) { v->visit(this); }
 
-    OpNode::OpNode(middleend::mir::BinaryOp op) : op(op) {}
+    AddressNode::AddressNode(std::unique_ptr<Node> base,
+                             std::unique_ptr<Node> index, uint64_t scale,
+                             uint64_t displacement)
+        : base(std::move(base)), index(std::move(index)), scale(scale),
+          displacement(displacement) {}
+
+    void AddressNode::accept(NodeVisitor *v) { v->visit(this); }
+
+    OpNode::OpNode(middleend::mir::BinaryOp op, std::unique_ptr<Node> left,
+                   std::unique_ptr<Node> right)
+        : op(op), left(std::move(left)), right(std::move(right)) {}
 
     middleend::mir::BinaryOp OpNode::getOp() { return op; }
 
@@ -57,6 +68,8 @@ namespace backend::lir_tree {
 
     void OpNode::accept(NodeVisitor *v) { v->visit(this); }
 
+    LoadNode::LoadNode(std::unique_ptr<Node> ptr) : ptr(std::move(ptr)) {}
+
     Node *LoadNode::getPtr() {
         if (!ptr)
             return nullptr;
@@ -68,6 +81,10 @@ namespace backend::lir_tree {
     }
 
     void LoadNode::accept(NodeVisitor *v) { v->visit(this); }
+
+    StoreNode::StoreNode(std::unique_ptr<Node> source,
+                         std::unique_ptr<Node> ptr)
+        : source(std::move(source)), ptr(std::move(ptr)) {}
 
     Node *StoreNode::getSource() {
         if (!source)
