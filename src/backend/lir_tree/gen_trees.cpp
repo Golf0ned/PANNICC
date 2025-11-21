@@ -1,9 +1,10 @@
 #include "backend/lir_tree/gen_trees.h"
+#include "backend/lir/data_size.h"
 
 namespace backend::lir_tree {
     TreeGenVisitor::TreeGenVisitor(middleend::mir::Program &p,
                                    lir::OperandManager &om)
-        : next_block(nullptr), om(om) {
+        : next_block(nullptr), om(om), stack_space(0) {
         nir.run(p);
     }
 
@@ -12,13 +13,18 @@ namespace backend::lir_tree {
     }
 
     void TreeGenVisitor::startFunction(middleend::mir::Function *f) {
-        function_name = f->getName();
-
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
+        //
+        // Function label
+        //
+        function_name = f->getName();
         auto label = std::make_unique<lir::Label>(function_name);
         instructions.push_back(std::move(label));
 
+        //
+        // Push callee-saved registers
+        //
         for (auto reg : lir::getCalleeSavedRegisters()) {
             auto src = om.getRegister(reg);
             auto push = std::make_unique<lir::InstructionPush>(
@@ -28,6 +34,10 @@ namespace backend::lir_tree {
             instructions.push_back(std::move(virt));
         }
 
+        //
+        // Move args to virtual registers
+        // TODO: is this even a good idea?
+        //
         auto &params = f->getParameters();
         auto &arg_registers = lir::getArgRegisters();
         for (int param_num = 0; param_num < params.size(); param_num++) {
@@ -54,6 +64,7 @@ namespace backend::lir_tree {
     void TreeGenVisitor::endFunction() {
         program_trees.push_back(std::move(function_trees));
         function_trees = Forest();
+        stack_space = 0;
     }
 
     void TreeGenVisitor::startBasicBlock(middleend::mir::BasicBlock *bb,
@@ -108,6 +119,9 @@ namespace backend::lir_tree {
         auto &arg_registers = lir::getArgRegisters();
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
+        //
+        // Push caller-saved registers
+        //
         for (auto reg : lir::getCallerSavedRegisters()) {
             auto src = om.getRegister(reg);
             auto push = std::make_unique<lir::InstructionPush>(
@@ -117,6 +131,9 @@ namespace backend::lir_tree {
             instructions.push_back(std::move(virt));
         }
 
+        //
+        // Move args to parameter registers
+        //
         auto args = i->getArguments();
         for (int arg_num = 0; arg_num < args.size(); arg_num++) {
             auto src = resolveOperand(args[arg_num]);
@@ -136,12 +153,20 @@ namespace backend::lir_tree {
             }
         }
 
-        // TODO: allocate stack space?
+        //
+        // TODO: fix alignment
+        //
 
+        //
+        // Call the function
+        //
         auto function_name = i->getCallee()->getName();
         auto call = std::make_unique<lir::InstructionCall>(function_name);
         instructions.push_back(std::move(call));
 
+        //
+        // Move return value to virtual register
+        //
         auto src = om.getRegister(lir::RegisterNum::RAX);
         auto src_size = lir::DataSize::QUADWORD;
         auto dst = resolveOperand(i);
@@ -150,6 +175,9 @@ namespace backend::lir_tree {
             lir::Extend::NONE, src_size, dst_size, src, dst);
         instructions.push_back(std::move(mov_ret));
 
+        //
+        // Restore caller-saved registers
+        //
         for (auto reg : lir::getCallerSavedRegisters()) {
             auto src = om.getRegister(reg);
             auto pop = std::make_unique<lir::InstructionPop>(
@@ -166,7 +194,17 @@ namespace backend::lir_tree {
     void TreeGenVisitor::visit(middleend::mir::InstructionAlloca *i) {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
-        // TODO: add virtual stack ptr push
+        // TODO: unhardcode size lol
+        auto size = om.getImmediate(4);
+        stack_space += 4;
+
+        auto rsp = om.getRegister(lir::RegisterNum::RSP);
+        auto allocate = std::make_unique<lir::InstructionBinaryOp>(
+            lir::BinaryOp::SUB, lir::DataSize::QUADWORD, size, rsp);
+
+        auto virtual_allocate =
+            std::make_unique<lir::InstructionVirtual>(std::move(allocate));
+        instructions.push_back(std::move(virtual_allocate));
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
         function_trees.insertAsm(std::move(assembly));
@@ -217,6 +255,9 @@ namespace backend::lir_tree {
     void TreeGenVisitor::visit(middleend::mir::TerminatorReturn *t) {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
+        //
+        // Move return value
+        //
         auto src = resolveOperand(t->getValue());
         auto src_size = lir::DataSize::QUADWORD;
         auto dst = om.getRegister(lir::RegisterNum::RAX);
@@ -225,8 +266,22 @@ namespace backend::lir_tree {
             lir::Extend::NONE, src_size, dst_size, src, dst);
         instructions.push_back(std::move(mov_ret));
 
-        // TODO: deallocate stack space?
+        //
+        // Deallocate stack space
+        //
+        if (stack_space > 0) {
+            auto rsp = om.getRegister(lir::RegisterNum::RSP);
+            auto size = om.getImmediate(stack_space);
+            auto deallocate = std::make_unique<lir::InstructionBinaryOp>(
+                lir::BinaryOp::ADD, lir::DataSize::QUADWORD, size, rsp);
+            auto virtual_deallocate = std::make_unique<lir::InstructionVirtual>(
+                std::move(deallocate));
+            instructions.push_back(std::move(virtual_deallocate));
+        }
 
+        //
+        // Restore callee-saved registers
+        //
         for (auto reg : lir::getCalleeSavedRegisters()) {
             auto src = om.getRegister(reg);
             auto pop = std::make_unique<lir::InstructionPop>(
@@ -236,6 +291,9 @@ namespace backend::lir_tree {
             instructions.push_back(std::move(virt));
         }
 
+        //
+        // Return lmao
+        //
         auto ret = std::make_unique<lir::InstructionRet>();
         instructions.push_back(std::move(ret));
 
@@ -269,9 +327,11 @@ namespace backend::lir_tree {
         auto t_succ = t->getTSuccessor(), f_succ = t->getFSuccessor();
         auto cond_code = lir::ConditionCode::EQ;
 
+        //
         // If next_block is t_succ, inverse cjump to f_succ
         // If next_block is f_succ, cjump to t_succ
         // If next_block is neither, cjump to t_succ + jmp to f_succ
+        //
         if (t_succ == next_block) {
             auto cjmp = std::make_unique<lir::InstructionCJmp>(
                 lir::invert(cond_code), std::to_string(nir.getNumber(f_succ)));
