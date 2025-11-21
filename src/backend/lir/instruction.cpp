@@ -59,7 +59,4 @@ namespace backend::lir {
     }
 
     void InstructionVirtual::accept(InstructionVisitor *v) { v->visit(this); }
-
-    void InstructionUnknown::accept(InstructionVisitor *v) { v->visit(this); }
-
 } // namespace backend::lir

@@ -137,11 +137,6 @@ namespace backend::lir {
         std::unique_ptr<Instruction> instruction;
     };
 
-    class InstructionUnknown : public Instruction {
-    public:
-        void accept(InstructionVisitor *v);
-    };
-
     class InstructionVisitor {
     public:
         virtual void visit(Instruction *i) = 0;
@@ -157,6 +152,5 @@ namespace backend::lir {
 
         virtual void visit(InstructionPhi *i) = 0;
         virtual void visit(InstructionVirtual *i) = 0;
-        virtual void visit(InstructionUnknown *i) = 0;
     };
 } // namespace backend::lir
