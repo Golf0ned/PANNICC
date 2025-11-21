@@ -30,8 +30,7 @@ namespace backend::lir_tree {
     public:
         RegisterNode(std::string name, std::unique_ptr<Node> source);
         std::string getName();
-        Node *getSource();
-        void setSource(std::unique_ptr<Node> new_node);
+        std::unique_ptr<Node> &getSource();
         bool sameReg(RegisterNode *other);
         void consume(RegisterNode *other);
         void accept(NodeVisitor *v);
@@ -55,6 +54,10 @@ namespace backend::lir_tree {
     public:
         AddressNode(std::unique_ptr<Node> base, std::unique_ptr<Node> index,
                     uint64_t scale, uint64_t displacement);
+        std::unique_ptr<Node> &getBase();
+        std::unique_ptr<Node> &getIndex();
+        uint64_t getScale();
+        uint64_t getDisplacement();
         void accept(NodeVisitor *v);
 
     private:
@@ -69,10 +72,8 @@ namespace backend::lir_tree {
         OpNode(middleend::mir::BinaryOp op, std::unique_ptr<Node> left,
                std::unique_ptr<Node> right);
         middleend::mir::BinaryOp getOp();
-        Node *getLeft();
-        Node *getRight();
-        void setLeft(std::unique_ptr<Node> new_node);
-        void setRight(std::unique_ptr<Node> new_node);
+        std::unique_ptr<Node> &getLeft();
+        std::unique_ptr<Node> &getRight();
         void accept(NodeVisitor *v);
 
     private:
@@ -84,8 +85,7 @@ namespace backend::lir_tree {
     class LoadNode : public Node {
     public:
         LoadNode(std::unique_ptr<Node> ptr);
-        Node *getPtr();
-        void setPtr(std::unique_ptr<Node> new_node);
+        std::unique_ptr<Node> &getPtr();
         void accept(NodeVisitor *v);
 
     private:
@@ -95,10 +95,8 @@ namespace backend::lir_tree {
     class StoreNode : public Node {
     public:
         StoreNode(std::unique_ptr<Node> source, std::unique_ptr<Node> ptr);
-        Node *getSource();
-        Node *getPtr();
-        void setSource(std::unique_ptr<Node> new_node);
-        void setPtr(std::unique_ptr<Node> new_node);
+        std::unique_ptr<Node> &getSource();
+        std::unique_ptr<Node> &getPtr();
         void accept(NodeVisitor *v);
 
     private:
