@@ -59,11 +59,27 @@ namespace backend::lir {
         Operand *dst;
     };
 
+    enum class BinaryOp {
+        ADD,
+        SUB,
+    };
+
+    class InstructionBinaryOp : public Instruction {
+    public:
+        InstructionBinaryOp(BinaryOp op, DataSize size, Operand *src,
+                            Operand *dst);
+        void accept(InstructionVisitor *v);
+
+    private:
+        BinaryOp op;
+        DataSize size;
+        Operand *src;
+        Operand *dst;
+    };
+
     // class InstructionNeg : public Instruction {};
     // class InstructionNot : public Instruction {};
     // class InstructionLea : public Instruction {};
-    // class InstructionAdd : public Instruction {};
-    // class InstructionSub : public Instruction {};
     // class InstructionIMul : public Instruction {};
     // class InstructionIDiv : public Instruction {};
     // class InstructionAnd : public Instruction {};
