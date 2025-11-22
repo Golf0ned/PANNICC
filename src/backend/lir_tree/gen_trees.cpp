@@ -207,8 +207,8 @@ namespace backend::lir_tree {
 
         // TODO: unhardcode size lol
         auto size = om.getImmediate(4);
-        stack_space += 4;
         stack_variables.insert({std::to_string(nir.getNumber(i)), stack_space});
+        stack_space += 4;
 
         auto rsp = om.getRegister(lir::RegisterNum::RSP);
         auto allocate = std::make_unique<lir::InstructionBinaryOp>(
