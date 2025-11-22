@@ -31,10 +31,10 @@ namespace frontend::hir {
         }
         res += ") {\n";
 
-        ToStringVisitor visitor = ToStringVisitor(symbol_table);
+        ToStringVisitor tsv(symbol_table);
         for (auto &i : body) {
-            i->accept(&visitor);
-            res += visitor.getResult() + '\n';
+            i->accept(&tsv);
+            res += tsv.getResult() + '\n';
         }
         res += '}';
 

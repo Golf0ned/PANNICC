@@ -60,14 +60,14 @@ namespace middleend::mir {
 
         std::string res = name + ":\n";
 
-        ToStringVisitor visitor(nir);
+        ToStringVisitor tsv(nir);
         for (auto &i : body) {
-            i->accept(&visitor);
-            res += "  " + visitor.getResult() + '\n';
+            i->accept(&tsv);
+            res += "  " + tsv.getResult() + '\n';
         }
 
-        terminator->accept(&visitor);
-        res += "  " + visitor.getResult();
+        terminator->accept(&tsv);
+        res += "  " + tsv.getResult();
 
         return res;
     }
@@ -104,11 +104,11 @@ namespace middleend::mir {
         std::string res =
             "define " + ::middleend::mir::toString(type) + " @" + name + "(";
 
-        ToStringVisitor visitor(&nir);
+        ToStringVisitor tsv(&nir);
         for (auto iter = parameters.begin(); iter != parameters.end(); iter++) {
             if (iter != parameters.begin())
                 res += ", ";
-            res += visitor.valueToTypedString(iter->get());
+            res += tsv.valueToTypedString(iter->get());
         }
 
         res += ") {\n";

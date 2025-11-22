@@ -35,7 +35,7 @@ namespace middleend {
     }
 
     void Mem2Reg::run(mir::Program &p) {
-        EraseUsesVisitor erase;
+        EraseUsesVisitor euv;
         for (auto &f : p.getFunctions()) {
             //
             // Phi Insertion
@@ -114,7 +114,7 @@ namespace middleend {
                     // Alloca: mark for drop
                     auto *alloca = dynamic_cast<mir::InstructionAlloca *>(i);
                     if (alloca) {
-                        i->accept(&erase);
+                        i->accept(&euv);
                         to_drop.push_back(std::move(*iter));
                         iter = instructions.erase(iter);
                         continue;
@@ -132,7 +132,7 @@ namespace middleend {
                                 succ_phis[alloca]->setPredecessor(bb, value);
                         }
 
-                        i->accept(&erase);
+                        i->accept(&euv);
                         to_drop.push_back(std::move(*iter));
                         iter = instructions.erase(iter);
                         continue;
@@ -141,15 +141,14 @@ namespace middleend {
                     // Load: replace uses with reaching def, delete
                     auto *load = dynamic_cast<mir::InstructionLoad *>(i);
                     if (load) {
-                        ReplaceUsesVisitor visitor(load,
-                                                   reaching[load->getPtr()]);
+                        ReplaceUsesVisitor ruv(load, reaching[load->getPtr()]);
                         auto uses_range = std::views::keys(load->getUses());
                         std::vector<mir::Instruction *> uses(uses_range.begin(),
                                                              uses_range.end());
                         for (auto &use : uses)
-                            use->accept(&visitor);
+                            use->accept(&ruv);
 
-                        i->accept(&erase);
+                        i->accept(&euv);
                         to_drop.push_back(std::move(*iter));
                         iter = instructions.erase(iter);
                         continue;
@@ -210,11 +209,11 @@ namespace middleend {
                     case 0: // empty phi: omit
                         continue;
                     case 1: // single branch phi: replace use with value
-                        ReplaceUsesVisitor visitor(
+                        ReplaceUsesVisitor ruv(
                             phi.get(), phi->getPredecessors().begin()->second);
                         for (auto &[use, _] : phi->getUses())
-                            use->accept(&visitor);
-                        phi->accept(&erase);
+                            use->accept(&ruv);
+                        phi->accept(&euv);
                         continue;
                     }
                 }

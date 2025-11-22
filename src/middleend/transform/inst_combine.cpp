@@ -6,7 +6,7 @@
 
 namespace middleend {
     void InstCombine::run(mir::Program &p) {
-        EraseUsesVisitor erase;
+        EraseUsesVisitor euv;
         for (auto &f : p.getFunctions()) {
             bool changed = true;
             while (changed) {
@@ -80,15 +80,15 @@ namespace middleend {
                             auto folded_literal =
                                 p.getLiteral(type, extended_val);
 
-                            ReplaceUsesVisitor visitor(bin_op, folded_literal);
+                            ReplaceUsesVisitor ruv(bin_op, folded_literal);
                             auto uses_range =
                                 std::views::keys(bin_op->getUses());
                             std::vector<mir::Instruction *> uses(
                                 uses_range.begin(), uses_range.end());
                             for (auto &use : uses)
-                                use->accept(&visitor);
+                                use->accept(&ruv);
 
-                            i->accept(&erase);
+                            i->accept(&euv);
                             to_drop.push_back(std::move(*iter));
                             iter = instructions.erase(iter);
                             return true;

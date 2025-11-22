@@ -11,7 +11,7 @@ namespace frontend::ast {
 
     class Expr {
     public:
-        virtual void accept(ExprVisitor *visitor) = 0;
+        virtual void accept(ExprVisitor *v) = 0;
         virtual ~Expr() = default;
     };
 
@@ -19,7 +19,7 @@ namespace frontend::ast {
     public:
         TerminalExpr(std::unique_ptr<Atom> atom);
         std::unique_ptr<Atom> &getAtom();
-        void accept(ExprVisitor *visitor);
+        void accept(ExprVisitor *v);
 
     private:
         std::unique_ptr<Atom> atom;
@@ -29,7 +29,7 @@ namespace frontend::ast {
     public:
         ParenExpr(std::unique_ptr<Expr> body);
         std::unique_ptr<Expr> &getBody();
-        void accept(ExprVisitor *visitor);
+        void accept(ExprVisitor *v);
 
     private:
         std::unique_ptr<Expr> body;
@@ -41,7 +41,7 @@ namespace frontend::ast {
                  std::vector<std::unique_ptr<Expr>> arguments);
         std::unique_ptr<AtomIdentifier> &getCallee();
         std::vector<std::unique_ptr<Expr>> &getArguments();
-        void accept(ExprVisitor *visitor);
+        void accept(ExprVisitor *v);
 
     private:
         std::unique_ptr<AtomIdentifier> callee;
@@ -53,7 +53,7 @@ namespace frontend::ast {
         UnaryOpExpr(UnaryOp op, std::unique_ptr<Expr> value);
         UnaryOp getOp();
         std::unique_ptr<Expr> &getValue();
-        void accept(ExprVisitor *visitor);
+        void accept(ExprVisitor *v);
 
     private:
         UnaryOp op;
@@ -67,7 +67,7 @@ namespace frontend::ast {
         BinaryOp getOp();
         std::unique_ptr<Expr> &getLeft();
         std::unique_ptr<Expr> &getRight();
-        void accept(ExprVisitor *visitor);
+        void accept(ExprVisitor *v);
 
     private:
         BinaryOp op;

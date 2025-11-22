@@ -38,9 +38,7 @@ namespace middleend::mir {
         right = new_val;
     }
 
-    void InstructionBinaryOp::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void InstructionBinaryOp::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionCall::InstructionCall(Type type, Function *callee,
                                      std::vector<Value *> arguments)
@@ -53,18 +51,14 @@ namespace middleend::mir {
 
     std::vector<Value *> &InstructionCall::getArguments() { return arguments; }
 
-    void InstructionCall::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void InstructionCall::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionAlloca::InstructionAlloca(Type allocType)
         : Value(Type::PTR), allocType(allocType) {}
 
     Type InstructionAlloca::getAllocType() { return allocType; }
 
-    void InstructionAlloca::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void InstructionAlloca::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionLoad::InstructionLoad(Type type, InstructionAlloca *ptr)
         : Value(type), ptr(ptr) {
@@ -73,9 +67,7 @@ namespace middleend::mir {
 
     InstructionAlloca *InstructionLoad::getPtr() { return ptr; }
 
-    void InstructionLoad::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void InstructionLoad::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionStore::InstructionStore(Value *value, InstructionAlloca *ptr)
         : value(value), ptr(ptr) {
@@ -93,9 +85,7 @@ namespace middleend::mir {
         value = new_val;
     }
 
-    void InstructionStore::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void InstructionStore::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionPhi::InstructionPhi(Type type) : Value(type) {}
 
@@ -111,9 +101,7 @@ namespace middleend::mir {
         predecessors[bb] = new_val;
     }
 
-    void InstructionPhi::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void InstructionPhi::accept(InstructionVisitor *v) { v->visit(this); }
 
     TerminatorReturn::TerminatorReturn(Value *value) : value(value) {
         addUse(value);
@@ -127,9 +115,7 @@ namespace middleend::mir {
         value = new_val;
     }
 
-    void TerminatorReturn::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void TerminatorReturn::accept(InstructionVisitor *v) { v->visit(this); }
 
     TerminatorBranch::TerminatorBranch(BasicBlock *successor)
         : successor(successor) {}
@@ -140,9 +126,7 @@ namespace middleend::mir {
         this->successor = successor;
     }
 
-    void TerminatorBranch::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void TerminatorBranch::accept(InstructionVisitor *v) { v->visit(this); }
 
     TerminatorCondBranch::TerminatorCondBranch(Value *cond,
                                                BasicBlock *t_successor,
@@ -175,7 +159,5 @@ namespace middleend::mir {
         this->f_successor = f_successor;
     }
 
-    void TerminatorCondBranch::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void TerminatorCondBranch::accept(InstructionVisitor *v) { v->visit(this); }
 } // namespace middleend::mir

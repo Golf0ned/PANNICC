@@ -9,16 +9,14 @@ namespace frontend::ast {
         return instructions;
     }
 
-    void Scope::accept(InstructionVisitor *visitor) { visitor->visit(this); }
+    void Scope::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionExpr::InstructionExpr(std::unique_ptr<Expr> expr)
         : expr(std::move(expr)) {}
 
     std::unique_ptr<Expr> &InstructionExpr::getExpr() { return expr; }
 
-    void InstructionExpr::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void InstructionExpr::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionDeclaration::InstructionDeclaration(
         Type type, std::unique_ptr<AtomIdentifier> variable)
@@ -30,8 +28,8 @@ namespace frontend::ast {
         return variable;
     }
 
-    void InstructionDeclaration::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
+    void InstructionDeclaration::accept(InstructionVisitor *v) {
+        v->visit(this);
     }
 
     InstructionDeclarationAssign::InstructionDeclarationAssign(
@@ -50,8 +48,8 @@ namespace frontend::ast {
         return value;
     }
 
-    void InstructionDeclarationAssign::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
+    void InstructionDeclarationAssign::accept(InstructionVisitor *v) {
+        v->visit(this);
     }
 
     InstructionAssign::InstructionAssign(
@@ -64,9 +62,7 @@ namespace frontend::ast {
 
     std::unique_ptr<Expr> &InstructionAssign::getValue() { return value; }
 
-    void InstructionAssign::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void InstructionAssign::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionOpAssign::InstructionOpAssign(
         std::unique_ptr<AtomIdentifier> variable, BinaryOp op,
@@ -81,18 +77,14 @@ namespace frontend::ast {
 
     std::unique_ptr<Expr> &InstructionOpAssign::getValue() { return value; }
 
-    void InstructionOpAssign::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void InstructionOpAssign::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionReturn::InstructionReturn(std::unique_ptr<Expr> value)
         : value(std::move(value)) {}
 
     std::unique_ptr<Expr> &InstructionReturn::getValue() { return value; }
 
-    void InstructionReturn::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void InstructionReturn::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionIf::InstructionIf(std::unique_ptr<Expr> cond,
                                  std::unique_ptr<Instruction> t_branch,
@@ -112,9 +104,7 @@ namespace frontend::ast {
 
     bool InstructionIf::hasFBranch() { return f_branch != nullptr; }
 
-    void InstructionIf::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void InstructionIf::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionWhile::InstructionWhile(std::unique_ptr<Expr> cond,
                                        std::unique_ptr<Instruction> body)
@@ -124,7 +114,5 @@ namespace frontend::ast {
 
     std::unique_ptr<Instruction> &InstructionWhile::getBody() { return body; }
 
-    void InstructionWhile::accept(InstructionVisitor *visitor) {
-        visitor->visit(this);
-    }
+    void InstructionWhile::accept(InstructionVisitor *v) { v->visit(this); }
 } // namespace frontend::ast
