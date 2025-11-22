@@ -98,11 +98,19 @@ namespace backend::lir_tree {
     }
 
     void ToStringVisitor::visit(AddressNode *n) {
-        n->getBase()->accept(this);
-        std::string base = result;
+        auto &base_node = n->getBase();
+        std::string base = "null";
+        if (base_node) {
+            base_node->accept(this);
+            base = result;
+        }
 
-        n->getIndex()->accept(this);
-        std::string index = result;
+        auto &index_node = n->getIndex();
+        std::string index = "null";
+        if (index_node) {
+            index_node->accept(this);
+            index = result;
+        }
 
         std::string scale = std::to_string(n->getScale());
         std::string displacement = std::to_string(n->getDisplacement());

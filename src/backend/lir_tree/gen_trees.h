@@ -16,7 +16,8 @@ namespace backend::lir_tree {
         void endFunction();
         void startBasicBlock(middleend::mir::BasicBlock *bb,
                              middleend::mir::BasicBlock *next_bb);
-        std::unique_ptr<Node> resolveValue(middleend::mir::Value *v);
+        std::unique_ptr<Node> resolveLeaf(middleend::mir::Value *v);
+        std::unique_ptr<Node> resolveStackVar(middleend::mir::Value *v);
         lir::Operand *resolveOperand(middleend::mir::Value *v);
 
         virtual void visit(middleend::mir::InstructionBinaryOp *i);
@@ -35,8 +36,9 @@ namespace backend::lir_tree {
         lir::OperandManager &om;
         std::string function_name;
         middleend::mir::BasicBlock *next_block;
+        uint64_t stack_space;
+        std::unordered_map<std::string, uint64_t> stack_variables;
         Forest function_trees;
         std::list<Forest> program_trees;
-        uint64_t stack_space;
     };
 } // namespace backend::lir_tree

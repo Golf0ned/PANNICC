@@ -83,12 +83,23 @@ namespace backend::lir_tree {
     }
 
     std::unique_ptr<Node>
-    TreeGenVisitor::resolveValue(middleend::mir::Value *v) {
+    TreeGenVisitor::resolveLeaf(middleend::mir::Value *v) {
         auto literal = dynamic_cast<middleend::mir::Literal *>(v);
         if (literal)
             return std::make_unique<ImmediateNode>(literal->getValue());
         return std::make_unique<RegisterNode>(std::to_string(nir.getNumber(v)),
                                               nullptr);
+    }
+
+    std::unique_ptr<Node>
+    TreeGenVisitor::resolveStackVar(middleend::mir::Value *v) {
+        auto name = std::to_string(nir.getNumber(v));
+        auto offset = stack_variables.at(name);
+
+        // TODO: please make this not a string
+        auto rsp = std::make_unique<RegisterNode>("%rsp", nullptr);
+        return std::make_unique<AddressNode>(std::move(rsp), nullptr, 0,
+                                             offset);
     }
 
     lir::Operand *TreeGenVisitor::resolveOperand(middleend::mir::Value *v) {
@@ -99,8 +110,8 @@ namespace backend::lir_tree {
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionBinaryOp *i) {
-        auto left = resolveValue(i->getLeft());
-        auto right = resolveValue(i->getRight());
+        auto left = resolveLeaf(i->getLeft());
+        auto right = resolveLeaf(i->getRight());
 
         auto left_leaf = left.get();
         auto right_leaf = right.get();
@@ -197,6 +208,7 @@ namespace backend::lir_tree {
         // TODO: unhardcode size lol
         auto size = om.getImmediate(4);
         stack_space += 4;
+        stack_variables.insert({std::to_string(nir.getNumber(i)), stack_space});
 
         auto rsp = om.getRegister(lir::RegisterNum::RSP);
         auto allocate = std::make_unique<lir::InstructionBinaryOp>(
@@ -211,7 +223,7 @@ namespace backend::lir_tree {
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionLoad *i) {
-        auto ptr = resolveValue(i->getPtr());
+        auto ptr = resolveStackVar(i->getPtr());
 
         auto ptr_leaf = ptr.get();
 
@@ -224,8 +236,8 @@ namespace backend::lir_tree {
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionStore *i) {
-        auto source = resolveValue(i->getValue());
-        auto ptr = resolveValue(i->getPtr());
+        auto source = resolveLeaf(i->getValue());
+        auto ptr = resolveStackVar(i->getPtr());
 
         auto source_leaf = source.get();
         auto ptr_leaf = ptr.get();
