@@ -34,9 +34,9 @@ namespace frontend::ast {
         }
         res += ')';
 
-        ToStringVisitor visitor = ToStringVisitor(symbol_table);
-        body->accept(&visitor);
-        res += " " + visitor.getResult();
+        ToStringVisitor tsv(symbol_table);
+        body->accept(&tsv);
+        res += " " + tsv.getResult();
 
         return res;
     }

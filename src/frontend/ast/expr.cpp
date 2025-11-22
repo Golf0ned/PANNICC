@@ -6,13 +6,13 @@ namespace frontend::ast {
 
     std::unique_ptr<Atom> &TerminalExpr::getAtom() { return atom; }
 
-    void TerminalExpr::accept(ExprVisitor *visitor) { visitor->visit(this); }
+    void TerminalExpr::accept(ExprVisitor *v) { v->visit(this); }
 
     ParenExpr::ParenExpr(std::unique_ptr<Expr> body) : body(std::move(body)) {}
 
     std::unique_ptr<Expr> &ParenExpr::getBody() { return body; }
 
-    void ParenExpr::accept(ExprVisitor *visitor) { visitor->visit(this); }
+    void ParenExpr::accept(ExprVisitor *v) { v->visit(this); }
 
     CallExpr::CallExpr(std::unique_ptr<AtomIdentifier> callee,
                        std::vector<std::unique_ptr<Expr>> arguments)
@@ -24,7 +24,7 @@ namespace frontend::ast {
         return arguments;
     }
 
-    void CallExpr::accept(ExprVisitor *visitor) { visitor->visit(this); }
+    void CallExpr::accept(ExprVisitor *v) { v->visit(this); }
 
     UnaryOpExpr::UnaryOpExpr(UnaryOp op, std::unique_ptr<Expr> value)
         : op(op), value(std::move(value)) {}
@@ -33,7 +33,7 @@ namespace frontend::ast {
 
     std::unique_ptr<Expr> &UnaryOpExpr::getValue() { return value; }
 
-    void UnaryOpExpr::accept(ExprVisitor *visitor) { visitor->visit(this); }
+    void UnaryOpExpr::accept(ExprVisitor *v) { v->visit(this); }
 
     BinaryOpExpr::BinaryOpExpr(BinaryOp op, std::unique_ptr<Expr> left,
                                std::unique_ptr<Expr> right)
@@ -45,5 +45,5 @@ namespace frontend::ast {
 
     std::unique_ptr<Expr> &BinaryOpExpr::getRight() { return right; }
 
-    void BinaryOpExpr::accept(ExprVisitor *visitor) { visitor->visit(this); }
+    void BinaryOpExpr::accept(ExprVisitor *v) { v->visit(this); }
 } // namespace frontend::ast
