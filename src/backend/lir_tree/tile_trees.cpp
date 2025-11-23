@@ -1,11 +1,9 @@
 #include "backend/lir_tree/tile_trees.h"
 
 namespace backend::lir_tree {
-    std::vector<Tile> tiles = {
-        StoreTile(),
-    };
-
-    TreeTiler::TreeTiler(lir::OperandManager &om) : om(om) {}
+    TreeTiler::TreeTiler(lir::OperandManager &om) : om(om) {
+        all_tiles.push_back(std::make_unique<StoreTile>());
+    }
 
     std::list<std::unique_ptr<lir::Instruction>> TreeTiler::getResult() {
         return std::move(assembly);
@@ -27,18 +25,43 @@ namespace backend::lir_tree {
 
             Tile *cur_tile = nullptr;
             uint64_t min_cost = -1;
-            for (auto &tile : tiles) {
-                auto tile_cost = tile.getCost();
-                if (tile.matches(cur) && tile_cost < min_cost) {
-                    cur_tile = &tile;
+            for (auto &tile : all_tiles) {
+                auto tile_cost = tile->getCost();
+                if (tile->matches(cur) && tile_cost < min_cost) {
+                    cur_tile = tile.get();
                     min_cost = tile_cost;
                 }
             }
+
+            // TODO: panic on nullptr
+            if (!cur_tile)
+                continue;
 
             instructions.splice(instructions.begin(), cur_tile->toAsm(cur));
             worklist.splice(worklist.end(), cur_tile->getRemaining(cur));
         }
 
         assembly.splice(assembly.end(), instructions);
+    }
+
+    Tile::Tile(uint64_t cost) : cost(cost) {}
+
+    uint64_t Tile::getCost() { return cost; }
+
+    StoreTile::StoreTile() : Tile(0) {}
+
+    bool StoreTile::matches(Node *root) {
+        // TODO
+        return false;
+    }
+
+    std::list<std::unique_ptr<lir::Instruction>> StoreTile::toAsm(Node *root) {
+        // TODO
+        return {};
+    }
+
+    std::list<Node *> StoreTile::getRemaining(Node *root) {
+        // TODO
+        return {};
     }
 } // namespace backend::lir_tree
