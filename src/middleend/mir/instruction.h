@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "middleend/mir/operator.h"
 #include "middleend/mir/value.h"
 
