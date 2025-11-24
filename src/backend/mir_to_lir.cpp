@@ -44,7 +44,7 @@ namespace backend {
 
         // Final cleanup
         auto instructions = tiler.getResult();
-        lir::Program lir(std::move(instructions));
+        lir::Program lir(std::move(instructions), std::move(om));
         return std::move(lir);
     }
 } // namespace backend

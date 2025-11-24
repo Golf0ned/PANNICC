@@ -8,7 +8,8 @@
 namespace backend::lir {
     class Program {
     public:
-        Program(std::list<std::unique_ptr<Instruction>> instructions);
+        Program(std::list<std::unique_ptr<Instruction>> instructions,
+                std::unique_ptr<OperandManager> om);
         std::list<std::unique_ptr<Instruction>> &getInstructions();
         std::string toString();
 

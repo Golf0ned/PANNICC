@@ -1,8 +1,9 @@
 #include "backend/lir/lir.h"
 
 namespace backend::lir {
-    Program::Program(std::list<std::unique_ptr<Instruction>> instructions)
-        : instructions(std::move(instructions)) {}
+    Program::Program(std::list<std::unique_ptr<Instruction>> instructions,
+                     std::unique_ptr<OperandManager> om)
+        : instructions(std::move(instructions)), om(std::move(om)) {}
 
     std::list<std::unique_ptr<Instruction>> &Program::getInstructions() {
         return instructions;
