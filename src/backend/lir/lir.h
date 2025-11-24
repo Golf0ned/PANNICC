@@ -35,6 +35,7 @@ namespace backend::lir {
 
         virtual void visit(InstructionPhi *i);
         virtual void visit(InstructionVirtual *i);
+        virtual void visit(InstructionUnknown *i);
 
     private:
         std::string result;
