@@ -3,7 +3,7 @@
 
 namespace backend::lir_tree {
     TreeGenVisitor::TreeGenVisitor(middleend::mir::Program &p,
-                                   lir::OperandManager &om)
+                                   lir::OperandManager *om)
         : next_block(nullptr), om(om), stack_space(0) {
         nir.run(p);
     }
@@ -26,7 +26,7 @@ namespace backend::lir_tree {
         // Push callee-saved registers
         //
         for (auto reg : lir::getCalleeSavedRegisters()) {
-            auto src = om.getRegister(reg);
+            auto src = om->getRegister(reg);
             auto push = std::make_unique<lir::InstructionPush>(
                 lir::DataSize::QUADWORD, src);
             auto virt =
@@ -45,7 +45,7 @@ namespace backend::lir_tree {
             auto dst_size = lir::DataSize::QUADWORD;
             auto dst = resolveOperand(params[param_num].get());
             if (param_num < 6) {
-                auto src = om.getRegister(arg_registers[param_num]);
+                auto src = om->getRegister(arg_registers[param_num]);
                 auto src_size = lir::DataSize::QUADWORD;
                 auto mov = std::make_unique<lir::InstructionMov>(
                     extend, src_size, dst_size, src, dst);
@@ -105,8 +105,8 @@ namespace backend::lir_tree {
     lir::Operand *TreeGenVisitor::resolveOperand(middleend::mir::Value *v) {
         auto literal = dynamic_cast<middleend::mir::Literal *>(v);
         if (literal)
-            return om.getImmediate(literal->getValue());
-        return om.getRegister(std::to_string(nir.getNumber(v)));
+            return om->getImmediate(literal->getValue());
+        return om->getRegister(std::to_string(nir.getNumber(v)));
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionBinaryOp *i) {
@@ -134,7 +134,7 @@ namespace backend::lir_tree {
         // Push caller-saved registers
         //
         for (auto reg : lir::getCallerSavedRegisters()) {
-            auto src = om.getRegister(reg);
+            auto src = om->getRegister(reg);
             auto push = std::make_unique<lir::InstructionPush>(
                 lir::DataSize::QUADWORD, src);
             auto virt =
@@ -150,7 +150,7 @@ namespace backend::lir_tree {
             auto src = resolveOperand(args[arg_num]);
             auto src_size = lir::fromMir(args[arg_num]->getType());
             if (arg_num < 6) {
-                auto dst = om.getRegister(arg_registers[arg_num]);
+                auto dst = om->getRegister(arg_registers[arg_num]);
                 auto dst_size = lir::DataSize::QUADWORD;
                 auto extend = src_size == dst_size ? lir::Extend::NONE
                                                    : lir::Extend::SIGN;
@@ -178,7 +178,7 @@ namespace backend::lir_tree {
         //
         // Move return value to virtual register
         //
-        auto src = om.getRegister(lir::RegisterNum::RAX);
+        auto src = om->getRegister(lir::RegisterNum::RAX);
         auto src_size = lir::DataSize::QUADWORD;
         auto dst = resolveOperand(i);
         auto dst_size = lir::DataSize::QUADWORD;
@@ -190,7 +190,7 @@ namespace backend::lir_tree {
         // Restore caller-saved registers
         //
         for (auto reg : lir::getCallerSavedRegisters()) {
-            auto src = om.getRegister(reg);
+            auto src = om->getRegister(reg);
             auto pop = std::make_unique<lir::InstructionPop>(
                 lir::DataSize::QUADWORD, src);
             auto virt =
@@ -206,11 +206,11 @@ namespace backend::lir_tree {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
         // TODO: unhardcode size lol
-        auto size = om.getImmediate(4);
+        auto size = om->getImmediate(4);
         stack_variables.insert({std::to_string(nir.getNumber(i)), stack_space});
         stack_space += 4;
 
-        auto rsp = om.getRegister(lir::RegisterNum::RSP);
+        auto rsp = om->getRegister(lir::RegisterNum::RSP);
         auto allocate = std::make_unique<lir::InstructionBinaryOp>(
             lir::BinaryOp::SUB, lir::DataSize::QUADWORD, size, rsp);
 
@@ -272,7 +272,7 @@ namespace backend::lir_tree {
         //
         auto src = resolveOperand(t->getValue());
         auto src_size = lir::DataSize::QUADWORD;
-        auto dst = om.getRegister(lir::RegisterNum::RAX);
+        auto dst = om->getRegister(lir::RegisterNum::RAX);
         auto dst_size = lir::DataSize::QUADWORD;
         auto mov_ret = std::make_unique<lir::InstructionMov>(
             lir::Extend::NONE, src_size, dst_size, src, dst);
@@ -282,8 +282,8 @@ namespace backend::lir_tree {
         // Deallocate stack space
         //
         if (stack_space > 0) {
-            auto rsp = om.getRegister(lir::RegisterNum::RSP);
-            auto size = om.getImmediate(stack_space);
+            auto rsp = om->getRegister(lir::RegisterNum::RSP);
+            auto size = om->getImmediate(stack_space);
             auto deallocate = std::make_unique<lir::InstructionBinaryOp>(
                 lir::BinaryOp::ADD, lir::DataSize::QUADWORD, size, rsp);
             auto virtual_deallocate = std::make_unique<lir::InstructionVirtual>(
@@ -295,7 +295,7 @@ namespace backend::lir_tree {
         // Restore callee-saved registers
         //
         for (auto reg : lir::getCalleeSavedRegisters()) {
-            auto src = om.getRegister(reg);
+            auto src = om->getRegister(reg);
             auto pop = std::make_unique<lir::InstructionPop>(
                 lir::DataSize::QUADWORD, src);
             auto virt =
@@ -333,7 +333,7 @@ namespace backend::lir_tree {
         // TODO: replace with test cond, cond
         auto cond = resolveOperand(t->getCond());
         auto cmp = std::make_unique<lir::InstructionCmp>(
-            lir::DataSize::DOUBLEWORD, cond, om.getImmediate(0));
+            lir::DataSize::DOUBLEWORD, cond, om->getImmediate(0));
         instructions.push_back(std::move(cmp));
 
         auto t_succ = t->getTSuccessor(), f_succ = t->getFSuccessor();

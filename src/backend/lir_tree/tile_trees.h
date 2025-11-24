@@ -30,14 +30,14 @@ namespace backend::lir_tree {
 
     class TreeTiler {
     public:
-        TreeTiler(lir::OperandManager &om);
+        TreeTiler(lir::OperandManager *om);
 
         std::list<std::unique_ptr<lir::Instruction>> getResult();
 
         void tile(Node *tree);
 
     private:
-        lir::OperandManager &om;
+        lir::OperandManager *om;
         std::vector<std::unique_ptr<Tile>> all_tiles;
         std::list<std::unique_ptr<lir::Instruction>> assembly;
     };

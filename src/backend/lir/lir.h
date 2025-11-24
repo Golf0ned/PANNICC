@@ -14,7 +14,7 @@ namespace backend::lir {
 
     private:
         std::list<std::unique_ptr<Instruction>> instructions;
-        OperandManager om;
+        std::unique_ptr<OperandManager> om;
     };
 
     class ToStringVisitor : public InstructionVisitor {

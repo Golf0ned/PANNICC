@@ -129,7 +129,7 @@ namespace backend::lir_tree {
 
     class ToStringVisitor : public NodeVisitor {
     public:
-        ToStringVisitor(lir::OperandManager &om);
+        ToStringVisitor(lir::OperandManager *om);
 
         std::string getResult();
 
@@ -143,7 +143,7 @@ namespace backend::lir_tree {
         virtual void visit(AsmNode *n);
 
     private:
-        lir::OperandManager &om;
+        lir::OperandManager *om;
         std::string result;
     };
 
@@ -157,7 +157,7 @@ namespace backend::lir_tree {
         bool hasMemInst(Node *tree);
         void setMemInst(Node *tree);
         bool empty();
-        std::string toString(lir::OperandManager &om);
+        std::string toString(lir::OperandManager *om);
 
     private:
         std::list<std::unique_ptr<Node>> trees;
