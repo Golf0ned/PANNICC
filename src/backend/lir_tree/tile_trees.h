@@ -5,7 +5,7 @@
 namespace backend::lir_tree {
     class Tile {
     public:
-        Tile(uint64_t cost);
+        Tile(uint64_t cost, lir::OperandManager *om);
         uint64_t getCost();
         virtual bool matches(Node *root) = 0;
         virtual std::list<std::unique_ptr<lir::Instruction>>
@@ -13,13 +13,16 @@ namespace backend::lir_tree {
         virtual std::list<Node *> getRemaining(Node *root) = 0;
         virtual ~Tile() = default;
 
+    protected:
+        lir::OperandManager *om;
+
     private:
         uint64_t cost;
     };
 
     class StoreTile : public Tile {
     public:
-        StoreTile();
+        StoreTile(lir::OperandManager *om);
         virtual bool matches(Node *root);
         virtual std::list<std::unique_ptr<lir::Instruction>> toAsm(Node *root);
         virtual std::list<Node *> getRemaining(Node *root);
