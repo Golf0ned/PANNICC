@@ -28,10 +28,18 @@ namespace backend::lir {
     InstructionPush::InstructionPush(DataSize size, Operand *src)
         : size(size), src(src) {}
 
+    DataSize InstructionPush::getSize() { return size; }
+
+    Operand *InstructionPush::getSrc() { return src; }
+
     void InstructionPush::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionPop::InstructionPop(DataSize size, Operand *dst)
         : size(size), dst(dst) {}
+
+    DataSize InstructionPop::getSize() { return size; }
+
+    Operand *InstructionPop::getDst() { return dst; }
 
     void InstructionPop::accept(InstructionVisitor *v) { v->visit(this); }
 
