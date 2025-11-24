@@ -47,6 +47,8 @@ namespace backend::lir {
     class InstructionPush : public Instruction {
     public:
         InstructionPush(DataSize size, Operand *src);
+        DataSize getSize();
+        Operand *getSrc();
         void accept(InstructionVisitor *v);
 
     private:
@@ -57,6 +59,8 @@ namespace backend::lir {
     class InstructionPop : public Instruction {
     public:
         InstructionPop(DataSize size, Operand *dst);
+        DataSize getSize();
+        Operand *getDst();
         void accept(InstructionVisitor *v);
 
     private:
