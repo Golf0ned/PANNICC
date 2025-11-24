@@ -27,61 +27,75 @@ namespace backend::lir {
 
     void ToStringVisitor::visit(InstructionMov *i) {
         if (!result.empty())
-            result += '\n';
-        result += "mov [TODO]";
+            result += "\n        ";
+
+        result += "mov";
+
+        auto extend = i->getExtend();
+        if (extend != Extend::NONE) {
+            result += toChar(extend);
+            result += toChar(i->getSrcSize());
+            result += toChar(i->getDstSize());
+            result += "  ";
+        } else {
+            result += toChar(i->getDstSize());
+            result += "    ";
+        }
+
+        result += i->getSrc()->toString() + ", " + i->getDst()->toString();
     }
 
     void ToStringVisitor::visit(InstructionPush *i) {
         if (!result.empty())
-            result += '\n';
+            result += "\n        ";
         result += "push [TODO]";
     }
 
     void ToStringVisitor::visit(InstructionPop *i) {
         if (!result.empty())
-            result += '\n';
+            result += "\n        ";
         result += "pop [TODO]";
     }
 
     void ToStringVisitor::visit(InstructionBinaryOp *i) {
         if (!result.empty())
-            result += '\n';
+            result += "\n        ";
         result += "binop [TODO]";
     }
 
     void ToStringVisitor::visit(InstructionCmp *i) {
         if (!result.empty())
-            result += '\n';
+            result += "\n        ";
         result += "cmp [TODO]";
     }
 
     void ToStringVisitor::visit(InstructionJmp *i) {
         if (!result.empty())
-            result += '\n';
+            result += "\n        ";
         result += "jmp [TODO]";
     }
 
     void ToStringVisitor::visit(InstructionCJmp *i) {
         if (!result.empty())
-            result += '\n';
+            result += "\n        ";
         result += "cjmp [TODO]";
     }
 
     void ToStringVisitor::visit(InstructionCall *i) {
         if (!result.empty())
-            result += '\n';
+            result += "\n        ";
         result += "call [TODO]";
     }
 
     void ToStringVisitor::visit(InstructionRet *i) {
         if (!result.empty())
-            result += '\n';
+            result += "\n        ";
         result += "ret [TODO]";
     }
 
     void ToStringVisitor::visit(InstructionPhi *i) {
         if (!result.empty())
-            result += '\n';
+            result += "\n        ";
         result += "phi [TODO]";
     }
 
