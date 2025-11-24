@@ -49,13 +49,17 @@ namespace backend::lir {
     void ToStringVisitor::visit(InstructionPush *i) {
         if (!result.empty())
             result += "\n        ";
-        result += "push    [TODO]";
+        result += "push";
+        result += toChar(i->getSize());
+        result += "   " + i->getSrc()->toString();
     }
 
     void ToStringVisitor::visit(InstructionPop *i) {
         if (!result.empty())
             result += "\n        ";
-        result += "pop     [TODO]";
+        result += "pop";
+        result += toChar(i->getSize());
+        result += "    " + i->getDst()->toString();
     }
 
     void ToStringVisitor::visit(InstructionBinaryOp *i) {
