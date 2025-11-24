@@ -34,8 +34,11 @@ namespace backend::lir_tree {
             }
 
             // TODO: panic on nullptr
-            if (!cur_tile)
+            if (!cur_tile) {
+                auto unknown = std::make_unique<lir::InstructionUnknown>();
+                assembly.push_back(std::move(unknown));
                 continue;
+            }
 
             instructions.splice(instructions.begin(), cur_tile->toAsm(cur));
             worklist.splice(worklist.end(), cur_tile->getRemaining(cur));
