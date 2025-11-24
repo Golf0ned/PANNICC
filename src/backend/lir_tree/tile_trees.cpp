@@ -1,8 +1,8 @@
 #include "backend/lir_tree/tile_trees.h"
 
 namespace backend::lir_tree {
-    TreeTiler::TreeTiler(lir::OperandManager &om) : om(om) {
-        all_tiles.push_back(std::make_unique<StoreTile>());
+    TreeTiler::TreeTiler(lir::OperandManager *om) : om(om) {
+        all_tiles.push_back(std::make_unique<StoreTile>(om));
     }
 
     std::list<std::unique_ptr<lir::Instruction>> TreeTiler::getResult() {

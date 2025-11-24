@@ -6,10 +6,10 @@
 
 namespace backend {
     lir::Program mirToLir(middleend::mir::Program &mir) {
-        lir::OperandManager om;
+        auto om = std::make_unique<lir::OperandManager>();
 
         // Generate trees per instruction
-        lir_tree::TreeGenVisitor tgv(mir, om);
+        lir_tree::TreeGenVisitor tgv(mir, om.get());
         for (auto &f : mir.getFunctions()) {
             auto linearized = middleend::traverseTraces(f.get());
 
@@ -34,10 +34,10 @@ namespace backend {
         lir_tree::TreeMerger merger;
         auto program_trees = tgv.getResult();
         for (auto &fn_trees : program_trees)
-            merger.mergeTrees(fn_trees, om);
+            merger.mergeTrees(fn_trees, om.get());
 
         // Tile trees
-        lir_tree::TreeTiler tiler(om);
+        lir_tree::TreeTiler tiler(om.get());
         auto merged_trees = merger.getResult();
         for (auto &tree : merged_trees)
             tiler.tile(tree.get());

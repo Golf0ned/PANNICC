@@ -77,7 +77,7 @@ namespace backend::lir_tree {
 
     void AsmNode::accept(NodeVisitor *v) { v->visit(this); }
 
-    ToStringVisitor::ToStringVisitor(lir::OperandManager &om) : om(om) {}
+    ToStringVisitor::ToStringVisitor(lir::OperandManager *om) : om(om) {}
 
     std::string ToStringVisitor::getResult() { return result; }
 
@@ -183,7 +183,7 @@ namespace backend::lir_tree {
 
     bool Forest::empty() { return trees.empty(); }
 
-    std::string Forest::toString(lir::OperandManager &om) {
+    std::string Forest::toString(lir::OperandManager *om) {
         ToStringVisitor tsv(om);
         std::string res;
         for (auto &tree : trees) {

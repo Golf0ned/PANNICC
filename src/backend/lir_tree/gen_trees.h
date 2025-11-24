@@ -8,7 +8,7 @@
 namespace backend::lir_tree {
     class TreeGenVisitor : public middleend::mir::InstructionVisitor {
     public:
-        TreeGenVisitor(middleend::mir::Program &p, lir::OperandManager &om);
+        TreeGenVisitor(middleend::mir::Program &p, lir::OperandManager *om);
 
         std::list<Forest> getResult();
 
@@ -33,7 +33,7 @@ namespace backend::lir_tree {
 
     private:
         middleend::NumberIR nir;
-        lir::OperandManager &om;
+        lir::OperandManager *om;
         std::string function_name;
         middleend::mir::BasicBlock *next_block;
         uint64_t stack_space;
