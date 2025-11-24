@@ -13,6 +13,16 @@ namespace backend::lir {
         : extend(extend), src_size(src_size), dst_size(dst_size), src(src),
           dst(dst) {}
 
+    Extend InstructionMov::getExtend() { return extend; }
+
+    DataSize InstructionMov::getSrcSize() { return src_size; }
+
+    DataSize InstructionMov::getDstSize() { return dst_size; }
+
+    Operand *InstructionMov::getSrc() { return src; }
+
+    Operand *InstructionMov::getDst() { return dst; }
+
     void InstructionMov::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionPush::InstructionPush(DataSize size, Operand *src)

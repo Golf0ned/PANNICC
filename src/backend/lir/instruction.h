@@ -29,6 +29,11 @@ namespace backend::lir {
     public:
         InstructionMov(Extend extend, DataSize src_size, DataSize dst_size,
                        Operand *src, Operand *dst);
+        Extend getExtend();
+        DataSize getSrcSize();
+        DataSize getDstSize();
+        Operand *getSrc();
+        Operand *getDst();
         void accept(InstructionVisitor *v);
 
     private:
