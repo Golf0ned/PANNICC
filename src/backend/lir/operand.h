@@ -8,13 +8,15 @@
 
 namespace backend::lir {
     class Operand {
-        // toString
+    public:
+        virtual std::string toString() = 0;
     };
 
     class Immediate : public Operand {
     public:
         Immediate(uint64_t value);
         uint64_t getValue();
+        std::string toString();
 
     private:
         uint64_t value;
@@ -56,6 +58,8 @@ namespace backend::lir {
         R15D,
     };
 
+    std::string toString(RegisterNum rn);
+
     const std::vector<RegisterNum> &getArgRegisters();
     const std::vector<RegisterNum> &getCalleeSavedRegisters();
     const std::vector<RegisterNum> &getCallerSavedRegisters();
@@ -64,6 +68,7 @@ namespace backend::lir {
     public:
         Register(RegisterNum reg);
         RegisterNum getRegNum();
+        virtual std::string toString();
 
     private:
         RegisterNum reg;
@@ -73,6 +78,7 @@ namespace backend::lir {
     public:
         VirtualRegister(std::string name);
         std::string getName();
+        std::string toString();
 
     private:
         std::string name;
@@ -86,6 +92,7 @@ namespace backend::lir {
         Register *getIndex();
         Immediate *getScale();
         Immediate *getDisplacement();
+        std::string toString();
 
     private:
         Register *base;
