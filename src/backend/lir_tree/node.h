@@ -52,17 +52,18 @@ namespace backend::lir_tree {
 
     class AddressNode : public Node {
     public:
-        AddressNode(std::unique_ptr<Node> base, std::unique_ptr<Node> index,
-                    uint64_t scale, uint64_t displacement);
-        std::unique_ptr<Node> &getBase();
-        std::unique_ptr<Node> &getIndex();
+        AddressNode(std::unique_ptr<RegisterNode> base,
+                    std::unique_ptr<RegisterNode> index, uint64_t scale,
+                    uint64_t displacement);
+        std::unique_ptr<RegisterNode> &getBase();
+        std::unique_ptr<RegisterNode> &getIndex();
         uint64_t getScale();
         uint64_t getDisplacement();
         void accept(NodeVisitor *v);
 
     private:
-        std::unique_ptr<Node> base;
-        std::unique_ptr<Node> index;
+        std::unique_ptr<RegisterNode> base;
+        std::unique_ptr<RegisterNode> index;
         uint64_t scale;
         uint64_t displacement;
     };

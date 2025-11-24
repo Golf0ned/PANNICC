@@ -24,15 +24,15 @@ namespace backend::lir_tree {
 
     void ImmediateNode::accept(NodeVisitor *v) { v->visit(this); }
 
-    AddressNode::AddressNode(std::unique_ptr<Node> base,
-                             std::unique_ptr<Node> index, uint64_t scale,
-                             uint64_t displacement)
+    AddressNode::AddressNode(std::unique_ptr<RegisterNode> base,
+                             std::unique_ptr<RegisterNode> index,
+                             uint64_t scale, uint64_t displacement)
         : base(std::move(base)), index(std::move(index)), scale(scale),
           displacement(displacement) {}
 
-    std::unique_ptr<Node> &AddressNode::getBase() { return base; }
+    std::unique_ptr<RegisterNode> &AddressNode::getBase() { return base; }
 
-    std::unique_ptr<Node> &AddressNode::getIndex() { return index; }
+    std::unique_ptr<RegisterNode> &AddressNode::getIndex() { return index; }
 
     uint64_t AddressNode::getScale() { return scale; }
 
