@@ -47,24 +47,65 @@ namespace backend::lir_tree {
         assembly.splice(assembly.end(), instructions);
     }
 
-    Tile::Tile(uint64_t cost) : cost(cost) {}
+    Tile::Tile(uint64_t cost, lir::OperandManager *om) : cost(cost), om(om) {}
 
     uint64_t Tile::getCost() { return cost; }
 
-    StoreTile::StoreTile() : Tile(0) {}
+    StoreTile::StoreTile(lir::OperandManager *om) : Tile(10, om) {}
 
     bool StoreTile::matches(Node *root) {
-        // TODO
-        return false;
+        auto store = dynamic_cast<StoreNode *>(root);
+        if (!store) {
+            return false;
+        }
+
+        auto store_ptr = dynamic_cast<AddressNode *>(store->getPtr().get());
+        auto store_src = dynamic_cast<RegisterNode *>(store->getSource().get());
+        return store_ptr && store_src;
     }
 
     std::list<std::unique_ptr<lir::Instruction>> StoreTile::toAsm(Node *root) {
-        // TODO
-        return {};
+        std::list<std::unique_ptr<lir::Instruction>> assembly;
+        auto store = dynamic_cast<StoreNode *>(root);
+
+        auto store_ptr = dynamic_cast<AddressNode *>(store->getPtr().get());
+        auto &ptr_base = store_ptr->getBase();
+        auto base = ptr_base ? om->getRegister(ptr_base->getName()) : nullptr;
+        auto &ptr_index = store_ptr->getIndex();
+        auto index =
+            ptr_index ? om->getRegister(ptr_index->getName()) : nullptr;
+        auto scale = om->getImmediate(store_ptr->getScale());
+        auto displacement = om->getImmediate(store_ptr->getDisplacement());
+
+        auto store_source =
+            dynamic_cast<RegisterNode *>(store->getSource().get());
+
+        auto size = lir::DataSize::QUADWORD;
+        auto dst = om->getAddress(base, index, scale, displacement);
+        auto src = om->getRegister(store_source->getName());
+        auto store_asm = std::make_unique<lir::InstructionMov>(
+            lir::Extend::NONE, size, size, src, dst);
+        assembly.push_back(std::move(store_asm));
+
+        return assembly;
     }
 
     std::list<Node *> StoreTile::getRemaining(Node *root) {
-        // TODO
-        return {};
+        std::list<Node *> remaining;
+        auto store = dynamic_cast<StoreNode *>(root);
+
+        auto store_ptr = dynamic_cast<AddressNode *>(store->getPtr().get());
+        auto &ptr_base = store_ptr->getBase();
+        if (ptr_base)
+            remaining.push_back(ptr_base.get());
+        auto &ptr_index = store_ptr->getIndex();
+        if (ptr_index)
+            remaining.push_back(ptr_index.get());
+
+        auto store_src = dynamic_cast<RegisterNode *>(store->getSource().get());
+        auto &src_source = store_src->getSource();
+        if (src_source)
+            remaining.push_back(src_source.get());
+        return remaining;
     }
 } // namespace backend::lir_tree
