@@ -71,7 +71,10 @@ namespace backend::lir {
     void ToStringVisitor::visit(InstructionCmp *i) {
         if (!result.empty())
             result += "\n        ";
-        result += "cmp     [TODO]";
+        result += "cmp";
+        result += toChar(i->getSize());
+        result +=
+            "    " + i->getSrc1()->toString() + ", " + i->getSrc2()->toString();
     }
 
     void ToStringVisitor::visit(InstructionJmp *i) {

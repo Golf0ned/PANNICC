@@ -53,6 +53,12 @@ namespace backend::lir {
                                    Operand *src_2)
         : size(size), src_1(src_1), src_2(src_2) {}
 
+    DataSize InstructionCmp::getSize() { return size; }
+
+    Operand *InstructionCmp::getSrc1() { return src_1; }
+
+    Operand *InstructionCmp::getSrc2() { return src_2; }
+
     void InstructionCmp::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionJmp::InstructionJmp(std::string label) : label(label) {}

@@ -101,6 +101,9 @@ namespace backend::lir {
     class InstructionCmp : public Instruction {
     public:
         InstructionCmp(DataSize size, Operand *src_1, Operand *src_2);
+        DataSize getSize();
+        Operand *getSrc1();
+        Operand *getSrc2();
         void accept(InstructionVisitor *v);
 
     private:
