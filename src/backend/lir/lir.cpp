@@ -80,7 +80,7 @@ namespace backend::lir {
     void ToStringVisitor::visit(InstructionJmp *i) {
         if (!result.empty())
             result += "\n        ";
-        result += "jmp     [TODO]";
+        result += "jmp     " + i->getLabel();
     }
 
     void ToStringVisitor::visit(InstructionCJmp *i) {

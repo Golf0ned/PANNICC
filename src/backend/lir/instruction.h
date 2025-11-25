@@ -115,6 +115,7 @@ namespace backend::lir {
     class InstructionJmp : public Instruction {
     public:
         InstructionJmp(std::string label);
+        std::string getLabel();
         void accept(InstructionVisitor *v);
 
     private:
