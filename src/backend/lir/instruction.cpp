@@ -107,6 +107,10 @@ namespace backend::lir {
     InstructionPhi::InstructionPhi(std::list<Operand *> src, Operand *dst)
         : src(std::move(src)), dst(dst) {}
 
+    std::list<Operand *> &InstructionPhi::getSrc() { return src; }
+
+    Operand *InstructionPhi::getDst() { return dst; }
+
     void InstructionPhi::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionVirtual::InstructionVirtual(std::unique_ptr<Instruction> i)

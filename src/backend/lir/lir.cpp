@@ -110,7 +110,16 @@ namespace backend::lir {
     void ToStringVisitor::visit(InstructionPhi *i) {
         if (!result.empty())
             result += "\n        ";
-        result += "phi     [TODO]";
+        result += "phi     [";
+
+        std::string src_str = "";
+        for (auto src : i->getSrc()) {
+            if (!src_str.empty())
+                src_str += ", ";
+            src_str += src->toString();
+        }
+        result +=
+            src_str + "] <-> " + i->getDst()->toString() + "    # [virtual]";
     }
 
     void ToStringVisitor::visit(InstructionVirtual *i) {
