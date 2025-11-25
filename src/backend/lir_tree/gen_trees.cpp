@@ -73,16 +73,18 @@ namespace backend::lir_tree {
 
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
-        auto bb_num = nir.getNumber(bb);
-
-        std::string label_name =
-            '.' + function_name + '_' +
-            (bb_num == -1 ? "entry" : std::to_string(bb_num));
+        std::string label_name = resolveLabel(bb);
         auto label = std::make_unique<lir::Label>(label_name);
         instructions.push_back(std::move(label));
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
         function_trees.insertAsm(std::move(assembly));
+    }
+
+    std::string TreeGenVisitor::resolveLabel(middleend::mir::BasicBlock *bb) {
+        auto bb_num = nir.getNumber(bb);
+        return "." + function_name + '_' +
+               (bb_num == -1 ? "entry" : std::to_string(bb_num));
     }
 
     std::unique_ptr<Node>
@@ -321,8 +323,8 @@ namespace backend::lir_tree {
 
         auto succ = t->getSuccessor();
         if (succ != next_block) {
-            auto jmp = std::make_unique<lir::InstructionJmp>(
-                std::to_string(nir.getNumber(succ)));
+            auto jmp =
+                std::make_unique<lir::InstructionJmp>(resolveLabel(succ));
             instructions.push_back(std::move(jmp));
         }
 
@@ -349,15 +351,15 @@ namespace backend::lir_tree {
         //
         if (t_succ == next_block) {
             auto cjmp = std::make_unique<lir::InstructionCJmp>(
-                lir::invert(cond_code), std::to_string(nir.getNumber(f_succ)));
+                lir::invert(cond_code), resolveLabel(f_succ));
             instructions.push_back(std::move(cjmp));
         } else {
             auto cjmp = std::make_unique<lir::InstructionCJmp>(
-                cond_code, std::to_string(nir.getNumber(t_succ)));
+                cond_code, resolveLabel(t_succ));
             instructions.push_back(std::move(cjmp));
             if (f_succ != next_block) {
-                auto jmp = std::make_unique<lir::InstructionJmp>(
-                    std::to_string(nir.getNumber(f_succ)));
+                auto jmp =
+                    std::make_unique<lir::InstructionJmp>(resolveLabel(f_succ));
                 instructions.push_back(std::move(jmp));
             }
         }
