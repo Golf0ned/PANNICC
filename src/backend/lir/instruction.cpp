@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "backend/lir/instruction.h"
 
 namespace backend::lir {
@@ -43,9 +45,27 @@ namespace backend::lir {
 
     void InstructionPop::accept(InstructionVisitor *v) { v->visit(this); }
 
+    std::string toString(BinaryOp op) {
+        switch (op) {
+        case BinaryOp::ADD:
+            return "add";
+        case BinaryOp::SUB:
+            return "sub";
+        }
+        std::unreachable();
+    }
+
     InstructionBinaryOp::InstructionBinaryOp(BinaryOp op, DataSize size,
                                              Operand *src, Operand *dst)
         : op(op), size(size), src(src), dst(dst) {}
+
+    BinaryOp InstructionBinaryOp::getOp() { return op; }
+
+    DataSize InstructionBinaryOp::getSize() { return size; }
+
+    Operand *InstructionBinaryOp::getSrc() { return src; }
+
+    Operand *InstructionBinaryOp::getDst() { return dst; }
 
     void InstructionBinaryOp::accept(InstructionVisitor *v) { v->visit(this); }
 
