@@ -131,6 +131,7 @@ namespace backend::lir {
     class InstructionCall : public Instruction {
     public:
         InstructionCall(std::string label);
+        std::string getLabel();
         void accept(InstructionVisitor *v);
 
     private:
