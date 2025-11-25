@@ -89,7 +89,7 @@ namespace backend::lir {
     void ToStringVisitor::visit(InstructionCall *i) {
         if (!result.empty())
             result += "\n        ";
-        result += "call    [TODO]";
+        result += "call    " + i->getLabel();
     }
 
     void ToStringVisitor::visit(InstructionRet *i) {

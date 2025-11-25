@@ -66,6 +66,8 @@ namespace backend::lir {
 
     InstructionCall::InstructionCall(std::string label) : label(label) {}
 
+    std::string InstructionCall::getLabel() { return label; }
+
     void InstructionCall::accept(InstructionVisitor *v) { v->visit(this); }
 
     void InstructionRet::accept(InstructionVisitor *v) { v->visit(this); }
