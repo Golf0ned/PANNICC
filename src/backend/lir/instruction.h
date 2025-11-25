@@ -158,6 +158,8 @@ namespace backend::lir {
     class InstructionPhi : public Instruction {
     public:
         InstructionPhi(std::list<Operand *> src, Operand *dst);
+        std::list<Operand *> &getSrc();
+        Operand *getDst();
         void accept(InstructionVisitor *v);
 
     private:
