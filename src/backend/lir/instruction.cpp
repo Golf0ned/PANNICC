@@ -90,6 +90,10 @@ namespace backend::lir {
     InstructionCJmp::InstructionCJmp(ConditionCode cmp, std::string label)
         : cmp(cmp), label(label) {}
 
+    ConditionCode InstructionCJmp::getCmp() { return cmp; }
+
+    std::string InstructionCJmp::getLabel() { return label; }
+
     void InstructionCJmp::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionCall::InstructionCall(std::string label) : label(label) {}

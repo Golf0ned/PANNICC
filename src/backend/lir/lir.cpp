@@ -89,7 +89,10 @@ namespace backend::lir {
     void ToStringVisitor::visit(InstructionCJmp *i) {
         if (!result.empty())
             result += "\n        ";
-        result += "cjmp    [TODO]";
+        auto cc_str = toString(i->getCmp());
+        result += "j" + cc_str;
+        result += std::string(8 - cc_str.size() - 1, ' ');
+        result += i->getLabel();
     }
 
     void ToStringVisitor::visit(InstructionCall *i) {

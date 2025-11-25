@@ -131,6 +131,8 @@ namespace backend::lir {
     class InstructionCJmp : public Instruction {
     public:
         InstructionCJmp(ConditionCode cmp, std::string label);
+        ConditionCode getCmp();
+        std::string getLabel();
         void accept(InstructionVisitor *v);
 
     private:
