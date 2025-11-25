@@ -12,4 +12,14 @@ namespace backend::lir {
         }
         std::unreachable();
     }
+
+    std::string toString(ConditionCode cc) {
+        switch (cc) {
+        case ConditionCode::EQ:
+            return "e";
+        case ConditionCode::NEQ:
+            return "ne";
+        }
+        std::unreachable();
+    }
 } // namespace backend::lir

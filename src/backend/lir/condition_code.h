@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace backend::lir {
     enum class ConditionCode {
         EQ,
@@ -7,4 +9,6 @@ namespace backend::lir {
     };
 
     ConditionCode invert(ConditionCode cc);
+
+    std::string toString(ConditionCode cc);
 } // namespace backend::lir
