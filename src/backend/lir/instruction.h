@@ -73,10 +73,16 @@ namespace backend::lir {
         SUB,
     };
 
+    std::string toString(BinaryOp op);
+
     class InstructionBinaryOp : public Instruction {
     public:
         InstructionBinaryOp(BinaryOp op, DataSize size, Operand *src,
                             Operand *dst);
+        BinaryOp getOp();
+        DataSize getSize();
+        Operand *getSrc();
+        Operand *getDst();
         void accept(InstructionVisitor *v);
 
     private:

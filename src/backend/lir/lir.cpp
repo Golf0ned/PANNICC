@@ -65,7 +65,10 @@ namespace backend::lir {
     void ToStringVisitor::visit(InstructionBinaryOp *i) {
         if (!result.empty())
             result += "\n        ";
-        result += "binop   [TODO]";
+        auto op_str = toString(i->getOp());
+        result += op_str + toChar(i->getSize());
+        result += std::string(8 - op_str.size() - 1, ' ');
+        result += i->getSrc()->toString() + ", " + i->getDst()->toString();
     }
 
     void ToStringVisitor::visit(InstructionCmp *i) {
