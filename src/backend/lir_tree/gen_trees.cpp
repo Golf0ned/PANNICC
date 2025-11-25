@@ -73,8 +73,11 @@ namespace backend::lir_tree {
 
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
+        auto bb_num = nir.getNumber(bb);
+
         std::string label_name =
-            '.' + function_name + '_' + std::to_string(nir.getNumber(bb));
+            '.' + function_name + '_' +
+            (bb_num == -1 ? "entry" : std::to_string(bb_num));
         auto label = std::make_unique<lir::Label>(label_name);
         instructions.push_back(std::move(label));
 
