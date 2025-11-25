@@ -95,7 +95,7 @@ namespace backend::lir {
     void ToStringVisitor::visit(InstructionRet *i) {
         if (!result.empty())
             result += "\n        ";
-        result += "ret     [TODO]";
+        result += "ret";
     }
 
     void ToStringVisitor::visit(InstructionPhi *i) {
