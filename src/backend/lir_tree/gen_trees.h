@@ -21,16 +21,16 @@ namespace backend::lir_tree {
         std::unique_ptr<Node> resolveStackVar(middleend::mir::Value *v);
         lir::Operand *resolveOperand(middleend::mir::Value *v);
 
-        virtual void visit(middleend::mir::InstructionBinaryOp *i);
-        virtual void visit(middleend::mir::InstructionCall *i);
-        virtual void visit(middleend::mir::InstructionAlloca *i);
-        virtual void visit(middleend::mir::InstructionLoad *i);
-        virtual void visit(middleend::mir::InstructionStore *i);
-        virtual void visit(middleend::mir::InstructionPhi *i);
+        void visit(middleend::mir::InstructionBinaryOp *i) override;
+        void visit(middleend::mir::InstructionCall *i) override;
+        void visit(middleend::mir::InstructionAlloca *i) override;
+        void visit(middleend::mir::InstructionLoad *i) override;
+        void visit(middleend::mir::InstructionStore *i) override;
+        void visit(middleend::mir::InstructionPhi *i) override;
 
-        virtual void visit(middleend::mir::TerminatorReturn *t);
-        virtual void visit(middleend::mir::TerminatorBranch *t);
-        virtual void visit(middleend::mir::TerminatorCondBranch *t);
+        void visit(middleend::mir::TerminatorReturn *t) override;
+        void visit(middleend::mir::TerminatorBranch *t) override;
+        void visit(middleend::mir::TerminatorCondBranch *t) override;
 
     private:
         middleend::NumberIR nir;

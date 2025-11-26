@@ -20,7 +20,7 @@ namespace frontend::hir {
     public:
         Label(std::unique_ptr<AtomIdentifier> name);
         std::unique_ptr<AtomIdentifier> &getName();
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *visitor) override;
 
     private:
         std::unique_ptr<AtomIdentifier> name;
@@ -32,7 +32,7 @@ namespace frontend::hir {
                                std::unique_ptr<AtomIdentifier> variable);
         Type getType();
         std::unique_ptr<AtomIdentifier> &getVariable();
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *visitor) override;
 
     private:
         Type type;
@@ -45,7 +45,7 @@ namespace frontend::hir {
                                std::unique_ptr<Atom> value);
         std::unique_ptr<AtomIdentifier> &getVariable();
         std::unique_ptr<Atom> &getValue();
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *visitor) override;
 
     private:
         std::unique_ptr<AtomIdentifier> variable;
@@ -59,7 +59,7 @@ namespace frontend::hir {
         std::unique_ptr<AtomIdentifier> &getVariable();
         UnaryOp getOp();
         std::unique_ptr<Atom> &getValue();
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *visitor) override;
 
     private:
         std::unique_ptr<AtomIdentifier> variable;
@@ -76,7 +76,7 @@ namespace frontend::hir {
         BinaryOp getOp();
         std::unique_ptr<Atom> &getLeft();
         std::unique_ptr<Atom> &getRight();
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *visitor) override;
 
     private:
         std::unique_ptr<AtomIdentifier> variable;
@@ -89,7 +89,7 @@ namespace frontend::hir {
     public:
         InstructionReturn(std::unique_ptr<Atom> value);
         std::unique_ptr<Atom> &getValue();
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *visitor) override;
 
     private:
         std::unique_ptr<Atom> value;
@@ -101,7 +101,7 @@ namespace frontend::hir {
                         std::vector<std::unique_ptr<Atom>> arguments);
         std::unique_ptr<AtomIdentifier> &getCallee();
         std::vector<std::unique_ptr<Atom>> &getArguments();
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *visitor) override;
 
     private:
         std::unique_ptr<AtomIdentifier> callee;
@@ -116,7 +116,7 @@ namespace frontend::hir {
         std::unique_ptr<AtomIdentifier> &getVariable();
         std::unique_ptr<AtomIdentifier> &getCallee();
         std::vector<std::unique_ptr<Atom>> &getArguments();
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *visitor) override;
 
     private:
         std::unique_ptr<AtomIdentifier> variable;
@@ -128,7 +128,7 @@ namespace frontend::hir {
     public:
         InstructionBranch(std::unique_ptr<AtomIdentifier> label);
         std::unique_ptr<AtomIdentifier> &getLabel();
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *visitor) override;
 
     private:
         std::unique_ptr<AtomIdentifier> label;
@@ -142,7 +142,7 @@ namespace frontend::hir {
         std::unique_ptr<Atom> &getCmp();
         std::unique_ptr<AtomIdentifier> &getTLabel();
         std::unique_ptr<AtomIdentifier> &getFLabel();
-        void accept(InstructionVisitor *visitor);
+        void accept(InstructionVisitor *visitor) override;
 
     private:
         std::unique_ptr<Atom> cmp;

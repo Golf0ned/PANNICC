@@ -19,7 +19,7 @@ namespace backend::lir {
     public:
         Label(std::string name);
         std::string getName();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         std::string name;
@@ -34,7 +34,7 @@ namespace backend::lir {
         DataSize getDstSize();
         Operand *getSrc();
         Operand *getDst();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         Extend extend;
@@ -49,7 +49,7 @@ namespace backend::lir {
         InstructionPush(DataSize size, Operand *src);
         DataSize getSize();
         Operand *getSrc();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         DataSize size;
@@ -61,7 +61,7 @@ namespace backend::lir {
         InstructionPop(DataSize size, Operand *dst);
         DataSize getSize();
         Operand *getDst();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         DataSize size;
@@ -83,7 +83,7 @@ namespace backend::lir {
         DataSize getSize();
         Operand *getSrc();
         Operand *getDst();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         BinaryOp op;
@@ -110,7 +110,7 @@ namespace backend::lir {
         DataSize getSize();
         Operand *getSrc1();
         Operand *getSrc2();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         DataSize size;
@@ -122,7 +122,7 @@ namespace backend::lir {
     public:
         InstructionJmp(std::string label);
         std::string getLabel();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         std::string label;
@@ -133,7 +133,7 @@ namespace backend::lir {
         InstructionCJmp(ConditionCode cmp, std::string label);
         ConditionCode getCmp();
         std::string getLabel();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         ConditionCode cmp;
@@ -144,7 +144,7 @@ namespace backend::lir {
     public:
         InstructionCall(std::string label);
         std::string getLabel();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         std::string label;
@@ -152,7 +152,7 @@ namespace backend::lir {
 
     class InstructionRet : public Instruction {
     public:
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
     };
 
     class InstructionPhi : public Instruction {
@@ -160,7 +160,7 @@ namespace backend::lir {
         InstructionPhi(std::list<Operand *> src, Operand *dst);
         std::list<Operand *> &getSrc();
         Operand *getDst();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         std::list<Operand *> src;
@@ -171,7 +171,7 @@ namespace backend::lir {
     public:
         InstructionVirtual(std::unique_ptr<Instruction> i);
         std::unique_ptr<Instruction> &getInstruction();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         std::unique_ptr<Instruction> instruction;
@@ -180,7 +180,7 @@ namespace backend::lir {
     // TODO: remove once tiling's implemented
     class InstructionUnknown : public Instruction {
     public:
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
     };
 
     class InstructionVisitor {

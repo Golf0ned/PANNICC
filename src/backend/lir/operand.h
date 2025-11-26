@@ -78,7 +78,7 @@ namespace backend::lir {
     public:
         VirtualRegister(std::string name);
         std::string getName();
-        std::string toString();
+        std::string toString() override;
 
     private:
         std::string name;
