@@ -9,8 +9,7 @@ namespace backend::lir_tree {
         uint64_t getCost();
         virtual bool matches(Node *root) = 0;
         virtual std::list<std::unique_ptr<lir::Instruction>>
-        toAsm(Node *root) = 0;
-        virtual std::list<Node *> getRemaining(Node *root) = 0;
+        apply(Node *root, std::vector<Node *> &worklist) = 0;
         virtual ~Tile() = default;
 
     protected:
@@ -23,9 +22,24 @@ namespace backend::lir_tree {
     class StoreTile : public Tile {
     public:
         StoreTile(lir::OperandManager *om);
-        virtual bool matches(Node *root);
-        virtual std::list<std::unique_ptr<lir::Instruction>> toAsm(Node *root);
-        virtual std::list<Node *> getRemaining(Node *root);
+        bool matches(Node *root) override;
+        std::list<std::unique_ptr<lir::Instruction>>
+        apply(Node *root, std::vector<Node *> &worklist) override;
+
+    private:
+        AddressNode *tile_ptr;
+        RegisterNode *tile_src;
+    };
+
+    class BinOpTile : public Tile {
+    public:
+        BinOpTile(lir::OperandManager *om);
+        bool matches(Node *root) override;
+        std::list<std::unique_ptr<lir::Instruction>>
+        apply(Node *root, std::vector<Node *> &worklist) override;
+
+    private:
+        OpNode *tile_op;
     };
 
     class TreeTiler {
