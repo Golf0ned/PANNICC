@@ -7,9 +7,16 @@ namespace backend::lir_tree {
     public:
         Tile(uint64_t cost, lir::OperandManager *om);
         uint64_t getCost();
+        lir::Operand *resolveOperand(Node *node, std::vector<Node *> &worklist);
+        lir::Operand *resolveOperand(AddressNode *node,
+                                     std::vector<Node *> &worklist);
+        lir::Operand *resolveOperand(ImmediateNode *node,
+                                     std::vector<Node *> &worklist);
+        lir::Operand *resolveOperand(RegisterNode *node,
+                                     std::vector<Node *> &worklist);
         virtual bool matches(Node *root) = 0;
         virtual std::list<std::unique_ptr<lir::Instruction>>
-        apply(Node *root, std::vector<Node *> &worklist) = 0;
+        apply(std::vector<Node *> &worklist) = 0;
         virtual ~Tile() = default;
 
     protected:
@@ -24,7 +31,7 @@ namespace backend::lir_tree {
         StoreTile(lir::OperandManager *om);
         bool matches(Node *root) override;
         std::list<std::unique_ptr<lir::Instruction>>
-        apply(Node *root, std::vector<Node *> &worklist) override;
+        apply(std::vector<Node *> &worklist) override;
 
     private:
         AddressNode *tile_ptr;
@@ -36,9 +43,10 @@ namespace backend::lir_tree {
         BinOpTile(lir::OperandManager *om);
         bool matches(Node *root) override;
         std::list<std::unique_ptr<lir::Instruction>>
-        apply(Node *root, std::vector<Node *> &worklist) override;
+        apply(std::vector<Node *> &worklist) override;
 
     private:
+        RegisterNode *tile_dst;
         OpNode *tile_op;
     };
 
