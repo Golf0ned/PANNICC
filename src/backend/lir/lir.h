@@ -22,21 +22,21 @@ namespace backend::lir {
     public:
         std::string getResult();
 
-        virtual void visit(Instruction *i);
-        virtual void visit(Label *l);
-        virtual void visit(InstructionMov *i);
-        virtual void visit(InstructionPush *i);
-        virtual void visit(InstructionPop *i);
-        virtual void visit(InstructionBinaryOp *i);
-        virtual void visit(InstructionCmp *i);
-        virtual void visit(InstructionJmp *i);
-        virtual void visit(InstructionCJmp *i);
-        virtual void visit(InstructionCall *i);
-        virtual void visit(InstructionRet *i);
+        void visit(Instruction *i) override;
+        void visit(Label *l) override;
+        void visit(InstructionMov *i) override;
+        void visit(InstructionPush *i) override;
+        void visit(InstructionPop *i) override;
+        void visit(InstructionBinaryOp *i) override;
+        void visit(InstructionCmp *i) override;
+        void visit(InstructionJmp *i) override;
+        void visit(InstructionCJmp *i) override;
+        void visit(InstructionCall *i) override;
+        void visit(InstructionRet *i) override;
 
-        virtual void visit(InstructionPhi *i);
-        virtual void visit(InstructionVirtual *i);
-        virtual void visit(InstructionUnknown *i);
+        void visit(InstructionPhi *i) override;
+        void visit(InstructionVirtual *i) override;
+        void visit(InstructionUnknown *i) override;
 
     private:
         std::string result;

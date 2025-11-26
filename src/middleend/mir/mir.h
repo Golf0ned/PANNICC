@@ -91,16 +91,16 @@ namespace middleend::mir {
         std::string valueToString(Value *v);
         std::string valueToTypedString(Value *v);
 
-        virtual void visit(InstructionBinaryOp *i);
-        virtual void visit(InstructionCall *i);
-        virtual void visit(InstructionAlloca *i);
-        virtual void visit(InstructionLoad *i);
-        virtual void visit(InstructionStore *i);
-        virtual void visit(InstructionPhi *i);
+        void visit(InstructionBinaryOp *i) override;
+        void visit(InstructionCall *i) override;
+        void visit(InstructionAlloca *i) override;
+        void visit(InstructionLoad *i) override;
+        void visit(InstructionStore *i) override;
+        void visit(InstructionPhi *i) override;
 
-        virtual void visit(TerminatorReturn *t);
-        virtual void visit(TerminatorBranch *t);
-        virtual void visit(TerminatorCondBranch *t);
+        void visit(TerminatorReturn *t) override;
+        void visit(TerminatorBranch *t) override;
+        void visit(TerminatorCondBranch *t) override;
 
     private:
         std::string result;

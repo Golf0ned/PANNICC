@@ -20,7 +20,7 @@ namespace frontend::ast {
     public:
         void addInstruction(std::unique_ptr<Instruction> i);
         std::vector<std::unique_ptr<Instruction>> &getInstructions();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         std::vector<std::unique_ptr<Instruction>> instructions;
@@ -30,7 +30,7 @@ namespace frontend::ast {
     public:
         InstructionExpr(std::unique_ptr<Expr> expr);
         std::unique_ptr<Expr> &getExpr();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         std::unique_ptr<Expr> expr;
@@ -42,7 +42,7 @@ namespace frontend::ast {
                                std::unique_ptr<AtomIdentifier> variable);
         Type getType();
         std::unique_ptr<AtomIdentifier> &getVariable();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         Type type;
@@ -57,7 +57,7 @@ namespace frontend::ast {
         Type getType();
         std::unique_ptr<AtomIdentifier> &getVariable();
         std::unique_ptr<Expr> &getValue();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         Type type;
@@ -71,7 +71,7 @@ namespace frontend::ast {
                           std::unique_ptr<Expr> value);
         std::unique_ptr<AtomIdentifier> &getVariable();
         std::unique_ptr<Expr> &getValue();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         std::unique_ptr<AtomIdentifier> variable;
@@ -85,7 +85,7 @@ namespace frontend::ast {
         std::unique_ptr<AtomIdentifier> &getVariable();
         BinaryOp getOp();
         std::unique_ptr<Expr> &getValue();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         std::unique_ptr<AtomIdentifier> variable;
@@ -97,7 +97,7 @@ namespace frontend::ast {
     public:
         InstructionReturn(std::unique_ptr<Expr> value);
         std::unique_ptr<Expr> &getValue();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         std::unique_ptr<Expr> value;
@@ -112,7 +112,7 @@ namespace frontend::ast {
         std::unique_ptr<Instruction> &getTBranch();
         std::unique_ptr<Instruction> &getFBranch();
         bool hasFBranch();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         std::unique_ptr<Expr> cond;
@@ -126,7 +126,7 @@ namespace frontend::ast {
                          std::unique_ptr<Instruction> body);
         std::unique_ptr<Expr> &getCond();
         std::unique_ptr<Instruction> &getBody();
-        void accept(InstructionVisitor *v);
+        void accept(InstructionVisitor *v) override;
 
     private:
         std::unique_ptr<Expr> cond;

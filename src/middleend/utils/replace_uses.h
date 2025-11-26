@@ -10,16 +10,16 @@ namespace middleend {
     public:
         ReplaceUsesVisitor(mir::Value *old_value, mir::Value *new_value);
 
-        virtual void visit(mir::InstructionBinaryOp *i);
-        virtual void visit(mir::InstructionCall *i);
-        virtual void visit(mir::InstructionAlloca *i);
-        virtual void visit(mir::InstructionLoad *i);
-        virtual void visit(mir::InstructionStore *i);
-        virtual void visit(mir::InstructionPhi *i);
+        void visit(mir::InstructionBinaryOp *i) override;
+        void visit(mir::InstructionCall *i) override;
+        void visit(mir::InstructionAlloca *i) override;
+        void visit(mir::InstructionLoad *i) override;
+        void visit(mir::InstructionStore *i) override;
+        void visit(mir::InstructionPhi *i) override;
 
-        virtual void visit(mir::TerminatorReturn *t);
-        virtual void visit(mir::TerminatorBranch *t);
-        virtual void visit(mir::TerminatorCondBranch *t);
+        void visit(mir::TerminatorReturn *t) override;
+        void visit(mir::TerminatorBranch *t) override;
+        void visit(mir::TerminatorCondBranch *t) override;
 
     private:
         mir::Value *old_value;

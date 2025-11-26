@@ -133,14 +133,14 @@ namespace backend::lir_tree {
 
         std::string getResult();
 
-        virtual void visit(Node *n);
-        virtual void visit(RegisterNode *n);
-        virtual void visit(ImmediateNode *n);
-        virtual void visit(AddressNode *n);
-        virtual void visit(OpNode *n);
-        virtual void visit(LoadNode *n);
-        virtual void visit(StoreNode *n);
-        virtual void visit(AsmNode *n);
+        void visit(Node *n) override;
+        void visit(RegisterNode *n) override;
+        void visit(ImmediateNode *n) override;
+        void visit(AddressNode *n) override;
+        void visit(OpNode *n) override;
+        void visit(LoadNode *n) override;
+        void visit(StoreNode *n) override;
+        void visit(AsmNode *n) override;
 
     private:
         lir::OperandManager *om;
