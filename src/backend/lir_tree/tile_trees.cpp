@@ -1,9 +1,64 @@
+#include <iostream>
+
 #include "backend/lir_tree/tile_trees.h"
 
 namespace backend::lir_tree {
     Tile::Tile(uint64_t cost, lir::OperandManager *om) : cost(cost), om(om) {}
 
     uint64_t Tile::getCost() { return cost; }
+
+    lir::Operand *Tile::resolveOperand(Node *node,
+                                       std::vector<Node *> &worklist) {
+        auto reg = dynamic_cast<RegisterNode *>(node);
+        if (reg)
+            resolveOperand(reg, worklist);
+
+        auto immediate = dynamic_cast<ImmediateNode *>(node);
+        if (immediate)
+            resolveOperand(immediate, worklist);
+
+        auto address = dynamic_cast<AddressNode *>(node);
+        if (address)
+            resolveOperand(address, worklist);
+
+        std::cout << "nullptr" << std::endl;
+        return nullptr;
+    }
+
+    lir::Operand *Tile::resolveOperand(AddressNode *node,
+                                       std::vector<Node *> &worklist) {
+        auto &base_ptr = node->getBase();
+        if (base_ptr)
+            worklist.push_back(base_ptr.get());
+        auto base = base_ptr ? om->getRegister(base_ptr->getName()) : nullptr;
+
+        auto &index_ptr = node->getIndex();
+        auto index =
+            index_ptr ? om->getRegister(index_ptr->getName()) : nullptr;
+        if (index_ptr)
+            worklist.push_back(index_ptr.get());
+
+        auto scale = om->getImmediate(node->getScale());
+
+        auto displacement = om->getImmediate(node->getDisplacement());
+
+        return om->getAddress(base, index, scale, displacement);
+    }
+
+    lir::Operand *Tile::resolveOperand(ImmediateNode *node,
+                                       std::vector<Node *> &worklist) {
+        return om->getImmediate(node->getValue());
+    }
+
+    lir::Operand *Tile::resolveOperand(RegisterNode *node,
+                                       std::vector<Node *> &worklist) {
+        // TODO: handle non-virtual registers
+        auto &source = node->getSource();
+        if (source)
+            worklist.push_back(source.get());
+
+        return om->getRegister(node->getName());
+    }
 
     StoreTile::StoreTile(lir::OperandManager *om) : Tile(10, om) {}
 
@@ -18,33 +73,13 @@ namespace backend::lir_tree {
     }
 
     std::list<std::unique_ptr<lir::Instruction>>
-    StoreTile::apply(Node *root, std::vector<Node *> &worklist) {
+    StoreTile::apply(std::vector<Node *> &worklist) {
         std::list<std::unique_ptr<lir::Instruction>> assembly;
 
-        auto &base_ptr = tile_ptr->getBase();
-        auto base = base_ptr ? om->getRegister(base_ptr->getName()) : nullptr;
-        if (base_ptr)
-            worklist.push_back(base_ptr.get());
+        auto size = lir::DataSize::DOUBLEWORD;
+        auto src = resolveOperand(tile_src, worklist);
+        auto dst = resolveOperand(tile_ptr, worklist);
 
-        auto &index_ptr = tile_ptr->getIndex();
-        auto index =
-            index_ptr ? om->getRegister(index_ptr->getName()) : nullptr;
-        if (index_ptr)
-            worklist.push_back(index_ptr.get());
-
-        auto scale = om->getImmediate(tile_ptr->getScale());
-
-        auto displacement = om->getImmediate(tile_ptr->getDisplacement());
-
-        auto dst = om->getAddress(base, index, scale, displacement);
-
-        auto &src_source = tile_src->getSource();
-        if (src_source)
-            worklist.push_back(src_source.get());
-
-        auto src = om->getRegister(tile_src->getName());
-
-        auto size = lir::DataSize::QUADWORD;
         auto store_asm = std::make_unique<lir::InstructionMov>(
             lir::Extend::NONE, size, size, src, dst);
         assembly.push_back(std::move(store_asm));
@@ -55,16 +90,39 @@ namespace backend::lir_tree {
     BinOpTile::BinOpTile(lir::OperandManager *om) : Tile(10, om) {}
 
     bool BinOpTile::matches(Node *root) {
-        auto reg = dynamic_cast<RegisterNode *>(root);
-        if (!reg)
+        tile_dst = dynamic_cast<RegisterNode *>(root);
+        if (!tile_dst)
             return false;
 
-        auto &reg_src = reg->getSource();
+        auto &reg_src = tile_dst->getSource();
         if (!reg_src)
             return false;
 
         tile_op = dynamic_cast<OpNode *>(reg_src.get());
         return tile_op;
+    }
+
+    std::list<std::unique_ptr<lir::Instruction>>
+    BinOpTile::apply(std::vector<Node *> &worklist) {
+        std::cout << "tiling binop" << std::endl;
+        std::list<std::unique_ptr<lir::Instruction>> assembly;
+
+        auto left = resolveOperand(tile_op->getLeft().get(), worklist);
+        auto right = resolveOperand(tile_op->getRight().get(), worklist);
+        auto dst = resolveOperand(tile_dst, worklist);
+
+        auto size = lir::DataSize::DOUBLEWORD;
+        auto mov_asm = std::make_unique<lir::InstructionMov>(
+            lir::Extend::NONE, size, size, left, dst);
+        assembly.push_back(std::move(mov_asm));
+
+        // TODO: unhardcode
+        auto op = lir::BinaryOp::ADD;
+        auto op_asm =
+            std::make_unique<lir::InstructionBinaryOp>(op, size, right, dst);
+        assembly.push_back(std::move(op_asm));
+
+        return assembly;
     }
 
     TreeTiler::TreeTiler(lir::OperandManager *om) : om(om) {
@@ -109,7 +167,7 @@ namespace backend::lir_tree {
             }
 
             tree_instructions.splice(tree_instructions.begin(),
-                                     cur_tile->apply(cur, worklist));
+                                     cur_tile->apply(worklist));
         }
 
         assembly.splice(assembly.end(), tree_instructions);
