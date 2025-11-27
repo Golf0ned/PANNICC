@@ -84,6 +84,36 @@ namespace backend::lir_tree {
         return assembly;
     }
 
+    LoadTile::LoadTile(lir::OperandManager *om) : Tile(10, om) {}
+
+    bool LoadTile::matches(Node *root) {
+        tile_dst = dynamic_cast<RegisterNode *>(root);
+        if (!tile_dst)
+            return false;
+
+        auto &reg_src = tile_dst->getSource();
+        if (!reg_src)
+            return false;
+
+        tile_load = dynamic_cast<LoadNode *>(reg_src.get());
+        return tile_load;
+    }
+
+    std::list<std::unique_ptr<lir::Instruction>>
+    LoadTile::apply(std::vector<Node *> &worklist) {
+        std::list<std::unique_ptr<lir::Instruction>> assembly;
+
+        auto size = lir::DataSize::DOUBLEWORD;
+        auto src = resolveOperand(tile_load->getPtr().get(), worklist);
+        auto dst = resolveOperand(tile_dst, worklist);
+
+        auto load_asm = std::make_unique<lir::InstructionMov>(
+            lir::Extend::NONE, size, size, src, dst);
+        assembly.push_back(std::move(load_asm));
+
+        return assembly;
+    }
+
     BinOpTile::BinOpTile(lir::OperandManager *om) : Tile(10, om) {}
 
     bool BinOpTile::matches(Node *root) {
@@ -129,6 +159,7 @@ namespace backend::lir_tree {
     TreeTiler::TreeTiler(lir::OperandManager *om) : om(om) {
         all_tiles.push_back(std::make_unique<StoreTile>(om));
         all_tiles.push_back(std::make_unique<BinOpTile>(om));
+        all_tiles.push_back(std::make_unique<LoadTile>(om));
     }
 
     std::list<std::unique_ptr<lir::Instruction>> TreeTiler::getResult() {
