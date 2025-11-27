@@ -10,8 +10,6 @@ namespace backend::lir_tree {
         lir::Operand *resolveOperand(Node *node, std::vector<Node *> &worklist);
         lir::Operand *resolveOperand(AddressNode *node,
                                      std::vector<Node *> &worklist);
-        lir::Operand *resolveOperand(ImmediateNode *node,
-                                     std::vector<Node *> &worklist);
         lir::Operand *resolveOperand(RegisterNode *node,
                                      std::vector<Node *> &worklist);
         virtual bool matches(Node *root) = 0;
