@@ -25,15 +25,14 @@ namespace backend::lir_tree {
     lir::Operand *Tile::resolveOperand(AddressNode *node,
                                        std::vector<Node *> &worklist) {
         auto &base_ptr = node->getBase();
-        if (base_ptr)
-            worklist.push_back(base_ptr.get());
-        auto base = base_ptr ? om->getRegister(base_ptr->getName()) : nullptr;
+        auto base = base_ptr ? static_cast<lir::Register *>(
+                                   resolveOperand(base_ptr.get(), worklist))
+                             : nullptr;
 
         auto &index_ptr = node->getIndex();
-        auto index =
-            index_ptr ? om->getRegister(index_ptr->getName()) : nullptr;
-        if (index_ptr)
-            worklist.push_back(index_ptr.get());
+        auto index = index_ptr ? static_cast<lir::Register *>(
+                                     resolveOperand(index_ptr.get(), worklist))
+                               : nullptr;
 
         auto scale = om->getImmediate(node->getScale());
 
@@ -50,9 +49,8 @@ namespace backend::lir_tree {
     lir::Operand *Tile::resolveOperand(RegisterNode *node,
                                        std::vector<Node *> &worklist) {
         // TODO: handle non-virtual registers
-        auto &source = node->getSource();
-        if (source)
-            worklist.push_back(source.get());
+        if (node->getSource())
+            worklist.push_back(node);
 
         return om->getRegister(node->getName());
     }
@@ -105,7 +103,7 @@ namespace backend::lir_tree {
 
         auto size = lir::DataSize::DOUBLEWORD;
         auto src = resolveOperand(tile_load->getPtr().get(), worklist);
-        auto dst = resolveOperand(tile_dst, worklist);
+        auto dst = om->getRegister(tile_dst->getName());
 
         auto load_asm = std::make_unique<lir::InstructionMov>(
             lir::Extend::NONE, size, size, src, dst);
@@ -135,13 +133,15 @@ namespace backend::lir_tree {
 
         auto left = resolveOperand(tile_op->getLeft().get(), worklist);
         auto right = resolveOperand(tile_op->getRight().get(), worklist);
-        auto dst = resolveOperand(tile_dst, worklist);
+        auto dst = om->getRegister(tile_dst->getName());
 
         auto size = lir::DataSize::DOUBLEWORD;
 
         auto op = tile_op->getOp();
         if (op == middleend::mir::BinaryOp::SDIV) {
             // TODO: some eax edx wizardry
+            auto unknown = std::make_unique<lir::InstructionUnknown>();
+            assembly.push_back(std::move(unknown));
         } else {
             auto mov_asm = std::make_unique<lir::InstructionMov>(
                 lir::Extend::NONE, size, size, left, dst);
