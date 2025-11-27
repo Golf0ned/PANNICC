@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "backend/lir_tree/tile_trees.h"
 
 namespace backend::lir_tree {
@@ -11,17 +9,16 @@ namespace backend::lir_tree {
                                        std::vector<Node *> &worklist) {
         auto reg = dynamic_cast<RegisterNode *>(node);
         if (reg)
-            resolveOperand(reg, worklist);
+            return resolveOperand(reg, worklist);
 
         auto immediate = dynamic_cast<ImmediateNode *>(node);
         if (immediate)
-            resolveOperand(immediate, worklist);
+            return resolveOperand(immediate, worklist);
 
         auto address = dynamic_cast<AddressNode *>(node);
         if (address)
-            resolveOperand(address, worklist);
+            return resolveOperand(address, worklist);
 
-        std::cout << "nullptr" << std::endl;
         return nullptr;
     }
 
@@ -104,7 +101,6 @@ namespace backend::lir_tree {
 
     std::list<std::unique_ptr<lir::Instruction>>
     BinOpTile::apply(std::vector<Node *> &worklist) {
-        std::cout << "tiling binop" << std::endl;
         std::list<std::unique_ptr<lir::Instruction>> assembly;
 
         auto left = resolveOperand(tile_op->getLeft().get(), worklist);
