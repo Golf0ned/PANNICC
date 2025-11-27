@@ -33,7 +33,7 @@ namespace backend::lir_tree {
 
     private:
         AddressNode *tile_ptr;
-        RegisterNode *tile_src;
+        Node *tile_src;
     };
 
     class LoadTile : public Tile {

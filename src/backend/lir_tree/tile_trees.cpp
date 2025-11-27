@@ -58,7 +58,7 @@ namespace backend::lir_tree {
             return false;
 
         tile_ptr = dynamic_cast<AddressNode *>(store->getPtr().get());
-        tile_src = dynamic_cast<RegisterNode *>(store->getSource().get());
+        tile_src = store->getSource().get();
         return tile_ptr && tile_src;
     }
 
