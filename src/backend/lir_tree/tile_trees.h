@@ -38,6 +38,18 @@ namespace backend::lir_tree {
         RegisterNode *tile_src;
     };
 
+    class LoadTile : public Tile {
+    public:
+        LoadTile(lir::OperandManager *om);
+        bool matches(Node *root) override;
+        std::list<std::unique_ptr<lir::Instruction>>
+        apply(std::vector<Node *> &worklist) override;
+
+    private:
+        RegisterNode *tile_dst;
+        LoadNode *tile_load;
+    };
+
     class BinOpTile : public Tile {
     public:
         BinOpTile(lir::OperandManager *om);
