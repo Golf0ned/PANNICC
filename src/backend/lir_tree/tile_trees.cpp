@@ -108,15 +108,20 @@ namespace backend::lir_tree {
         auto dst = resolveOperand(tile_dst, worklist);
 
         auto size = lir::DataSize::DOUBLEWORD;
-        auto mov_asm = std::make_unique<lir::InstructionMov>(
-            lir::Extend::NONE, size, size, left, dst);
-        assembly.push_back(std::move(mov_asm));
 
-        // TODO: unhardcode
-        auto op = lir::BinaryOp::ADD;
-        auto op_asm =
-            std::make_unique<lir::InstructionBinaryOp>(op, size, right, dst);
-        assembly.push_back(std::move(op_asm));
+        auto op = tile_op->getOp();
+        if (op == middleend::mir::BinaryOp::SDIV) {
+            // TODO: some eax edx wizardry
+        } else {
+            auto mov_asm = std::make_unique<lir::InstructionMov>(
+                lir::Extend::NONE, size, size, left, dst);
+            assembly.push_back(std::move(mov_asm));
+
+            auto bin_op = lir::fromMir(op);
+            auto op_asm = std::make_unique<lir::InstructionBinaryOp>(
+                bin_op, size, right, dst);
+            assembly.push_back(std::move(op_asm));
+        }
 
         return assembly;
     }
