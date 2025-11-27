@@ -45,12 +45,48 @@ namespace backend::lir {
 
     void InstructionPop::accept(InstructionVisitor *v) { v->visit(this); }
 
+    BinaryOp fromMir(middleend::mir::BinaryOp op) {
+        switch (op) {
+        case middleend::mir::BinaryOp::ADD:
+            return BinaryOp::ADD;
+        case middleend::mir::BinaryOp::SUB:
+            return BinaryOp::SUB;
+        case middleend::mir::BinaryOp::MUL:
+            return BinaryOp::IMUL;
+        case middleend::mir::BinaryOp::AND:
+            return BinaryOp::AND;
+        case middleend::mir::BinaryOp::OR:
+            return BinaryOp::OR;
+        case middleend::mir::BinaryOp::XOR:
+            return BinaryOp::XOR;
+        case middleend::mir::BinaryOp::SHL:
+            return BinaryOp::SHL;
+        case middleend::mir::BinaryOp::ASHR:
+            return BinaryOp::SAR;
+        default:
+            std::unreachable();
+        }
+        std::unreachable();
+    }
+
     std::string toString(BinaryOp op) {
         switch (op) {
         case BinaryOp::ADD:
             return "add";
         case BinaryOp::SUB:
             return "sub";
+        case BinaryOp::IMUL:
+            return "imul";
+        case BinaryOp::AND:
+            return "and";
+        case BinaryOp::OR:
+            return "or";
+        case BinaryOp::XOR:
+            return "xor";
+        case BinaryOp::SHL:
+            return "shl";
+        case BinaryOp::SAR:
+            return "sar";
         }
         std::unreachable();
     }

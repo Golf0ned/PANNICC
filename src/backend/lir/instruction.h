@@ -5,6 +5,7 @@
 #include "backend/lir/condition_code.h"
 #include "backend/lir/data_size.h"
 #include "backend/lir/operand.h"
+#include "middleend/mir/operator.h"
 
 namespace backend::lir {
     class InstructionVisitor;
@@ -71,9 +72,19 @@ namespace backend::lir {
     enum class BinaryOp {
         ADD,
         SUB,
+        IMUL,
+        AND,
+        OR,
+        XOR,
+        SHL,
+        SAR,
     };
 
+    BinaryOp fromMir(middleend::mir::BinaryOp op);
+
     std::string toString(BinaryOp op);
+
+    // TODO: div, inc, dec, neg, not
 
     class InstructionBinaryOp : public Instruction {
     public:
