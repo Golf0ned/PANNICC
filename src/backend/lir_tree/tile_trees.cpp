@@ -13,7 +13,7 @@ namespace backend::lir_tree {
 
         auto immediate = dynamic_cast<ImmediateNode *>(node);
         if (immediate)
-            return resolveOperand(immediate, worklist);
+            return om->getImmediate(immediate->getValue());
 
         auto address = dynamic_cast<AddressNode *>(node);
         if (address)
@@ -39,11 +39,6 @@ namespace backend::lir_tree {
         auto displacement = om->getImmediate(node->getDisplacement());
 
         return om->getAddress(base, index, scale, displacement);
-    }
-
-    lir::Operand *Tile::resolveOperand(ImmediateNode *node,
-                                       std::vector<Node *> &worklist) {
-        return om->getImmediate(node->getValue());
     }
 
     lir::Operand *Tile::resolveOperand(RegisterNode *node,
