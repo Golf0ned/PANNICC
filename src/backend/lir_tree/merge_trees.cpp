@@ -11,7 +11,7 @@ namespace backend::lir_tree {
     }
 
     void TreeMerger::mergeTrees(Forest &trees, lir::OperandManager *om) {
-        std::unordered_map<std::string, std::list<Node *>> uses;
+        std::unordered_map<lir::Register *, std::list<Node *>> uses;
         std::list<std::unique_ptr<Node>> context;
 
         auto try_merge_context = [&]() {
@@ -32,7 +32,7 @@ namespace backend::lir_tree {
                         if (!t2_reg)
                             continue;
 
-                        auto t2_uses_iter = uses.find(t2_reg->getName());
+                        auto t2_uses_iter = uses.find(t2_reg->getReg());
                         if (t2_uses_iter == uses.end())
                             continue;
 
@@ -111,11 +111,11 @@ namespace backend::lir_tree {
                                 if (!cur_leaf_reg)
                                     continue;
                                 auto &cur_leaf_uses =
-                                    uses[cur_leaf_reg->getName()];
+                                    uses[cur_leaf_reg->getReg()];
                                 *std::find(cur_leaf_uses.begin(),
                                            cur_leaf_uses.end(), cur) = t1;
                             }
-                            uses.erase(t2_reg->getName());
+                            uses.erase(t2_reg->getReg());
 
                             // Transfer info in forest from cur to t1
                             for (auto &new_leaf : trees.getLeaves(cur))
@@ -147,7 +147,7 @@ namespace backend::lir_tree {
                 for (auto &leaf : trees.getLeaves(tree.get())) {
                     auto leaf_reg = dynamic_cast<RegisterNode *>(leaf);
                     if (leaf_reg)
-                        uses[leaf_reg->getName()].push_front(tree.get());
+                        uses[leaf_reg->getReg()].push_front(tree.get());
                 }
                 context.push_back(std::move(tree));
                 continue;

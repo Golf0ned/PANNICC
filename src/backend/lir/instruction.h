@@ -69,10 +69,23 @@ namespace backend::lir {
         Operand *dst;
     };
 
+    class InstructionConvert : public Instruction {
+    public:
+        InstructionConvert(DataSize from, DataSize to);
+        DataSize getFrom();
+        DataSize getTo();
+        void accept(InstructionVisitor *v) override;
+
+    private:
+        DataSize from;
+        DataSize to;
+    };
+
     enum class BinaryOp {
         ADD,
         SUB,
         IMUL,
+        IDIV,
         AND,
         OR,
         XOR,
@@ -101,6 +114,20 @@ namespace backend::lir {
         DataSize size;
         Operand *src;
         Operand *dst;
+    };
+
+    class InstructionSpecialOp : public Instruction {
+    public:
+        InstructionSpecialOp(BinaryOp op, DataSize size, Operand *src);
+        BinaryOp getOp();
+        DataSize getSize();
+        Operand *getSrc();
+        void accept(InstructionVisitor *v) override;
+
+    private:
+        BinaryOp op;
+        DataSize size;
+        Operand *src;
     };
 
     // class InstructionNeg : public Instruction {};
@@ -201,7 +228,9 @@ namespace backend::lir {
         virtual void visit(InstructionMov *i) = 0;
         virtual void visit(InstructionPush *i) = 0;
         virtual void visit(InstructionPop *i) = 0;
+        virtual void visit(InstructionConvert *i) = 0;
         virtual void visit(InstructionBinaryOp *i) = 0;
+        virtual void visit(InstructionSpecialOp *i) = 0;
         virtual void visit(InstructionCmp *i) = 0;
         virtual void visit(InstructionJmp *i) = 0;
         virtual void visit(InstructionCJmp *i) = 0;

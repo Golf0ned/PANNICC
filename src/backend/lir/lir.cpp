@@ -62,6 +62,25 @@ namespace backend::lir {
         result += "    " + i->getDst()->toString();
     }
 
+    void ToStringVisitor::visit(InstructionConvert *i) {
+        if (!result.empty())
+            result += "\n        ";
+
+        auto from = i->getFrom();
+        auto to = i->getTo();
+
+        result += 'c';
+        result += toChar(from);
+        result += 't';
+        if (from == to)
+            if (to == DataSize::QUADWORD)
+                result += 'o';
+            else
+                result += 'd';
+        else
+            result += toChar(i->getTo());
+    }
+
     void ToStringVisitor::visit(InstructionBinaryOp *i) {
         if (!result.empty())
             result += "\n        ";
@@ -69,6 +88,15 @@ namespace backend::lir {
         result += op_str + toChar(i->getSize());
         result += std::string(8 - op_str.size() - 1, ' ');
         result += i->getSrc()->toString() + ", " + i->getDst()->toString();
+    }
+
+    void ToStringVisitor::visit(InstructionSpecialOp *i) {
+        if (!result.empty())
+            result += "\n        ";
+        auto op_str = toString(i->getOp());
+        result += op_str + toChar(i->getSize());
+        result += std::string(8 - op_str.size() - 1, ' ');
+        result += i->getSrc()->toString();
     }
 
     void ToStringVisitor::visit(InstructionCmp *i) {
