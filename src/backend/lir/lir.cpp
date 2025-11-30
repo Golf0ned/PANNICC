@@ -90,6 +90,15 @@ namespace backend::lir {
         result += i->getSrc()->toString() + ", " + i->getDst()->toString();
     }
 
+    void ToStringVisitor::visit(InstructionSpecialOp *i) {
+        if (!result.empty())
+            result += "\n        ";
+        auto op_str = toString(i->getOp());
+        result += op_str + toChar(i->getSize());
+        result += std::string(8 - op_str.size() - 1, ' ');
+        result += i->getSrc()->toString();
+    }
+
     void ToStringVisitor::visit(InstructionCmp *i) {
         if (!result.empty())
             result += "\n        ";
