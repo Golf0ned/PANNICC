@@ -116,6 +116,18 @@ namespace backend::lir {
 
     void InstructionBinaryOp::accept(InstructionVisitor *v) { v->visit(this); }
 
+    InstructionSpecialOp::InstructionSpecialOp(BinaryOp op, DataSize size,
+                                               Operand *src)
+        : op(op), size(size), src(src) {}
+
+    BinaryOp InstructionSpecialOp::getOp() { return op; }
+
+    DataSize InstructionSpecialOp::getSize() { return size; }
+
+    Operand *InstructionSpecialOp::getSrc() { return src; }
+
+    void InstructionSpecialOp::accept(InstructionVisitor *v) { v->visit(this); }
+
     InstructionCmp::InstructionCmp(DataSize size, Operand *src_1,
                                    Operand *src_2)
         : size(size), src_1(src_1), src_2(src_2) {}

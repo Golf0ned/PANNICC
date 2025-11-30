@@ -116,6 +116,20 @@ namespace backend::lir {
         Operand *dst;
     };
 
+    class InstructionSpecialOp : public Instruction {
+    public:
+        InstructionSpecialOp(BinaryOp op, DataSize size, Operand *src);
+        BinaryOp getOp();
+        DataSize getSize();
+        Operand *getSrc();
+        void accept(InstructionVisitor *v) override;
+
+    private:
+        BinaryOp op;
+        DataSize size;
+        Operand *src;
+    };
+
     // class InstructionNeg : public Instruction {};
     // class InstructionNot : public Instruction {};
     // class InstructionLea : public Instruction {};
@@ -216,6 +230,7 @@ namespace backend::lir {
         virtual void visit(InstructionPop *i) = 0;
         virtual void visit(InstructionConvert *i) = 0;
         virtual void visit(InstructionBinaryOp *i) = 0;
+        virtual void visit(InstructionSpecialOp *i) = 0;
         virtual void visit(InstructionCmp *i) = 0;
         virtual void visit(InstructionJmp *i) = 0;
         virtual void visit(InstructionCJmp *i) = 0;
