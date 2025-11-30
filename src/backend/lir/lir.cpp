@@ -65,10 +65,20 @@ namespace backend::lir {
     void ToStringVisitor::visit(InstructionConvert *i) {
         if (!result.empty())
             result += "\n        ";
+
+        auto from = i->getFrom();
+        auto to = i->getTo();
+
         result += 'c';
-        result += toChar(i->getFrom());
+        result += toChar(from);
         result += 't';
-        result += toChar(i->getTo());
+        if (from == to)
+            if (to == DataSize::QUADWORD)
+                result += 'o';
+            else
+                result += 'd';
+        else
+            result += toChar(i->getTo());
     }
 
     void ToStringVisitor::visit(InstructionBinaryOp *i) {
