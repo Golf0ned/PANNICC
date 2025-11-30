@@ -27,6 +27,7 @@ namespace backend::lir {
         void visit(InstructionMov *i) override;
         void visit(InstructionPush *i) override;
         void visit(InstructionPop *i) override;
+        void visit(InstructionConvert *i) override;
         void visit(InstructionBinaryOp *i) override;
         void visit(InstructionCmp *i) override;
         void visit(InstructionJmp *i) override;
