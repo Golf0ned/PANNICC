@@ -45,6 +45,15 @@ namespace backend::lir {
 
     void InstructionPop::accept(InstructionVisitor *v) { v->visit(this); }
 
+    InstructionConvert::InstructionConvert(DataSize from, DataSize to)
+        : from(from), to(to) {}
+
+    DataSize InstructionConvert::getFrom() { return from; }
+
+    DataSize InstructionConvert::getTo() { return to; }
+
+    void InstructionConvert::accept(InstructionVisitor *v) { v->visit(this); }
+
     BinaryOp fromMir(middleend::mir::BinaryOp op) {
         switch (op) {
         case middleend::mir::BinaryOp::ADD:

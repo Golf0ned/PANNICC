@@ -62,6 +62,15 @@ namespace backend::lir {
         result += "    " + i->getDst()->toString();
     }
 
+    void ToStringVisitor::visit(InstructionConvert *i) {
+        if (!result.empty())
+            result += "\n        ";
+        result += 'c';
+        result += toChar(i->getFrom());
+        result += 't';
+        result += toChar(i->getTo());
+    }
+
     void ToStringVisitor::visit(InstructionBinaryOp *i) {
         if (!result.empty())
             result += "\n        ";
