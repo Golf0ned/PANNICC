@@ -133,16 +133,30 @@ namespace backend::lir_tree {
         auto size = lir::DataSize::DOUBLEWORD;
 
         auto op = tile_op->getOp();
+        auto bin_op = lir::fromMir(op);
         if (op == middleend::mir::BinaryOp::SDIV) {
-            // TODO: some eax edx wizardry
-            auto unknown = std::make_unique<lir::InstructionUnknown>();
-            assembly.push_back(std::move(unknown));
+            auto eax = om->getRegister(lir::RegisterNum::EAX);
+
+            auto mov_in_asm = std::make_unique<lir::InstructionMov>(
+                lir::Extend::NONE, size, size, left, eax);
+            assembly.push_back(std::move(mov_in_asm));
+
+            auto extend_asm =
+                std::make_unique<lir::InstructionConvert>(size, size);
+            assembly.push_back(std::move(extend_asm));
+
+            auto div_asm = std::make_unique<lir::InstructionSpecialOp>(
+                bin_op, size, right);
+            assembly.push_back(std::move(div_asm));
+
+            auto mov_out_asm = std::make_unique<lir::InstructionMov>(
+                lir::Extend::NONE, size, size, eax, dst);
+            assembly.push_back(std::move(mov_out_asm));
         } else {
             auto mov_asm = std::make_unique<lir::InstructionMov>(
                 lir::Extend::NONE, size, size, left, dst);
             assembly.push_back(std::move(mov_asm));
 
-            auto bin_op = lir::fromMir(op);
             auto op_asm = std::make_unique<lir::InstructionBinaryOp>(
                 bin_op, size, right, dst);
             assembly.push_back(std::move(op_asm));
