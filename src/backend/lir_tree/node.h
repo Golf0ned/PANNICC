@@ -28,15 +28,16 @@ namespace backend::lir_tree {
 
     class RegisterNode : public Node {
     public:
-        RegisterNode(std::string name, std::unique_ptr<Node> source);
+        RegisterNode(lir::Register *reg, std::unique_ptr<Node> source);
         std::string getName();
+        lir::Register *getReg();
         std::unique_ptr<Node> &getSource();
         bool sameReg(RegisterNode *other);
         void consume(RegisterNode *other);
         void accept(NodeVisitor *v);
 
     private:
-        std::string name;
+        lir::Register *reg;
         std::unique_ptr<Node> source;
     };
 

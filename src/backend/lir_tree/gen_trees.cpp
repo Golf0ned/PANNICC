@@ -92,8 +92,8 @@ namespace backend::lir_tree {
         auto literal = dynamic_cast<middleend::mir::Literal *>(v);
         if (literal)
             return std::make_unique<ImmediateNode>(literal->getValue());
-        return std::make_unique<RegisterNode>(std::to_string(nir.getNumber(v)),
-                                              nullptr);
+        auto reg = om->getRegister(std::to_string(nir.getNumber(v)));
+        return std::make_unique<RegisterNode>(reg, nullptr);
     }
 
     std::unique_ptr<Node>
@@ -101,8 +101,8 @@ namespace backend::lir_tree {
         auto name = std::to_string(nir.getNumber(v));
         auto offset = stack_variables.at(name);
 
-        // TODO: please make this not a string
-        auto rsp = std::make_unique<RegisterNode>("%rsp", nullptr);
+        auto reg = om->getRegister(lir::RegisterNum::RSP);
+        auto rsp = std::make_unique<RegisterNode>(reg, nullptr);
         return std::make_unique<AddressNode>(std::move(rsp), nullptr, 0,
                                              offset);
     }
@@ -124,8 +124,8 @@ namespace backend::lir_tree {
         auto op = std::make_unique<OpNode>(i->getOp(), std::move(left),
                                            std::move(right));
 
-        auto reg = std::make_unique<RegisterNode>(
-            std::to_string(nir.getNumber(i)), std::move(op));
+        auto om_reg = om->getRegister(std::to_string(nir.getNumber(i)));
+        auto reg = std::make_unique<RegisterNode>(om_reg, std::move(op));
 
         function_trees.insertTree(std::move(reg), {left_leaf, right_leaf},
                                   false);
@@ -234,8 +234,8 @@ namespace backend::lir_tree {
 
         auto load = std::make_unique<LoadNode>(std::move(ptr));
 
-        auto reg = std::make_unique<RegisterNode>(
-            std::to_string(nir.getNumber(i)), std::move(load));
+        auto om_reg = om->getRegister(std::to_string(nir.getNumber(i)));
+        auto reg = std::make_unique<RegisterNode>(om_reg, std::move(load));
 
         function_trees.insertTree(std::move(reg), {ptr_leaf}, true);
     }
