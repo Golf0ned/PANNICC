@@ -1,15 +1,24 @@
 #include "backend/lir_tree/node.h"
 
 namespace backend::lir_tree {
-    RegisterNode::RegisterNode(std::string name, std::unique_ptr<Node> source)
-        : name(name), source(std::move(source)) {}
+    RegisterNode::RegisterNode(lir::Register *reg, std::unique_ptr<Node> source)
+        : reg(reg), source(std::move(source)) {}
 
-    std::string RegisterNode::getName() { return name; }
+    std::string RegisterNode::getName() {
+        auto reg_num = reg->getRegNum();
+        if (reg_num == lir::RegisterNum::VIRTUAL) {
+            auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
+            return virtual_reg->getName();
+        }
+        return toString(reg_num);
+    }
+
+    lir::Register *RegisterNode::getReg() { return reg; }
 
     std::unique_ptr<Node> &RegisterNode::getSource() { return source; }
 
     bool RegisterNode::sameReg(RegisterNode *other) {
-        return name == other->name;
+        return reg == other->reg;
     }
 
     void RegisterNode::consume(RegisterNode *other) {
