@@ -85,6 +85,7 @@ namespace backend::lir {
         ADD,
         SUB,
         IMUL,
+        IDIV,
         AND,
         OR,
         XOR,

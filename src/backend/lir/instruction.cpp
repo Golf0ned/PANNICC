@@ -62,6 +62,8 @@ namespace backend::lir {
             return BinaryOp::SUB;
         case middleend::mir::BinaryOp::MUL:
             return BinaryOp::IMUL;
+        case middleend::mir::BinaryOp::SDIV:
+            return BinaryOp::IDIV;
         case middleend::mir::BinaryOp::AND:
             return BinaryOp::AND;
         case middleend::mir::BinaryOp::OR:
@@ -72,8 +74,6 @@ namespace backend::lir {
             return BinaryOp::SHL;
         case middleend::mir::BinaryOp::ASHR:
             return BinaryOp::SAR;
-        default:
-            std::unreachable();
         }
         std::unreachable();
     }
@@ -86,6 +86,8 @@ namespace backend::lir {
             return "sub";
         case BinaryOp::IMUL:
             return "imul";
+        case BinaryOp::IDIV:
+            return "idiv";
         case BinaryOp::AND:
             return "and";
         case BinaryOp::OR:
