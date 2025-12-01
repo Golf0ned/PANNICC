@@ -11,8 +11,6 @@ fun1:
 .fun1_entry:
         movl    %0, %1
         imull   %0, %1
-
-.fun1_2:
         movq    %1, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
@@ -85,8 +83,6 @@ fun2:
         popq    %r11    # [virtual]
         movl    %5, %7
         addl    %6, %7
-
-.fun2_8:
         movq    %7, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
@@ -140,8 +136,6 @@ fun3:
         addl    %6, %7
         movl    %7, %8
         addl    %2, %8
-
-.fun3_9:
         movq    %8, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
@@ -183,8 +177,6 @@ call1:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-
-.call1_1:
         movq    %0, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
@@ -229,8 +221,6 @@ call2:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-
-.call2_3:
         movq    %2, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
@@ -277,8 +267,6 @@ call3:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-
-.call3_3:
         movq    %2, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
@@ -322,8 +310,6 @@ call4:
         popq    %r11    # [virtual]
         movl    %0, %1
         subl    $100, %1
-
-.call4_2:
         movq    %1, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]

@@ -50,8 +50,6 @@ second:
         popq    %r11    # [virtual]
         movl    %0, %1
         addl    $1, %1
-
-.second_2:
         movq    %1, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
@@ -94,8 +92,6 @@ third:
         popq    %r11    # [virtual]
         movl    %0, %1
         addl    $2, %1
-
-.third_2:
         movq    %1, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
@@ -138,8 +134,6 @@ fourth:
         popq    %r11    # [virtual]
         movl    %0, %1
         addl    $3, %1
-
-.fourth_2:
         movq    %1, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
@@ -182,8 +176,6 @@ fifth:
         popq    %r11    # [virtual]
         movl    %0, %1
         addl    $4, %1
-
-.fifth_2:
         movq    %1, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
@@ -226,8 +218,6 @@ sixth:
         popq    %r11    # [virtual]
         movl    %0, %1
         addl    $5, %1
-
-.sixth_2:
         movq    %1, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
@@ -532,8 +522,6 @@ main:
         popq    %r11    # [virtual]
         movl    %22, %24
         addl    %23, %24
-
-.main_25:
         movq    %24, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
