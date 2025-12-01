@@ -1,0 +1,104 @@
+define i32 @add() {
+entry:
+  ret i32 3
+}
+
+define i32 @sub() {
+entry:
+  ret i32 9
+}
+
+define i32 @mul() {
+entry:
+  ret i32 12
+}
+
+define i32 @div() {
+entry:
+  ret i32 4
+}
+
+define i32 @lshift() {
+entry:
+  ret i32 16
+}
+
+define i32 @rshift() {
+entry:
+  ret i32 2
+}
+
+define i32 @bit_and() {
+entry:
+  ret i32 4
+}
+
+define i32 @bit_or() {
+entry:
+  ret i32 15
+}
+
+define i32 @bit_xor() {
+entry:
+  ret i32 11
+}
+
+define i32 @unary_plus() {
+entry:
+  ret i32 42
+}
+
+define i32 @unary_minus() {
+entry:
+  ret i32 -42
+}
+
+define i32 @unary_bitwise_not() {
+entry:
+  ret i32 -43
+}
+
+define i32 @add_equals() {
+entry:
+  ret i32 3
+}
+
+define i32 @sub_equals() {
+entry:
+  ret i32 8
+}
+
+define i32 @mul_equals() {
+entry:
+  ret i32 12
+}
+
+define i32 @div_equals() {
+entry:
+  ret i32 4
+}
+
+define i32 @lshift_equals() {
+entry:
+  ret i32 16
+}
+
+define i32 @rshift_equals() {
+entry:
+  ret i32 2
+}
+
+define i32 @bit_and_equals() {
+entry:
+  ret i32 4
+}
+
+define i32 @bit_or_equals() {
+entry:
+  ret i32 15
+}
+
+define i32 @bit_xor_equals() {
+entry:
+  ret i32 11
+}

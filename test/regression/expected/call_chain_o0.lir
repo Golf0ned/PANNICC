@@ -1,0 +1,724 @@
+first:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.first_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    $1, (%rsp)
+        movl    (%rsp), %2
+        movl    %2, $4(%rsp)
+
+.first_3:
+        movl    $4(%rsp), %4
+        movq    %4, %rax
+        addq    $8, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+second:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.second_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    first
+        movq    %rax, %3
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %3, (%rsp)
+        movl    $1, $4(%rsp)
+        movl    (%rsp), %4
+        movl    $4(%rsp), %5
+        movl    %4, %6
+        addl    %5, %6
+        movl    %6, (%rsp)
+        movl    (%rsp), %7
+        movl    %7, $8(%rsp)
+
+.second_8:
+        movl    $8(%rsp), %9
+        movq    %9, %rax
+        addq    $12, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+third:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.third_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    second
+        movq    %rax, %3
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %3, (%rsp)
+        movl    $2, $4(%rsp)
+        movl    (%rsp), %4
+        movl    $4(%rsp), %5
+        movl    %4, %6
+        addl    %5, %6
+        movl    %6, (%rsp)
+        movl    (%rsp), %7
+        movl    %7, $8(%rsp)
+
+.third_8:
+        movl    $8(%rsp), %9
+        movq    %9, %rax
+        addq    $12, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+fourth:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.fourth_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    third
+        movq    %rax, %3
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %3, (%rsp)
+        movl    $3, $4(%rsp)
+        movl    (%rsp), %4
+        movl    $4(%rsp), %5
+        movl    %4, %6
+        addl    %5, %6
+        movl    %6, (%rsp)
+        movl    (%rsp), %7
+        movl    %7, $8(%rsp)
+
+.fourth_8:
+        movl    $8(%rsp), %9
+        movq    %9, %rax
+        addq    $12, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+fifth:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.fifth_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    fourth
+        movq    %rax, %3
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %3, (%rsp)
+        movl    $4, $4(%rsp)
+        movl    (%rsp), %4
+        movl    $4(%rsp), %5
+        movl    %4, %6
+        addl    %5, %6
+        movl    %6, (%rsp)
+        movl    (%rsp), %7
+        movl    %7, $8(%rsp)
+
+.fifth_8:
+        movl    $8(%rsp), %9
+        movq    %9, %rax
+        addq    $12, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+sixth:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.sixth_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    fifth
+        movq    %rax, %3
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %3, (%rsp)
+        movl    $5, $4(%rsp)
+        movl    (%rsp), %4
+        movl    $4(%rsp), %5
+        movl    %4, %6
+        addl    %5, %6
+        movl    %6, (%rsp)
+        movl    (%rsp), %7
+        movl    %7, $8(%rsp)
+
+.sixth_8:
+        movl    $8(%rsp), %9
+        movq    %9, %rax
+        addq    $12, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+main:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.main_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    sixth
+        movq    %rax, %24
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %24, (%rsp)
+        movl    $0, $8(%rsp)
+        movl    $8(%rsp), %25
+        movl    %25, $4(%rsp)
+        movl    $4(%rsp), %26
+        movl    %26, $12(%rsp)
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    first
+        movq    %rax, %27
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %27, $16(%rsp)
+        movl    $12(%rsp), %28
+        movl    $16(%rsp), %29
+        movl    %28, %30
+        addl    %29, %30
+        movl    %30, $12(%rsp)
+        movl    $12(%rsp), %31
+        movl    %31, $4(%rsp)
+        movl    $4(%rsp), %32
+        movl    %32, $20(%rsp)
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    second
+        movq    %rax, %33
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %33, $24(%rsp)
+        movl    $20(%rsp), %34
+        movl    $24(%rsp), %35
+        movl    %34, %36
+        addl    %35, %36
+        movl    %36, $20(%rsp)
+        movl    $20(%rsp), %37
+        movl    %37, $4(%rsp)
+        movl    $4(%rsp), %38
+        movl    %38, $28(%rsp)
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    third
+        movq    %rax, %39
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %39, $32(%rsp)
+        movl    $28(%rsp), %40
+        movl    $32(%rsp), %41
+        movl    %40, %42
+        addl    %41, %42
+        movl    %42, $28(%rsp)
+        movl    $28(%rsp), %43
+        movl    %43, $4(%rsp)
+        movl    $4(%rsp), %44
+        movl    %44, $36(%rsp)
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    fourth
+        movq    %rax, %45
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %45, $40(%rsp)
+        movl    $36(%rsp), %46
+        movl    $40(%rsp), %47
+        movl    %46, %48
+        addl    %47, %48
+        movl    %48, $36(%rsp)
+        movl    $36(%rsp), %49
+        movl    %49, $4(%rsp)
+        movl    $4(%rsp), %50
+        movl    %50, $44(%rsp)
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    fifth
+        movq    %rax, %51
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %51, $48(%rsp)
+        movl    $44(%rsp), %52
+        movl    $48(%rsp), %53
+        movl    %52, %54
+        addl    %53, %54
+        movl    %54, $44(%rsp)
+        movl    $44(%rsp), %55
+        movl    %55, $4(%rsp)
+        movl    $4(%rsp), %56
+        movl    %56, $52(%rsp)
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    sixth
+        movq    %rax, %57
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %57, $56(%rsp)
+        movl    $52(%rsp), %58
+        movl    $56(%rsp), %59
+        movl    %58, %60
+        addl    %59, %60
+        movl    %60, $52(%rsp)
+        movl    $52(%rsp), %61
+        movl    %61, $4(%rsp)
+        movl    $4(%rsp), %62
+        movl    %62, $60(%rsp)
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    first
+        movq    %rax, %63
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %63, $64(%rsp)
+        movl    $60(%rsp), %64
+        movl    $64(%rsp), %65
+        movl    %64, %66
+        addl    %65, %66
+        movl    %66, $60(%rsp)
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    second
+        movq    %rax, %67
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %67, $68(%rsp)
+        movl    $60(%rsp), %68
+        movl    $68(%rsp), %69
+        movl    %68, %70
+        addl    %69, %70
+        movl    %70, $60(%rsp)
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    third
+        movq    %rax, %71
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %71, $72(%rsp)
+        movl    $60(%rsp), %72
+        movl    $72(%rsp), %73
+        movl    %72, %74
+        addl    %73, %74
+        movl    %74, $60(%rsp)
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    fourth
+        movq    %rax, %75
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %75, $76(%rsp)
+        movl    $60(%rsp), %76
+        movl    $76(%rsp), %77
+        movl    %76, %78
+        addl    %77, %78
+        movl    %78, $60(%rsp)
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    fifth
+        movq    %rax, %79
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %79, $80(%rsp)
+        movl    $60(%rsp), %80
+        movl    $80(%rsp), %81
+        movl    %80, %82
+        addl    %81, %82
+        movl    %82, $60(%rsp)
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        call    sixth
+        movq    %rax, %83
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %83, $84(%rsp)
+        movl    $60(%rsp), %84
+        movl    $84(%rsp), %85
+        movl    %84, %86
+        addl    %85, %86
+        movl    %86, $60(%rsp)
+        movl    $60(%rsp), %87
+        movl    %87, $4(%rsp)
+        movl    $4(%rsp), %88
+        movl    %88, $88(%rsp)
+        movl    $88(%rsp), %89
+        movl    %89, $92(%rsp)
+
+.main_90:
+        movl    $92(%rsp), %91
+        movq    %91, %rax
+        addq    $96, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret

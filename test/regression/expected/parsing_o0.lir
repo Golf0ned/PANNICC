@@ -1,0 +1,207 @@
+main:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.main_entry:
+        subq    $4, %rsp    # [virtual]
+        movl    $0, (%rsp)
+
+.main_1:
+        movl    (%rsp), %2
+        movq    %2, %rax
+        addq    $4, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+compound:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.compound_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    $9, $4(%rsp)
+        movl    $123, $8(%rsp)
+        movl    $4(%rsp), %19
+        movl    $8(%rsp), %20
+        movl    %19, %21
+        imull   %20, %21
+        movl    %21, $4(%rsp)
+        movl    $3, $12(%rsp)
+        movl    $4(%rsp), %22
+        movl    $12(%rsp), %23
+        movl    %22, %24
+        addl    %23, %24
+        movl    %24, $4(%rsp)
+        movl    $123, $16(%rsp)
+        movl    $122, $20(%rsp)
+        movl    $16(%rsp), %25
+        movl    $20(%rsp), %26
+        movl    %25, %27
+        subl    %26, %27
+        movl    %27, $16(%rsp)
+        movl    $4(%rsp), %28
+        movl    $16(%rsp), %29
+        movl    %28, %30
+        andl    %29, %30
+        movl    %30, $4(%rsp)
+        movl    $4(%rsp), %31
+        movl    %31, (%rsp)
+        movl    $1, $28(%rsp)
+        movl    $2, $32(%rsp)
+        movl    $3, $36(%rsp)
+        movl    $32(%rsp), %32
+        movl    $36(%rsp), %33
+        movl    %32, %34
+        imull   %33, %34
+        movl    %34, $32(%rsp)
+        movl    $28(%rsp), %35
+        movl    $32(%rsp), %36
+        movl    %35, %37
+        addl    %36, %37
+        movl    %37, $28(%rsp)
+        movl    $4, $40(%rsp)
+        movl    $28(%rsp), %38
+        movl    $40(%rsp), %39
+        movl    %38, %40
+        subl    %39, %40
+        movl    %40, $28(%rsp)
+        movl    $28(%rsp), %41
+        movl    %41, $24(%rsp)
+        movl    (%rsp), %42
+        movl    %42, $44(%rsp)
+        movl    $2, $48(%rsp)
+        movl    $44(%rsp), %43
+        movl    $48(%rsp), %44
+        movl    %43, %45
+        addl    %44, %45
+        movl    %45, $44(%rsp)
+        movl    $3, $52(%rsp)
+        movl    $44(%rsp), %46
+        movl    $52(%rsp), %47
+        movl    %46, %48
+        addl    %47, %48
+        movl    %48, $44(%rsp)
+        movl    $4, $56(%rsp)
+        movl    $44(%rsp), %49
+        movl    $56(%rsp), %50
+        movl    %49, %51
+        addl    %50, %51
+        movl    %51, $44(%rsp)
+        movl    $5, $60(%rsp)
+        movl    $44(%rsp), %52
+        movl    $60(%rsp), %53
+        movl    %52, %54
+        addl    %53, %54
+        movl    %54, $44(%rsp)
+        movl    $6, $64(%rsp)
+        movl    $44(%rsp), %55
+        movl    $64(%rsp), %56
+        movl    %55, %57
+        addl    %56, %57
+        movl    %57, $44(%rsp)
+        movl    $24(%rsp), %58
+        movl    %58, $68(%rsp)
+        movl    $44(%rsp), %59
+        movl    $68(%rsp), %60
+        movl    %59, %61
+        addl    %60, %61
+        movl    %61, $44(%rsp)
+        movl    $44(%rsp), %62
+        movl    %62, $72(%rsp)
+
+.compound_63:
+        movl    $72(%rsp), %64
+        movq    %64, %rax
+        addq    $76, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+parens:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.parens_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    $4, (%rsp)
+        movl    $3, $4(%rsp)
+        movl    $2, $8(%rsp)
+        movl    $1, $12(%rsp)
+        movl    $8(%rsp), %5
+        movl    $12(%rsp), %6
+        movl    %5, %7
+        subl    %6, %7
+        movl    %7, $8(%rsp)
+        movl    $4(%rsp), %8
+        movl    $8(%rsp), %9
+        movl    %8, %10
+        subl    %9, %10
+        movl    %10, $4(%rsp)
+        movl    (%rsp), %11
+        movl    $4(%rsp), %12
+        movl    %11, %13
+        imull   %12, %13
+        movl    %13, (%rsp)
+        movl    (%rsp), %14
+        movl    %14, $16(%rsp)
+
+.parens_15:
+        movl    $16(%rsp), %16
+        movq    %16, %rax
+        addq    $20, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
