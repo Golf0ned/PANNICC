@@ -66,6 +66,9 @@ namespace middleend {
                         pred->getSuccessors() = std::move(succs);
                         pred->getTerminator().swap(bb->getTerminator());
 
+                        if (bb == f->getEntryBlock())
+                            f->setEntryBlock(pred);
+
                         to_drop.push_back(std::move(*iter));
                         iter = bbs.erase(iter);
                         return true;
