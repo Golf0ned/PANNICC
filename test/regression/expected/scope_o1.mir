@@ -1,0 +1,14 @@
+define i32 @scope() {
+entry:
+  ret i32 0
+}
+
+define i32 @scope_reassign_variable() {
+entry:
+  ret i32 7
+}
+
+define i32 @scope_reassign_in_parallel_scopes() {
+entry:
+  ret i32 1
+}

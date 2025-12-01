@@ -1,0 +1,394 @@
+if_basic:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.if_basic_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    $1, $4(%rsp)
+        movl    $4(%rsp), %7
+        movl    %7, (%rsp)
+        movl    (%rsp), %8
+        movl    %8, $8(%rsp)
+        movl    $8(%rsp), %9
+        cmpl    %9, $0
+        jne     .if_basic_16
+
+.if_basic_10:
+        movl    (%rsp), %11
+        movl    %11, $12(%rsp)
+        movl    $100, $16(%rsp)
+        movl    $12(%rsp), %12
+        movl    $16(%rsp), %13
+        movl    %12, %14
+        addl    %13, %14
+        movl    %14, $12(%rsp)
+        movl    $12(%rsp), %15
+        movl    %15, (%rsp)
+
+.if_basic_16:
+        movl    (%rsp), %17
+        movl    %17, $20(%rsp)
+        movl    $20(%rsp), %18
+        movl    %18, $24(%rsp)
+
+.if_basic_19:
+        movl    $24(%rsp), %20
+        movq    %20, %rax
+        addq    $28, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+if_basic_else:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.if_basic_else_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    $1, $4(%rsp)
+        movl    $4(%rsp), %9
+        movl    %9, (%rsp)
+        movl    (%rsp), %10
+        movl    %10, $8(%rsp)
+        movl    $8(%rsp), %11
+        cmpl    %11, $0
+        jne     .if_basic_else_18
+
+.if_basic_else_12:
+        movl    (%rsp), %13
+        movl    %13, $12(%rsp)
+        movl    $3, $16(%rsp)
+        movl    $12(%rsp), %14
+        movl    $16(%rsp), %15
+        movl    %14, %16
+        addl    %15, %16
+        movl    %16, $12(%rsp)
+        movl    $12(%rsp), %17
+        movl    %17, (%rsp)
+        jmp     .if_basic_else_24
+
+.if_basic_else_18:
+        movl    (%rsp), %19
+        movl    %19, $20(%rsp)
+        movl    $100, $24(%rsp)
+        movl    $20(%rsp), %20
+        movl    $24(%rsp), %21
+        movl    %20, %22
+        addl    %21, %22
+        movl    %22, $20(%rsp)
+        movl    $20(%rsp), %23
+        movl    %23, (%rsp)
+
+.if_basic_else_24:
+        movl    (%rsp), %25
+        movl    %25, $28(%rsp)
+        movl    $28(%rsp), %26
+        movl    %26, $32(%rsp)
+
+.if_basic_else_27:
+        movl    $32(%rsp), %28
+        movq    %28, %rax
+        addq    $36, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+if_no_braces:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.if_no_braces_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    $1, $4(%rsp)
+        movl    $4(%rsp), %6
+        movl    %6, (%rsp)
+        movl    (%rsp), %7
+        movl    %7, $8(%rsp)
+        movl    $8(%rsp), %8
+        cmpl    %8, $0
+        jne     .if_no_braces_12
+
+.if_no_braces_9:
+        movl    (%rsp), %10
+        movl    %10, $12(%rsp)
+        movl    $12(%rsp), %11
+        movl    %11, $20(%rsp)
+        jmp     .if_no_braces_16
+
+.if_no_braces_12:
+        movl    (%rsp), %13
+        movl    %13, $16(%rsp)
+        movl    $16(%rsp), %14
+        movl    %14, $20(%rsp)
+        jmp     .if_no_braces_16
+
+.if_no_braces_15:
+
+.if_no_braces_16:
+        movl    $20(%rsp), %17
+        movq    %17, %rax
+        addq    $24, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+if_chain:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.if_chain_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    $1, $4(%rsp)
+        movl    $4(%rsp), %9
+        movl    %9, (%rsp)
+        movl    $2, $12(%rsp)
+        movl    $12(%rsp), %10
+        movl    %10, $8(%rsp)
+        movl    (%rsp), %11
+        movl    %11, $16(%rsp)
+        movl    $16(%rsp), %12
+        cmpl    %12, $0
+        jne     .if_chain_19
+
+.if_chain_13:
+        movl    $8(%rsp), %14
+        movl    %14, $20(%rsp)
+        movl    $20(%rsp), %15
+        cmpl    %15, $0
+        jne     .if_chain_18
+
+.if_chain_16:
+        movl    $0, $24(%rsp)
+        movl    $24(%rsp), %17
+        movl    %17, $32(%rsp)
+        jmp     .if_chain_21
+
+.if_chain_18:
+
+.if_chain_19:
+        movl    $1, $28(%rsp)
+        movl    $28(%rsp), %20
+        movl    %20, $32(%rsp)
+
+.if_chain_21:
+        movl    $32(%rsp), %22
+        movq    %22, %rax
+        addq    $36, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+if_chain_many:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.if_chain_many_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    $1, $4(%rsp)
+        movl    $4(%rsp), %13
+        movl    %13, (%rsp)
+        movl    $2, $12(%rsp)
+        movl    $12(%rsp), %14
+        movl    %14, $8(%rsp)
+        movl    $0, $20(%rsp)
+        movl    $20(%rsp), %15
+        movl    %15, $16(%rsp)
+        movl    (%rsp), %16
+        movl    %16, $24(%rsp)
+        movl    $24(%rsp), %17
+        cmpl    %17, $0
+        jne     .if_chain_many_30
+
+.if_chain_many_18:
+        movl    $8(%rsp), %19
+        movl    %19, $28(%rsp)
+        movl    $28(%rsp), %20
+        cmpl    %20, $0
+        jne     .if_chain_many_29
+
+.if_chain_many_21:
+        movl    $16(%rsp), %22
+        movl    %22, $32(%rsp)
+        movl    $32(%rsp), %23
+        cmpl    %23, $0
+        jne     .if_chain_many_26
+
+.if_chain_many_24:
+        movl    $0, $36(%rsp)
+        movl    $36(%rsp), %25
+        movl    %25, $48(%rsp)
+        jmp     .if_chain_many_32
+
+.if_chain_many_26:
+        movl    $3, $40(%rsp)
+        movl    $40(%rsp), %27
+        movl    %27, $48(%rsp)
+        jmp     .if_chain_many_32
+
+.if_chain_many_28:
+
+.if_chain_many_29:
+
+.if_chain_many_30:
+        movl    $1, $44(%rsp)
+        movl    $44(%rsp), %31
+        movl    %31, $48(%rsp)
+
+.if_chain_many_32:
+        movl    $48(%rsp), %33
+        movq    %33, %rax
+        addq    $52, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+if_else_if:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.if_else_if_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    $1, (%rsp)
+        movl    (%rsp), %6
+        cmpl    %6, $0
+        jne     .if_else_if_9
+
+.if_else_if_7:
+        movl    $2, $4(%rsp)
+        movl    $4(%rsp), %8
+        movl    %8, $20(%rsp)
+        jmp     .if_else_if_17
+
+.if_else_if_9:
+        movl    $3, $8(%rsp)
+        movl    $8(%rsp), %10
+        cmpl    %10, $0
+        jne     .if_else_if_13
+
+.if_else_if_11:
+        movl    $4, $12(%rsp)
+        movl    $12(%rsp), %12
+        movl    %12, $20(%rsp)
+        jmp     .if_else_if_17
+
+.if_else_if_13:
+        movl    $5, $16(%rsp)
+        movl    $16(%rsp), %14
+        movl    %14, $20(%rsp)
+        jmp     .if_else_if_17
+
+.if_else_if_15:
+
+.if_else_if_16:
+
+.if_else_if_17:
+        movl    $20(%rsp), %18
+        movq    %18, %rax
+        addq    $24, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret

@@ -1,0 +1,104 @@
+define i32 @if_basic() {
+entry:
+  br i32 1, label 0, label 1
+
+0:
+  br label 1
+
+1:
+  %2 = phi i32 [ 101, %0 ], [ 1, %18446744073709551615 ]
+  ret i32 %2
+}
+
+define i32 @if_basic_else() {
+entry:
+  br i32 1, label 0, label 1
+
+0:
+  br label 2
+
+1:
+  br label 2
+
+2:
+  %3 = phi i32 [ 4, %0 ], [ 101, %1 ]
+  ret i32 %3
+}
+
+define i32 @if_no_braces() {
+entry:
+  br i32 1, label 0, label 1
+
+0:
+  br label 2
+
+1:
+  br label 2
+
+2:
+  %3 = phi i32 [ 1, %0 ], [ 1, %1 ]
+  ret i32 %3
+}
+
+define i32 @if_chain() {
+entry:
+  br i32 1, label 0, label 2
+
+0:
+  br i32 2, label 1, label 2
+
+1:
+  br label 3
+
+2:
+  br label 3
+
+3:
+  %4 = phi i32 [ 0, %1 ], [ 1, %2 ]
+  ret i32 %4
+}
+
+define i32 @if_chain_many() {
+entry:
+  br i32 1, label 0, label 4
+
+0:
+  br i32 2, label 1, label 4
+
+1:
+  br i32 0, label 2, label 3
+
+2:
+  br label 5
+
+3:
+  br label 5
+
+4:
+  br label 5
+
+5:
+  %6 = phi i32 [ 0, %2 ], [ 3, %3 ], [ 1, %4 ]
+  ret i32 %6
+}
+
+define i32 @if_else_if() {
+entry:
+  br i32 1, label 0, label 1
+
+0:
+  br label 4
+
+1:
+  br i32 3, label 2, label 3
+
+2:
+  br label 4
+
+3:
+  br label 4
+
+4:
+  %5 = phi i32 [ 2, %0 ], [ 4, %2 ], [ 5, %3 ]
+  ret i32 %5
+}
