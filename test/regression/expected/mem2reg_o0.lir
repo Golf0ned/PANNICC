@@ -98,7 +98,7 @@ mem2reg_branching:
         movl    $42, $12(%rsp)
         movl    $8(%rsp), %11
         movl    $12(%rsp), %12
-        movl    %11, %13
+        phi     [%11] <-> %13    # [virtual]
         subl    %12, %13
         movl    %13, $8(%rsp)
         movl    $8(%rsp), %14
@@ -117,7 +117,7 @@ mem2reg_branching:
         movl    $2, $24(%rsp)
         movl    $20(%rsp), %19
         movl    $24(%rsp), %20
-        movl    %19, %21
+        phi     [%19] <-> %21    # [virtual]
         addl    %20, %21
         movl    %21, $20(%rsp)
         movl    $20(%rsp), %22
@@ -177,7 +177,7 @@ mem2reg_while:
         movl    $10, $20(%rsp)
         movl    $16(%rsp), %16
         movl    $20(%rsp), %17
-        movl    %16, %18
+        phi     [%16] <-> %18    # [virtual]
         subl    %17, %18
         movl    %18, $16(%rsp)
         movl    $16(%rsp), %19
@@ -191,7 +191,7 @@ mem2reg_while:
         movl    %22, $24(%rsp)
         movl    $24(%rsp), %23
         movl    $24(%rsp), %24
-        movl    %23, %25
+        phi     [%23] <-> %25    # [virtual]
         addl    %24, %25
         movl    %25, $24(%rsp)
         movl    $24(%rsp), %26
@@ -201,7 +201,7 @@ mem2reg_while:
         movl    $1, $32(%rsp)
         movl    $28(%rsp), %28
         movl    $32(%rsp), %29
-        movl    %28, %30
+        phi     [%28] <-> %30    # [virtual]
         addl    %29, %30
         movl    %30, $28(%rsp)
         movl    $28(%rsp), %31

@@ -53,7 +53,7 @@ mem2reg_branching:
         movq    %rdi, %0
 
 .mem2reg_branching_entry:
-        movl    %0, %1
+        phi     [%0] <-> %1    # [virtual]
         subl    $42, %1
         cmpl    %1, $0
         jne     .mem2reg_branching_3
@@ -62,7 +62,7 @@ mem2reg_branching:
         jmp     .mem2reg_branching_5
 
 .mem2reg_branching_3:
-        movl    %0, %4
+        phi     [%0] <-> %4    # [virtual]
         addl    $2, %4
 
 .mem2reg_branching_5:
@@ -93,15 +93,15 @@ mem2reg_while:
 .mem2reg_while_0:
         phi     [$0, %6] <-> %1    # [virtual]
         phi     [$0, %5] <-> %2    # [virtual]
-        movl    %1, %3
+        phi     [%1] <-> %3    # [virtual]
         subl    $10, %3
         cmpl    %3, $0
         jne     .mem2reg_while_7
 
 .mem2reg_while_4:
-        movl    %2, %5
+        phi     [%2] <-> %5    # [virtual]
         addl    %1, %5
-        movl    %1, %6
+        phi     [%1] <-> %6    # [virtual]
         addl    $1, %6
         jmp     .mem2reg_while_0
 

@@ -27,7 +27,7 @@ add:
         movl    %10, $20(%rsp)
         movl    $16(%rsp), %11
         movl    $20(%rsp), %12
-        movl    %11, %13
+        phi     [%11] <-> %13    # [virtual]
         addl    %12, %13
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
@@ -75,7 +75,7 @@ sub:
         movl    %10, $20(%rsp)
         movl    $16(%rsp), %11
         movl    $20(%rsp), %12
-        movl    %11, %13
+        phi     [%11] <-> %13    # [virtual]
         subl    %12, %13
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
@@ -123,7 +123,7 @@ mul:
         movl    %10, $20(%rsp)
         movl    $16(%rsp), %11
         movl    $20(%rsp), %12
-        movl    %11, %13
+        phi     [%11] <-> %13    # [virtual]
         imull   %12, %13
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
@@ -221,7 +221,7 @@ lshift:
         movl    %10, $20(%rsp)
         movl    $16(%rsp), %11
         movl    $20(%rsp), %12
-        movl    %11, %13
+        phi     [%11, %rcx] <-> %13    # [virtual]
         shll    %12, %13
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
@@ -269,7 +269,7 @@ rshift:
         movl    %10, $20(%rsp)
         movl    $16(%rsp), %11
         movl    $20(%rsp), %12
-        movl    %11, %13
+        phi     [%11, %rcx] <-> %13    # [virtual]
         sarl    %12, %13
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
@@ -317,7 +317,7 @@ bit_and:
         movl    %10, $20(%rsp)
         movl    $16(%rsp), %11
         movl    $20(%rsp), %12
-        movl    %11, %13
+        phi     [%11] <-> %13    # [virtual]
         andl    %12, %13
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
@@ -365,7 +365,7 @@ bit_or:
         movl    %10, $20(%rsp)
         movl    $16(%rsp), %11
         movl    $20(%rsp), %12
-        movl    %11, %13
+        phi     [%11] <-> %13    # [virtual]
         orl     %12, %13
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
@@ -413,7 +413,7 @@ bit_xor:
         movl    %10, $20(%rsp)
         movl    $16(%rsp), %11
         movl    $20(%rsp), %12
-        movl    %11, %13
+        phi     [%11] <-> %13    # [virtual]
         xorl    %12, %13
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
@@ -489,7 +489,7 @@ unary_minus:
         movl    (%rsp), %5
         movl    %5, $8(%rsp)
         movl    $8(%rsp), %6
-        movl    $0, %7
+        phi     [$0] <-> %7    # [virtual]
         subl    %6, %7
         movl    %7, $8(%rsp)
         movl    $8(%rsp), %8
@@ -528,7 +528,7 @@ unary_bitwise_not:
         movl    (%rsp), %5
         movl    %5, $8(%rsp)
         movl    $8(%rsp), %6
-        movl    %6, %7
+        phi     [%6] <-> %7    # [virtual]
         xorl    $18446744073709551615, %7
         movl    %7, $8(%rsp)
         movl    $8(%rsp), %8
@@ -568,7 +568,7 @@ add_equals:
         movl    $2, $8(%rsp)
         movl    (%rsp), %6
         movl    $8(%rsp), %7
-        movl    %6, %8
+        phi     [%6] <-> %8    # [virtual]
         addl    %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
@@ -610,7 +610,7 @@ sub_equals:
         movl    $2, $8(%rsp)
         movl    (%rsp), %6
         movl    $8(%rsp), %7
-        movl    %6, %8
+        phi     [%6] <-> %8    # [virtual]
         subl    %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
@@ -652,7 +652,7 @@ mul_equals:
         movl    $4, $8(%rsp)
         movl    (%rsp), %6
         movl    $8(%rsp), %7
-        movl    %6, %8
+        phi     [%6] <-> %8    # [virtual]
         imull   %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
@@ -738,7 +738,7 @@ lshift_equals:
         movl    $4, $8(%rsp)
         movl    (%rsp), %6
         movl    $8(%rsp), %7
-        movl    %6, %8
+        phi     [%6, %rcx] <-> %8    # [virtual]
         shll    %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
@@ -780,7 +780,7 @@ rshift_equals:
         movl    $3, $8(%rsp)
         movl    (%rsp), %6
         movl    $8(%rsp), %7
-        movl    %6, %8
+        phi     [%6, %rcx] <-> %8    # [virtual]
         sarl    %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
@@ -822,7 +822,7 @@ bit_and_equals:
         movl    $4, $8(%rsp)
         movl    (%rsp), %6
         movl    $8(%rsp), %7
-        movl    %6, %8
+        phi     [%6] <-> %8    # [virtual]
         andl    %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
@@ -864,7 +864,7 @@ bit_or_equals:
         movl    $3, $8(%rsp)
         movl    (%rsp), %6
         movl    $8(%rsp), %7
-        movl    %6, %8
+        phi     [%6] <-> %8    # [virtual]
         orl     %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
@@ -906,7 +906,7 @@ bit_xor_equals:
         movl    $4, $8(%rsp)
         movl    (%rsp), %6
         movl    $8(%rsp), %7
-        movl    %6, %8
+        phi     [%6] <-> %8    # [virtual]
         xorl    %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9

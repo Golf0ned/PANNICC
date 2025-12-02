@@ -153,9 +153,15 @@ namespace backend::lir_tree {
                 std::move(out_src_list), dst);
             assembly.push_back(std::move(out_asm));
         } else {
-            auto mov_asm = std::make_unique<lir::InstructionMov>(
-                lir::Extend::NONE, size, size, left, dst);
-            assembly.push_back(std::move(mov_asm));
+            std::list<lir::Operand *> phi_list = {left};
+            if (op == middleend::mir::BinaryOp::SHL ||
+                op == middleend::mir::BinaryOp::ASHR) {
+                phi_list.push_back(om->getRegister(lir::RegisterNum::RCX));
+            }
+
+            auto phi_asm =
+                std::make_unique<lir::InstructionPhi>(std::move(phi_list), dst);
+            assembly.push_back(std::move(phi_asm));
 
             auto op_asm = std::make_unique<lir::InstructionBinaryOp>(
                 bin_op, size, right, dst);

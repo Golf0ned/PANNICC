@@ -64,7 +64,7 @@ second:
         movl    $1, $4(%rsp)
         movl    (%rsp), %4
         movl    $4(%rsp), %5
-        movl    %4, %6
+        phi     [%4] <-> %6    # [virtual]
         addl    %5, %6
         movl    %6, (%rsp)
         movl    (%rsp), %7
@@ -120,7 +120,7 @@ third:
         movl    $2, $4(%rsp)
         movl    (%rsp), %4
         movl    $4(%rsp), %5
-        movl    %4, %6
+        phi     [%4] <-> %6    # [virtual]
         addl    %5, %6
         movl    %6, (%rsp)
         movl    (%rsp), %7
@@ -176,7 +176,7 @@ fourth:
         movl    $3, $4(%rsp)
         movl    (%rsp), %4
         movl    $4(%rsp), %5
-        movl    %4, %6
+        phi     [%4] <-> %6    # [virtual]
         addl    %5, %6
         movl    %6, (%rsp)
         movl    (%rsp), %7
@@ -232,7 +232,7 @@ fifth:
         movl    $4, $4(%rsp)
         movl    (%rsp), %4
         movl    $4(%rsp), %5
-        movl    %4, %6
+        phi     [%4] <-> %6    # [virtual]
         addl    %5, %6
         movl    %6, (%rsp)
         movl    (%rsp), %7
@@ -288,7 +288,7 @@ sixth:
         movl    $5, $4(%rsp)
         movl    (%rsp), %4
         movl    $4(%rsp), %5
-        movl    %4, %6
+        phi     [%4] <-> %6    # [virtual]
         addl    %5, %6
         movl    %6, (%rsp)
         movl    (%rsp), %7
@@ -390,7 +390,7 @@ main:
         movl    %27, $16(%rsp)
         movl    $12(%rsp), %28
         movl    $16(%rsp), %29
-        movl    %28, %30
+        phi     [%28] <-> %30    # [virtual]
         addl    %29, %30
         movl    %30, $12(%rsp)
         movl    $12(%rsp), %31
@@ -420,7 +420,7 @@ main:
         movl    %33, $24(%rsp)
         movl    $20(%rsp), %34
         movl    $24(%rsp), %35
-        movl    %34, %36
+        phi     [%34] <-> %36    # [virtual]
         addl    %35, %36
         movl    %36, $20(%rsp)
         movl    $20(%rsp), %37
@@ -450,7 +450,7 @@ main:
         movl    %39, $32(%rsp)
         movl    $28(%rsp), %40
         movl    $32(%rsp), %41
-        movl    %40, %42
+        phi     [%40] <-> %42    # [virtual]
         addl    %41, %42
         movl    %42, $28(%rsp)
         movl    $28(%rsp), %43
@@ -480,7 +480,7 @@ main:
         movl    %45, $40(%rsp)
         movl    $36(%rsp), %46
         movl    $40(%rsp), %47
-        movl    %46, %48
+        phi     [%46] <-> %48    # [virtual]
         addl    %47, %48
         movl    %48, $36(%rsp)
         movl    $36(%rsp), %49
@@ -510,7 +510,7 @@ main:
         movl    %51, $48(%rsp)
         movl    $44(%rsp), %52
         movl    $48(%rsp), %53
-        movl    %52, %54
+        phi     [%52] <-> %54    # [virtual]
         addl    %53, %54
         movl    %54, $44(%rsp)
         movl    $44(%rsp), %55
@@ -540,7 +540,7 @@ main:
         movl    %57, $56(%rsp)
         movl    $52(%rsp), %58
         movl    $56(%rsp), %59
-        movl    %58, %60
+        phi     [%58] <-> %60    # [virtual]
         addl    %59, %60
         movl    %60, $52(%rsp)
         movl    $52(%rsp), %61
@@ -570,7 +570,7 @@ main:
         movl    %63, $64(%rsp)
         movl    $60(%rsp), %64
         movl    $64(%rsp), %65
-        movl    %64, %66
+        phi     [%64] <-> %66    # [virtual]
         addl    %65, %66
         movl    %66, $60(%rsp)
         pushq   %rax    # [virtual]
@@ -596,7 +596,7 @@ main:
         movl    %67, $68(%rsp)
         movl    $60(%rsp), %68
         movl    $68(%rsp), %69
-        movl    %68, %70
+        phi     [%68] <-> %70    # [virtual]
         addl    %69, %70
         movl    %70, $60(%rsp)
         pushq   %rax    # [virtual]
@@ -622,7 +622,7 @@ main:
         movl    %71, $72(%rsp)
         movl    $60(%rsp), %72
         movl    $72(%rsp), %73
-        movl    %72, %74
+        phi     [%72] <-> %74    # [virtual]
         addl    %73, %74
         movl    %74, $60(%rsp)
         pushq   %rax    # [virtual]
@@ -648,7 +648,7 @@ main:
         movl    %75, $76(%rsp)
         movl    $60(%rsp), %76
         movl    $76(%rsp), %77
-        movl    %76, %78
+        phi     [%76] <-> %78    # [virtual]
         addl    %77, %78
         movl    %78, $60(%rsp)
         pushq   %rax    # [virtual]
@@ -674,7 +674,7 @@ main:
         movl    %79, $80(%rsp)
         movl    $60(%rsp), %80
         movl    $80(%rsp), %81
-        movl    %80, %82
+        phi     [%80] <-> %82    # [virtual]
         addl    %81, %82
         movl    %82, $60(%rsp)
         pushq   %rax    # [virtual]
@@ -700,7 +700,7 @@ main:
         movl    %83, $84(%rsp)
         movl    $60(%rsp), %84
         movl    $84(%rsp), %85
-        movl    %84, %86
+        phi     [%84] <-> %86    # [virtual]
         addl    %85, %86
         movl    %86, $60(%rsp)
         movl    $60(%rsp), %87
