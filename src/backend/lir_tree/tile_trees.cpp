@@ -1,9 +1,7 @@
 #include "backend/lir_tree/tile_trees.h"
 
 namespace backend::lir_tree {
-    Tile::Tile(uint64_t cost, lir::OperandManager *om) : cost(cost), om(om) {}
-
-    uint64_t Tile::getCost() { return cost; }
+    Tile::Tile(lir::OperandManager *om) : om(om) {}
 
     lir::Operand *Tile::resolveOperand(Node *node,
                                        std::vector<Node *> &worklist) {
@@ -50,7 +48,7 @@ namespace backend::lir_tree {
         return om->getRegister(node->getName());
     }
 
-    StoreTile::StoreTile(lir::OperandManager *om) : Tile(10, om) {}
+    StoreTile::StoreTile(lir::OperandManager *om) : Tile(om) {}
 
     bool StoreTile::matches(Node *root) {
         auto store = dynamic_cast<StoreNode *>(root);
@@ -77,7 +75,7 @@ namespace backend::lir_tree {
         return assembly;
     }
 
-    LoadTile::LoadTile(lir::OperandManager *om) : Tile(10, om) {}
+    LoadTile::LoadTile(lir::OperandManager *om) : Tile(om) {}
 
     bool LoadTile::matches(Node *root) {
         tile_dst = dynamic_cast<RegisterNode *>(root);
@@ -107,7 +105,7 @@ namespace backend::lir_tree {
         return assembly;
     }
 
-    BinOpTile::BinOpTile(lir::OperandManager *om) : Tile(10, om) {}
+    BinOpTile::BinOpTile(lir::OperandManager *om) : Tile(om) {}
 
     bool BinOpTile::matches(Node *root) {
         tile_dst = dynamic_cast<RegisterNode *>(root);
@@ -166,8 +164,9 @@ namespace backend::lir_tree {
     }
 
     TreeTiler::TreeTiler(lir::OperandManager *om) : om(om) {
-        all_tiles.push_back(std::make_unique<StoreTile>(om));
+        // Atomic tiles
         all_tiles.push_back(std::make_unique<BinOpTile>(om));
+        all_tiles.push_back(std::make_unique<StoreTile>(om));
         all_tiles.push_back(std::make_unique<LoadTile>(om));
     }
 
@@ -189,14 +188,11 @@ namespace backend::lir_tree {
             auto cur = worklist.back();
             worklist.pop_back();
 
-            // TODO: is this how we want to compute cost?
             Tile *cur_tile = nullptr;
-            uint64_t min_cost = -1;
             for (auto &tile : all_tiles) {
-                auto tile_cost = tile->getCost();
-                if (tile_cost < min_cost && tile->matches(cur)) {
+                if (tile->matches(cur)) {
                     cur_tile = tile.get();
-                    min_cost = tile_cost;
+                    break;
                 }
             }
 
