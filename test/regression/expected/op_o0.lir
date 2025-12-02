@@ -171,10 +171,10 @@ div:
         movl    %10, $20(%rsp)
         movl    $16(%rsp), %11
         movl    $20(%rsp), %12
-        movl    %11, %eax
+        phi     [%11] <-> %eax    # [virtual]
         cltd
         idivl   %12
-        movl    %eax, %13
+        phi     [%eax] <-> %13    # [virtual]
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
         movl    %14, $24(%rsp)
@@ -694,10 +694,10 @@ div_equals:
         movl    $6, $8(%rsp)
         movl    (%rsp), %6
         movl    $8(%rsp), %7
-        movl    %6, %eax
+        phi     [%6] <-> %eax    # [virtual]
         cltd
         idivl   %7
-        movl    %eax, %8
+        phi     [%eax] <-> %8    # [virtual]
         movl    %8, (%rsp)
         movl    (%rsp), %9
         movl    %9, $12(%rsp)
