@@ -5,8 +5,7 @@
 namespace backend::lir_tree {
     class Tile {
     public:
-        Tile(uint64_t cost, lir::OperandManager *om);
-        uint64_t getCost();
+        Tile(lir::OperandManager *om);
         lir::Operand *resolveOperand(Node *node, std::vector<Node *> &worklist);
         lir::Operand *resolveOperand(AddressNode *node,
                                      std::vector<Node *> &worklist);
@@ -19,9 +18,6 @@ namespace backend::lir_tree {
 
     protected:
         lir::OperandManager *om;
-
-    private:
-        uint64_t cost;
     };
 
     class StoreTile : public Tile {
