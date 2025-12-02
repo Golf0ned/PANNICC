@@ -10,7 +10,7 @@ while_basic:
 .while_basic_entry:
 
 .while_basic_0:
-        phi     [%3, $0] <-> %1    # [virtual]
+        phi     [$0, %3] <-> %1    # [virtual]
         cmpl    $1, $0
         jne     .while_basic_4
 
@@ -42,8 +42,8 @@ while_complex:
 .while_complex_entry:
 
 .while_complex_0:
-        phi     [%5, $100] <-> %1    # [virtual]
-        phi     [%4, $0] <-> %2    # [virtual]
+        phi     [$100, %5] <-> %1    # [virtual]
+        phi     [$0, %4] <-> %2    # [virtual]
         cmpl    %1, $0
         jne     .while_complex_6
 
@@ -112,7 +112,7 @@ while_if:
 .while_if_2:
 
 .while_if_3:
-        phi     [$500, $0] <-> %4    # [virtual]
+        phi     [$0, $500] <-> %4    # [virtual]
         movq    %4, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
