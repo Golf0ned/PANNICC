@@ -14,7 +14,7 @@ if_basic:
 .if_basic_0:
 
 .if_basic_1:
-        phi     [$101, $1] <-> %2    # [virtual]
+        phi     [$1, $101] <-> %2    # [virtual]
         movq    %2, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
@@ -44,7 +44,7 @@ if_basic_else:
 .if_basic_else_1:
 
 .if_basic_else_2:
-        phi     [$4, $101] <-> %3    # [virtual]
+        phi     [$101, $4] <-> %3    # [virtual]
         movq    %3, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
@@ -149,7 +149,7 @@ if_chain_many:
 .if_chain_many_4:
 
 .if_chain_many_5:
-        phi     [$0, $3, $1] <-> %6    # [virtual]
+        phi     [$0, $1, $3] <-> %6    # [virtual]
         movq    %6, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
