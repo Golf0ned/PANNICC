@@ -90,7 +90,7 @@ simplify_cfg_merge_straight_line:
         movl    $4, $24(%rsp)
         movl    $20(%rsp), %18
         movl    $24(%rsp), %19
-        movl    %18, %20
+        phi     [%18] <-> %20    # [virtual]
         addl    %19, %20
         movl    %20, $20(%rsp)
         movl    $20(%rsp), %21

@@ -34,7 +34,7 @@ constant_fold:
         movl    $13, $16(%rsp)
         movl    $12(%rsp), %20
         movl    $16(%rsp), %21
-        movl    %20, %22
+        phi     [%20] <-> %22    # [virtual]
         addl    %21, %22
         movl    %22, $12(%rsp)
         movl    $12(%rsp), %23
@@ -45,7 +45,7 @@ constant_fold:
         movl    %25, $28(%rsp)
         movl    $24(%rsp), %26
         movl    $28(%rsp), %27
-        movl    %26, %28
+        phi     [%26] <-> %28    # [virtual]
         addl    %27, %28
         movl    %28, $24(%rsp)
         movl    $24(%rsp), %29
@@ -56,7 +56,7 @@ constant_fold:
         movl    %31, $40(%rsp)
         movl    $36(%rsp), %32
         movl    $40(%rsp), %33
-        movl    %32, %34
+        phi     [%32] <-> %34    # [virtual]
         imull   %33, %34
         movl    %34, $36(%rsp)
         movl    $36(%rsp), %35
@@ -67,7 +67,7 @@ constant_fold:
         movl    %37, $48(%rsp)
         movl    $44(%rsp), %38
         movl    $48(%rsp), %39
-        movl    %38, %40
+        phi     [%38] <-> %40    # [virtual]
         addl    %39, %40
         movl    %40, $44(%rsp)
         movl    $44(%rsp), %41
@@ -78,7 +78,7 @@ constant_fold:
         movl    %43, $60(%rsp)
         movl    $56(%rsp), %44
         movl    $60(%rsp), %45
-        movl    %44, %46
+        phi     [%44] <-> %46    # [virtual]
         subl    %45, %46
         movl    %46, $56(%rsp)
         movl    $56(%rsp), %47
@@ -120,7 +120,7 @@ constant_fold_overflow:
         movl    $1, $8(%rsp)
         movl    $4(%rsp), %5
         movl    $8(%rsp), %6
-        movl    %5, %7
+        phi     [%5] <-> %7    # [virtual]
         addl    %6, %7
         movl    %7, $4(%rsp)
         movl    $4(%rsp), %8
@@ -162,7 +162,7 @@ constant_fold_underflow:
         movl    $1, $8(%rsp)
         movl    $4(%rsp), %5
         movl    $8(%rsp), %6
-        movl    %5, %7
+        phi     [%5] <-> %7    # [virtual]
         subl    %6, %7
         movl    %7, $4(%rsp)
         movl    $4(%rsp), %8

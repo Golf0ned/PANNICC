@@ -20,7 +20,7 @@ fun1:
         movl    %6, $4(%rsp)
         movl    (%rsp), %7
         movl    $4(%rsp), %8
-        movl    %7, %9
+        phi     [%7] <-> %9    # [virtual]
         imull   %8, %9
         movl    %9, (%rsp)
         movl    (%rsp), %10
@@ -93,19 +93,19 @@ fun2:
         movl    %15, $12(%rsp)
         movl    $12(%rsp), %16
         movl    $12(%rsp), %17
-        movl    %16, %18
+        phi     [%16] <-> %18    # [virtual]
         imull   %17, %18
         movl    %18, $12(%rsp)
         movl    $36(%rsp), %19
         movl    %19, $16(%rsp)
         movl    $12(%rsp), %20
         movl    $16(%rsp), %21
-        movl    %20, %22
+        phi     [%20] <-> %22    # [virtual]
         imull   %21, %22
         movl    %22, $12(%rsp)
         movl    $8(%rsp), %23
         movl    $12(%rsp), %24
-        movl    %23, %25
+        phi     [%23] <-> %25    # [virtual]
         addl    %24, %25
         movl    %25, $8(%rsp)
         movl    $36(%rsp), %26
@@ -135,7 +135,7 @@ fun2:
         movl    %28, $24(%rsp)
         movl    $8(%rsp), %29
         movl    $24(%rsp), %30
-        movl    %29, %31
+        phi     [%29] <-> %31    # [virtual]
         addl    %30, %31
         movl    %31, $8(%rsp)
         movl    $8(%rsp), %32
@@ -212,7 +212,7 @@ fun3:
         movl    %18, $16(%rsp)
         movl    $12(%rsp), %19
         movl    $16(%rsp), %20
-        movl    %19, %21
+        phi     [%19] <-> %21    # [virtual]
         imull   %20, %21
         movl    %21, $12(%rsp)
         movl    $32(%rsp), %22
@@ -221,19 +221,19 @@ fun3:
         movl    %23, $24(%rsp)
         movl    $20(%rsp), %24
         movl    $24(%rsp), %25
-        movl    %24, %26
+        phi     [%24] <-> %26    # [virtual]
         imull   %25, %26
         movl    %26, $20(%rsp)
         movl    $12(%rsp), %27
         movl    $20(%rsp), %28
-        movl    %27, %29
+        phi     [%27] <-> %29    # [virtual]
         addl    %28, %29
         movl    %29, $12(%rsp)
         movl    $36(%rsp), %30
         movl    %30, $28(%rsp)
         movl    $12(%rsp), %31
         movl    $28(%rsp), %32
-        movl    %31, %33
+        phi     [%31] <-> %33    # [virtual]
         addl    %32, %33
         movl    %33, $12(%rsp)
         movl    $12(%rsp), %34
@@ -484,7 +484,7 @@ call4:
         movl    $100, $4(%rsp)
         movl    (%rsp), %6
         movl    $4(%rsp), %7
-        movl    %6, %8
+        phi     [%6] <-> %8    # [virtual]
         subl    %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
