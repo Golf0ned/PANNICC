@@ -171,7 +171,176 @@ namespace backend::lir_tree {
         return assembly;
     }
 
+    LeaBISDTile::LeaBISDTile(lir::OperandManager *om) : Tile(om) {}
+
+    bool LeaBISDTile::matches(Node *root) {
+        tile_dst = dynamic_cast<RegisterNode *>(root);
+        if (!tile_dst)
+            return false;
+
+        auto &dst_source = tile_dst->getSource();
+        if (!dst_source)
+            return false;
+
+        auto op = dynamic_cast<OpNode *>(dst_source.get());
+        if (!op || op->getOp() != middleend::mir::BinaryOp::ADD)
+            return false;
+
+        auto left_reg = dynamic_cast<RegisterNode *>(op->getLeft().get());
+        auto right_reg = dynamic_cast<RegisterNode *>(op->getRight().get());
+        if (!left_reg && !right_reg)
+            return false;
+
+        if (!left_reg ^ !right_reg) {
+            tile_displacement = static_cast<ImmediateNode *>(
+                left_reg ? op->getRight().get() : op->getLeft().get());
+            auto inner_reg = left_reg ? left_reg : right_reg;
+
+            auto &inner_reg_source = inner_reg->getSource();
+            if (!inner_reg_source)
+                return false;
+
+            auto inner_op = dynamic_cast<OpNode *>(inner_reg_source.get());
+            if (!inner_op || inner_op->getOp() != middleend::mir::BinaryOp::ADD)
+                return false;
+
+            auto inner_left =
+                dynamic_cast<RegisterNode *>(inner_op->getLeft().get());
+            auto inner_right =
+                dynamic_cast<RegisterNode *>(inner_op->getRight().get());
+            if (!inner_left || !inner_right)
+                return false;
+
+            if (matchScaledIndex(inner_left))
+                tile_base = inner_right;
+            else if (matchScaledIndex(inner_right))
+                tile_base = inner_left;
+            else
+                return false;
+
+            return true;
+        }
+
+        auto &left_reg_source = left_reg->getSource();
+        auto &right_reg_source = right_reg->getSource();
+
+        auto left_op = left_reg_source
+                           ? dynamic_cast<OpNode *>(left_reg_source.get())
+                           : nullptr;
+        auto right_op = right_reg_source
+                            ? dynamic_cast<OpNode *>(right_reg_source.get())
+                            : nullptr;
+
+        if (left_op && left_op->getOp() == middleend::mir::BinaryOp::ADD) {
+            auto inner_left_imm =
+                dynamic_cast<ImmediateNode *>(left_op->getLeft().get());
+            auto inner_right_imm =
+                dynamic_cast<ImmediateNode *>(left_op->getRight().get());
+
+            // TODO: what
+            if (!inner_left_imm ^ !inner_right_imm) {
+                tile_displacement =
+                    inner_left_imm ? inner_left_imm : inner_right_imm;
+                auto remaining_node = static_cast<RegisterNode *>(
+                    inner_left_imm ? left_op->getRight().get()
+                                   : left_op->getLeft().get());
+
+                if (matchScaledIndex(remaining_node)) {
+                    tile_base = right_reg;
+                    return true;
+                }
+
+                if (matchScaledIndex(right_reg)) {
+                    tile_base = remaining_node;
+                    return true;
+                }
+            }
+        }
+
+        if (right_op && right_op->getOp() == middleend::mir::BinaryOp::ADD) {
+            auto inner_left_imm =
+                dynamic_cast<ImmediateNode *>(right_op->getLeft().get());
+            auto inner_right_imm =
+                dynamic_cast<ImmediateNode *>(right_op->getRight().get());
+
+            // TODO: what
+            if (!inner_left_imm ^ !inner_right_imm) {
+                tile_displacement =
+                    inner_left_imm ? inner_left_imm : inner_right_imm;
+                auto remaining_node = static_cast<RegisterNode *>(
+                    inner_left_imm ? right_op->getRight().get()
+                                   : right_op->getLeft().get());
+
+                if (matchScaledIndex(remaining_node)) {
+                    tile_base = left_reg;
+                    return true;
+                }
+
+                if (matchScaledIndex(left_reg)) {
+                    tile_base = remaining_node;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    bool LeaBISDTile::matchScaledIndex(RegisterNode *node) {
+        auto &reg_src = node->getSource();
+        if (!reg_src)
+            return false;
+
+        auto op = dynamic_cast<OpNode *>(reg_src.get());
+        if (!op)
+            return false;
+
+        if (op->getOp() != middleend::mir::BinaryOp::MUL)
+            return false;
+
+        auto left_reg = dynamic_cast<RegisterNode *>(op->getLeft().get());
+        auto right_reg = dynamic_cast<RegisterNode *>(op->getRight().get());
+        // TODO: what
+        if (!left_reg == !right_reg)
+            return false;
+
+        auto index = left_reg ? left_reg : right_reg;
+
+        auto scale = dynamic_cast<ImmediateNode *>(
+            left_reg ? op->getRight().get() : op->getLeft().get());
+        if (!scale)
+            return false;
+
+        switch (scale->getValue()) {
+        case 1:
+        case 2:
+        case 4:
+        case 8:
+            break;
+        default:
+            return false;
+        }
+
+        tile_index = index;
+        tile_scale = scale;
+        return true;
+    }
+
+    std::list<std::unique_ptr<lir::Instruction>>
+    LeaBISDTile::apply(std::vector<Node *> &worklist) {
+        // TODO
+        std::list<std::unique_ptr<lir::Instruction>> assembly;
+
+        auto unknown = std::make_unique<lir::InstructionUnknown>();
+        assembly.push_back(std::move(unknown));
+
+        return std::move(assembly);
+    }
+
     TreeTiler::TreeTiler(lir::OperandManager *om) : om(om) {
+        // lea tiles
+        all_tiles.push_back(std::make_unique<LeaBISDTile>(om));
+
         // Atomic tiles
         all_tiles.push_back(std::make_unique<BinOpTile>(om));
         all_tiles.push_back(std::make_unique<StoreTile>(om));
