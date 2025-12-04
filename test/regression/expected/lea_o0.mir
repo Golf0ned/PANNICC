@@ -1,0 +1,351 @@
+define i32 @leaBISD(i32 %0, i32 %1) {
+entry:
+  %2 = alloca i32
+  %3 = alloca i32
+  %4 = alloca i32
+  %5 = alloca i32
+  %6 = alloca i32
+  %7 = alloca i32
+  %8 = alloca i32
+  %9 = alloca i32
+  %10 = alloca i32
+  %11 = alloca i32
+  %12 = alloca i32
+  %13 = alloca i32
+  %14 = alloca i32
+  %15 = alloca i32
+  %16 = alloca i32
+  %17 = alloca i32
+  %18 = alloca i32
+  %19 = alloca i32
+  %20 = alloca i32
+  %21 = alloca i32
+  %22 = alloca i32
+  %23 = alloca i32
+  %24 = alloca i32
+  %25 = alloca i32
+  %26 = alloca i32
+  %27 = alloca i32
+  %28 = alloca i32
+  %29 = alloca i32
+  %30 = alloca i32
+  %31 = alloca i32
+  %32 = alloca i32
+  %33 = alloca i32
+  %34 = alloca i32
+  %35 = alloca i32
+  %36 = alloca i32
+  %37 = alloca i32
+  %38 = alloca i32
+  %39 = alloca i32
+  %40 = alloca i32
+  %41 = alloca i32
+  %42 = alloca i32
+  %43 = alloca i32
+  %44 = alloca i32
+  %45 = alloca i32
+  %46 = alloca i32
+  %47 = alloca i32
+  %48 = alloca i32
+  %49 = alloca i32
+  %50 = alloca i32
+  %51 = alloca i32
+  %52 = alloca i32
+  %53 = alloca i32
+  %54 = alloca i32
+  %55 = alloca i32
+  %56 = alloca i32
+  %57 = alloca i32
+  %58 = alloca i32
+  %59 = alloca i32
+  %60 = alloca i32
+  %61 = alloca i32
+  %62 = alloca i32
+  %63 = alloca i32
+  %64 = alloca i32
+  %65 = alloca i32
+  %66 = alloca i32
+  %67 = alloca i32
+  %68 = alloca i32
+  store i32 %0, ptr %68
+  %69 = alloca i32
+  store i32 %1, ptr %69
+  store i32 8, ptr %3
+  %70 = load ptr %3
+  store i32 %70, ptr %2
+  store i32 40, ptr %5
+  %71 = load ptr %5
+  store i32 %71, ptr %4
+  %72 = load ptr %68
+  store i32 %72, ptr %7
+  %73 = load ptr %69
+  store i32 %73, ptr %8
+  %74 = load ptr %2
+  store i32 %74, ptr %9
+  %75 = load ptr %8
+  %76 = load ptr %9
+  %77 = mul i32 %75, i32 %76
+  store i32 %77, ptr %8
+  %78 = load ptr %7
+  %79 = load ptr %8
+  %80 = add i32 %78, i32 %79
+  store i32 %80, ptr %7
+  %81 = load ptr %4
+  store i32 %81, ptr %10
+  %82 = load ptr %7
+  %83 = load ptr %10
+  %84 = add i32 %82, i32 %83
+  store i32 %84, ptr %7
+  %85 = load ptr %7
+  store i32 %85, ptr %6
+  %86 = load ptr %4
+  store i32 %86, ptr %12
+  %87 = load ptr %69
+  store i32 %87, ptr %13
+  %88 = load ptr %2
+  store i32 %88, ptr %14
+  %89 = load ptr %13
+  %90 = load ptr %14
+  %91 = mul i32 %89, i32 %90
+  store i32 %91, ptr %13
+  %92 = load ptr %12
+  %93 = load ptr %13
+  %94 = add i32 %92, i32 %93
+  store i32 %94, ptr %12
+  %95 = load ptr %68
+  store i32 %95, ptr %15
+  %96 = load ptr %12
+  %97 = load ptr %15
+  %98 = add i32 %96, i32 %97
+  store i32 %98, ptr %12
+  %99 = load ptr %12
+  store i32 %99, ptr %11
+  %100 = load ptr %69
+  store i32 %100, ptr %17
+  %101 = load ptr %2
+  store i32 %101, ptr %18
+  %102 = load ptr %17
+  %103 = load ptr %18
+  %104 = mul i32 %102, i32 %103
+  store i32 %104, ptr %17
+  %105 = load ptr %68
+  store i32 %105, ptr %19
+  %106 = load ptr %17
+  %107 = load ptr %19
+  %108 = add i32 %106, i32 %107
+  store i32 %108, ptr %17
+  %109 = load ptr %4
+  store i32 %109, ptr %20
+  %110 = load ptr %17
+  %111 = load ptr %20
+  %112 = add i32 %110, i32 %111
+  store i32 %112, ptr %17
+  %113 = load ptr %17
+  store i32 %113, ptr %16
+  %114 = load ptr %69
+  store i32 %114, ptr %22
+  %115 = load ptr %2
+  store i32 %115, ptr %23
+  %116 = load ptr %22
+  %117 = load ptr %23
+  %118 = mul i32 %116, i32 %117
+  store i32 %118, ptr %22
+  %119 = load ptr %4
+  store i32 %119, ptr %24
+  %120 = load ptr %22
+  %121 = load ptr %24
+  %122 = add i32 %120, i32 %121
+  store i32 %122, ptr %22
+  %123 = load ptr %68
+  store i32 %123, ptr %25
+  %124 = load ptr %22
+  %125 = load ptr %25
+  %126 = add i32 %124, i32 %125
+  store i32 %126, ptr %22
+  %127 = load ptr %22
+  store i32 %127, ptr %21
+  %128 = load ptr %68
+  store i32 %128, ptr %27
+  %129 = load ptr %4
+  store i32 %129, ptr %28
+  %130 = load ptr %27
+  %131 = load ptr %28
+  %132 = add i32 %130, i32 %131
+  store i32 %132, ptr %27
+  %133 = load ptr %69
+  store i32 %133, ptr %29
+  %134 = load ptr %2
+  store i32 %134, ptr %30
+  %135 = load ptr %29
+  %136 = load ptr %30
+  %137 = mul i32 %135, i32 %136
+  store i32 %137, ptr %29
+  %138 = load ptr %27
+  %139 = load ptr %29
+  %140 = add i32 %138, i32 %139
+  store i32 %140, ptr %27
+  %141 = load ptr %27
+  store i32 %141, ptr %26
+  %142 = load ptr %4
+  store i32 %142, ptr %32
+  %143 = load ptr %68
+  store i32 %143, ptr %33
+  %144 = load ptr %32
+  %145 = load ptr %33
+  %146 = add i32 %144, i32 %145
+  store i32 %146, ptr %32
+  %147 = load ptr %69
+  store i32 %147, ptr %34
+  %148 = load ptr %2
+  store i32 %148, ptr %35
+  %149 = load ptr %34
+  %150 = load ptr %35
+  %151 = mul i32 %149, i32 %150
+  store i32 %151, ptr %34
+  %152 = load ptr %32
+  %153 = load ptr %34
+  %154 = add i32 %152, i32 %153
+  store i32 %154, ptr %32
+  %155 = load ptr %32
+  store i32 %155, ptr %31
+  %156 = load ptr %68
+  store i32 %156, ptr %37
+  %157 = load ptr %2
+  store i32 %157, ptr %38
+  %158 = load ptr %69
+  store i32 %158, ptr %39
+  %159 = load ptr %38
+  %160 = load ptr %39
+  %161 = mul i32 %159, i32 %160
+  store i32 %161, ptr %38
+  %162 = load ptr %37
+  %163 = load ptr %38
+  %164 = add i32 %162, i32 %163
+  store i32 %164, ptr %37
+  %165 = load ptr %4
+  store i32 %165, ptr %40
+  %166 = load ptr %37
+  %167 = load ptr %40
+  %168 = add i32 %166, i32 %167
+  store i32 %168, ptr %37
+  %169 = load ptr %37
+  store i32 %169, ptr %36
+  %170 = load ptr %4
+  store i32 %170, ptr %42
+  %171 = load ptr %2
+  store i32 %171, ptr %43
+  %172 = load ptr %69
+  store i32 %172, ptr %44
+  %173 = load ptr %43
+  %174 = load ptr %44
+  %175 = mul i32 %173, i32 %174
+  store i32 %175, ptr %43
+  %176 = load ptr %42
+  %177 = load ptr %43
+  %178 = add i32 %176, i32 %177
+  store i32 %178, ptr %42
+  %179 = load ptr %68
+  store i32 %179, ptr %45
+  %180 = load ptr %42
+  %181 = load ptr %45
+  %182 = add i32 %180, i32 %181
+  store i32 %182, ptr %42
+  %183 = load ptr %42
+  store i32 %183, ptr %41
+  %184 = load ptr %2
+  store i32 %184, ptr %47
+  %185 = load ptr %69
+  store i32 %185, ptr %48
+  %186 = load ptr %47
+  %187 = load ptr %48
+  %188 = mul i32 %186, i32 %187
+  store i32 %188, ptr %47
+  %189 = load ptr %68
+  store i32 %189, ptr %49
+  %190 = load ptr %47
+  %191 = load ptr %49
+  %192 = add i32 %190, i32 %191
+  store i32 %192, ptr %47
+  %193 = load ptr %4
+  store i32 %193, ptr %50
+  %194 = load ptr %47
+  %195 = load ptr %50
+  %196 = add i32 %194, i32 %195
+  store i32 %196, ptr %47
+  %197 = load ptr %47
+  store i32 %197, ptr %46
+  %198 = load ptr %2
+  store i32 %198, ptr %52
+  %199 = load ptr %69
+  store i32 %199, ptr %53
+  %200 = load ptr %52
+  %201 = load ptr %53
+  %202 = mul i32 %200, i32 %201
+  store i32 %202, ptr %52
+  %203 = load ptr %4
+  store i32 %203, ptr %54
+  %204 = load ptr %52
+  %205 = load ptr %54
+  %206 = add i32 %204, i32 %205
+  store i32 %206, ptr %52
+  %207 = load ptr %68
+  store i32 %207, ptr %55
+  %208 = load ptr %52
+  %209 = load ptr %55
+  %210 = add i32 %208, i32 %209
+  store i32 %210, ptr %52
+  %211 = load ptr %52
+  store i32 %211, ptr %51
+  %212 = load ptr %68
+  store i32 %212, ptr %57
+  %213 = load ptr %4
+  store i32 %213, ptr %58
+  %214 = load ptr %57
+  %215 = load ptr %58
+  %216 = add i32 %214, i32 %215
+  store i32 %216, ptr %57
+  %217 = load ptr %2
+  store i32 %217, ptr %59
+  %218 = load ptr %69
+  store i32 %218, ptr %60
+  %219 = load ptr %59
+  %220 = load ptr %60
+  %221 = mul i32 %219, i32 %220
+  store i32 %221, ptr %59
+  %222 = load ptr %57
+  %223 = load ptr %59
+  %224 = add i32 %222, i32 %223
+  store i32 %224, ptr %57
+  %225 = load ptr %57
+  store i32 %225, ptr %56
+  %226 = load ptr %4
+  store i32 %226, ptr %62
+  %227 = load ptr %68
+  store i32 %227, ptr %63
+  %228 = load ptr %62
+  %229 = load ptr %63
+  %230 = add i32 %228, i32 %229
+  store i32 %230, ptr %62
+  %231 = load ptr %2
+  store i32 %231, ptr %64
+  %232 = load ptr %69
+  store i32 %232, ptr %65
+  %233 = load ptr %64
+  %234 = load ptr %65
+  %235 = mul i32 %233, i32 %234
+  store i32 %235, ptr %64
+  %236 = load ptr %62
+  %237 = load ptr %64
+  %238 = add i32 %236, i32 %237
+  store i32 %238, ptr %62
+  %239 = load ptr %62
+  store i32 %239, ptr %61
+  store i32 0, ptr %66
+  %240 = load ptr %66
+  store i32 %240, ptr %67
+  br label 241
+
+241:
+  %242 = load ptr %67
+  ret i32 %242
+}

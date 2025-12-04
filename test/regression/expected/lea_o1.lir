@@ -1,0 +1,33 @@
+leaBISD:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+        movq    %rdi, %0
+        movq    %rsi, %1
+
+.leaBISD_entry:
+        leal    $40(%0,%1,8), %4
+        leal    $40(%0,%1,8), %7
+        leal    $40(%0,%1,8), %10
+        leal    $40(%0,%1,8), %13
+        leal    $40(%0,%1,8), %16
+        leal    $40(%0,%1,8), %19
+        leal    $40(%0,%1,8), %22
+        leal    $40(%0,%1,8), %25
+        leal    $40(%0,%1,8), %28
+        leal    $40(%0,%1,8), %31
+        leal    $40(%0,%1,8), %34
+        leal    $40(%0,%1,8), %37
+        movq    $0, %rax
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
