@@ -191,7 +191,16 @@ namespace backend::lir_tree {
         if (!left_reg && !right_reg)
             return false;
 
-        if (!left_reg ^ !right_reg) {
+        //
+        //   +
+        //  / \
+        // $   +
+        //    / \   (with reorderings)
+        //   *   %
+        //  / \
+        // $   %
+        //
+        if (!left_reg || !right_reg) {
             tile_displacement = static_cast<ImmediateNode *>(
                 left_reg ? op->getRight().get() : op->getLeft().get());
             auto inner_reg = left_reg ? left_reg : right_reg;
@@ -221,6 +230,15 @@ namespace backend::lir_tree {
             return true;
         }
 
+        //
+        //   +
+        //  / \              +
+        // %   +           /   \
+        //    / \   or    *     +    (with reorderings)
+        //   *   $       / \   / \
+        //  / \         $   % $   %
+        // $   %
+        //
         auto &left_reg_source = left_reg->getSource();
         auto &right_reg_source = right_reg->getSource();
 
@@ -231,59 +249,38 @@ namespace backend::lir_tree {
                             ? dynamic_cast<OpNode *>(right_reg_source.get())
                             : nullptr;
 
-        if (left_op && left_op->getOp() == middleend::mir::BinaryOp::ADD) {
-            auto inner_left_imm =
-                dynamic_cast<ImmediateNode *>(left_op->getLeft().get());
-            auto inner_right_imm =
-                dynamic_cast<ImmediateNode *>(left_op->getRight().get());
+        auto matchDoubleReg = [&](OpNode *op_node, RegisterNode *reg_node) {
+            if (!op_node || op_node->getOp() != middleend::mir::BinaryOp::ADD)
+                return false;
 
-            // TODO: what
-            if (!inner_left_imm ^ !inner_right_imm) {
-                tile_displacement =
-                    inner_left_imm ? inner_left_imm : inner_right_imm;
-                auto remaining_node = static_cast<RegisterNode *>(
-                    inner_left_imm ? left_op->getRight().get()
-                                   : left_op->getLeft().get());
+            auto op_left_imm =
+                dynamic_cast<ImmediateNode *>(op_node->getLeft().get());
+            auto op_right_imm =
+                dynamic_cast<ImmediateNode *>(op_node->getRight().get());
 
-                if (matchScaledIndex(remaining_node)) {
-                    tile_base = right_reg;
-                    return true;
-                }
+            if (!!op_left_imm ^ !op_right_imm)
+                return false;
 
-                if (matchScaledIndex(right_reg)) {
-                    tile_base = remaining_node;
-                    return true;
-                }
+            tile_displacement = op_left_imm ? op_left_imm : op_right_imm;
+            auto other_child = static_cast<RegisterNode *>(
+                op_left_imm ? left_op->getRight().get()
+                            : left_op->getLeft().get());
+
+            if (matchScaledIndex(other_child)) {
+                tile_base = reg_node;
+                return true;
             }
-        }
 
-        if (right_op && right_op->getOp() == middleend::mir::BinaryOp::ADD) {
-            auto inner_left_imm =
-                dynamic_cast<ImmediateNode *>(right_op->getLeft().get());
-            auto inner_right_imm =
-                dynamic_cast<ImmediateNode *>(right_op->getRight().get());
-
-            // TODO: what
-            if (!inner_left_imm ^ !inner_right_imm) {
-                tile_displacement =
-                    inner_left_imm ? inner_left_imm : inner_right_imm;
-                auto remaining_node = static_cast<RegisterNode *>(
-                    inner_left_imm ? right_op->getRight().get()
-                                   : right_op->getLeft().get());
-
-                if (matchScaledIndex(remaining_node)) {
-                    tile_base = left_reg;
-                    return true;
-                }
-
-                if (matchScaledIndex(left_reg)) {
-                    tile_base = remaining_node;
-                    return true;
-                }
+            if (matchScaledIndex(right_reg)) {
+                tile_base = reg_node;
+                return true;
             }
-        }
 
-        return false;
+            return false;
+        };
+
+        return matchDoubleReg(left_op, right_reg) ||
+               matchDoubleReg(right_op, left_reg);
     }
 
     bool LeaBISDTile::matchScaledIndex(RegisterNode *node) {
