@@ -101,6 +101,15 @@ namespace backend::lir {
         result += i->getSrc()->toString();
     }
 
+    void ToStringVisitor::visit(InstructionLea *i) {
+        if (!result.empty())
+            result += "\n        ";
+        result += "lea";
+        result += toChar(i->getSize());
+        result +=
+            "    " + i->getSrc()->toString() + ", " + i->getDst()->toString();
+    }
+
     void ToStringVisitor::visit(InstructionCmp *i) {
         if (!result.empty())
             result += "\n        ";

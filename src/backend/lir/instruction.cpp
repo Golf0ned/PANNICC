@@ -128,6 +128,17 @@ namespace backend::lir {
 
     void InstructionSpecialOp::accept(InstructionVisitor *v) { v->visit(this); }
 
+    InstructionLea::InstructionLea(DataSize size, Address *src, Operand *dst)
+        : size(size), src(src), dst(dst) {}
+
+    DataSize InstructionLea::getSize() { return size; }
+
+    Address *InstructionLea::getSrc() { return src; }
+
+    Operand *InstructionLea::getDst() { return dst; }
+
+    void InstructionLea::accept(InstructionVisitor *v) { v->visit(this); }
+
     InstructionCmp::InstructionCmp(DataSize size, Operand *src_1,
                                    Operand *src_2)
         : size(size), src_1(src_1), src_2(src_2) {}
