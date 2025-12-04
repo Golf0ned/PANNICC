@@ -263,16 +263,16 @@ namespace backend::lir_tree {
 
             tile_displacement = op_left_imm ? op_left_imm : op_right_imm;
             auto other_child = static_cast<RegisterNode *>(
-                op_left_imm ? left_op->getRight().get()
-                            : left_op->getLeft().get());
+                op_left_imm ? op_node->getRight().get()
+                            : op_node->getLeft().get());
 
             if (matchScaledIndex(other_child)) {
                 tile_base = reg_node;
                 return true;
             }
 
-            if (matchScaledIndex(right_reg)) {
-                tile_base = reg_node;
+            if (matchScaledIndex(reg_node)) {
+                tile_base = other_child;
                 return true;
             }
 
