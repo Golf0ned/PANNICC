@@ -328,11 +328,22 @@ namespace backend::lir_tree {
 
     std::list<std::unique_ptr<lir::Instruction>>
     LeaBISDTile::apply(std::vector<Node *> &worklist) {
-        // TODO
         std::list<std::unique_ptr<lir::Instruction>> assembly;
 
-        auto unknown = std::make_unique<lir::InstructionUnknown>();
-        assembly.push_back(std::move(unknown));
+        auto size = lir::DataSize::DOUBLEWORD;
+
+        auto base = resolveOperand(tile_base, worklist);
+        auto index = resolveOperand(tile_index, worklist);
+        auto scale = om->getImmediate(tile_scale->getValue());
+        auto displacement = om->getImmediate(tile_displacement->getValue());
+        auto src = om->getAddress(static_cast<lir::Register *>(base),
+                                  static_cast<lir::Register *>(index), scale,
+                                  displacement);
+
+        auto dst = om->getRegister(tile_dst->getName());
+
+        auto lea = std::make_unique<lir::InstructionLea>(size, src, dst);
+        assembly.push_back(std::move(lea));
 
         return std::move(assembly);
     }
