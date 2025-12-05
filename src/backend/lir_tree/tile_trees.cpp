@@ -1,26 +1,6 @@
 #include "backend/lir_tree/tile_trees.h"
 
 namespace backend::lir_tree {
-    bool matchRegAndSource(Node *node, RegisterNode **reg_res,
-                           Node **source_res) {
-        auto reg = dynamic_cast<RegisterNode *>(node);
-        if (!reg)
-            return false;
-
-        auto &reg_src = reg->getSource();
-        if (!reg_src)
-            return false;
-
-        *reg_res = reg;
-        *source_res = reg_src.get();
-        return true;
-    }
-
-    bool matchRegAndSource(Node *node, Node **source_res) {
-        RegisterNode *reg_res;
-        return matchRegAndSource(node, &reg_res, source_res);
-    }
-
     bool matchScaledIndex(RegisterNode *node, RegisterNode **index_res,
                           ImmediateNode **scale_res) {
         auto &reg_src = node->getSource();
@@ -116,8 +96,14 @@ namespace backend::lir_tree {
             return false;
 
         tile_ptr = dynamic_cast<AddressNode *>(store->getPtr().get());
+        if (!tile_ptr)
+            return false;
+
         tile_src = store->getSource().get();
-        return tile_ptr && tile_src;
+        if (!tile_src)
+            return false;
+
+        return true;
     }
 
     std::list<std::unique_ptr<lir::Instruction>>
@@ -138,11 +124,15 @@ namespace backend::lir_tree {
     LoadTile::LoadTile(lir::OperandManager *om) : Tile(om) {}
 
     bool LoadTile::matches(Node *root) {
-        Node *reg_src;
-        if (!matchRegAndSource(root, &tile_dst, &reg_src))
+        tile_dst = dynamic_cast<RegisterNode *>(root);
+        if (!tile_dst)
             return false;
 
-        tile_load = dynamic_cast<LoadNode *>(reg_src);
+        auto &reg_src = tile_dst->getSource();
+        if (!reg_src)
+            return false;
+
+        tile_load = dynamic_cast<LoadNode *>(reg_src.get());
         return tile_load;
     }
 
@@ -164,11 +154,15 @@ namespace backend::lir_tree {
     BinOpTile::BinOpTile(lir::OperandManager *om) : Tile(om) {}
 
     bool BinOpTile::matches(Node *root) {
-        Node *reg_src;
-        if (!matchRegAndSource(root, &tile_dst, &reg_src))
+        tile_dst = dynamic_cast<RegisterNode *>(root);
+        if (!tile_dst)
             return false;
 
-        tile_op = dynamic_cast<OpNode *>(reg_src);
+        auto &reg_src = tile_dst->getSource();
+        if (!reg_src)
+            return false;
+
+        tile_op = dynamic_cast<OpNode *>(reg_src.get());
         return tile_op;
     }
 
@@ -184,6 +178,7 @@ namespace backend::lir_tree {
 
         auto op = tile_op->getOp();
         auto bin_op = lir::fromMir(op);
+        // TODO: fix multiply operands
         if (op == middleend::mir::BinaryOp::SDIV) {
             auto eax = om->getRegister(lir::RegisterNum::EAX);
 
@@ -226,11 +221,15 @@ namespace backend::lir_tree {
     LeaBISTile::LeaBISTile(lir::OperandManager *om) : Tile(om) {}
 
     bool LeaBISTile::matches(Node *root) {
-        Node *dst_source;
-        if (!matchRegAndSource(root, &tile_dst, &dst_source))
+        tile_dst = dynamic_cast<RegisterNode *>(root);
+        if (!tile_dst)
             return false;
 
-        auto op = dynamic_cast<OpNode *>(dst_source);
+        auto &reg_src = tile_dst->getSource();
+        if (!reg_src)
+            return false;
+
+        auto op = dynamic_cast<OpNode *>(reg_src.get());
         if (!op || op->getOp() != middleend::mir::BinaryOp::ADD)
             return false;
 
@@ -239,14 +238,16 @@ namespace backend::lir_tree {
         if (!left_reg || !right_reg)
             return false;
 
-        if (matchScaledIndex(left_reg, &tile_index, &tile_scale))
+        if (matchScaledIndex(left_reg, &tile_index, &tile_scale)) {
             tile_base = right_reg;
-        else if (matchScaledIndex(right_reg, &tile_index, &tile_scale))
+            return true;
+        }
+        if (matchScaledIndex(right_reg, &tile_index, &tile_scale)) {
             tile_base = left_reg;
-        else
-            return false;
+            return true;
+        }
 
-        return true;
+        return false;
     }
 
     std::list<std::unique_ptr<lir::Instruction>>
@@ -274,11 +275,15 @@ namespace backend::lir_tree {
     LeaBISDTile::LeaBISDTile(lir::OperandManager *om) : Tile(om) {}
 
     bool LeaBISDTile::matches(Node *root) {
-        Node *dst_source;
-        if (!matchRegAndSource(root, &tile_dst, &dst_source))
+        tile_dst = dynamic_cast<RegisterNode *>(root);
+        if (!tile_dst)
             return false;
 
-        auto op = dynamic_cast<OpNode *>(dst_source);
+        auto &reg_src = tile_dst->getSource();
+        if (!reg_src)
+            return false;
+
+        auto op = dynamic_cast<OpNode *>(reg_src.get());
         if (!op || op->getOp() != middleend::mir::BinaryOp::ADD)
             return false;
 
@@ -316,14 +321,16 @@ namespace backend::lir_tree {
             if (!inner_left || !inner_right)
                 return false;
 
-            if (matchScaledIndex(inner_left, &tile_index, &tile_scale))
+            if (matchScaledIndex(inner_left, &tile_index, &tile_scale)) {
                 tile_base = inner_right;
-            else if (matchScaledIndex(inner_right, &tile_index, &tile_scale))
+                return true;
+            }
+            if (matchScaledIndex(inner_right, &tile_index, &tile_scale)) {
                 tile_base = inner_left;
-            else
-                return false;
+                return true;
+            }
 
-            return true;
+            return false;
         }
 
         //
@@ -345,28 +352,27 @@ namespace backend::lir_tree {
                             ? dynamic_cast<OpNode *>(right_reg_source.get())
                             : nullptr;
 
-        auto matchDoubleReg = [&](OpNode *op_node, RegisterNode *reg_node) {
-            if (!op_node || op_node->getOp() != middleend::mir::BinaryOp::ADD)
+        auto matchDoubleReg = [&](OpNode *op_group, RegisterNode *reg_node) {
+            if (!op_group || op_group->getOp() != middleend::mir::BinaryOp::ADD)
                 return false;
 
             auto op_left_imm =
-                dynamic_cast<ImmediateNode *>(op_node->getLeft().get());
+                dynamic_cast<ImmediateNode *>(op_group->getLeft().get());
             auto op_right_imm =
-                dynamic_cast<ImmediateNode *>(op_node->getRight().get());
+                dynamic_cast<ImmediateNode *>(op_group->getRight().get());
 
             if (!!op_left_imm ^ !op_right_imm)
                 return false;
 
             tile_displacement = op_left_imm ? op_left_imm : op_right_imm;
             auto other_child = static_cast<RegisterNode *>(
-                op_left_imm ? op_node->getRight().get()
-                            : op_node->getLeft().get());
+                op_left_imm ? op_group->getRight().get()
+                            : op_group->getLeft().get());
 
             if (matchScaledIndex(other_child, &tile_index, &tile_scale)) {
                 tile_base = reg_node;
                 return true;
             }
-
             if (matchScaledIndex(reg_node, &tile_index, &tile_scale)) {
                 tile_base = other_child;
                 return true;
