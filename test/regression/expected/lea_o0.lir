@@ -34,7 +34,7 @@ leaBIS:
         movl    %0, $80(%rsp)
         subq    $4, %rsp    # [virtual]
         movl    %1, $84(%rsp)
-        movl    $8, $4(%rsp)
+        movl    $2, $4(%rsp)
         movl    $4(%rsp), %24
         movl    %24, (%rsp)
         movl    $80(%rsp), %25
@@ -117,6 +117,136 @@ leaBIS:
         movl    $76(%rsp), %67
         movq    %67, %rax
         addq    $88, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+leaISD:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+        movq    %rdi, %0
+
+.leaISD_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    %0, $84(%rsp)
+        movl    $4, (%rsp)
+        movl    (%rsp), %24
+        movl    %24, (%rsp)
+        movl    $60, $8(%rsp)
+        movl    $8(%rsp), %25
+        movl    %25, $4(%rsp)
+        movl    $84(%rsp), %26
+        movl    %26, $16(%rsp)
+        movl    (%rsp), %27
+        movl    %27, $20(%rsp)
+        movl    $16(%rsp), %28
+        movl    $20(%rsp), %29
+        phi     [%28] <-> %30    # [virtual]
+        imull   %29, %30
+        movl    %30, $16(%rsp)
+        movl    $4(%rsp), %31
+        movl    %31, $24(%rsp)
+        movl    $16(%rsp), %32
+        movl    $24(%rsp), %33
+        phi     [%32] <-> %34    # [virtual]
+        addl    %33, %34
+        movl    %34, $16(%rsp)
+        movl    $16(%rsp), %35
+        movl    %35, $12(%rsp)
+        movl    (%rsp), %36
+        movl    %36, $32(%rsp)
+        movl    $84(%rsp), %37
+        movl    %37, $36(%rsp)
+        movl    $32(%rsp), %38
+        movl    $36(%rsp), %39
+        phi     [%38] <-> %40    # [virtual]
+        imull   %39, %40
+        movl    %40, $32(%rsp)
+        movl    $4(%rsp), %41
+        movl    %41, $40(%rsp)
+        movl    $32(%rsp), %42
+        movl    $40(%rsp), %43
+        phi     [%42] <-> %44    # [virtual]
+        addl    %43, %44
+        movl    %44, $32(%rsp)
+        movl    $32(%rsp), %45
+        movl    %45, $28(%rsp)
+        movl    $4(%rsp), %46
+        movl    %46, $48(%rsp)
+        movl    $84(%rsp), %47
+        movl    %47, $52(%rsp)
+        movl    (%rsp), %48
+        movl    %48, $56(%rsp)
+        movl    $52(%rsp), %49
+        movl    $56(%rsp), %50
+        phi     [%49] <-> %51    # [virtual]
+        imull   %50, %51
+        movl    %51, $52(%rsp)
+        movl    $48(%rsp), %52
+        movl    $52(%rsp), %53
+        phi     [%52] <-> %54    # [virtual]
+        addl    %53, %54
+        movl    %54, $48(%rsp)
+        movl    $48(%rsp), %55
+        movl    %55, $44(%rsp)
+        movl    $4(%rsp), %56
+        movl    %56, $64(%rsp)
+        movl    (%rsp), %57
+        movl    %57, $68(%rsp)
+        movl    $84(%rsp), %58
+        movl    %58, $72(%rsp)
+        movl    $68(%rsp), %59
+        movl    $72(%rsp), %60
+        phi     [%59] <-> %61    # [virtual]
+        imull   %60, %61
+        movl    %61, $68(%rsp)
+        movl    $64(%rsp), %62
+        movl    $68(%rsp), %63
+        phi     [%62] <-> %64    # [virtual]
+        addl    %63, %64
+        movl    %64, $64(%rsp)
+        movl    $64(%rsp), %65
+        movl    %65, $60(%rsp)
+        movl    $0, $76(%rsp)
+        movl    $76(%rsp), %66
+        movl    %66, $80(%rsp)
+
+.leaISD_67:
+        movl    $80(%rsp), %68
+        movq    %68, %rax
+        addq    $92, %rsp    # [virtual]
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
         popq    %rbp    # [virtual]
