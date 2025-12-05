@@ -272,6 +272,62 @@ namespace backend::lir_tree {
         return std::move(assembly);
     }
 
+    LeaISDTile::LeaISDTile(lir::OperandManager *om) : Tile(om) {}
+
+    bool LeaISDTile::matches(Node *root) {
+        tile_dst = dynamic_cast<RegisterNode *>(root);
+        if (!tile_dst)
+            return false;
+
+        auto &reg_src = tile_dst->getSource();
+        if (!reg_src)
+            return false;
+
+        auto op = dynamic_cast<OpNode *>(reg_src.get());
+        if (!op || op->getOp() != middleend::mir::BinaryOp::ADD)
+            return false;
+
+        auto left_reg = dynamic_cast<RegisterNode *>(op->getLeft().get());
+        auto right_reg = dynamic_cast<RegisterNode *>(op->getRight().get());
+        if (!!left_reg ^ !right_reg)
+            return false;
+
+        if (left_reg && matchScaledIndex(left_reg, &tile_index, &tile_scale)) {
+            tile_displacement =
+                static_cast<ImmediateNode *>(op->getRight().get());
+            return true;
+        }
+        if (right_reg &&
+            matchScaledIndex(right_reg, &tile_index, &tile_scale)) {
+            tile_displacement =
+                static_cast<ImmediateNode *>(op->getLeft().get());
+            return true;
+        }
+
+        return false;
+    }
+
+    std::list<std::unique_ptr<lir::Instruction>>
+    LeaISDTile::apply(std::vector<Node *> &worklist) {
+        std::list<std::unique_ptr<lir::Instruction>> assembly;
+
+        auto size = lir::DataSize::DOUBLEWORD;
+
+        auto base = nullptr;
+        auto index = resolveOperand(tile_index, worklist);
+        auto scale = om->getImmediate(tile_scale->getValue());
+        auto displacement = om->getImmediate(tile_displacement->getValue());
+        auto src = om->getAddress(base, static_cast<lir::Register *>(index),
+                                  scale, displacement);
+
+        auto dst = om->getRegister(tile_dst->getName());
+
+        auto lea = std::make_unique<lir::InstructionLea>(size, src, dst);
+        assembly.push_back(std::move(lea));
+
+        return std::move(assembly);
+    }
+
     LeaBISDTile::LeaBISDTile(lir::OperandManager *om) : Tile(om) {}
 
     bool LeaBISDTile::matches(Node *root) {
@@ -411,6 +467,7 @@ namespace backend::lir_tree {
         // lea tiles
         all_tiles.push_back(std::make_unique<LeaBISDTile>(om));
         all_tiles.push_back(std::make_unique<LeaBISTile>(om));
+        all_tiles.push_back(std::make_unique<LeaISDTile>(om));
 
         // Atomic tiles
         all_tiles.push_back(std::make_unique<BinOpTile>(om));
