@@ -1,9 +1,19 @@
 int leaBIS(int base, int index) {
-    int scale = 8;
+    int scale = 2;
     int a = base + (index * scale);
     int b = base + (scale * index);
     int c = (index * scale) + base;
     int d = (scale * index) + base;
+    return 0;
+}
+
+int leaISD(int index) {
+    int scale = 4;
+    int displacement = 60;
+    int c = (index * scale) + displacement;
+    int d = (scale * index) + displacement;
+    int a = displacement + (index * scale);
+    int b = displacement + (scale * index);
     return 0;
 }
 
