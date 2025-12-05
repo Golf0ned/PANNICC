@@ -1,6 +1,46 @@
 #include "backend/lir_tree/tile_trees.h"
 
 namespace backend::lir_tree {
+    bool matchScaledIndex(RegisterNode *node, RegisterNode **index_res,
+                          ImmediateNode **scale_res) {
+        auto &reg_src = node->getSource();
+        if (!reg_src)
+            return false;
+
+        auto op = dynamic_cast<OpNode *>(reg_src.get());
+        if (!op)
+            return false;
+
+        if (op->getOp() != middleend::mir::BinaryOp::MUL)
+            return false;
+
+        auto left_reg = dynamic_cast<RegisterNode *>(op->getLeft().get());
+        auto right_reg = dynamic_cast<RegisterNode *>(op->getRight().get());
+        if (!left_reg == !right_reg)
+            return false;
+
+        auto index = left_reg ? left_reg : right_reg;
+
+        auto scale = dynamic_cast<ImmediateNode *>(
+            left_reg ? op->getRight().get() : op->getLeft().get());
+        if (!scale)
+            return false;
+
+        switch (scale->getValue()) {
+        case 1:
+        case 2:
+        case 4:
+        case 8:
+            break;
+        default:
+            return false;
+        }
+
+        *index_res = index;
+        *scale_res = scale;
+        return true;
+    }
+
     Tile::Tile(lir::OperandManager *om) : om(om) {}
 
     lir::Operand *Tile::resolveOperand(Node *node,
@@ -220,9 +260,9 @@ namespace backend::lir_tree {
             if (!inner_left || !inner_right)
                 return false;
 
-            if (matchScaledIndex(inner_left))
+            if (matchScaledIndex(inner_left, &tile_index, &tile_scale))
                 tile_base = inner_right;
-            else if (matchScaledIndex(inner_right))
+            else if (matchScaledIndex(inner_right, &tile_index, &tile_scale))
                 tile_base = inner_left;
             else
                 return false;
@@ -266,12 +306,12 @@ namespace backend::lir_tree {
                 op_left_imm ? op_node->getRight().get()
                             : op_node->getLeft().get());
 
-            if (matchScaledIndex(other_child)) {
+            if (matchScaledIndex(other_child, &tile_index, &tile_scale)) {
                 tile_base = reg_node;
                 return true;
             }
 
-            if (matchScaledIndex(reg_node)) {
+            if (matchScaledIndex(reg_node, &tile_index, &tile_scale)) {
                 tile_base = other_child;
                 return true;
             }
@@ -281,46 +321,6 @@ namespace backend::lir_tree {
 
         return matchDoubleReg(left_op, right_reg) ||
                matchDoubleReg(right_op, left_reg);
-    }
-
-    bool LeaBISDTile::matchScaledIndex(RegisterNode *node) {
-        auto &reg_src = node->getSource();
-        if (!reg_src)
-            return false;
-
-        auto op = dynamic_cast<OpNode *>(reg_src.get());
-        if (!op)
-            return false;
-
-        if (op->getOp() != middleend::mir::BinaryOp::MUL)
-            return false;
-
-        auto left_reg = dynamic_cast<RegisterNode *>(op->getLeft().get());
-        auto right_reg = dynamic_cast<RegisterNode *>(op->getRight().get());
-        // TODO: what
-        if (!left_reg == !right_reg)
-            return false;
-
-        auto index = left_reg ? left_reg : right_reg;
-
-        auto scale = dynamic_cast<ImmediateNode *>(
-            left_reg ? op->getRight().get() : op->getLeft().get());
-        if (!scale)
-            return false;
-
-        switch (scale->getValue()) {
-        case 1:
-        case 2:
-        case 4:
-        case 8:
-            break;
-        default:
-            return false;
-        }
-
-        tile_index = index;
-        tile_scale = scale;
-        return true;
     }
 
     std::list<std::unique_ptr<lir::Instruction>>
