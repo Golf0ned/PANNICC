@@ -56,11 +56,24 @@ namespace backend::lir_tree {
         OpNode *tile_op;
     };
 
+    class LeaBISTile : public Tile {
+    public:
+        LeaBISTile(lir::OperandManager *om);
+        bool matches(Node *root) override;
+        std::list<std::unique_ptr<lir::Instruction>>
+        apply(std::vector<Node *> &worklist) override;
+
+    private:
+        RegisterNode *tile_dst;
+        RegisterNode *tile_base;
+        RegisterNode *tile_index;
+        ImmediateNode *tile_scale;
+    };
+
     class LeaBISDTile : public Tile {
     public:
         LeaBISDTile(lir::OperandManager *om);
         bool matches(Node *root) override;
-        bool matchScaledIndex(RegisterNode *node);
         std::list<std::unique_ptr<lir::Instruction>>
         apply(std::vector<Node *> &worklist) override;
 
