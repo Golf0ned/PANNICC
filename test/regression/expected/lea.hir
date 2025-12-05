@@ -1,3 +1,54 @@
+int leaBIS(int base_0, int index_0) {
+    __entry:
+    int scale_1;
+    int __v;
+    __v = 8;
+    scale_1 = __v;
+    int a_1;
+    int __v1;
+    __v1 = base_0;
+    int __v2;
+    __v2 = index_0;
+    int __v3;
+    __v3 = scale_1;
+    __v2 = __v2 * __v3;
+    __v1 = __v1 + __v2;
+    a_1 = __v1;
+    int b_1;
+    int __v4;
+    __v4 = base_0;
+    int __v5;
+    __v5 = scale_1;
+    int __v6;
+    __v6 = index_0;
+    __v5 = __v5 * __v6;
+    __v4 = __v4 + __v5;
+    b_1 = __v4;
+    int c_1;
+    int __v7;
+    __v7 = index_0;
+    int __v8;
+    __v8 = scale_1;
+    __v7 = __v7 * __v8;
+    int __v9;
+    __v9 = base_0;
+    __v7 = __v7 + __v9;
+    c_1 = __v7;
+    int d_1;
+    int __v10;
+    __v10 = scale_1;
+    int __v11;
+    __v11 = index_0;
+    __v10 = __v10 * __v11;
+    int __v12;
+    __v12 = base_0;
+    __v10 = __v10 + __v12;
+    d_1 = __v10;
+    int __v13;
+    __v13 = 0;
+    return __v13;
+}
+
 int leaBISD(int base_0, int index_0) {
     __entry:
     int scale_1;
