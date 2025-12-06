@@ -9,6 +9,19 @@ int leaBIS(int base, int index) {
     return 0;
 }
 
+int leaBID(int base, int index) {
+    int displacement = 13;
+
+    int a = base + index + displacement;
+    int b = base + displacement + index;
+    int c = displacement + base + index;
+    int d = base + (index + displacement);
+    int e = base + (displacement + index);
+    int f = displacement + (base + index);
+
+    return 0;
+}
+
 int leaISD(int index) {
     int scale = 4;
     int displacement = 60;
