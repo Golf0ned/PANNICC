@@ -53,7 +53,8 @@ protected:
     std::string test_name;
     std::string input_path, passes_path;
     std::string ast_path, hir_path;
-    std::string mir_path, mir_opt_path;
+    std::string mir_path, mir_o1_path, mir_select_path;
+    std::string lir_path, lir_o1_path, lir_select_path;
 
     void SetUp() override {
         test_name = GetParam();
@@ -64,8 +65,13 @@ protected:
         ast_path = test_dir + "/expected/" + test_name + ".ast";
         hir_path = test_dir + "/expected/" + test_name + ".hir";
 
-        mir_path = test_dir + "/expected/" + test_name + ".mir";
-        mir_opt_path = test_dir + "/expected/" + test_name + "_opt.mir";
+        mir_path = test_dir + "/expected/" + test_name + "_o0.mir";
+        mir_o1_path = test_dir + "/expected/" + test_name + "_o1.mir";
+        mir_select_path = test_dir + "/expected/" + test_name + "_select.mir";
+
+        lir_path = test_dir + "/expected/" + test_name + "_o0.lir";
+        lir_o1_path = test_dir + "/expected/" + test_name + "_o1.lir";
+        lir_select_path = test_dir + "/expected/" + test_name + "_select.lir";
     }
 };
 
@@ -87,7 +93,16 @@ TEST_P(RegressionTest, MIR) {
     compareIfFileExists(mir.toString(), mir_path);
 }
 
-TEST_P(RegressionTest, MIRWithPasses) {
+TEST_P(RegressionTest, MIRWithO1) {
+    auto pm = middleend::initializeO1();
+    auto ast = frontend::parse(input_path);
+    auto hir = frontend::astToHir(ast);
+    auto mir = frontend::hirToMir(hir);
+    pm->runPasses(mir);
+    compareIfFileExists(mir.toString(), mir_o1_path);
+}
+
+TEST_P(RegressionTest, MIRWithSelectPasses) {
     auto pm = buildPassesFromFile(passes_path);
     if (!pm)
         GTEST_SKIP();
@@ -96,7 +111,7 @@ TEST_P(RegressionTest, MIRWithPasses) {
     auto hir = frontend::astToHir(ast);
     auto mir = frontend::hirToMir(hir);
     pm->runPasses(mir);
-    compareIfFileExists(mir.toString(), mir_opt_path);
+    compareIfFileExists(mir.toString(), mir_select_path);
 }
 
 TEST_P(RegressionTest, LIR) {
@@ -104,10 +119,20 @@ TEST_P(RegressionTest, LIR) {
     auto hir = frontend::astToHir(ast);
     auto mir = frontend::hirToMir(hir);
     auto lir = backend::mirToLir(mir);
-    SUCCEED();
+    compareIfFileExists(lir.toString(), lir_path);
 }
 
-TEST_P(RegressionTest, LIRWithPasses) {
+TEST_P(RegressionTest, LIRWithO1) {
+    auto pm = middleend::initializeO1();
+    auto ast = frontend::parse(input_path);
+    auto hir = frontend::astToHir(ast);
+    auto mir = frontend::hirToMir(hir);
+    pm->runPasses(mir);
+    auto lir = backend::mirToLir(mir);
+    compareIfFileExists(lir.toString(), lir_o1_path);
+}
+
+TEST_P(RegressionTest, LIRWithSelectPasses) {
     auto pm = buildPassesFromFile(passes_path);
     if (!pm)
         GTEST_SKIP();
@@ -117,7 +142,7 @@ TEST_P(RegressionTest, LIRWithPasses) {
     auto mir = frontend::hirToMir(hir);
     pm->runPasses(mir);
     auto lir = backend::mirToLir(mir);
-    SUCCEED();
+    compareIfFileExists(lir.toString(), lir_select_path);
 }
 
 std::vector<std::string> discoverTests(std::string input_dir) {

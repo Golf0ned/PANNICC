@@ -149,11 +149,10 @@ namespace backend::lir {
 
         if (base) {
             res += base->toString();
-            if (index)
-                res += ',';
         }
 
         if (index) {
+            res += ',';
             res += index->toString();
             auto scale_value = scale->getValue();
             if (scale_value > 1) {

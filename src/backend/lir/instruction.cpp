@@ -45,6 +45,15 @@ namespace backend::lir {
 
     void InstructionPop::accept(InstructionVisitor *v) { v->visit(this); }
 
+    InstructionConvert::InstructionConvert(DataSize from, DataSize to)
+        : from(from), to(to) {}
+
+    DataSize InstructionConvert::getFrom() { return from; }
+
+    DataSize InstructionConvert::getTo() { return to; }
+
+    void InstructionConvert::accept(InstructionVisitor *v) { v->visit(this); }
+
     BinaryOp fromMir(middleend::mir::BinaryOp op) {
         switch (op) {
         case middleend::mir::BinaryOp::ADD:
@@ -53,6 +62,8 @@ namespace backend::lir {
             return BinaryOp::SUB;
         case middleend::mir::BinaryOp::MUL:
             return BinaryOp::IMUL;
+        case middleend::mir::BinaryOp::SDIV:
+            return BinaryOp::IDIV;
         case middleend::mir::BinaryOp::AND:
             return BinaryOp::AND;
         case middleend::mir::BinaryOp::OR:
@@ -63,8 +74,6 @@ namespace backend::lir {
             return BinaryOp::SHL;
         case middleend::mir::BinaryOp::ASHR:
             return BinaryOp::SAR;
-        default:
-            std::unreachable();
         }
         std::unreachable();
     }
@@ -77,6 +86,8 @@ namespace backend::lir {
             return "sub";
         case BinaryOp::IMUL:
             return "imul";
+        case BinaryOp::IDIV:
+            return "idiv";
         case BinaryOp::AND:
             return "and";
         case BinaryOp::OR:
@@ -104,6 +115,29 @@ namespace backend::lir {
     Operand *InstructionBinaryOp::getDst() { return dst; }
 
     void InstructionBinaryOp::accept(InstructionVisitor *v) { v->visit(this); }
+
+    InstructionSpecialOp::InstructionSpecialOp(BinaryOp op, DataSize size,
+                                               Operand *src)
+        : op(op), size(size), src(src) {}
+
+    BinaryOp InstructionSpecialOp::getOp() { return op; }
+
+    DataSize InstructionSpecialOp::getSize() { return size; }
+
+    Operand *InstructionSpecialOp::getSrc() { return src; }
+
+    void InstructionSpecialOp::accept(InstructionVisitor *v) { v->visit(this); }
+
+    InstructionLea::InstructionLea(DataSize size, Address *src, Operand *dst)
+        : size(size), src(src), dst(dst) {}
+
+    DataSize InstructionLea::getSize() { return size; }
+
+    Address *InstructionLea::getSrc() { return src; }
+
+    Operand *InstructionLea::getDst() { return dst; }
+
+    void InstructionLea::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionCmp::InstructionCmp(DataSize size, Operand *src_1,
                                    Operand *src_2)

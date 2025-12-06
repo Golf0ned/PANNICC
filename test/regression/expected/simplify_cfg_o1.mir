@@ -1,0 +1,57 @@
+define i32 @simplify_cfg_delete_orphaned() {
+entry:
+  br i32 1, label 0, label 1
+
+0:
+  br label 2
+
+1:
+  br label 2
+
+2:
+  %3 = phi i32 [ 2, %0 ], [ 3, %1 ]
+  ret i32 %3
+}
+
+define i32 @simplify_cfg_merge_straight_line() {
+entry:
+  br i32 1, label 0, label 2
+
+0:
+  br i32 2, label 1, label 3
+
+1:
+  br label 4
+
+2:
+  br label 4
+
+3:
+  br label 4
+
+4:
+  %5 = phi i32 [ 3, %1 ], [ 5, %2 ], [ 4, %3 ]
+  ret i32 %5
+}
+
+define i32 @simplify_cfg_delete_empty() {
+entry:
+  br i32 1, label 0, label 1
+
+0:
+  br i32 2, label 2, label 2
+
+1:
+  br i32 3, label 2, label 2
+
+2:
+  ret i32 4
+}
+
+define i32 @simplify_cfg_empty_loop() {
+entry:
+  br i32 0, label 18446744073709551615, label 0
+
+0:
+  ret i32 0
+}

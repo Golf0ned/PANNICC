@@ -5,8 +5,7 @@
 namespace backend::lir_tree {
     class Tile {
     public:
-        Tile(uint64_t cost, lir::OperandManager *om);
-        uint64_t getCost();
+        Tile(lir::OperandManager *om);
         lir::Operand *resolveOperand(Node *node, std::vector<Node *> &worklist);
         lir::Operand *resolveOperand(AddressNode *node,
                                      std::vector<Node *> &worklist);
@@ -19,9 +18,6 @@ namespace backend::lir_tree {
 
     protected:
         lir::OperandManager *om;
-
-    private:
-        uint64_t cost;
     };
 
     class StoreTile : public Tile {
@@ -58,6 +54,89 @@ namespace backend::lir_tree {
     private:
         RegisterNode *tile_dst;
         OpNode *tile_op;
+    };
+
+    class LeaBITile : public Tile {
+    public:
+        LeaBITile(lir::OperandManager *om);
+        bool matches(Node *root) override;
+        std::list<std::unique_ptr<lir::Instruction>>
+        apply(std::vector<Node *> &worklist) override;
+
+    private:
+        RegisterNode *tile_dst;
+        RegisterNode *tile_base;
+        RegisterNode *tile_index;
+    };
+
+    class LeaBISTile : public Tile {
+    public:
+        LeaBISTile(lir::OperandManager *om);
+        bool matches(Node *root) override;
+        std::list<std::unique_ptr<lir::Instruction>>
+        apply(std::vector<Node *> &worklist) override;
+
+    private:
+        RegisterNode *tile_dst;
+        RegisterNode *tile_base;
+        RegisterNode *tile_index;
+        ImmediateNode *tile_scale;
+    };
+
+    class LeaBIDTile : public Tile {
+    public:
+        LeaBIDTile(lir::OperandManager *om);
+        bool matches(Node *root) override;
+        std::list<std::unique_ptr<lir::Instruction>>
+        apply(std::vector<Node *> &worklist) override;
+
+    private:
+        RegisterNode *tile_dst;
+        RegisterNode *tile_base;
+        RegisterNode *tile_index;
+        ImmediateNode *tile_displacement;
+    };
+
+    class LeaISTile : public Tile {
+    public:
+        LeaISTile(lir::OperandManager *om);
+        bool matches(Node *root) override;
+        std::list<std::unique_ptr<lir::Instruction>>
+        apply(std::vector<Node *> &worklist) override;
+
+    private:
+        RegisterNode *tile_dst;
+        RegisterNode *tile_index;
+        ImmediateNode *tile_scale;
+    };
+
+    class LeaISDTile : public Tile {
+    public:
+        LeaISDTile(lir::OperandManager *om);
+        bool matches(Node *root) override;
+        std::list<std::unique_ptr<lir::Instruction>>
+        apply(std::vector<Node *> &worklist) override;
+
+    private:
+        RegisterNode *tile_dst;
+        RegisterNode *tile_index;
+        ImmediateNode *tile_scale;
+        ImmediateNode *tile_displacement;
+    };
+
+    class LeaBISDTile : public Tile {
+    public:
+        LeaBISDTile(lir::OperandManager *om);
+        bool matches(Node *root) override;
+        std::list<std::unique_ptr<lir::Instruction>>
+        apply(std::vector<Node *> &worklist) override;
+
+    private:
+        RegisterNode *tile_dst;
+        RegisterNode *tile_base;
+        RegisterNode *tile_index;
+        ImmediateNode *tile_scale;
+        ImmediateNode *tile_displacement;
     };
 
     class TreeTiler {

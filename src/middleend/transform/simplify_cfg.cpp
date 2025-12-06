@@ -34,8 +34,7 @@ namespace middleend {
                         if (preds.getSize() != 1)
                             return false;
                         auto pred = preds.getEdges()[0];
-                        if (pred == f->getEntryBlock() ||
-                            pred->getSuccessors().getSize() != 1)
+                        if (pred->getSuccessors().getSize() != 1)
                             return false;
 
                         auto &pred_insts = pred->getInstructions();
@@ -65,6 +64,9 @@ namespace middleend {
 
                         pred->getSuccessors() = std::move(succs);
                         pred->getTerminator().swap(bb->getTerminator());
+
+                        if (bb == f->getEntryBlock())
+                            f->setEntryBlock(pred);
 
                         to_drop.push_back(std::move(*iter));
                         iter = bbs.erase(iter);

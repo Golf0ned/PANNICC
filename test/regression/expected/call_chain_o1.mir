@@ -7,9 +7,6 @@ define i32 @second() {
 entry:
   %0 = call i32 @first()
   %1 = add i32 %0, i32 1
-  br label 2
-
-2:
   ret i32 %1
 }
 
@@ -17,9 +14,6 @@ define i32 @third() {
 entry:
   %0 = call i32 @second()
   %1 = add i32 %0, i32 2
-  br label 2
-
-2:
   ret i32 %1
 }
 
@@ -27,9 +21,6 @@ define i32 @fourth() {
 entry:
   %0 = call i32 @third()
   %1 = add i32 %0, i32 3
-  br label 2
-
-2:
   ret i32 %1
 }
 
@@ -37,9 +28,6 @@ define i32 @fifth() {
 entry:
   %0 = call i32 @fourth()
   %1 = add i32 %0, i32 4
-  br label 2
-
-2:
   ret i32 %1
 }
 
@@ -47,9 +35,6 @@ define i32 @sixth() {
 entry:
   %0 = call i32 @fifth()
   %1 = add i32 %0, i32 5
-  br label 2
-
-2:
   ret i32 %1
 }
 
@@ -80,8 +65,5 @@ entry:
   %22 = add i32 %20, i32 %21
   %23 = call i32 @sixth()
   %24 = add i32 %22, i32 %23
-  br label 25
-
-25:
   ret i32 %24
 }

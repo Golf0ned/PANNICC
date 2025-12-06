@@ -69,10 +69,23 @@ namespace backend::lir {
         Operand *dst;
     };
 
+    class InstructionConvert : public Instruction {
+    public:
+        InstructionConvert(DataSize from, DataSize to);
+        DataSize getFrom();
+        DataSize getTo();
+        void accept(InstructionVisitor *v) override;
+
+    private:
+        DataSize from;
+        DataSize to;
+    };
+
     enum class BinaryOp {
         ADD,
         SUB,
         IMUL,
+        IDIV,
         AND,
         OR,
         XOR,
@@ -103,16 +116,36 @@ namespace backend::lir {
         Operand *dst;
     };
 
+    class InstructionSpecialOp : public Instruction {
+    public:
+        InstructionSpecialOp(BinaryOp op, DataSize size, Operand *src);
+        BinaryOp getOp();
+        DataSize getSize();
+        Operand *getSrc();
+        void accept(InstructionVisitor *v) override;
+
+    private:
+        BinaryOp op;
+        DataSize size;
+        Operand *src;
+    };
+
+    class InstructionLea : public Instruction {
+    public:
+        InstructionLea(DataSize size, Address *src, Operand *dst);
+        DataSize getSize();
+        Address *getSrc();
+        Operand *getDst();
+        void accept(InstructionVisitor *v) override;
+
+    private:
+        DataSize size;
+        Address *src;
+        Operand *dst;
+    };
+
     // class InstructionNeg : public Instruction {};
     // class InstructionNot : public Instruction {};
-    // class InstructionLea : public Instruction {};
-    // class InstructionIMul : public Instruction {};
-    // class InstructionIDiv : public Instruction {};
-    // class InstructionAnd : public Instruction {};
-    // class InstructionOr : public Instruction {};
-    // class InstructionXor : public Instruction {};
-    // class InstructionSal : public Instruction {};
-    // class InstructionSar : public Instruction {};
     // class InstructionTest : public Instruction {};
 
     class InstructionCmp : public Instruction {
@@ -201,7 +234,10 @@ namespace backend::lir {
         virtual void visit(InstructionMov *i) = 0;
         virtual void visit(InstructionPush *i) = 0;
         virtual void visit(InstructionPop *i) = 0;
+        virtual void visit(InstructionConvert *i) = 0;
         virtual void visit(InstructionBinaryOp *i) = 0;
+        virtual void visit(InstructionSpecialOp *i) = 0;
+        virtual void visit(InstructionLea *i) = 0;
         virtual void visit(InstructionCmp *i) = 0;
         virtual void visit(InstructionJmp *i) = 0;
         virtual void visit(InstructionCJmp *i) = 0;

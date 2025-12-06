@@ -1,0 +1,500 @@
+fun1:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+        movq    %rdi, %0
+
+.fun1_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    %0, $12(%rsp)
+        movl    $12(%rsp), %5
+        movl    %5, (%rsp)
+        movl    $12(%rsp), %6
+        movl    %6, $4(%rsp)
+        movl    (%rsp), %7
+        movl    $4(%rsp), %8
+        phi     [%7] <-> %9    # [virtual]
+        imull   %8, %9
+        movl    %9, (%rsp)
+        movl    (%rsp), %10
+        movl    %10, $8(%rsp)
+
+.fun1_11:
+        movl    $8(%rsp), %12
+        movq    %12, %rax
+        addq    $16, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+fun2:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+        movq    %rdi, %0
+        movq    %rsi, %1
+
+.fun2_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    %0, $32(%rsp)
+        subq    $4, %rsp    # [virtual]
+        movl    %1, $36(%rsp)
+        movl    $32(%rsp), %12
+        movl    %12, $4(%rsp)
+        movl    $4(%rsp), %13
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        movslq  %13, %rdi
+        call    fun1
+        movq    %rax, %14
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %14, $8(%rsp)
+        movl    $2, $12(%rsp)
+        movl    $32(%rsp), %15
+        movl    %15, $12(%rsp)
+        movl    $12(%rsp), %16
+        movl    $12(%rsp), %17
+        phi     [%16] <-> %18    # [virtual]
+        imull   %17, %18
+        movl    %18, $12(%rsp)
+        movl    $36(%rsp), %19
+        movl    %19, $16(%rsp)
+        movl    $12(%rsp), %20
+        movl    $16(%rsp), %21
+        phi     [%20] <-> %22    # [virtual]
+        imull   %21, %22
+        movl    %22, $12(%rsp)
+        movl    $8(%rsp), %23
+        movl    $12(%rsp), %24
+        leal    (%23,%24), %25
+        movl    %25, $8(%rsp)
+        movl    $36(%rsp), %26
+        movl    %26, $20(%rsp)
+        movl    $20(%rsp), %27
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        movslq  %27, %rdi
+        call    fun1
+        movq    %rax, %28
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %28, $24(%rsp)
+        movl    $8(%rsp), %29
+        movl    $24(%rsp), %30
+        leal    (%29,%30), %31
+        movl    %31, $8(%rsp)
+        movl    $8(%rsp), %32
+        movl    %32, $28(%rsp)
+
+.fun2_33:
+        movl    $28(%rsp), %34
+        movq    %34, %rax
+        addq    $40, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+fun3:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+        movq    %rdi, %0
+        movq    %rsi, %1
+        movq    %rdx, %2
+        movq    %rcx, %3
+
+.fun3_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    %0, $36(%rsp)
+        subq    $4, %rsp    # [virtual]
+        movl    %1, $32(%rsp)
+        subq    $4, %rsp    # [virtual]
+        movl    %2, $36(%rsp)
+        subq    $4, %rsp    # [virtual]
+        movl    %3, $40(%rsp)
+        movl    $36(%rsp), %15
+        movl    %15, $12(%rsp)
+        movl    $40(%rsp), %16
+        movl    %16, $12(%rsp)
+        movl    $12(%rsp), %17
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        movslq  %17, %rdi
+        call    fun1
+        movq    %rax, %18
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %18, $16(%rsp)
+        movl    $12(%rsp), %19
+        movl    $16(%rsp), %20
+        phi     [%19] <-> %21    # [virtual]
+        imull   %20, %21
+        movl    %21, $12(%rsp)
+        movl    $32(%rsp), %22
+        movl    %22, $20(%rsp)
+        movl    $40(%rsp), %23
+        movl    %23, $24(%rsp)
+        movl    $20(%rsp), %24
+        movl    $24(%rsp), %25
+        phi     [%24] <-> %26    # [virtual]
+        imull   %25, %26
+        movl    %26, $20(%rsp)
+        movl    $12(%rsp), %27
+        movl    $20(%rsp), %28
+        leal    (%27,%28), %29
+        movl    %29, $12(%rsp)
+        movl    $36(%rsp), %30
+        movl    %30, $28(%rsp)
+        movl    $12(%rsp), %31
+        movl    $28(%rsp), %32
+        leal    (%31,%32), %33
+        movl    %33, $12(%rsp)
+        movl    $12(%rsp), %34
+        movl    %34, $32(%rsp)
+
+.fun3_35:
+        movl    $32(%rsp), %36
+        movq    %36, %rax
+        addq    $44, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+call1:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.call1_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    $5, (%rsp)
+        movl    (%rsp), %3
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        movslq  %3, %rdi
+        call    fun1
+        movq    %rax, %4
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %4, (%rsp)
+        movl    (%rsp), %5
+        movl    %5, $4(%rsp)
+
+.call1_6:
+        movl    $4(%rsp), %7
+        movq    %7, %rax
+        addq    $12, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+call2:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+        movq    %rdi, %0
+        movq    %rsi, %1
+
+.call2_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    %0, $16(%rsp)
+        subq    $4, %rsp    # [virtual]
+        movl    %1, $20(%rsp)
+        movl    $16(%rsp), %8
+        movl    %8, $4(%rsp)
+        movl    $20(%rsp), %9
+        movl    %9, $8(%rsp)
+        movl    $4(%rsp), %10
+        movl    $8(%rsp), %11
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        movslq  %10, %rdi
+        movslq  %11, %rsi
+        call    fun2
+        movq    %rax, %12
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %12, $12(%rsp)
+        movl    $12(%rsp), %13
+        movl    %13, $12(%rsp)
+
+.call2_14:
+        movl    $12(%rsp), %15
+        movq    %15, %rax
+        addq    $24, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+call3:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+        movq    %rdi, %0
+        movq    %rsi, %1
+
+.call3_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    %0, $24(%rsp)
+        subq    $4, %rsp    # [virtual]
+        movl    %1, $28(%rsp)
+        movl    $24(%rsp), %10
+        movl    %10, $4(%rsp)
+        movl    $28(%rsp), %11
+        movl    %11, $8(%rsp)
+        movl    $1, $12(%rsp)
+        movl    $0, $12(%rsp)
+        movl    $4(%rsp), %12
+        movl    $8(%rsp), %13
+        movl    $12(%rsp), %14
+        movl    $12(%rsp), %15
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        movslq  %12, %rdi
+        movslq  %13, %rsi
+        movslq  %14, %rdx
+        movslq  %15, %rcx
+        call    fun3
+        movq    %rax, %16
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %16, $16(%rsp)
+        movl    $16(%rsp), %17
+        movl    %17, $20(%rsp)
+
+.call3_18:
+        movl    $20(%rsp), %19
+        movq    %19, %rax
+        addq    $32, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+call4:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.call4_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    $10, (%rsp)
+        movl    (%rsp), %4
+        pushq   %rax    # [virtual]
+        pushq   %rdi    # [virtual]
+        pushq   %rsi    # [virtual]
+        pushq   %rdx    # [virtual]
+        pushq   %rcx    # [virtual]
+        pushq   %r8    # [virtual]
+        pushq   %r9    # [virtual]
+        pushq   %r10    # [virtual]
+        pushq   %r11    # [virtual]
+        movslq  %4, %rdi
+        call    fun1
+        movq    %rax, %5
+        popq    %rax    # [virtual]
+        popq    %rdi    # [virtual]
+        popq    %rsi    # [virtual]
+        popq    %rdx    # [virtual]
+        popq    %rcx    # [virtual]
+        popq    %r8    # [virtual]
+        popq    %r9    # [virtual]
+        popq    %r10    # [virtual]
+        popq    %r11    # [virtual]
+        movl    %5, (%rsp)
+        movl    $100, $4(%rsp)
+        movl    (%rsp), %6
+        movl    $4(%rsp), %7
+        phi     [%6] <-> %8    # [virtual]
+        subl    %7, %8
+        movl    %8, (%rsp)
+        movl    (%rsp), %9
+        movl    %9, $8(%rsp)
+
+.call4_10:
+        movl    $8(%rsp), %11
+        movq    %11, %rax
+        addq    $16, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret

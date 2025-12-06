@@ -1,0 +1,201 @@
+simplify_cfg_delete_orphaned:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.simplify_cfg_delete_orphaned_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    $1, (%rsp)
+        movl    (%rsp), %4
+        cmpl    %4, $0
+        jne     .simplify_cfg_delete_orphaned_7
+
+.simplify_cfg_delete_orphaned_5:
+        movl    $2, $4(%rsp)
+        movl    $4(%rsp), %6
+        movl    %6, $12(%rsp)
+        jmp     .simplify_cfg_delete_orphaned_9
+
+.simplify_cfg_delete_orphaned_7:
+        movl    $3, $8(%rsp)
+        movl    $8(%rsp), %8
+        movl    %8, $12(%rsp)
+
+.simplify_cfg_delete_orphaned_9:
+        movl    $12(%rsp), %10
+        movq    %10, %rax
+        addq    $16, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+simplify_cfg_merge_straight_line:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.simplify_cfg_merge_straight_line_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    $0, $4(%rsp)
+        movl    $4(%rsp), %10
+        movl    %10, (%rsp)
+        movl    $1, $8(%rsp)
+        movl    $8(%rsp), %11
+        cmpl    %11, $0
+        jne     .simplify_cfg_merge_straight_line_24
+
+.simplify_cfg_merge_straight_line_12:
+        movl    $2, $12(%rsp)
+        movl    $12(%rsp), %13
+        cmpl    %13, $0
+        jne     .simplify_cfg_merge_straight_line_16
+
+.simplify_cfg_merge_straight_line_14:
+        movl    $3, $16(%rsp)
+        movl    $16(%rsp), %15
+        movl    %15, $36(%rsp)
+        jmp     .simplify_cfg_merge_straight_line_26
+
+.simplify_cfg_merge_straight_line_16:
+        movl    (%rsp), %17
+        movl    %17, $20(%rsp)
+        movl    $4, $24(%rsp)
+        movl    $20(%rsp), %18
+        movl    $24(%rsp), %19
+        leal    (%18,%19), %20
+        movl    %20, $20(%rsp)
+        movl    $20(%rsp), %21
+        movl    %21, (%rsp)
+        movl    (%rsp), %22
+        movl    %22, $32(%rsp)
+        movl    $32(%rsp), %23
+        movl    %23, $36(%rsp)
+        jmp     .simplify_cfg_merge_straight_line_26
+
+.simplify_cfg_merge_straight_line_24:
+        movl    $5, $28(%rsp)
+        movl    $28(%rsp), %25
+        movl    %25, $36(%rsp)
+
+.simplify_cfg_merge_straight_line_26:
+        movl    $36(%rsp), %27
+        movq    %27, %rax
+        addq    $40, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+simplify_cfg_delete_empty:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.simplify_cfg_delete_empty_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    $1, (%rsp)
+        movl    (%rsp), %5
+        cmpl    %5, $0
+        jne     .simplify_cfg_delete_empty_8
+
+.simplify_cfg_delete_empty_6:
+        movl    $2, $4(%rsp)
+        movl    $4(%rsp), %7
+        cmpl    %7, $0
+        je      .simplify_cfg_delete_empty_10
+        jmp     .simplify_cfg_delete_empty_10
+
+.simplify_cfg_delete_empty_8:
+        movl    $3, $8(%rsp)
+        movl    $8(%rsp), %9
+        cmpl    %9, $0
+        jne     .simplify_cfg_delete_empty_10
+
+.simplify_cfg_delete_empty_10:
+        movl    $4, $12(%rsp)
+        movl    $12(%rsp), %11
+        movl    %11, $16(%rsp)
+        movl    $16(%rsp), %12
+        movq    %12, %rax
+        addq    $20, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
+simplify_cfg_empty_loop:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+
+.simplify_cfg_empty_loop_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+
+.simplify_cfg_empty_loop_3:
+        movl    $0, (%rsp)
+        movl    (%rsp), %4
+        cmpl    %4, $0
+        je      .simplify_cfg_empty_loop_3
+
+.simplify_cfg_empty_loop_5:
+        movl    $0, $4(%rsp)
+        movl    $4(%rsp), %6
+        movl    %6, $8(%rsp)
+        movl    $8(%rsp), %7
+        movq    %7, %rax
+        addq    $12, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret

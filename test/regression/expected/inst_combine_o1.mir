@@ -1,0 +1,14 @@
+define i32 @constant_fold() {
+entry:
+  ret i32 55
+}
+
+define i32 @constant_fold_overflow() {
+entry:
+  ret i32 -2147483648
+}
+
+define i32 @constant_fold_underflow() {
+entry:
+  ret i32 2147483647
+}

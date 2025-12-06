@@ -1,0 +1,59 @@
+define i32 @while_basic() {
+entry:
+  br label 0
+
+0:
+  %1 = phi i32 [ %3, %2 ], [ 0, %18446744073709551615 ]
+  br i32 1, label 2, label 4
+
+2:
+  %3 = add i32 %1, i32 2
+  br label 0
+
+4:
+  ret i32 %1
+}
+
+define i32 @while_complex() {
+entry:
+  br label 0
+
+0:
+  %1 = phi i32 [ %5, %3 ], [ 100, %18446744073709551615 ]
+  %2 = phi i32 [ %4, %3 ], [ 0, %18446744073709551615 ]
+  br i32 %1, label 3, label 6
+
+3:
+  %4 = add i32 %2, i32 5
+  %5 = sub i32 %1, i32 1
+  br label 0
+
+6:
+  ret i32 %2
+}
+
+define i32 @while_empty() {
+entry:
+  br i32 0, label 18446744073709551615, label 0
+
+0:
+  ret i32 0
+}
+
+define i32 @while_if() {
+0:
+  br i32 200, label 18446744073709551615, label 1
+
+1:
+  br label 3
+
+entry:
+  br i32 1, label 0, label 2
+
+2:
+  br label 3
+
+3:
+  %4 = phi i32 [ 500, %1 ], [ 0, %2 ]
+  ret i32 %4
+}

@@ -1,0 +1,86 @@
+int leaBI(int base, int index) {
+    int a = base + index;
+
+    return 0;
+}
+
+int leaBIS(int base, int index) {
+    int scale = 2;
+
+    int a = base + (index * scale);
+    int b = base + (scale * index);
+    int c = (index * scale) + base;
+    int d = (scale * index) + base;
+
+    return 0;
+}
+
+int leaBID(int base, int index) {
+    int displacement = 13;
+
+    int a = base + index + displacement;
+    int b = base + displacement + index;
+    int c = displacement + base + index;
+    int d = base + (index + displacement);
+    int e = base + (displacement + index);
+    int f = displacement + (base + index);
+
+    return 0;
+}
+
+int leaIS(int index) {
+    int a = (index * 1);
+    int b = (index * 2);
+    int c = (index * 4);
+    int d = (index * 8);
+    int e = (1 * index);
+    int f = (2 * index);
+    int g = (4 * index);
+    int h = (8 * index);
+
+    return 0;
+}
+
+int leaISD(int index) {
+    int scale = 4;
+    int displacement = 60;
+
+    int c = (index * scale) + displacement;
+    int d = (scale * index) + displacement;
+    int a = displacement + (index * scale);
+    int b = displacement + (scale * index);
+
+    return 0;
+}
+
+int leaBISD(int base, int index) {
+    int scale = 8;
+    int displacement = 40;
+
+    int a = base + (index * scale) + displacement;
+    int b = displacement + (index * scale) + base;
+    int c = (index * scale) + base + displacement;
+    int d = (index * scale) + displacement + base;
+    int e = base + displacement + (index * scale);
+    int f = displacement + base + (index * scale);
+    int g = base + (scale * index) + displacement;
+    int h = displacement + (scale * index) + base;
+    int i = (scale * index) + base + displacement;
+    int j = (scale * index) + displacement + base;
+    int k = base + displacement + (scale * index);
+    int l = displacement + base + (scale * index);
+    int m = base + ((index * scale) + displacement);
+    int n = displacement + ((index * scale) + base);
+    int o = (index * scale) + (base + displacement);
+    int p = (index * scale) + (displacement + base);
+    int q = base + (displacement + (index * scale));
+    int r = displacement + (base + (index * scale));
+    int s = base + ((scale * index) + displacement);
+    int t = displacement + ((scale * index) + base);
+    int u = (scale * index) + (base + displacement);
+    int v = (scale * index) + (displacement + base);
+    int w = base + (displacement + (scale * index));
+    int x = displacement + (base + (scale * index));
+
+    return 0;
+}
