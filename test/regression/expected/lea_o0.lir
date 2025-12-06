@@ -25,8 +25,7 @@ leaBI:
         movl    %10, $8(%rsp)
         movl    $4(%rsp), %11
         movl    $8(%rsp), %12
-        phi     [%11] <-> %13    # [virtual]
-        addl    %12, %13
+        leal    (%11,%12), %13
         movl    %13, $4(%rsp)
         movl    $4(%rsp), %14
         movl    %14, (%rsp)
@@ -99,8 +98,7 @@ leaBIS:
         movl    %30, $16(%rsp)
         movl    $12(%rsp), %31
         movl    $16(%rsp), %32
-        phi     [%31] <-> %33    # [virtual]
-        addl    %32, %33
+        leal    (%31,%32), %33
         movl    %33, $12(%rsp)
         movl    $12(%rsp), %34
         movl    %34, $8(%rsp)
@@ -117,8 +115,7 @@ leaBIS:
         movl    %40, $32(%rsp)
         movl    $28(%rsp), %41
         movl    $32(%rsp), %42
-        phi     [%41] <-> %43    # [virtual]
-        addl    %42, %43
+        leal    (%41,%42), %43
         movl    %43, $28(%rsp)
         movl    $28(%rsp), %44
         movl    %44, $24(%rsp)
@@ -135,8 +132,7 @@ leaBIS:
         movl    %50, $52(%rsp)
         movl    $44(%rsp), %51
         movl    $52(%rsp), %52
-        phi     [%51] <-> %53    # [virtual]
-        addl    %52, %53
+        leal    (%51,%52), %53
         movl    %53, $44(%rsp)
         movl    $44(%rsp), %54
         movl    %54, $40(%rsp)
@@ -153,8 +149,7 @@ leaBIS:
         movl    %60, $68(%rsp)
         movl    $60(%rsp), %61
         movl    $68(%rsp), %62
-        phi     [%61] <-> %63    # [virtual]
-        addl    %62, %63
+        leal    (%61,%62), %63
         movl    %63, $60(%rsp)
         movl    $60(%rsp), %64
         movl    %64, $56(%rsp)
@@ -228,15 +223,13 @@ leaBID:
         movl    %34, $16(%rsp)
         movl    $12(%rsp), %35
         movl    $16(%rsp), %36
-        phi     [%35] <-> %37    # [virtual]
-        addl    %36, %37
+        leal    (%35,%36), %37
         movl    %37, $12(%rsp)
         movl    (%rsp), %38
         movl    %38, $20(%rsp)
         movl    $12(%rsp), %39
         movl    $20(%rsp), %40
-        phi     [%39] <-> %41    # [virtual]
-        addl    %40, %41
+        leal    (%39,%40), %41
         movl    %41, $12(%rsp)
         movl    $12(%rsp), %42
         movl    %42, $8(%rsp)
@@ -246,15 +239,13 @@ leaBID:
         movl    %44, $32(%rsp)
         movl    $28(%rsp), %45
         movl    $32(%rsp), %46
-        phi     [%45] <-> %47    # [virtual]
-        addl    %46, %47
+        leal    (%45,%46), %47
         movl    %47, $28(%rsp)
         movl    $116(%rsp), %48
         movl    %48, $36(%rsp)
         movl    $28(%rsp), %49
         movl    $36(%rsp), %50
-        phi     [%49] <-> %51    # [virtual]
-        addl    %50, %51
+        leal    (%49,%50), %51
         movl    %51, $28(%rsp)
         movl    $28(%rsp), %52
         movl    %52, $24(%rsp)
@@ -264,15 +255,13 @@ leaBID:
         movl    %54, $48(%rsp)
         movl    $44(%rsp), %55
         movl    $48(%rsp), %56
-        phi     [%55] <-> %57    # [virtual]
-        addl    %56, %57
+        leal    (%55,%56), %57
         movl    %57, $44(%rsp)
         movl    $116(%rsp), %58
         movl    %58, $52(%rsp)
         movl    $44(%rsp), %59
         movl    $52(%rsp), %60
-        phi     [%59] <-> %61    # [virtual]
-        addl    %60, %61
+        leal    (%59,%60), %61
         movl    %61, $44(%rsp)
         movl    $44(%rsp), %62
         movl    %62, $40(%rsp)
@@ -284,13 +273,11 @@ leaBID:
         movl    %65, $68(%rsp)
         movl    $64(%rsp), %66
         movl    $68(%rsp), %67
-        phi     [%66] <-> %68    # [virtual]
-        addl    %67, %68
+        leal    (%66,%67), %68
         movl    %68, $64(%rsp)
         movl    $60(%rsp), %69
         movl    $64(%rsp), %70
-        phi     [%69] <-> %71    # [virtual]
-        addl    %70, %71
+        leal    (%69,%70), %71
         movl    %71, $60(%rsp)
         movl    $60(%rsp), %72
         movl    %72, $56(%rsp)
@@ -302,13 +289,11 @@ leaBID:
         movl    %75, $84(%rsp)
         movl    $80(%rsp), %76
         movl    $84(%rsp), %77
-        phi     [%76] <-> %78    # [virtual]
-        addl    %77, %78
+        leal    (%76,%77), %78
         movl    %78, $80(%rsp)
         movl    $76(%rsp), %79
         movl    $80(%rsp), %80
-        phi     [%79] <-> %81    # [virtual]
-        addl    %80, %81
+        leal    (%79,%80), %81
         movl    %81, $76(%rsp)
         movl    $76(%rsp), %82
         movl    %82, $72(%rsp)
@@ -320,13 +305,11 @@ leaBID:
         movl    %85, $100(%rsp)
         movl    $96(%rsp), %86
         movl    $100(%rsp), %87
-        phi     [%86] <-> %88    # [virtual]
-        addl    %87, %88
+        leal    (%86,%87), %88
         movl    %88, $96(%rsp)
         movl    $92(%rsp), %89
         movl    $96(%rsp), %90
-        phi     [%89] <-> %91    # [virtual]
-        addl    %90, %91
+        leal    (%89,%90), %91
         movl    %91, $92(%rsp)
         movl    $92(%rsp), %92
         movl    %92, $88(%rsp)
@@ -401,8 +384,7 @@ leaISD:
         movl    %31, $24(%rsp)
         movl    $16(%rsp), %32
         movl    $24(%rsp), %33
-        phi     [%32] <-> %34    # [virtual]
-        addl    %33, %34
+        leal    (%32,%33), %34
         movl    %34, $16(%rsp)
         movl    $16(%rsp), %35
         movl    %35, $12(%rsp)
@@ -419,8 +401,7 @@ leaISD:
         movl    %41, $40(%rsp)
         movl    $32(%rsp), %42
         movl    $40(%rsp), %43
-        phi     [%42] <-> %44    # [virtual]
-        addl    %43, %44
+        leal    (%42,%43), %44
         movl    %44, $32(%rsp)
         movl    $32(%rsp), %45
         movl    %45, $28(%rsp)
@@ -437,8 +418,7 @@ leaISD:
         movl    %51, $52(%rsp)
         movl    $48(%rsp), %52
         movl    $52(%rsp), %53
-        phi     [%52] <-> %54    # [virtual]
-        addl    %53, %54
+        leal    (%52,%53), %54
         movl    %54, $48(%rsp)
         movl    $48(%rsp), %55
         movl    %55, $44(%rsp)
@@ -455,8 +435,7 @@ leaISD:
         movl    %61, $68(%rsp)
         movl    $64(%rsp), %62
         movl    $68(%rsp), %63
-        phi     [%62] <-> %64    # [virtual]
-        addl    %63, %64
+        leal    (%62,%63), %64
         movl    %64, $64(%rsp)
         movl    $64(%rsp), %65
         movl    %65, $60(%rsp)
@@ -638,15 +617,13 @@ leaBISD:
         movl    %137, $24(%rsp)
         movl    $20(%rsp), %138
         movl    $24(%rsp), %139
-        phi     [%138] <-> %140    # [virtual]
-        addl    %139, %140
+        leal    (%138,%139), %140
         movl    %140, $20(%rsp)
         movl    $8(%rsp), %141
         movl    %141, $32(%rsp)
         movl    $20(%rsp), %142
         movl    $32(%rsp), %143
-        phi     [%142] <-> %144    # [virtual]
-        addl    %143, %144
+        leal    (%142,%143), %144
         movl    %144, $20(%rsp)
         movl    $20(%rsp), %145
         movl    %145, $16(%rsp)
@@ -663,15 +640,13 @@ leaBISD:
         movl    %151, $44(%rsp)
         movl    $40(%rsp), %152
         movl    $44(%rsp), %153
-        phi     [%152] <-> %154    # [virtual]
-        addl    %153, %154
+        leal    (%152,%153), %154
         movl    %154, $40(%rsp)
         movl    $504(%rsp), %155
         movl    %155, $52(%rsp)
         movl    $40(%rsp), %156
         movl    $52(%rsp), %157
-        phi     [%156] <-> %158    # [virtual]
-        addl    %157, %158
+        leal    (%156,%157), %158
         movl    %158, $40(%rsp)
         movl    $40(%rsp), %159
         movl    %159, $36(%rsp)
@@ -688,15 +663,13 @@ leaBISD:
         movl    %165, $68(%rsp)
         movl    $60(%rsp), %166
         movl    $68(%rsp), %167
-        phi     [%166] <-> %168    # [virtual]
-        addl    %167, %168
+        leal    (%166,%167), %168
         movl    %168, $60(%rsp)
         movl    $8(%rsp), %169
         movl    %169, $72(%rsp)
         movl    $60(%rsp), %170
         movl    $72(%rsp), %171
-        phi     [%170] <-> %172    # [virtual]
-        addl    %171, %172
+        leal    (%170,%171), %172
         movl    %172, $60(%rsp)
         movl    $60(%rsp), %173
         movl    %173, $56(%rsp)
@@ -713,15 +686,13 @@ leaBISD:
         movl    %179, $88(%rsp)
         movl    $80(%rsp), %180
         movl    $88(%rsp), %181
-        phi     [%180] <-> %182    # [virtual]
-        addl    %181, %182
+        leal    (%180,%181), %182
         movl    %182, $80(%rsp)
         movl    $504(%rsp), %183
         movl    %183, $92(%rsp)
         movl    $80(%rsp), %184
         movl    $92(%rsp), %185
-        phi     [%184] <-> %186    # [virtual]
-        addl    %185, %186
+        leal    (%184,%185), %186
         movl    %186, $80(%rsp)
         movl    $80(%rsp), %187
         movl    %187, $76(%rsp)
@@ -731,8 +702,7 @@ leaBISD:
         movl    %189, $104(%rsp)
         movl    $100(%rsp), %190
         movl    $104(%rsp), %191
-        phi     [%190] <-> %192    # [virtual]
-        addl    %191, %192
+        leal    (%190,%191), %192
         movl    %192, $100(%rsp)
         movl    $508(%rsp), %193
         movl    %193, $108(%rsp)
@@ -745,8 +715,7 @@ leaBISD:
         movl    %197, $108(%rsp)
         movl    $100(%rsp), %198
         movl    $108(%rsp), %199
-        phi     [%198] <-> %200    # [virtual]
-        addl    %199, %200
+        leal    (%198,%199), %200
         movl    %200, $100(%rsp)
         movl    $100(%rsp), %201
         movl    %201, $96(%rsp)
@@ -756,8 +725,7 @@ leaBISD:
         movl    %203, $124(%rsp)
         movl    $120(%rsp), %204
         movl    $124(%rsp), %205
-        phi     [%204] <-> %206    # [virtual]
-        addl    %205, %206
+        leal    (%204,%205), %206
         movl    %206, $120(%rsp)
         movl    $508(%rsp), %207
         movl    %207, $128(%rsp)
@@ -770,8 +738,7 @@ leaBISD:
         movl    %211, $128(%rsp)
         movl    $120(%rsp), %212
         movl    $128(%rsp), %213
-        phi     [%212] <-> %214    # [virtual]
-        addl    %213, %214
+        leal    (%212,%213), %214
         movl    %214, $120(%rsp)
         movl    $120(%rsp), %215
         movl    %215, $116(%rsp)
@@ -788,15 +755,13 @@ leaBISD:
         movl    %221, $144(%rsp)
         movl    $140(%rsp), %222
         movl    $144(%rsp), %223
-        phi     [%222] <-> %224    # [virtual]
-        addl    %223, %224
+        leal    (%222,%223), %224
         movl    %224, $140(%rsp)
         movl    $8(%rsp), %225
         movl    %225, $152(%rsp)
         movl    $140(%rsp), %226
         movl    $152(%rsp), %227
-        phi     [%226] <-> %228    # [virtual]
-        addl    %227, %228
+        leal    (%226,%227), %228
         movl    %228, $140(%rsp)
         movl    $140(%rsp), %229
         movl    %229, $136(%rsp)
@@ -813,15 +778,13 @@ leaBISD:
         movl    %235, $164(%rsp)
         movl    $160(%rsp), %236
         movl    $164(%rsp), %237
-        phi     [%236] <-> %238    # [virtual]
-        addl    %237, %238
+        leal    (%236,%237), %238
         movl    %238, $160(%rsp)
         movl    $504(%rsp), %239
         movl    %239, $172(%rsp)
         movl    $160(%rsp), %240
         movl    $172(%rsp), %241
-        phi     [%240] <-> %242    # [virtual]
-        addl    %241, %242
+        leal    (%240,%241), %242
         movl    %242, $160(%rsp)
         movl    $160(%rsp), %243
         movl    %243, $156(%rsp)
@@ -838,15 +801,13 @@ leaBISD:
         movl    %249, $188(%rsp)
         movl    $180(%rsp), %250
         movl    $188(%rsp), %251
-        phi     [%250] <-> %252    # [virtual]
-        addl    %251, %252
+        leal    (%250,%251), %252
         movl    %252, $180(%rsp)
         movl    $8(%rsp), %253
         movl    %253, $192(%rsp)
         movl    $180(%rsp), %254
         movl    $192(%rsp), %255
-        phi     [%254] <-> %256    # [virtual]
-        addl    %255, %256
+        leal    (%254,%255), %256
         movl    %256, $180(%rsp)
         movl    $180(%rsp), %257
         movl    %257, $176(%rsp)
@@ -863,15 +824,13 @@ leaBISD:
         movl    %263, $208(%rsp)
         movl    $200(%rsp), %264
         movl    $208(%rsp), %265
-        phi     [%264] <-> %266    # [virtual]
-        addl    %265, %266
+        leal    (%264,%265), %266
         movl    %266, $200(%rsp)
         movl    $504(%rsp), %267
         movl    %267, $212(%rsp)
         movl    $200(%rsp), %268
         movl    $212(%rsp), %269
-        phi     [%268] <-> %270    # [virtual]
-        addl    %269, %270
+        leal    (%268,%269), %270
         movl    %270, $200(%rsp)
         movl    $200(%rsp), %271
         movl    %271, $196(%rsp)
@@ -881,8 +840,7 @@ leaBISD:
         movl    %273, $224(%rsp)
         movl    $220(%rsp), %274
         movl    $224(%rsp), %275
-        phi     [%274] <-> %276    # [virtual]
-        addl    %275, %276
+        leal    (%274,%275), %276
         movl    %276, $220(%rsp)
         movl    (%rsp), %277
         movl    %277, $228(%rsp)
@@ -895,8 +853,7 @@ leaBISD:
         movl    %281, $228(%rsp)
         movl    $220(%rsp), %282
         movl    $228(%rsp), %283
-        phi     [%282] <-> %284    # [virtual]
-        addl    %283, %284
+        leal    (%282,%283), %284
         movl    %284, $220(%rsp)
         movl    $220(%rsp), %285
         movl    %285, $216(%rsp)
@@ -906,8 +863,7 @@ leaBISD:
         movl    %287, $244(%rsp)
         movl    $240(%rsp), %288
         movl    $244(%rsp), %289
-        phi     [%288] <-> %290    # [virtual]
-        addl    %289, %290
+        leal    (%288,%289), %290
         movl    %290, $240(%rsp)
         movl    (%rsp), %291
         movl    %291, $248(%rsp)
@@ -920,8 +876,7 @@ leaBISD:
         movl    %295, $248(%rsp)
         movl    $240(%rsp), %296
         movl    $248(%rsp), %297
-        phi     [%296] <-> %298    # [virtual]
-        addl    %297, %298
+        leal    (%296,%297), %298
         movl    %298, $240(%rsp)
         movl    $240(%rsp), %299
         movl    %299, $236(%rsp)
@@ -940,13 +895,11 @@ leaBISD:
         movl    %306, $272(%rsp)
         movl    $264(%rsp), %307
         movl    $272(%rsp), %308
-        phi     [%307] <-> %309    # [virtual]
-        addl    %308, %309
+        leal    (%307,%308), %309
         movl    %309, $264(%rsp)
         movl    $260(%rsp), %310
         movl    $264(%rsp), %311
-        phi     [%310] <-> %312    # [virtual]
-        addl    %311, %312
+        leal    (%310,%311), %312
         movl    %312, $260(%rsp)
         movl    $260(%rsp), %313
         movl    %313, $256(%rsp)
@@ -965,13 +918,11 @@ leaBISD:
         movl    %320, $292(%rsp)
         movl    $284(%rsp), %321
         movl    $292(%rsp), %322
-        phi     [%321] <-> %323    # [virtual]
-        addl    %322, %323
+        leal    (%321,%322), %323
         movl    %323, $284(%rsp)
         movl    $280(%rsp), %324
         movl    $284(%rsp), %325
-        phi     [%324] <-> %326    # [virtual]
-        addl    %325, %326
+        leal    (%324,%325), %326
         movl    %326, $280(%rsp)
         movl    $280(%rsp), %327
         movl    %327, $276(%rsp)
@@ -990,13 +941,11 @@ leaBISD:
         movl    %334, $312(%rsp)
         movl    $308(%rsp), %335
         movl    $312(%rsp), %336
-        phi     [%335] <-> %337    # [virtual]
-        addl    %336, %337
+        leal    (%335,%336), %337
         movl    %337, $308(%rsp)
         movl    $300(%rsp), %338
         movl    $308(%rsp), %339
-        phi     [%338] <-> %340    # [virtual]
-        addl    %339, %340
+        leal    (%338,%339), %340
         movl    %340, $300(%rsp)
         movl    $300(%rsp), %341
         movl    %341, $296(%rsp)
@@ -1015,13 +964,11 @@ leaBISD:
         movl    %348, $332(%rsp)
         movl    $328(%rsp), %349
         movl    $332(%rsp), %350
-        phi     [%349] <-> %351    # [virtual]
-        addl    %350, %351
+        leal    (%349,%350), %351
         movl    %351, $328(%rsp)
         movl    $320(%rsp), %352
         movl    $328(%rsp), %353
-        phi     [%352] <-> %354    # [virtual]
-        addl    %353, %354
+        leal    (%352,%353), %354
         movl    %354, $320(%rsp)
         movl    $320(%rsp), %355
         movl    %355, $316(%rsp)
@@ -1040,13 +987,11 @@ leaBISD:
         movl    %362, $348(%rsp)
         movl    $344(%rsp), %363
         movl    $348(%rsp), %364
-        phi     [%363] <-> %365    # [virtual]
-        addl    %364, %365
+        leal    (%363,%364), %365
         movl    %365, $344(%rsp)
         movl    $340(%rsp), %366
         movl    $344(%rsp), %367
-        phi     [%366] <-> %368    # [virtual]
-        addl    %367, %368
+        leal    (%366,%367), %368
         movl    %368, $340(%rsp)
         movl    $340(%rsp), %369
         movl    %369, $336(%rsp)
@@ -1065,13 +1010,11 @@ leaBISD:
         movl    %376, $368(%rsp)
         movl    $364(%rsp), %377
         movl    $368(%rsp), %378
-        phi     [%377] <-> %379    # [virtual]
-        addl    %378, %379
+        leal    (%377,%378), %379
         movl    %379, $364(%rsp)
         movl    $360(%rsp), %380
         movl    $364(%rsp), %381
-        phi     [%380] <-> %382    # [virtual]
-        addl    %381, %382
+        leal    (%380,%381), %382
         movl    %382, $360(%rsp)
         movl    $360(%rsp), %383
         movl    %383, $356(%rsp)
@@ -1090,13 +1033,11 @@ leaBISD:
         movl    %390, $392(%rsp)
         movl    $384(%rsp), %391
         movl    $392(%rsp), %392
-        phi     [%391] <-> %393    # [virtual]
-        addl    %392, %393
+        leal    (%391,%392), %393
         movl    %393, $384(%rsp)
         movl    $380(%rsp), %394
         movl    $384(%rsp), %395
-        phi     [%394] <-> %396    # [virtual]
-        addl    %395, %396
+        leal    (%394,%395), %396
         movl    %396, $380(%rsp)
         movl    $380(%rsp), %397
         movl    %397, $376(%rsp)
@@ -1115,13 +1056,11 @@ leaBISD:
         movl    %404, $412(%rsp)
         movl    $404(%rsp), %405
         movl    $412(%rsp), %406
-        phi     [%405] <-> %407    # [virtual]
-        addl    %406, %407
+        leal    (%405,%406), %407
         movl    %407, $404(%rsp)
         movl    $400(%rsp), %408
         movl    $404(%rsp), %409
-        phi     [%408] <-> %410    # [virtual]
-        addl    %409, %410
+        leal    (%408,%409), %410
         movl    %410, $400(%rsp)
         movl    $400(%rsp), %411
         movl    %411, $396(%rsp)
@@ -1140,13 +1079,11 @@ leaBISD:
         movl    %418, $432(%rsp)
         movl    $428(%rsp), %419
         movl    $432(%rsp), %420
-        phi     [%419] <-> %421    # [virtual]
-        addl    %420, %421
+        leal    (%419,%420), %421
         movl    %421, $428(%rsp)
         movl    $420(%rsp), %422
         movl    $428(%rsp), %423
-        phi     [%422] <-> %424    # [virtual]
-        addl    %423, %424
+        leal    (%422,%423), %424
         movl    %424, $420(%rsp)
         movl    $420(%rsp), %425
         movl    %425, $416(%rsp)
@@ -1165,13 +1102,11 @@ leaBISD:
         movl    %432, $452(%rsp)
         movl    $448(%rsp), %433
         movl    $452(%rsp), %434
-        phi     [%433] <-> %435    # [virtual]
-        addl    %434, %435
+        leal    (%433,%434), %435
         movl    %435, $448(%rsp)
         movl    $440(%rsp), %436
         movl    $448(%rsp), %437
-        phi     [%436] <-> %438    # [virtual]
-        addl    %437, %438
+        leal    (%436,%437), %438
         movl    %438, $440(%rsp)
         movl    $440(%rsp), %439
         movl    %439, $436(%rsp)
@@ -1190,13 +1125,11 @@ leaBISD:
         movl    %446, $468(%rsp)
         movl    $464(%rsp), %447
         movl    $468(%rsp), %448
-        phi     [%447] <-> %449    # [virtual]
-        addl    %448, %449
+        leal    (%447,%448), %449
         movl    %449, $464(%rsp)
         movl    $460(%rsp), %450
         movl    $464(%rsp), %451
-        phi     [%450] <-> %452    # [virtual]
-        addl    %451, %452
+        leal    (%450,%451), %452
         movl    %452, $460(%rsp)
         movl    $460(%rsp), %453
         movl    %453, $456(%rsp)
@@ -1215,13 +1148,11 @@ leaBISD:
         movl    %460, $488(%rsp)
         movl    $484(%rsp), %461
         movl    $488(%rsp), %462
-        phi     [%461] <-> %463    # [virtual]
-        addl    %462, %463
+        leal    (%461,%462), %463
         movl    %463, $484(%rsp)
         movl    $480(%rsp), %464
         movl    $484(%rsp), %465
-        phi     [%464] <-> %466    # [virtual]
-        addl    %465, %466
+        leal    (%464,%465), %466
         movl    %466, $480(%rsp)
         movl    $480(%rsp), %467
         movl    %467, $476(%rsp)

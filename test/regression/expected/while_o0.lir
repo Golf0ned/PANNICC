@@ -31,8 +31,7 @@ while_basic:
         movl    $2, $16(%rsp)
         movl    $12(%rsp), %12
         movl    $16(%rsp), %13
-        phi     [%12] <-> %14    # [virtual]
-        addl    %13, %14
+        leal    (%12,%13), %14
         movl    %14, $12(%rsp)
         movl    $12(%rsp), %15
         movl    %15, (%rsp)
@@ -98,8 +97,7 @@ while_complex:
         movl    $5, $24(%rsp)
         movl    $20(%rsp), %18
         movl    $24(%rsp), %19
-        phi     [%18] <-> %20    # [virtual]
-        addl    %19, %20
+        leal    (%18,%19), %20
         movl    %20, $20(%rsp)
         movl    $20(%rsp), %21
         movl    %21, (%rsp)

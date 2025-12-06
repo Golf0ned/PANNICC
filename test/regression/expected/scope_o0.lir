@@ -41,8 +41,7 @@ scope:
         movl    $3, $32(%rsp)
         movl    $28(%rsp), %23
         movl    $32(%rsp), %24
-        phi     [%23] <-> %25    # [virtual]
-        addl    %24, %25
+        leal    (%23,%24), %25
         movl    %25, $28(%rsp)
         movl    $28(%rsp), %26
         movl    %26, $24(%rsp)
@@ -58,8 +57,7 @@ scope:
         movl    %30, $56(%rsp)
         movl    $52(%rsp), %31
         movl    $56(%rsp), %32
-        phi     [%31] <-> %33    # [virtual]
-        addl    %32, %33
+        leal    (%31,%32), %33
         movl    %33, $52(%rsp)
         movl    $52(%rsp), %34
         movl    %34, $44(%rsp)
@@ -113,8 +111,7 @@ scope_reassign_variable:
         movl    $1, $12(%rsp)
         movl    $8(%rsp), %14
         movl    $12(%rsp), %15
-        phi     [%14] <-> %16    # [virtual]
-        addl    %15, %16
+        leal    (%14,%15), %16
         movl    %16, $8(%rsp)
         movl    $8(%rsp), %17
         movl    %17, (%rsp)
@@ -126,8 +123,7 @@ scope_reassign_variable:
         movl    $4, $28(%rsp)
         movl    $24(%rsp), %20
         movl    $28(%rsp), %21
-        phi     [%20] <-> %22    # [virtual]
-        addl    %21, %22
+        leal    (%20,%21), %22
         movl    %22, $24(%rsp)
         movl    $24(%rsp), %23
         movl    %23, $16(%rsp)
@@ -136,8 +132,7 @@ scope_reassign_variable:
         movl    $5, $36(%rsp)
         movl    $32(%rsp), %25
         movl    $36(%rsp), %26
-        phi     [%25] <-> %27    # [virtual]
-        addl    %26, %27
+        leal    (%25,%26), %27
         movl    %27, $32(%rsp)
         movl    $32(%rsp), %28
         movl    %28, (%rsp)

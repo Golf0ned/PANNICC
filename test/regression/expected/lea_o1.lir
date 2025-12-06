@@ -10,8 +10,7 @@ leaBI:
         movq    %rsi, %1
 
 .leaBI_entry:
-        phi     [%0] <-> %2    # [virtual]
-        addl    %1, %2
+        leal    (%0,%1), %2
         movq    $0, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]

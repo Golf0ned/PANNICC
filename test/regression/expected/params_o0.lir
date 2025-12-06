@@ -105,8 +105,7 @@ fun2:
         movl    %22, $12(%rsp)
         movl    $8(%rsp), %23
         movl    $12(%rsp), %24
-        phi     [%23] <-> %25    # [virtual]
-        addl    %24, %25
+        leal    (%23,%24), %25
         movl    %25, $8(%rsp)
         movl    $36(%rsp), %26
         movl    %26, $20(%rsp)
@@ -135,8 +134,7 @@ fun2:
         movl    %28, $24(%rsp)
         movl    $8(%rsp), %29
         movl    $24(%rsp), %30
-        phi     [%29] <-> %31    # [virtual]
-        addl    %30, %31
+        leal    (%29,%30), %31
         movl    %31, $8(%rsp)
         movl    $8(%rsp), %32
         movl    %32, $28(%rsp)
@@ -226,15 +224,13 @@ fun3:
         movl    %26, $20(%rsp)
         movl    $12(%rsp), %27
         movl    $20(%rsp), %28
-        phi     [%27] <-> %29    # [virtual]
-        addl    %28, %29
+        leal    (%27,%28), %29
         movl    %29, $12(%rsp)
         movl    $36(%rsp), %30
         movl    %30, $28(%rsp)
         movl    $12(%rsp), %31
         movl    $28(%rsp), %32
-        phi     [%31] <-> %33    # [virtual]
-        addl    %32, %33
+        leal    (%31,%32), %33
         movl    %33, $12(%rsp)
         movl    $12(%rsp), %34
         movl    %34, $32(%rsp)
