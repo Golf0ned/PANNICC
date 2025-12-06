@@ -35,10 +35,10 @@ leaISD:
         movq    %rdi, %0
 
 .leaISD_entry:
-        leal    $60(%0,4), %2
-        leal    $60(%0,4), %4
-        leal    $60(%0,4), %6
-        leal    $60(%0,4), %8
+        leal    $60(,%0,4), %2
+        leal    $60(,%0,4), %4
+        leal    $60(,%0,4), %6
+        leal    $60(,%0,4), %8
         movq    $0, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
