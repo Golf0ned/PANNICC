@@ -54,8 +54,7 @@ fun2:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-        phi     [$2] <-> %3    # [virtual]
-        imull   %0, %3
+        leal    (,%0,2), %3
         phi     [%3] <-> %4    # [virtual]
         imull   %1, %4
         leal    (%2,%4), %5
