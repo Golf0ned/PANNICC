@@ -134,6 +134,69 @@ int leaBID(int base_0, int index_0) {
     return __v19;
 }
 
+int leaIS(int index_0) {
+    __entry:
+    int a_1;
+    int __v;
+    __v = index_0;
+    int __v1;
+    __v1 = 1;
+    __v = __v * __v1;
+    a_1 = __v;
+    int b_1;
+    int __v2;
+    __v2 = index_0;
+    int __v3;
+    __v3 = 2;
+    __v2 = __v2 * __v3;
+    b_1 = __v2;
+    int c_1;
+    int __v4;
+    __v4 = index_0;
+    int __v5;
+    __v5 = 4;
+    __v4 = __v4 * __v5;
+    c_1 = __v4;
+    int d_1;
+    int __v6;
+    __v6 = index_0;
+    int __v7;
+    __v7 = 8;
+    __v6 = __v6 * __v7;
+    d_1 = __v6;
+    int e_1;
+    int __v8;
+    __v8 = 1;
+    int __v9;
+    __v9 = index_0;
+    __v8 = __v8 * __v9;
+    e_1 = __v8;
+    int f_1;
+    int __v10;
+    __v10 = 2;
+    int __v11;
+    __v11 = index_0;
+    __v10 = __v10 * __v11;
+    f_1 = __v10;
+    int g_1;
+    int __v12;
+    __v12 = 4;
+    int __v13;
+    __v13 = index_0;
+    __v12 = __v12 * __v13;
+    g_1 = __v12;
+    int h_1;
+    int __v14;
+    __v14 = 8;
+    int __v15;
+    __v15 = index_0;
+    __v14 = __v14 * __v15;
+    h_1 = __v14;
+    int __v16;
+    __v16 = 0;
+    return __v16;
+}
+
 int leaISD(int index_0) {
     __entry:
     int scale_1;
