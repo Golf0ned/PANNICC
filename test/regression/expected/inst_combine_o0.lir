@@ -34,8 +34,7 @@ constant_fold:
         movl    $13, $16(%rsp)
         movl    $12(%rsp), %20
         movl    $16(%rsp), %21
-        phi     [%20] <-> %22    # [virtual]
-        addl    %21, %22
+        leal    (%20,%21), %22
         movl    %22, $12(%rsp)
         movl    $12(%rsp), %23
         movl    %23, $8(%rsp)
@@ -45,8 +44,7 @@ constant_fold:
         movl    %25, $28(%rsp)
         movl    $24(%rsp), %26
         movl    $28(%rsp), %27
-        phi     [%26] <-> %28    # [virtual]
-        addl    %27, %28
+        leal    (%26,%27), %28
         movl    %28, $24(%rsp)
         movl    $24(%rsp), %29
         movl    %29, $20(%rsp)
@@ -67,8 +65,7 @@ constant_fold:
         movl    %37, $48(%rsp)
         movl    $44(%rsp), %38
         movl    $48(%rsp), %39
-        phi     [%38] <-> %40    # [virtual]
-        addl    %39, %40
+        leal    (%38,%39), %40
         movl    %40, $44(%rsp)
         movl    $44(%rsp), %41
         movl    %41, $32(%rsp)
@@ -120,8 +117,7 @@ constant_fold_overflow:
         movl    $1, $8(%rsp)
         movl    $4(%rsp), %5
         movl    $8(%rsp), %6
-        phi     [%5] <-> %7    # [virtual]
-        addl    %6, %7
+        leal    (%5,%6), %7
         movl    %7, $4(%rsp)
         movl    $4(%rsp), %8
         movl    %8, (%rsp)

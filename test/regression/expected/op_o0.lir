@@ -27,8 +27,7 @@ add:
         movl    %10, $20(%rsp)
         movl    $16(%rsp), %11
         movl    $20(%rsp), %12
-        phi     [%11] <-> %13    # [virtual]
-        addl    %12, %13
+        leal    (%11,%12), %13
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
         movl    %14, $24(%rsp)
@@ -568,8 +567,7 @@ add_equals:
         movl    $2, $8(%rsp)
         movl    (%rsp), %6
         movl    $8(%rsp), %7
-        phi     [%6] <-> %8    # [virtual]
-        addl    %7, %8
+        leal    (%6,%7), %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
         movl    %9, $12(%rsp)

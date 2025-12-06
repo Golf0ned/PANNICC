@@ -30,8 +30,7 @@ if_basic:
         movl    $100, $16(%rsp)
         movl    $12(%rsp), %12
         movl    $16(%rsp), %13
-        phi     [%12] <-> %14    # [virtual]
-        addl    %13, %14
+        leal    (%12,%13), %14
         movl    %14, $12(%rsp)
         movl    $12(%rsp), %15
         movl    %15, (%rsp)
@@ -89,8 +88,7 @@ if_basic_else:
         movl    $3, $16(%rsp)
         movl    $12(%rsp), %14
         movl    $16(%rsp), %15
-        phi     [%14] <-> %16    # [virtual]
-        addl    %15, %16
+        leal    (%14,%15), %16
         movl    %16, $12(%rsp)
         movl    $12(%rsp), %17
         movl    %17, (%rsp)
@@ -102,8 +100,7 @@ if_basic_else:
         movl    $100, $24(%rsp)
         movl    $20(%rsp), %20
         movl    $24(%rsp), %21
-        phi     [%20] <-> %22    # [virtual]
-        addl    %21, %22
+        leal    (%20,%21), %22
         movl    %22, $20(%rsp)
         movl    $20(%rsp), %23
         movl    %23, (%rsp)

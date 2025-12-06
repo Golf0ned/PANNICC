@@ -99,8 +99,7 @@ mem2reg_while:
         jne     .mem2reg_while_7
 
 .mem2reg_while_4:
-        phi     [%2] <-> %5    # [virtual]
-        addl    %1, %5
+        leal    (%2,%1), %5
         phi     [%1] <-> %6    # [virtual]
         addl    $1, %6
         jmp     .mem2reg_while_0

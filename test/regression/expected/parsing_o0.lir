@@ -63,8 +63,7 @@ compound:
         movl    $3, $12(%rsp)
         movl    $4(%rsp), %22
         movl    $12(%rsp), %23
-        phi     [%22] <-> %24    # [virtual]
-        addl    %23, %24
+        leal    (%22,%23), %24
         movl    %24, $4(%rsp)
         movl    $123, $16(%rsp)
         movl    $122, $20(%rsp)
@@ -90,8 +89,7 @@ compound:
         movl    %34, $32(%rsp)
         movl    $28(%rsp), %35
         movl    $32(%rsp), %36
-        phi     [%35] <-> %37    # [virtual]
-        addl    %36, %37
+        leal    (%35,%36), %37
         movl    %37, $28(%rsp)
         movl    $4, $40(%rsp)
         movl    $28(%rsp), %38
@@ -106,39 +104,33 @@ compound:
         movl    $2, $48(%rsp)
         movl    $44(%rsp), %43
         movl    $48(%rsp), %44
-        phi     [%43] <-> %45    # [virtual]
-        addl    %44, %45
+        leal    (%43,%44), %45
         movl    %45, $44(%rsp)
         movl    $3, $52(%rsp)
         movl    $44(%rsp), %46
         movl    $52(%rsp), %47
-        phi     [%46] <-> %48    # [virtual]
-        addl    %47, %48
+        leal    (%46,%47), %48
         movl    %48, $44(%rsp)
         movl    $4, $56(%rsp)
         movl    $44(%rsp), %49
         movl    $56(%rsp), %50
-        phi     [%49] <-> %51    # [virtual]
-        addl    %50, %51
+        leal    (%49,%50), %51
         movl    %51, $44(%rsp)
         movl    $5, $60(%rsp)
         movl    $44(%rsp), %52
         movl    $60(%rsp), %53
-        phi     [%52] <-> %54    # [virtual]
-        addl    %53, %54
+        leal    (%52,%53), %54
         movl    %54, $44(%rsp)
         movl    $6, $64(%rsp)
         movl    $44(%rsp), %55
         movl    $64(%rsp), %56
-        phi     [%55] <-> %57    # [virtual]
-        addl    %56, %57
+        leal    (%55,%56), %57
         movl    %57, $44(%rsp)
         movl    $24(%rsp), %58
         movl    %58, $68(%rsp)
         movl    $44(%rsp), %59
         movl    $68(%rsp), %60
-        phi     [%59] <-> %61    # [virtual]
-        addl    %60, %61
+        leal    (%59,%60), %61
         movl    %61, $44(%rsp)
         movl    $44(%rsp), %62
         movl    %62, $72(%rsp)

@@ -218,6 +218,53 @@ namespace backend::lir_tree {
         return assembly;
     }
 
+    LeaBITile::LeaBITile(lir::OperandManager *om) : Tile(om) {}
+
+    bool LeaBITile::matches(Node *root) {
+        tile_dst = dynamic_cast<RegisterNode *>(root);
+        if (!tile_dst)
+            return false;
+
+        auto &reg_src = tile_dst->getSource();
+        if (!reg_src)
+            return false;
+
+        auto op = dynamic_cast<OpNode *>(reg_src.get());
+        if (!op || op->getOp() != middleend::mir::BinaryOp::ADD)
+            return false;
+
+        auto left_reg = dynamic_cast<RegisterNode *>(op->getLeft().get());
+        auto right_reg = dynamic_cast<RegisterNode *>(op->getRight().get());
+        if (!left_reg || !right_reg)
+            return false;
+
+        tile_base = left_reg;
+        tile_index = right_reg;
+        return true;
+    }
+
+    std::list<std::unique_ptr<lir::Instruction>>
+    LeaBITile::apply(std::vector<Node *> &worklist) {
+        std::list<std::unique_ptr<lir::Instruction>> assembly;
+
+        auto size = lir::DataSize::DOUBLEWORD;
+
+        auto base = resolveOperand(tile_base, worklist);
+        auto index = resolveOperand(tile_index, worklist);
+        auto scale = om->getImmediate(1);
+        auto displacement = om->getImmediate(0);
+        auto src = om->getAddress(static_cast<lir::Register *>(base),
+                                  static_cast<lir::Register *>(index), scale,
+                                  displacement);
+
+        auto dst = om->getRegister(tile_dst->getName());
+
+        auto lea = std::make_unique<lir::InstructionLea>(size, src, dst);
+        assembly.push_back(std::move(lea));
+
+        return std::move(assembly);
+    }
+
     LeaBISTile::LeaBISTile(lir::OperandManager *om) : Tile(om) {}
 
     bool LeaBISTile::matches(Node *root) {
@@ -586,6 +633,7 @@ namespace backend::lir_tree {
         all_tiles.push_back(std::make_unique<LeaBISTile>(om));
         all_tiles.push_back(std::make_unique<LeaISDTile>(om));
         all_tiles.push_back(std::make_unique<LeaBIDTile>(om));
+        all_tiles.push_back(std::make_unique<LeaBITile>(om));
 
         // Atomic tiles
         all_tiles.push_back(std::make_unique<BinOpTile>(om));

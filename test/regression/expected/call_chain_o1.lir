@@ -300,8 +300,7 @@ main:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-        phi     [%2] <-> %4    # [virtual]
-        addl    %3, %4
+        leal    (%2,%3), %4
         pushq   %rax    # [virtual]
         pushq   %rdi    # [virtual]
         pushq   %rsi    # [virtual]
@@ -322,8 +321,7 @@ main:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-        phi     [%4] <-> %6    # [virtual]
-        addl    %5, %6
+        leal    (%4,%5), %6
         pushq   %rax    # [virtual]
         pushq   %rdi    # [virtual]
         pushq   %rsi    # [virtual]
@@ -344,8 +342,7 @@ main:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-        phi     [%6] <-> %8    # [virtual]
-        addl    %7, %8
+        leal    (%6,%7), %8
         pushq   %rax    # [virtual]
         pushq   %rdi    # [virtual]
         pushq   %rsi    # [virtual]
@@ -366,8 +363,7 @@ main:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-        phi     [%8] <-> %10    # [virtual]
-        addl    %9, %10
+        leal    (%8,%9), %10
         pushq   %rax    # [virtual]
         pushq   %rdi    # [virtual]
         pushq   %rsi    # [virtual]
@@ -388,8 +384,7 @@ main:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-        phi     [%10] <-> %12    # [virtual]
-        addl    %11, %12
+        leal    (%10,%11), %12
         pushq   %rax    # [virtual]
         pushq   %rdi    # [virtual]
         pushq   %rsi    # [virtual]
@@ -410,8 +405,7 @@ main:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-        phi     [%12] <-> %14    # [virtual]
-        addl    %13, %14
+        leal    (%12,%13), %14
         pushq   %rax    # [virtual]
         pushq   %rdi    # [virtual]
         pushq   %rsi    # [virtual]
@@ -432,8 +426,7 @@ main:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-        phi     [%14] <-> %16    # [virtual]
-        addl    %15, %16
+        leal    (%14,%15), %16
         pushq   %rax    # [virtual]
         pushq   %rdi    # [virtual]
         pushq   %rsi    # [virtual]
@@ -454,8 +447,7 @@ main:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-        phi     [%16] <-> %18    # [virtual]
-        addl    %17, %18
+        leal    (%16,%17), %18
         pushq   %rax    # [virtual]
         pushq   %rdi    # [virtual]
         pushq   %rsi    # [virtual]
@@ -476,8 +468,7 @@ main:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-        phi     [%18] <-> %20    # [virtual]
-        addl    %19, %20
+        leal    (%18,%19), %20
         pushq   %rax    # [virtual]
         pushq   %rdi    # [virtual]
         pushq   %rsi    # [virtual]
@@ -498,8 +489,7 @@ main:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-        phi     [%20] <-> %22    # [virtual]
-        addl    %21, %22
+        leal    (%20,%21), %22
         pushq   %rax    # [virtual]
         pushq   %rdi    # [virtual]
         pushq   %rsi    # [virtual]
@@ -520,8 +510,7 @@ main:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-        phi     [%22] <-> %24    # [virtual]
-        addl    %23, %24
+        leal    (%22,%23), %24
         movq    %24, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]

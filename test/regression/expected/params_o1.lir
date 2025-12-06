@@ -58,8 +58,7 @@ fun2:
         imull   %0, %3
         phi     [%3] <-> %4    # [virtual]
         imull   %1, %4
-        phi     [%2] <-> %5    # [virtual]
-        addl    %4, %5
+        leal    (%2,%4), %5
         pushq   %rax    # [virtual]
         pushq   %rdi    # [virtual]
         pushq   %rsi    # [virtual]
@@ -81,8 +80,7 @@ fun2:
         popq    %r9    # [virtual]
         popq    %r10    # [virtual]
         popq    %r11    # [virtual]
-        phi     [%5] <-> %7    # [virtual]
-        addl    %6, %7
+        leal    (%5,%6), %7
         movq    %7, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
@@ -132,10 +130,8 @@ fun3:
         imull   %4, %5
         phi     [%1] <-> %6    # [virtual]
         imull   %3, %6
-        phi     [%5] <-> %7    # [virtual]
-        addl    %6, %7
-        phi     [%7] <-> %8    # [virtual]
-        addl    %2, %8
+        leal    (%5,%6), %7
+        leal    (%7,%2), %8
         movq    %8, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
