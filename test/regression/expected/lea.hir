@@ -1,3 +1,17 @@
+int leaBI(int base_0, int index_0) {
+    __entry:
+    int a_1;
+    int __v;
+    __v = base_0;
+    int __v1;
+    __v1 = index_0;
+    __v = __v + __v1;
+    a_1 = __v;
+    int __v2;
+    __v2 = 0;
+    return __v2;
+}
+
 int leaBIS(int base_0, int index_0) {
     __entry:
     int scale_1;

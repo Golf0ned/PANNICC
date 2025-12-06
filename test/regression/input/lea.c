@@ -1,3 +1,9 @@
+int leaBI(int base, int index) {
+    int a = base + index;
+
+    return 0;
+}
+
 int leaBIS(int base, int index) {
     int scale = 2;
 
