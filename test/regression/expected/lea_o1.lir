@@ -167,18 +167,10 @@ leaIISD:
         movq    %rdi, %0
 
 .leaIISD_entry:
-        leal    (%0,%0,2), %1
-        phi     [%1] <-> %2    # [virtual]
-        addl    $60, %2
-        leal    (%0,%0,4), %3
-        phi     [%3] <-> %4    # [virtual]
-        addl    $60, %4
-        leal    (%0,%0,8), %5
-        phi     [$60] <-> %6    # [virtual]
-        addl    %5, %6
-        leal    (%0,%0,2), %7
-        phi     [$60] <-> %8    # [virtual]
-        addl    %7, %8
+        leal    $60(%0,%0,2), %2
+        leal    $60(%0,%0,4), %4
+        leal    $60(%0,%0,8), %6
+        leal    $60(%0,%0,2), %8
         movq    $0, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]

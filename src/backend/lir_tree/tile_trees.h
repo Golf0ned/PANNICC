@@ -137,6 +137,20 @@ namespace backend::lir_tree {
         ImmediateNode *tile_displacement;
     };
 
+    class LeaIISDTile : public Tile {
+    public:
+        LeaIISDTile(lir::OperandManager *om);
+        bool matches(Node *root) override;
+        std::list<std::unique_ptr<lir::Instruction>>
+        apply(std::vector<Node *> &worklist) override;
+
+    private:
+        RegisterNode *tile_dst;
+        RegisterNode *tile_index;
+        ImmediateNode *tile_scale;
+        ImmediateNode *tile_displacement;
+    };
+
     class LeaBISDTile : public Tile {
     public:
         LeaBISDTile(lir::OperandManager *om);
