@@ -257,6 +257,57 @@ namespace backend::lir_tree {
         return assembly;
     }
 
+    MulOneTile::MulOneTile(lir::OperandManager *om) : Tile(om) {}
+
+    bool MulOneTile::matches(Node *root) {
+        tile_dst = dynamic_cast<RegisterNode *>(root);
+        if (!tile_dst)
+            return false;
+
+        auto &reg_src = tile_dst->getSource();
+        if (!reg_src)
+            return false;
+
+        auto op = dynamic_cast<OpNode *>(reg_src.get());
+        if (!op)
+            return false;
+
+        if (op->getOp() != middleend::mir::BinaryOp::MUL)
+            return false;
+
+        auto left_imm = dynamic_cast<ImmediateNode *>(op->getLeft().get());
+        auto right_imm = dynamic_cast<ImmediateNode *>(op->getRight().get());
+        if (!left_imm && !right_imm)
+            return false;
+
+        if (left_imm && left_imm->getValue() == 1) {
+            tile_src = op->getRight().get();
+            return true;
+        }
+        if (right_imm && right_imm->getValue() == 1) {
+            tile_src = op->getLeft().get();
+            return true;
+        }
+
+        return false;
+    }
+
+    std::list<std::unique_ptr<lir::Instruction>>
+    MulOneTile::apply(std::vector<Node *> &worklist) {
+        std::list<std::unique_ptr<lir::Instruction>> assembly;
+
+        auto size = lir::DataSize::DOUBLEWORD;
+
+        auto src = resolveOperand(tile_src, worklist);
+        auto dst = om->getRegister(tile_dst->getName());
+
+        auto mov_asm = std::make_unique<lir::InstructionMov>(
+            lir::Extend::NONE, size, size, src, dst);
+        assembly.push_back(std::move(mov_asm));
+
+        return assembly;
+    }
+
     LeaBITile::LeaBITile(lir::OperandManager *om) : Tile(om) {}
 
     bool LeaBITile::matches(Node *root) {
@@ -783,13 +834,14 @@ namespace backend::lir_tree {
     }
 
     TreeTiler::TreeTiler(lir::OperandManager *om) : om(om) {
-        // lea tiles
+        // complex tiles
         all_tiles.push_back(std::make_unique<LeaBISDTile>(om));
         all_tiles.push_back(std::make_unique<LeaBISTile>(om));
         all_tiles.push_back(std::make_unique<LeaIISDTile>(om));
         all_tiles.push_back(std::make_unique<LeaISDTile>(om));
         all_tiles.push_back(std::make_unique<LeaBIDTile>(om));
         all_tiles.push_back(std::make_unique<LeaIISTile>(om));
+        all_tiles.push_back(std::make_unique<MulOneTile>(om));
         all_tiles.push_back(std::make_unique<LeaISTile>(om));
         all_tiles.push_back(std::make_unique<LeaBITile>(om));
 
