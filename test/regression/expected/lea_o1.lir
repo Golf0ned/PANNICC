@@ -115,18 +115,12 @@ leaIIS:
         movq    %rdi, %0
 
 .leaIIS_entry:
-        phi     [%0] <-> %1    # [virtual]
-        imull   $3, %1
-        phi     [%0] <-> %2    # [virtual]
-        imull   $5, %2
-        phi     [%0] <-> %3    # [virtual]
-        imull   $9, %3
-        phi     [$3] <-> %4    # [virtual]
-        imull   %0, %4
-        phi     [$5] <-> %5    # [virtual]
-        imull   %0, %5
-        phi     [$9] <-> %6    # [virtual]
-        imull   %0, %6
+        leal    (%0,%0,2), %1
+        leal    (%0,%0,4), %2
+        leal    (%0,%0,8), %3
+        leal    (%0,%0,2), %4
+        leal    (%0,%0,4), %5
+        leal    (%0,%0,8), %6
         movq    $0, %rax
         popq    %rbx    # [virtual]
         popq    %rsp    # [virtual]
