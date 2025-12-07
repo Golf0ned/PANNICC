@@ -549,7 +549,7 @@ namespace backend::lir_tree {
             auto op_right_imm =
                 dynamic_cast<ImmediateNode *>(op_group->getRight().get());
 
-            if (!!op_left_imm ^ !op_right_imm)
+            if (!op_left_imm == !op_right_imm)
                 return false;
 
             tile_displacement = op_left_imm ? op_left_imm : op_right_imm;
@@ -605,7 +605,7 @@ namespace backend::lir_tree {
 
         auto left_reg = dynamic_cast<RegisterNode *>(op->getLeft().get());
         auto right_reg = dynamic_cast<RegisterNode *>(op->getRight().get());
-        if (!!left_reg ^ !right_reg)
+        if (!left_reg == !right_reg)
             return false;
 
         if (left_reg && matchIS(left_reg, &tile_index, &tile_scale)) {
@@ -660,7 +660,7 @@ namespace backend::lir_tree {
 
         auto left_reg = dynamic_cast<RegisterNode *>(op->getLeft().get());
         auto right_reg = dynamic_cast<RegisterNode *>(op->getRight().get());
-        if (!!left_reg ^ !right_reg)
+        if (!left_reg == !right_reg)
             return false;
 
         if (left_reg && matchISS(left_reg, &tile_index, &tile_scale)) {
@@ -787,7 +787,7 @@ namespace backend::lir_tree {
             auto op_right_imm =
                 dynamic_cast<ImmediateNode *>(op_group->getRight().get());
 
-            if (!!op_left_imm ^ !op_right_imm)
+            if (!op_left_imm == !op_right_imm)
                 return false;
 
             tile_displacement = op_left_imm ? op_left_imm : op_right_imm;
