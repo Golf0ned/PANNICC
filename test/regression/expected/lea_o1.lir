@@ -156,6 +156,39 @@ leaISD:
         popq    %r15    # [virtual]
         ret
 
+leaIISD:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+        movq    %rdi, %0
+
+.leaIISD_entry:
+        leal    (%0,%0,2), %1
+        phi     [%1] <-> %2    # [virtual]
+        addl    $60, %2
+        leal    (%0,%0,4), %3
+        phi     [%3] <-> %4    # [virtual]
+        addl    $60, %4
+        leal    (%0,%0,8), %5
+        phi     [$60] <-> %6    # [virtual]
+        addl    %5, %6
+        leal    (%0,%0,2), %7
+        phi     [$60] <-> %8    # [virtual]
+        addl    %7, %8
+        movq    $0, %rax
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
 leaBISD:
         pushq   %rbx    # [virtual]
         pushq   %rsp    # [virtual]

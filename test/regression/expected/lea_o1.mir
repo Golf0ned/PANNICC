@@ -71,6 +71,19 @@ entry:
   ret i32 0
 }
 
+define i32 @leaIISD(i32 %0) {
+entry:
+  %1 = mul i32 %0, i32 3
+  %2 = add i32 %1, i32 60
+  %3 = mul i32 5, i32 %0
+  %4 = add i32 %3, i32 60
+  %5 = mul i32 %0, i32 9
+  %6 = add i32 60, i32 %5
+  %7 = mul i32 3, i32 %0
+  %8 = add i32 60, i32 %7
+  ret i32 0
+}
+
 define i32 @leaBISD(i32 %0, i32 %1) {
 entry:
   %2 = mul i32 %1, i32 8

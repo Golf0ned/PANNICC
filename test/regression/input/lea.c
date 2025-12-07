@@ -64,6 +64,17 @@ int leaISD(int index) {
     return 0;
 }
 
+int leaIISD(int index) {
+    int displacement = 60;
+
+    int a = (index * 3) + displacement;
+    int b = (5 * index) + displacement;
+    int c = displacement + (index * 9);
+    int d = displacement + (3 * index);
+
+    return 0;
+}
+
 int leaBISD(int base, int index) {
     int scale = 8;
     int displacement = 40;

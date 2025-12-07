@@ -301,6 +301,57 @@ int leaISD(int index_0) {
     return __v14;
 }
 
+int leaIISD(int index_0) {
+    __entry:
+    int displacement_1;
+    int __v;
+    __v = 60;
+    displacement_1 = __v;
+    int a_1;
+    int __v1;
+    __v1 = index_0;
+    int __v2;
+    __v2 = 3;
+    __v1 = __v1 * __v2;
+    int __v3;
+    __v3 = displacement_1;
+    __v1 = __v1 + __v3;
+    a_1 = __v1;
+    int b_1;
+    int __v4;
+    __v4 = 5;
+    int __v5;
+    __v5 = index_0;
+    __v4 = __v4 * __v5;
+    int __v6;
+    __v6 = displacement_1;
+    __v4 = __v4 + __v6;
+    b_1 = __v4;
+    int c_1;
+    int __v7;
+    __v7 = displacement_1;
+    int __v8;
+    __v8 = index_0;
+    int __v9;
+    __v9 = 9;
+    __v8 = __v8 * __v9;
+    __v7 = __v7 + __v8;
+    c_1 = __v7;
+    int d_1;
+    int __v10;
+    __v10 = displacement_1;
+    int __v11;
+    __v11 = 3;
+    int __v12;
+    __v12 = index_0;
+    __v11 = __v11 * __v12;
+    __v10 = __v10 + __v11;
+    d_1 = __v10;
+    int __v13;
+    __v13 = 0;
+    return __v13;
+}
+
 int leaBISD(int base_0, int index_0) {
     __entry:
     int scale_1;

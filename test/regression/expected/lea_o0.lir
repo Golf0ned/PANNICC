@@ -702,6 +702,123 @@ leaISD:
         popq    %r15    # [virtual]
         ret
 
+leaIISD:
+        pushq   %rbx    # [virtual]
+        pushq   %rsp    # [virtual]
+        pushq   %rbp    # [virtual]
+        pushq   %r12    # [virtual]
+        pushq   %r13    # [virtual]
+        pushq   %r14    # [virtual]
+        pushq   %r15    # [virtual]
+        movq    %rdi, %0
+
+.leaIISD_entry:
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        subq    $4, %rsp    # [virtual]
+        movl    %0, $80(%rsp)
+        movl    $60, (%rsp)
+        movl    (%rsp), %22
+        movl    %22, (%rsp)
+        movl    $80(%rsp), %23
+        movl    %23, $8(%rsp)
+        movl    $3, $12(%rsp)
+        movl    $8(%rsp), %24
+        movl    $12(%rsp), %25
+        phi     [%24] <-> %26    # [virtual]
+        imull   %25, %26
+        movl    %26, $8(%rsp)
+        movl    (%rsp), %27
+        movl    %27, $16(%rsp)
+        movl    $8(%rsp), %28
+        movl    $16(%rsp), %29
+        leal    (%28,%29), %30
+        movl    %30, $8(%rsp)
+        movl    $8(%rsp), %31
+        movl    %31, $4(%rsp)
+        movl    $5, $24(%rsp)
+        movl    $80(%rsp), %32
+        movl    %32, $32(%rsp)
+        movl    $24(%rsp), %33
+        movl    $32(%rsp), %34
+        phi     [%33] <-> %35    # [virtual]
+        imull   %34, %35
+        movl    %35, $24(%rsp)
+        movl    (%rsp), %36
+        movl    %36, $36(%rsp)
+        movl    $24(%rsp), %37
+        movl    $36(%rsp), %38
+        leal    (%37,%38), %39
+        movl    %39, $24(%rsp)
+        movl    $24(%rsp), %40
+        movl    %40, $20(%rsp)
+        movl    (%rsp), %41
+        movl    %41, $44(%rsp)
+        movl    $80(%rsp), %42
+        movl    %42, $48(%rsp)
+        movl    $9, $52(%rsp)
+        movl    $48(%rsp), %43
+        movl    $52(%rsp), %44
+        phi     [%43] <-> %45    # [virtual]
+        imull   %44, %45
+        movl    %45, $48(%rsp)
+        movl    $44(%rsp), %46
+        movl    $48(%rsp), %47
+        leal    (%46,%47), %48
+        movl    %48, $44(%rsp)
+        movl    $44(%rsp), %49
+        movl    %49, $40(%rsp)
+        movl    (%rsp), %50
+        movl    %50, $60(%rsp)
+        movl    $3, $64(%rsp)
+        movl    $80(%rsp), %51
+        movl    %51, $68(%rsp)
+        movl    $64(%rsp), %52
+        movl    $68(%rsp), %53
+        phi     [%52] <-> %54    # [virtual]
+        imull   %53, %54
+        movl    %54, $64(%rsp)
+        movl    $60(%rsp), %55
+        movl    $64(%rsp), %56
+        leal    (%55,%56), %57
+        movl    %57, $60(%rsp)
+        movl    $60(%rsp), %58
+        movl    %58, $56(%rsp)
+        movl    $0, $72(%rsp)
+        movl    $72(%rsp), %59
+        movl    %59, $76(%rsp)
+
+.leaIISD_60:
+        movl    $76(%rsp), %61
+        movq    %61, %rax
+        addq    $84, %rsp    # [virtual]
+        popq    %rbx    # [virtual]
+        popq    %rsp    # [virtual]
+        popq    %rbp    # [virtual]
+        popq    %r12    # [virtual]
+        popq    %r13    # [virtual]
+        popq    %r14    # [virtual]
+        popq    %r15    # [virtual]
+        ret
+
 leaBISD:
         pushq   %rbx    # [virtual]
         pushq   %rsp    # [virtual]
