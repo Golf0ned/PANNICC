@@ -29,6 +29,118 @@ entry:
   ret i32 %17
 }
 
+define i32 @leaIS(i32 %0) {
+entry:
+  %1 = alloca i32
+  %2 = alloca i32
+  %3 = alloca i32
+  %4 = alloca i32
+  %5 = alloca i32
+  %6 = alloca i32
+  %7 = alloca i32
+  %8 = alloca i32
+  %9 = alloca i32
+  %10 = alloca i32
+  %11 = alloca i32
+  %12 = alloca i32
+  %13 = alloca i32
+  %14 = alloca i32
+  %15 = alloca i32
+  %16 = alloca i32
+  %17 = alloca i32
+  %18 = alloca i32
+  %19 = alloca i32
+  %20 = alloca i32
+  %21 = alloca i32
+  %22 = alloca i32
+  %23 = alloca i32
+  %24 = alloca i32
+  %25 = alloca i32
+  %26 = alloca i32
+  %27 = alloca i32
+  store i32 %0, ptr %27
+  %28 = load ptr %27
+  store i32 %28, ptr %2
+  store i32 1, ptr %3
+  %29 = load ptr %2
+  %30 = load ptr %3
+  %31 = mul i32 %29, i32 %30
+  store i32 %31, ptr %2
+  %32 = load ptr %2
+  store i32 %32, ptr %1
+  %33 = load ptr %27
+  store i32 %33, ptr %5
+  store i32 2, ptr %6
+  %34 = load ptr %5
+  %35 = load ptr %6
+  %36 = mul i32 %34, i32 %35
+  store i32 %36, ptr %5
+  %37 = load ptr %5
+  store i32 %37, ptr %4
+  %38 = load ptr %27
+  store i32 %38, ptr %8
+  store i32 4, ptr %9
+  %39 = load ptr %8
+  %40 = load ptr %9
+  %41 = mul i32 %39, i32 %40
+  store i32 %41, ptr %8
+  %42 = load ptr %8
+  store i32 %42, ptr %7
+  %43 = load ptr %27
+  store i32 %43, ptr %11
+  store i32 8, ptr %12
+  %44 = load ptr %11
+  %45 = load ptr %12
+  %46 = mul i32 %44, i32 %45
+  store i32 %46, ptr %11
+  %47 = load ptr %11
+  store i32 %47, ptr %10
+  store i32 1, ptr %14
+  %48 = load ptr %27
+  store i32 %48, ptr %15
+  %49 = load ptr %14
+  %50 = load ptr %15
+  %51 = mul i32 %49, i32 %50
+  store i32 %51, ptr %14
+  %52 = load ptr %14
+  store i32 %52, ptr %13
+  store i32 2, ptr %17
+  %53 = load ptr %27
+  store i32 %53, ptr %18
+  %54 = load ptr %17
+  %55 = load ptr %18
+  %56 = mul i32 %54, i32 %55
+  store i32 %56, ptr %17
+  %57 = load ptr %17
+  store i32 %57, ptr %16
+  store i32 4, ptr %20
+  %58 = load ptr %27
+  store i32 %58, ptr %21
+  %59 = load ptr %20
+  %60 = load ptr %21
+  %61 = mul i32 %59, i32 %60
+  store i32 %61, ptr %20
+  %62 = load ptr %20
+  store i32 %62, ptr %19
+  store i32 8, ptr %23
+  %63 = load ptr %27
+  store i32 %63, ptr %24
+  %64 = load ptr %23
+  %65 = load ptr %24
+  %66 = mul i32 %64, i32 %65
+  store i32 %66, ptr %23
+  %67 = load ptr %23
+  store i32 %67, ptr %22
+  store i32 0, ptr %25
+  %68 = load ptr %25
+  store i32 %68, ptr %26
+  br label 69
+
+69:
+  %70 = load ptr %26
+  ret i32 %70
+}
+
 define i32 @leaBIS(i32 %0, i32 %1) {
 entry:
   %2 = alloca i32
@@ -275,7 +387,7 @@ entry:
   ret i32 %95
 }
 
-define i32 @leaIS(i32 %0) {
+define i32 @leaIIS(i32 %0) {
 entry:
   %1 = alloca i32
   %2 = alloca i32
@@ -298,93 +410,69 @@ entry:
   %19 = alloca i32
   %20 = alloca i32
   %21 = alloca i32
-  %22 = alloca i32
-  %23 = alloca i32
-  %24 = alloca i32
-  %25 = alloca i32
-  %26 = alloca i32
-  %27 = alloca i32
-  store i32 %0, ptr %27
-  %28 = load ptr %27
-  store i32 %28, ptr %2
-  store i32 1, ptr %3
-  %29 = load ptr %2
-  %30 = load ptr %3
-  %31 = mul i32 %29, i32 %30
-  store i32 %31, ptr %2
-  %32 = load ptr %2
-  store i32 %32, ptr %1
-  %33 = load ptr %27
-  store i32 %33, ptr %5
-  store i32 2, ptr %6
-  %34 = load ptr %5
-  %35 = load ptr %6
-  %36 = mul i32 %34, i32 %35
-  store i32 %36, ptr %5
-  %37 = load ptr %5
-  store i32 %37, ptr %4
-  %38 = load ptr %27
-  store i32 %38, ptr %8
-  store i32 4, ptr %9
-  %39 = load ptr %8
-  %40 = load ptr %9
-  %41 = mul i32 %39, i32 %40
-  store i32 %41, ptr %8
-  %42 = load ptr %8
-  store i32 %42, ptr %7
-  %43 = load ptr %27
-  store i32 %43, ptr %11
-  store i32 8, ptr %12
-  %44 = load ptr %11
-  %45 = load ptr %12
-  %46 = mul i32 %44, i32 %45
-  store i32 %46, ptr %11
-  %47 = load ptr %11
-  store i32 %47, ptr %10
-  store i32 1, ptr %14
-  %48 = load ptr %27
-  store i32 %48, ptr %15
-  %49 = load ptr %14
-  %50 = load ptr %15
-  %51 = mul i32 %49, i32 %50
-  store i32 %51, ptr %14
-  %52 = load ptr %14
-  store i32 %52, ptr %13
-  store i32 2, ptr %17
-  %53 = load ptr %27
-  store i32 %53, ptr %18
-  %54 = load ptr %17
-  %55 = load ptr %18
-  %56 = mul i32 %54, i32 %55
-  store i32 %56, ptr %17
-  %57 = load ptr %17
-  store i32 %57, ptr %16
-  store i32 4, ptr %20
-  %58 = load ptr %27
-  store i32 %58, ptr %21
-  %59 = load ptr %20
-  %60 = load ptr %21
-  %61 = mul i32 %59, i32 %60
-  store i32 %61, ptr %20
-  %62 = load ptr %20
-  store i32 %62, ptr %19
-  store i32 8, ptr %23
-  %63 = load ptr %27
-  store i32 %63, ptr %24
-  %64 = load ptr %23
-  %65 = load ptr %24
-  %66 = mul i32 %64, i32 %65
-  store i32 %66, ptr %23
-  %67 = load ptr %23
-  store i32 %67, ptr %22
-  store i32 0, ptr %25
-  %68 = load ptr %25
-  store i32 %68, ptr %26
-  br label 69
+  store i32 %0, ptr %21
+  %22 = load ptr %21
+  store i32 %22, ptr %2
+  store i32 3, ptr %3
+  %23 = load ptr %2
+  %24 = load ptr %3
+  %25 = mul i32 %23, i32 %24
+  store i32 %25, ptr %2
+  %26 = load ptr %2
+  store i32 %26, ptr %1
+  %27 = load ptr %21
+  store i32 %27, ptr %5
+  store i32 5, ptr %6
+  %28 = load ptr %5
+  %29 = load ptr %6
+  %30 = mul i32 %28, i32 %29
+  store i32 %30, ptr %5
+  %31 = load ptr %5
+  store i32 %31, ptr %4
+  %32 = load ptr %21
+  store i32 %32, ptr %8
+  store i32 9, ptr %9
+  %33 = load ptr %8
+  %34 = load ptr %9
+  %35 = mul i32 %33, i32 %34
+  store i32 %35, ptr %8
+  %36 = load ptr %8
+  store i32 %36, ptr %7
+  store i32 3, ptr %11
+  %37 = load ptr %21
+  store i32 %37, ptr %12
+  %38 = load ptr %11
+  %39 = load ptr %12
+  %40 = mul i32 %38, i32 %39
+  store i32 %40, ptr %11
+  %41 = load ptr %11
+  store i32 %41, ptr %10
+  store i32 5, ptr %14
+  %42 = load ptr %21
+  store i32 %42, ptr %15
+  %43 = load ptr %14
+  %44 = load ptr %15
+  %45 = mul i32 %43, i32 %44
+  store i32 %45, ptr %14
+  %46 = load ptr %14
+  store i32 %46, ptr %13
+  store i32 9, ptr %17
+  %47 = load ptr %21
+  store i32 %47, ptr %18
+  %48 = load ptr %17
+  %49 = load ptr %18
+  %50 = mul i32 %48, i32 %49
+  store i32 %50, ptr %17
+  %51 = load ptr %17
+  store i32 %51, ptr %16
+  store i32 0, ptr %19
+  %52 = load ptr %19
+  store i32 %52, ptr %20
+  br label 53
 
-69:
-  %70 = load ptr %26
-  ret i32 %70
+53:
+  %54 = load ptr %20
+  ret i32 %54
 }
 
 define i32 @leaISD(i32 %0) {

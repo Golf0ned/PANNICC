@@ -4,6 +4,19 @@ int leaBI(int base, int index) {
     return 0;
 }
 
+int leaIS(int index) {
+    int a = (index * 1);
+    int b = (index * 2);
+    int c = (index * 4);
+    int d = (index * 8);
+    int e = (1 * index);
+    int f = (2 * index);
+    int g = (4 * index);
+    int h = (8 * index);
+
+    return 0;
+}
+
 int leaBIS(int base, int index) {
     int scale = 2;
 
@@ -28,15 +41,13 @@ int leaBID(int base, int index) {
     return 0;
 }
 
-int leaIS(int index) {
-    int a = (index * 1);
-    int b = (index * 2);
-    int c = (index * 4);
-    int d = (index * 8);
-    int e = (1 * index);
-    int f = (2 * index);
-    int g = (4 * index);
-    int h = (8 * index);
+int leaIIS(int index) {
+    int a = (index * 3);
+    int b = (index * 5);
+    int c = (index * 9);
+    int d = (3 * index);
+    int e = (5 * index);
+    int f = (9 * index);
 
     return 0;
 }
@@ -45,10 +56,10 @@ int leaISD(int index) {
     int scale = 4;
     int displacement = 60;
 
-    int c = (index * scale) + displacement;
-    int d = (scale * index) + displacement;
-    int a = displacement + (index * scale);
-    int b = displacement + (scale * index);
+    int a = (index * scale) + displacement;
+    int b = (scale * index) + displacement;
+    int c = displacement + (index * scale);
+    int d = displacement + (scale * index);
 
     return 0;
 }
