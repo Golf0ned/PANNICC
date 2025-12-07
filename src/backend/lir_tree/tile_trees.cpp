@@ -41,6 +41,45 @@ namespace backend::lir_tree {
         return true;
     }
 
+    bool matchScaledPlusOneIndex(RegisterNode *node, RegisterNode **index_res,
+                                 ImmediateNode **scale_res) {
+        auto &reg_src = node->getSource();
+        if (!reg_src)
+            return false;
+
+        auto op = dynamic_cast<OpNode *>(reg_src.get());
+        if (!op)
+            return false;
+
+        if (op->getOp() != middleend::mir::BinaryOp::MUL)
+            return false;
+
+        auto left_reg = dynamic_cast<RegisterNode *>(op->getLeft().get());
+        auto right_reg = dynamic_cast<RegisterNode *>(op->getRight().get());
+        if (!left_reg == !right_reg)
+            return false;
+
+        auto index = left_reg ? left_reg : right_reg;
+
+        auto scale = dynamic_cast<ImmediateNode *>(
+            left_reg ? op->getRight().get() : op->getLeft().get());
+        if (!scale)
+            return false;
+
+        switch (scale->getValue()) {
+        case 3:
+        case 5:
+        case 9:
+            break;
+        default:
+            return false;
+        }
+
+        *index_res = index;
+        *scale_res = scale;
+        return true;
+    }
+
     Tile::Tile(lir::OperandManager *om) : om(om) {}
 
     lir::Operand *Tile::resolveOperand(Node *node,
@@ -603,6 +642,63 @@ namespace backend::lir_tree {
         return std::move(assembly);
     }
 
+    LeaIISDTile::LeaIISDTile(lir::OperandManager *om) : Tile(om) {}
+
+    bool LeaIISDTile::matches(Node *root) {
+        tile_dst = dynamic_cast<RegisterNode *>(root);
+        if (!tile_dst)
+            return false;
+
+        auto &reg_src = tile_dst->getSource();
+        if (!reg_src)
+            return false;
+
+        auto op = dynamic_cast<OpNode *>(reg_src.get());
+        if (!op || op->getOp() != middleend::mir::BinaryOp::ADD)
+            return false;
+
+        auto left_reg = dynamic_cast<RegisterNode *>(op->getLeft().get());
+        auto right_reg = dynamic_cast<RegisterNode *>(op->getRight().get());
+        if (!!left_reg ^ !right_reg)
+            return false;
+
+        if (left_reg &&
+            matchScaledPlusOneIndex(left_reg, &tile_index, &tile_scale)) {
+            tile_displacement =
+                static_cast<ImmediateNode *>(op->getRight().get());
+            return true;
+        }
+        if (right_reg &&
+            matchScaledPlusOneIndex(right_reg, &tile_index, &tile_scale)) {
+            tile_displacement =
+                static_cast<ImmediateNode *>(op->getLeft().get());
+            return true;
+        }
+
+        return false;
+    }
+
+    std::list<std::unique_ptr<lir::Instruction>>
+    LeaIISDTile::apply(std::vector<Node *> &worklist) {
+        std::list<std::unique_ptr<lir::Instruction>> assembly;
+
+        auto size = lir::DataSize::DOUBLEWORD;
+
+        auto base =
+            static_cast<lir::Register *>(resolveOperand(tile_index, worklist));
+        auto index = base;
+        auto scale = om->getImmediate(tile_scale->getValue() - 1);
+        auto displacement = om->getImmediate(tile_displacement->getValue());
+        auto src = om->getAddress(base, index, scale, displacement);
+
+        auto dst = om->getRegister(tile_dst->getName());
+
+        auto lea = std::make_unique<lir::InstructionLea>(size, src, dst);
+        assembly.push_back(std::move(lea));
+
+        return std::move(assembly);
+    }
+
     LeaBISDTile::LeaBISDTile(lir::OperandManager *om) : Tile(om) {}
 
     bool LeaBISDTile::matches(Node *root) {
@@ -742,6 +838,7 @@ namespace backend::lir_tree {
         // lea tiles
         all_tiles.push_back(std::make_unique<LeaBISDTile>(om));
         all_tiles.push_back(std::make_unique<LeaBISTile>(om));
+        all_tiles.push_back(std::make_unique<LeaIISDTile>(om));
         all_tiles.push_back(std::make_unique<LeaISDTile>(om));
         all_tiles.push_back(std::make_unique<LeaBIDTile>(om));
         all_tiles.push_back(std::make_unique<LeaIISTile>(om));
