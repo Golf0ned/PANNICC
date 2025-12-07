@@ -56,6 +56,18 @@ namespace backend::lir_tree {
         OpNode *tile_op;
     };
 
+    class MulOneTile : public Tile {
+    public:
+        MulOneTile(lir::OperandManager *om);
+        bool matches(Node *root) override;
+        std::list<std::unique_ptr<lir::Instruction>>
+        apply(std::vector<Node *> &worklist) override;
+
+    private:
+        RegisterNode *tile_dst;
+        Node *tile_src;
+    };
+
     class LeaBITile : public Tile {
     public:
         LeaBITile(lir::OperandManager *om);

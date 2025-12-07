@@ -32,11 +32,11 @@ leaIS:
         movq    %rdi, %0
 
 .leaIS_entry:
-        leal    (,%0), %1
+        movl    %0, %1
         leal    (,%0,2), %2
         leal    (,%0,4), %3
         leal    (,%0,8), %4
-        leal    (,%0), %5
+        movl    %0, %5
         leal    (,%0,2), %6
         leal    (,%0,4), %7
         leal    (,%0,8), %8
