@@ -1,8 +1,8 @@
 #include "backend/lir_tree/tile_trees.h"
 
 namespace backend::lir_tree {
-    bool matchScaledIndex(RegisterNode *node, RegisterNode **index_res,
-                          ImmediateNode **scale_res) {
+    bool matchIS(RegisterNode *node, RegisterNode **index_res,
+                 ImmediateNode **scale_res) {
         auto &reg_src = node->getSource();
         if (!reg_src)
             return false;
@@ -41,8 +41,8 @@ namespace backend::lir_tree {
         return true;
     }
 
-    bool matchScaledPlusOneIndex(RegisterNode *node, RegisterNode **index_res,
-                                 ImmediateNode **scale_res) {
+    bool matchISS(RegisterNode *node, RegisterNode **index_res,
+                  ImmediateNode **scale_res) {
         auto &reg_src = node->getSource();
         if (!reg_src)
             return false;
@@ -311,32 +311,7 @@ namespace backend::lir_tree {
         if (!tile_dst)
             return false;
 
-        auto &reg_src = tile_dst->getSource();
-        if (!reg_src)
-            return false;
-
-        auto op = dynamic_cast<OpNode *>(reg_src.get());
-        if (!op || op->getOp() != middleend::mir::BinaryOp::MUL)
-            return false;
-
-        auto left_reg = dynamic_cast<RegisterNode *>(op->getLeft().get());
-        auto right_reg = dynamic_cast<RegisterNode *>(op->getRight().get());
-        if (!!left_reg ^ !right_reg)
-            return false;
-
-        tile_index = left_reg ? left_reg : right_reg;
-
-        tile_scale = static_cast<ImmediateNode *>(
-            left_reg ? op->getRight().get() : op->getLeft().get());
-        switch (tile_scale->getValue()) {
-        case 1:
-        case 2:
-        case 4:
-        case 8:
-            return true;
-        default:
-            return false;
-        }
+        return matchIS(tile_dst, &tile_index, &tile_scale);
     }
 
     std::list<std::unique_ptr<lir::Instruction>>
@@ -367,31 +342,7 @@ namespace backend::lir_tree {
         if (!tile_dst)
             return false;
 
-        auto &reg_src = tile_dst->getSource();
-        if (!reg_src)
-            return false;
-
-        auto op = dynamic_cast<OpNode *>(reg_src.get());
-        if (!op || op->getOp() != middleend::mir::BinaryOp::MUL)
-            return false;
-
-        auto left_reg = dynamic_cast<RegisterNode *>(op->getLeft().get());
-        auto right_reg = dynamic_cast<RegisterNode *>(op->getRight().get());
-        if (!!left_reg ^ !right_reg)
-            return false;
-
-        tile_index = left_reg ? left_reg : right_reg;
-
-        tile_scale = static_cast<ImmediateNode *>(
-            left_reg ? op->getRight().get() : op->getLeft().get());
-        switch (tile_scale->getValue()) {
-        case 3:
-        case 5:
-        case 9:
-            return true;
-        default:
-            return false;
-        }
+        return matchISS(tile_dst, &tile_index, &tile_scale);
     }
 
     std::list<std::unique_ptr<lir::Instruction>>
@@ -435,11 +386,11 @@ namespace backend::lir_tree {
         if (!left_reg || !right_reg)
             return false;
 
-        if (matchScaledIndex(left_reg, &tile_index, &tile_scale)) {
+        if (matchIS(left_reg, &tile_index, &tile_scale)) {
             tile_base = right_reg;
             return true;
         }
-        if (matchScaledIndex(right_reg, &tile_index, &tile_scale)) {
+        if (matchIS(right_reg, &tile_index, &tile_scale)) {
             tile_base = left_reg;
             return true;
         }
@@ -606,13 +557,12 @@ namespace backend::lir_tree {
         if (!!left_reg ^ !right_reg)
             return false;
 
-        if (left_reg && matchScaledIndex(left_reg, &tile_index, &tile_scale)) {
+        if (left_reg && matchIS(left_reg, &tile_index, &tile_scale)) {
             tile_displacement =
                 static_cast<ImmediateNode *>(op->getRight().get());
             return true;
         }
-        if (right_reg &&
-            matchScaledIndex(right_reg, &tile_index, &tile_scale)) {
+        if (right_reg && matchIS(right_reg, &tile_index, &tile_scale)) {
             tile_displacement =
                 static_cast<ImmediateNode *>(op->getLeft().get());
             return true;
@@ -662,14 +612,12 @@ namespace backend::lir_tree {
         if (!!left_reg ^ !right_reg)
             return false;
 
-        if (left_reg &&
-            matchScaledPlusOneIndex(left_reg, &tile_index, &tile_scale)) {
+        if (left_reg && matchISS(left_reg, &tile_index, &tile_scale)) {
             tile_displacement =
                 static_cast<ImmediateNode *>(op->getRight().get());
             return true;
         }
-        if (right_reg &&
-            matchScaledPlusOneIndex(right_reg, &tile_index, &tile_scale)) {
+        if (right_reg && matchISS(right_reg, &tile_index, &tile_scale)) {
             tile_displacement =
                 static_cast<ImmediateNode *>(op->getLeft().get());
             return true;
@@ -748,11 +696,11 @@ namespace backend::lir_tree {
             if (!inner_left || !inner_right)
                 return false;
 
-            if (matchScaledIndex(inner_left, &tile_index, &tile_scale)) {
+            if (matchIS(inner_left, &tile_index, &tile_scale)) {
                 tile_base = inner_right;
                 return true;
             }
-            if (matchScaledIndex(inner_right, &tile_index, &tile_scale)) {
+            if (matchIS(inner_right, &tile_index, &tile_scale)) {
                 tile_base = inner_left;
                 return true;
             }
@@ -796,11 +744,11 @@ namespace backend::lir_tree {
                 op_left_imm ? op_group->getRight().get()
                             : op_group->getLeft().get());
 
-            if (matchScaledIndex(other_child, &tile_index, &tile_scale)) {
+            if (matchIS(other_child, &tile_index, &tile_scale)) {
                 tile_base = reg_node;
                 return true;
             }
-            if (matchScaledIndex(reg_node, &tile_index, &tile_scale)) {
+            if (matchIS(reg_node, &tile_index, &tile_scale)) {
                 tile_base = other_child;
                 return true;
             }
