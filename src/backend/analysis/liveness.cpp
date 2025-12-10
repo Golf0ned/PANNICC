@@ -1,0 +1,177 @@
+#include "backend/analysis/liveness.h"
+
+namespace backend {
+    RegisterSet GenSetVisitor::getResult() { return gen; }
+
+    void GenSetVisitor::visit(lir::Instruction *i) {}
+
+    void GenSetVisitor::visit(lir::Label *l) { gen.clear(); }
+
+    void GenSetVisitor::visit(lir::InstructionMov *i) {
+        gen.clear();
+
+        auto src = dynamic_cast<lir::Register *>(i->getSrc());
+        if (src)
+            gen.insert(src);
+    }
+
+    void GenSetVisitor::visit(lir::InstructionPush *i) {
+        gen.clear();
+
+        auto src = dynamic_cast<lir::Register *>(i->getSrc());
+        if (src)
+            gen.insert(src);
+    }
+
+    void GenSetVisitor::visit(lir::InstructionPop *i) { gen.clear(); }
+
+    void GenSetVisitor::visit(lir::InstructionConvert *i) {
+        gen.clear();
+
+        // TODO: physical registers
+    }
+
+    void GenSetVisitor::visit(lir::InstructionBinaryOp *i) {
+        gen.clear();
+
+        auto src = dynamic_cast<lir::Register *>(i->getSrc());
+        if (src)
+            gen.insert(src);
+
+        auto dst = dynamic_cast<lir::Register *>(i->getDst());
+        if (dst)
+            gen.insert(dst);
+    }
+
+    void GenSetVisitor::visit(lir::InstructionSpecialOp *i) {
+        gen.clear();
+
+        auto src = dynamic_cast<lir::Register *>(i->getSrc());
+        if (src)
+            gen.insert(src);
+
+        // TODO: physical registers
+    }
+
+    void GenSetVisitor::visit(lir::InstructionLea *i) {
+        gen.clear();
+
+        auto dst = dynamic_cast<lir::Register *>(i->getDst());
+        if (dst)
+            gen.insert(dst);
+
+        auto address = i->getSrc();
+
+        auto base = address->getBase();
+        if (base)
+            gen.insert(base);
+
+        auto index = address->getIndex();
+        if (index)
+            gen.insert(index);
+    }
+
+    void GenSetVisitor::visit(lir::InstructionCmp *i) {
+        gen.clear();
+
+        auto src1 = dynamic_cast<lir::Register *>(i->getSrc1());
+        if (src1)
+            gen.insert(src1);
+
+        auto src2 = dynamic_cast<lir::Register *>(i->getSrc2());
+        if (src2)
+            gen.insert(src2);
+    }
+
+    void GenSetVisitor::visit(lir::InstructionJmp *i) { gen.clear(); }
+
+    void GenSetVisitor::visit(lir::InstructionCJmp *i) { gen.clear(); }
+
+    void GenSetVisitor::visit(lir::InstructionCall *i) { gen.clear(); }
+
+    void GenSetVisitor::visit(lir::InstructionRet *i) { gen.clear(); }
+
+    void GenSetVisitor::visit(lir::InstructionPhi *i) {
+        gen.clear();
+
+        // TODO
+    }
+
+    void GenSetVisitor::visit(lir::InstructionVirtual *i) {
+        i->getInstruction()->accept(this);
+    }
+
+    void GenSetVisitor::visit(lir::InstructionUnknown *i) {}
+
+    RegisterSet KillSetVisitor::getResult() { return kill; }
+
+    void KillSetVisitor::visit(lir::Instruction *i) {}
+
+    void KillSetVisitor::visit(lir::Label *l) { kill.clear(); }
+
+    void KillSetVisitor::visit(lir::InstructionMov *i) {
+        kill.clear();
+
+        auto dst = dynamic_cast<lir::Register *>(i->getDst());
+        if (dst)
+            kill.insert(dst);
+    }
+
+    void KillSetVisitor::visit(lir::InstructionPush *i) {}
+
+    void KillSetVisitor::visit(lir::InstructionPop *i) {
+        auto dst = dynamic_cast<lir::Register *>(i->getDst());
+        if (dst)
+            kill.insert(dst);
+    }
+
+    void KillSetVisitor::visit(lir::InstructionConvert *i) {
+        kill.clear();
+
+        // TODO: physical registers
+    }
+
+    void KillSetVisitor::visit(lir::InstructionBinaryOp *i) {
+        kill.clear();
+
+        auto dst = dynamic_cast<lir::Register *>(i->getDst());
+        if (dst)
+            kill.insert(dst);
+    }
+
+    void KillSetVisitor::visit(lir::InstructionSpecialOp *i) {
+        kill.clear();
+
+        // TODO: physical registers
+    }
+
+    void KillSetVisitor::visit(lir::InstructionLea *i) {
+        kill.clear();
+
+        auto dst = dynamic_cast<lir::Register *>(i->getDst());
+        if (dst)
+            kill.insert(dst);
+    }
+
+    void KillSetVisitor::visit(lir::InstructionCmp *i) { kill.clear(); }
+
+    void KillSetVisitor::visit(lir::InstructionJmp *i) { kill.clear(); }
+
+    void KillSetVisitor::visit(lir::InstructionCJmp *i) { kill.clear(); }
+
+    void KillSetVisitor::visit(lir::InstructionCall *i) { kill.clear(); }
+
+    void KillSetVisitor::visit(lir::InstructionRet *i) { kill.clear(); }
+
+    void KillSetVisitor::visit(lir::InstructionPhi *i) {
+        kill.clear();
+
+        // TODO
+    }
+
+    void KillSetVisitor::visit(lir::InstructionVirtual *i) {
+        i->getInstruction()->accept(this);
+    }
+
+    void KillSetVisitor::visit(lir::InstructionUnknown *i) {}
+} // namespace backend
