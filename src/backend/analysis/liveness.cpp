@@ -30,7 +30,9 @@ namespace backend {
     void GenSetVisitor::visit(lir::InstructionConvert *i) {
         gen.clear();
 
-        // TODO: physical registers
+        auto from = lir::toSized(lir::RegisterNum::RAX, i->getFrom());
+        auto reg = om->getRegister(from);
+        gen.insert(reg);
     }
 
     void GenSetVisitor::visit(lir::InstructionBinaryOp *i) {
@@ -52,7 +54,8 @@ namespace backend {
         if (src)
             gen.insert(src);
 
-        // TODO: physical registers
+        if (i->getOp() == lir::BinaryOp::IDIV)
+            gen.insert(om->getRegister(lir::RegisterNum::EAX));
     }
 
     void GenSetVisitor::visit(lir::InstructionLea *i) {
@@ -96,7 +99,11 @@ namespace backend {
     void GenSetVisitor::visit(lir::InstructionPhi *i) {
         gen.clear();
 
-        // TODO
+        for (auto src : i->getSrc()) {
+            auto reg = dynamic_cast<lir::Register *>(src);
+            if (reg)
+                gen.insert(reg);
+        }
     }
 
     void GenSetVisitor::visit(lir::InstructionVirtual *i) {
@@ -132,7 +139,15 @@ namespace backend {
     void KillSetVisitor::visit(lir::InstructionConvert *i) {
         kill.clear();
 
-        // TODO: physical registers
+        auto from = i->getFrom();
+        auto to = i->getTo();
+
+        kill.insert(om->getRegister(lir::toSized(lir::RegisterNum::RAX, to)));
+
+        if (from == to) {
+            kill.insert(
+                om->getRegister(lir::toSized(lir::RegisterNum::RDX, to)));
+        }
     }
 
     void KillSetVisitor::visit(lir::InstructionBinaryOp *i) {
@@ -146,7 +161,9 @@ namespace backend {
     void KillSetVisitor::visit(lir::InstructionSpecialOp *i) {
         kill.clear();
 
-        // TODO: physical registers
+        if (i->getOp() == lir::BinaryOp::IDIV)
+            kill.insert(om->getRegister(
+                lir::toSized(lir::RegisterNum::RAX, i->getSize())));
     }
 
     void KillSetVisitor::visit(lir::InstructionLea *i) {
@@ -163,14 +180,18 @@ namespace backend {
 
     void KillSetVisitor::visit(lir::InstructionCJmp *i) { kill.clear(); }
 
+    // TODO: is this correct?
     void KillSetVisitor::visit(lir::InstructionCall *i) { kill.clear(); }
 
+    // TODO: is this correct?
     void KillSetVisitor::visit(lir::InstructionRet *i) { kill.clear(); }
 
     void KillSetVisitor::visit(lir::InstructionPhi *i) {
         kill.clear();
 
-        // TODO
+        auto dst = dynamic_cast<lir::Register *>(i->getDst());
+        if (dst)
+            kill.insert(dst);
     }
 
     void KillSetVisitor::visit(lir::InstructionVirtual *i) {
