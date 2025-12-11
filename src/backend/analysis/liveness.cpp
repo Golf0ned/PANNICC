@@ -1,6 +1,8 @@
 #include "backend/analysis/liveness.h"
 
 namespace backend {
+    GenSetVisitor::GenSetVisitor(lir::OperandManager *om) : om(om) {}
+
     RegisterSet GenSetVisitor::getResult() { return gen; }
 
     void GenSetVisitor::visit(lir::Instruction *i) {}
@@ -102,6 +104,8 @@ namespace backend {
     }
 
     void GenSetVisitor::visit(lir::InstructionUnknown *i) {}
+
+    KillSetVisitor::KillSetVisitor(lir::OperandManager *om) : om(om) {}
 
     RegisterSet KillSetVisitor::getResult() { return kill; }
 
