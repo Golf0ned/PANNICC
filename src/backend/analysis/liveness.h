@@ -9,6 +9,8 @@ namespace backend {
 
     class GenSetVisitor : public lir::InstructionVisitor {
     public:
+        GenSetVisitor(lir::OperandManager *om);
+
         RegisterSet getResult();
 
         void visit(lir::Instruction *i) override;
@@ -32,10 +34,13 @@ namespace backend {
 
     private:
         RegisterSet gen;
+        lir::OperandManager *om;
     };
 
     class KillSetVisitor : public lir::InstructionVisitor {
     public:
+        KillSetVisitor(lir::OperandManager *om);
+
         RegisterSet getResult();
 
         void visit(lir::Instruction *i) override;
@@ -59,6 +64,7 @@ namespace backend {
 
     private:
         RegisterSet kill;
+        lir::OperandManager *om;
     };
 
     class Liveness {
