@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "backend/lir/data_size.h"
+
 namespace backend::lir {
     class Operand {
     public:
@@ -24,6 +26,8 @@ namespace backend::lir {
 
     enum class RegisterNum {
         VIRTUAL,
+
+        // 64-bit
         RAX,
         RCX,
         RDX,
@@ -40,6 +44,8 @@ namespace backend::lir {
         R13,
         R14,
         R15,
+
+        // 32-bit
         EAX,
         ECX,
         EDX,
@@ -59,6 +65,8 @@ namespace backend::lir {
     };
 
     std::string toString(RegisterNum rn);
+
+    RegisterNum toSized(RegisterNum rn, DataSize size);
 
     const std::vector<RegisterNum> &getArgRegisters();
     const std::vector<RegisterNum> &getCalleeSavedRegisters();

@@ -110,6 +110,175 @@ namespace backend::lir {
         std::unreachable();
     }
 
+    // TODO: implement for other register sizes. or dont. its up to you! :)
+    RegisterNum toSized(RegisterNum rn, DataSize size) {
+        switch (rn) {
+        case RegisterNum::VIRTUAL:
+            return RegisterNum::VIRTUAL;
+        case RegisterNum::RAX:
+        case RegisterNum::EAX:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::EAX;
+            case DataSize::QUADWORD:
+                return RegisterNum::RAX;
+            }
+        case RegisterNum::RCX:
+        case RegisterNum::ECX:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::ECX;
+            case DataSize::QUADWORD:
+                return RegisterNum::RCX;
+            }
+        case RegisterNum::RDX:
+        case RegisterNum::EDX:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::EDX;
+            case DataSize::QUADWORD:
+                return RegisterNum::RDX;
+            }
+        case RegisterNum::RBX:
+        case RegisterNum::EBX:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::EBX;
+            case DataSize::QUADWORD:
+                return RegisterNum::RBX;
+            }
+        case RegisterNum::RSI:
+        case RegisterNum::ESI:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::ESI;
+            case DataSize::QUADWORD:
+                return RegisterNum::RSI;
+            }
+        case RegisterNum::RDI:
+        case RegisterNum::EDI:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::EDI;
+            case DataSize::QUADWORD:
+                return RegisterNum::RDI;
+            }
+        case RegisterNum::RSP:
+        case RegisterNum::ESP:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::ESP;
+            case DataSize::QUADWORD:
+                return RegisterNum::RSP;
+            }
+        case RegisterNum::RBP:
+        case RegisterNum::EBP:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::EBP;
+            case DataSize::QUADWORD:
+                return RegisterNum::RBP;
+            }
+        case RegisterNum::R8:
+        case RegisterNum::R8D:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::R8D;
+            case DataSize::QUADWORD:
+                return RegisterNum::R8;
+            }
+        case RegisterNum::R9:
+        case RegisterNum::R9D:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::R9D;
+            case DataSize::QUADWORD:
+                return RegisterNum::R9;
+            }
+        case RegisterNum::R10:
+        case RegisterNum::R10D:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::R10D;
+            case DataSize::QUADWORD:
+                return RegisterNum::R10;
+            }
+        case RegisterNum::R11:
+        case RegisterNum::R11D:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::R11D;
+            case DataSize::QUADWORD:
+                return RegisterNum::R11;
+            }
+        case RegisterNum::R12:
+        case RegisterNum::R12D:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::R12D;
+            case DataSize::QUADWORD:
+                return RegisterNum::R12;
+            }
+        case RegisterNum::R13:
+        case RegisterNum::R13D:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::R13D;
+            case DataSize::QUADWORD:
+                return RegisterNum::R13;
+            }
+        case RegisterNum::R14:
+        case RegisterNum::R14D:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::R14D;
+            case DataSize::QUADWORD:
+                return RegisterNum::R14;
+            }
+        case RegisterNum::R15:
+        case RegisterNum::R15D:
+            switch (size) {
+            default:
+                std::unreachable();
+            case DataSize::DOUBLEWORD:
+                return RegisterNum::R15D;
+            case DataSize::QUADWORD:
+                return RegisterNum::R15;
+            }
+        }
+        std::unreachable();
+    }
+
     Register::Register(RegisterNum reg) : reg(reg) {}
 
     std::string Register::toString() {
