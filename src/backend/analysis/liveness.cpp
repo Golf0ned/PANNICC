@@ -199,4 +199,21 @@ namespace backend {
     }
 
     void KillSetVisitor::visit(lir::InstructionUnknown *i) {}
+
+    Liveness::Liveness(lir::OperandManager *om)
+        : gsv(GenSetVisitor(om)), ksv(KillSetVisitor(om)) {}
+
+    void Liveness::computeLiveRanges(lir::Program p) {
+        for (auto &i : p.getInstructions()) {
+            i->accept(&gsv);
+            i->accept(&ksv);
+
+            auto gen = gsv.getResult();
+            auto kill = ksv.getResult();
+        }
+    }
+
+    std::vector<RegisterSet> Liveness::getIn() { return in; }
+
+    std::vector<RegisterSet> Liveness::getOut() { return out; }
 } // namespace backend
