@@ -11,6 +11,7 @@ namespace backend::lir {
         Program(std::list<std::unique_ptr<Instruction>> instructions,
                 std::unique_ptr<OperandManager> om);
         std::list<std::unique_ptr<Instruction>> &getInstructions();
+        OperandManager *getOm();
         std::string toString();
 
     private:
