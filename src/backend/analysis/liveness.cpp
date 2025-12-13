@@ -63,10 +63,6 @@ namespace backend {
     void GenSetVisitor::visit(lir::InstructionLea *i) {
         gen.clear();
 
-        auto dst = dynamic_cast<lir::Register *>(i->getDst());
-        if (dst)
-            gen.insert(dst);
-
         auto address = i->getSrc();
 
         auto base = address->getBase();
@@ -133,6 +129,8 @@ namespace backend {
     void KillSetVisitor::visit(lir::InstructionPush *i) {}
 
     void KillSetVisitor::visit(lir::InstructionPop *i) {
+        kill.clear();
+
         auto dst = dynamic_cast<lir::Register *>(i->getDst());
         if (dst)
             kill.insert(dst);
