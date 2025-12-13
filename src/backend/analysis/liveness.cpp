@@ -200,24 +200,65 @@ namespace backend {
 
     void KillSetVisitor::visit(lir::InstructionUnknown *i) {}
 
-    Liveness::Liveness(lir::OperandManager *om)
-        : gsv(GenSetVisitor(om)), ksv(KillSetVisitor(om)) {}
+    SuccessorVisitor::SuccessorVisitor(
+        std::list<std::unique_ptr<lir::Instruction>> &instructions)
+        : instructions(instructions) {}
 
-    void Liveness::computeLiveRanges(lir::Program &p) {
+    std::vector<int> SuccessorVisitor::getResult() { return successors; }
+
+    void SuccessorVisitor::visit(lir::Instruction *i) {}
+
+    void SuccessorVisitor::visit(lir::Label *l) {}
+
+    void SuccessorVisitor::visit(lir::InstructionMov *i) {}
+
+    void SuccessorVisitor::visit(lir::InstructionPush *i) {}
+
+    void SuccessorVisitor::visit(lir::InstructionPop *i) {}
+
+    void SuccessorVisitor::visit(lir::InstructionConvert *i) {}
+
+    void SuccessorVisitor::visit(lir::InstructionBinaryOp *i) {}
+
+    void SuccessorVisitor::visit(lir::InstructionSpecialOp *i) {}
+
+    void SuccessorVisitor::visit(lir::InstructionLea *i) {}
+
+    void SuccessorVisitor::visit(lir::InstructionCmp *i) {}
+
+    void SuccessorVisitor::visit(lir::InstructionJmp *i) {}
+
+    void SuccessorVisitor::visit(lir::InstructionCJmp *i) {}
+
+    void SuccessorVisitor::visit(lir::InstructionCall *i) {}
+
+    void SuccessorVisitor::visit(lir::InstructionRet *i) {}
+
+    void SuccessorVisitor::visit(lir::InstructionPhi *i) {}
+
+    void SuccessorVisitor::visit(lir::InstructionVirtual *i) {}
+
+    void SuccessorVisitor::visit(lir::InstructionUnknown *i) {}
+
+    Liveness::Liveness(lir::Program &p)
+        : program(p), gsv(GenSetVisitor(p.getOm())),
+          ksv(KillSetVisitor(p.getOm())), sv(p.getInstructions()) {}
+
+    void Liveness::computeLiveRanges() {
         std::vector<RegisterSet> gen;
         std::vector<RegisterSet> kill;
-        std::vector<std::vector<int>> succcessors;
+        std::vector<std::vector<int>> successors;
 
-        for (auto &i : p.getInstructions()) {
+        for (auto &i : program.getInstructions()) {
             i->accept(&gsv);
             i->accept(&ksv);
 
             gen.push_back(std::move(gsv.getResult()));
             kill.push_back(std::move(ksv.getResult()));
-            // TODO: add successors
+            successors.push_back(std::move(sv.getResult()));
         }
 
-        auto size = p.getInstructions().size();
+        auto size = program.getInstructions().size();
         in = std::vector<RegisterSet>(size);
         out = std::vector<RegisterSet>(size);
 
@@ -232,7 +273,7 @@ namespace backend {
                         new_in.insert(reg);
 
                 new_out.clear();
-                for (auto succ : succcessors[i])
+                for (auto succ : successors[i])
                     new_out.insert(in[succ].begin(), in[succ].end());
 
                 if (new_in != in[i]) {
@@ -248,9 +289,9 @@ namespace backend {
         }
     }
 
-    void Liveness::printGenKill(lir::Program &p) {
+    void Liveness::printGenKill() {
         auto line = 0;
-        for (auto &i : p.getInstructions()) {
+        for (auto &i : program.getInstructions()) {
             lir::ToStringVisitor tsv;
             i->accept(&tsv);
             std::cout << line++ << ": " << tsv.getResult() << std::endl;

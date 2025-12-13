@@ -67,18 +67,51 @@ namespace backend {
         lir::OperandManager *om;
     };
 
+    class SuccessorVisitor : public lir::InstructionVisitor {
+    public:
+        SuccessorVisitor(
+            std::list<std::unique_ptr<lir::Instruction>> &instructions);
+
+        std::vector<int> getResult();
+
+        void visit(lir::Instruction *i) override;
+        void visit(lir::Label *l) override;
+        void visit(lir::InstructionMov *i) override;
+        void visit(lir::InstructionPush *i) override;
+        void visit(lir::InstructionPop *i) override;
+        void visit(lir::InstructionConvert *i) override;
+        void visit(lir::InstructionBinaryOp *i) override;
+        void visit(lir::InstructionSpecialOp *i) override;
+        void visit(lir::InstructionLea *i) override;
+        void visit(lir::InstructionCmp *i) override;
+        void visit(lir::InstructionJmp *i) override;
+        void visit(lir::InstructionCJmp *i) override;
+        void visit(lir::InstructionCall *i) override;
+        void visit(lir::InstructionRet *i) override;
+
+        void visit(lir::InstructionPhi *i) override;
+        void visit(lir::InstructionVirtual *i) override;
+        void visit(lir::InstructionUnknown *i) override;
+
+    private:
+        std::list<std::unique_ptr<lir::Instruction>> &instructions;
+        std::vector<int> successors;
+    };
+
     class Liveness {
     public:
-        Liveness(lir::OperandManager *om);
-        void computeLiveRanges(lir::Program &p);
-        void printGenKill(lir::Program &p);
+        Liveness(lir::Program &p);
+        void computeLiveRanges();
+        void printGenKill();
         std::vector<RegisterSet> getIn();
         std::vector<RegisterSet> getOut();
 
     private:
         std::vector<RegisterSet> in;
         std::vector<RegisterSet> out;
+        lir::Program &program;
         GenSetVisitor gsv;
         KillSetVisitor ksv;
+        SuccessorVisitor sv;
     };
 } // namespace backend
