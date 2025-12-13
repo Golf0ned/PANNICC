@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "backend/analysis/liveness.h"
 
 namespace backend {
@@ -203,13 +205,30 @@ namespace backend {
     Liveness::Liveness(lir::OperandManager *om)
         : gsv(GenSetVisitor(om)), ksv(KillSetVisitor(om)) {}
 
-    void Liveness::computeLiveRanges(lir::Program p) {
+    void Liveness::computeLiveRanges(lir::Program &p) {}
+
+    void Liveness::printGenKill(lir::Program &p) {
+        auto line = 0;
         for (auto &i : p.getInstructions()) {
+            lir::ToStringVisitor tsv;
+            i->accept(&tsv);
+            std::cout << line++ << ": " << tsv.getResult() << std::endl;
+
             i->accept(&gsv);
             i->accept(&ksv);
 
             auto gen = gsv.getResult();
             auto kill = ksv.getResult();
+
+            std::cout << "- gen:  ";
+            for (auto *reg : gen)
+                std::cout << reg->toString() << ',';
+            std::cout << std::endl;
+
+            std::cout << "- kill: ";
+            for (auto *reg : kill)
+                std::cout << reg->toString() << ',';
+            std::cout << std::endl;
         }
     }
 
