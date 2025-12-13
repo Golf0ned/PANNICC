@@ -129,8 +129,8 @@ int main(int argc, char *argv[]) {
     if (output_level == OutputLevel::LIR) {
         OUTPUT(lir.toString());
         // Temporary OM output
-        backend::Liveness liveness(lir.getOm());
-        liveness.printGenKill(lir);
+        backend::Liveness liveness(lir);
+        liveness.printGenKill();
 
         return 0;
     }
