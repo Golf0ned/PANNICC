@@ -70,7 +70,8 @@ namespace backend {
     class Liveness {
     public:
         Liveness(lir::OperandManager *om);
-        void computeLiveRanges(lir::Program p);
+        void computeLiveRanges(lir::Program &p);
+        void printGenKill(lir::Program &p);
         std::vector<RegisterSet> getIn();
         std::vector<RegisterSet> getOut();
 
