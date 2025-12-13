@@ -203,7 +203,50 @@ namespace backend {
     Liveness::Liveness(lir::OperandManager *om)
         : gsv(GenSetVisitor(om)), ksv(KillSetVisitor(om)) {}
 
-    void Liveness::computeLiveRanges(lir::Program &p) {}
+    void Liveness::computeLiveRanges(lir::Program &p) {
+        std::vector<RegisterSet> gen;
+        std::vector<RegisterSet> kill;
+        std::vector<std::vector<int>> succcessors;
+
+        for (auto &i : p.getInstructions()) {
+            i->accept(&gsv);
+            i->accept(&ksv);
+
+            gen.push_back(std::move(gsv.getResult()));
+            kill.push_back(std::move(ksv.getResult()));
+            // TODO: add successors
+        }
+
+        auto size = p.getInstructions().size();
+        in = std::vector<RegisterSet>(size);
+        out = std::vector<RegisterSet>(size);
+
+        RegisterSet new_in, new_out;
+        bool changed = true;
+        while (changed) {
+            changed = false;
+            for (int i = 0; i < size; i++) {
+                new_in = gen[i];
+                for (auto *reg : out[i])
+                    if (!kill[i].contains(reg))
+                        new_in.insert(reg);
+
+                new_out.clear();
+                for (auto succ : succcessors[i])
+                    new_out.insert(in[succ].begin(), in[succ].end());
+
+                if (new_in != in[i]) {
+                    changed = true;
+                    in[i].swap(new_in);
+                }
+
+                if (new_out != out[i]) {
+                    changed = true;
+                    out[i].swap(new_out);
+                }
+            }
+        }
+    }
 
     void Liveness::printGenKill(lir::Program &p) {
         auto line = 0;
