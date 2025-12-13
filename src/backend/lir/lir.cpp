@@ -11,6 +11,8 @@ namespace backend::lir {
         return instructions;
     }
 
+    OperandManager *Program::getOm() { return om.get(); }
+
     std::string Program::toString() {
         ToStringVisitor tsv;
         for (auto &i : instructions)
