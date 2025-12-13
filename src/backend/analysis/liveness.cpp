@@ -220,12 +220,12 @@ namespace backend {
 
             std::cout << "- gen:  ";
             for (auto *reg : gen)
-                std::cout << reg->toString() << ',';
+                std::cout << reg->toString() << ", ";
             std::cout << std::endl;
 
             std::cout << "- kill: ";
             for (auto *reg : kill)
-                std::cout << reg->toString() << ',';
+                std::cout << reg->toString() << ", ";
             std::cout << std::endl;
         }
     }
