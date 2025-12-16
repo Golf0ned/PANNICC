@@ -130,7 +130,8 @@ int main(int argc, char *argv[]) {
         OUTPUT(lir.toString());
         // Temporary OM output
         backend::Liveness liveness(lir);
-        liveness.printGenKill();
+        liveness.computeLiveRanges();
+        liveness.printLiveness();
 
         return 0;
     }
