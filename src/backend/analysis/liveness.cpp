@@ -201,44 +201,101 @@ namespace backend {
     void KillSetVisitor::visit(lir::InstructionUnknown *i) {}
 
     SuccessorVisitor::SuccessorVisitor(
-        std::list<std::unique_ptr<lir::Instruction>> &instructions)
-        : instructions(instructions) {}
+        std::list<std::unique_ptr<lir::Instruction>> &instructions) {
+        auto i = 0;
+        for (auto instruction = instructions.begin();
+             instruction != instructions.end(); instruction++) {
+            auto label = dynamic_cast<lir::Label *>(instruction->get());
+            if (label)
+                label_index[label->getName()] = i;
+
+            next_index[instruction->get()] =
+                ++i == instructions.size() ? -1 : i;
+        }
+    }
 
     std::vector<int> SuccessorVisitor::getResult() { return successors; }
 
     void SuccessorVisitor::visit(lir::Instruction *i) {}
 
-    void SuccessorVisitor::visit(lir::Label *l) {}
+    void SuccessorVisitor::visit(lir::Label *l) {
+        successors.clear();
+        successors.push_back(next_index[l]);
+    }
 
-    void SuccessorVisitor::visit(lir::InstructionMov *i) {}
+    void SuccessorVisitor::visit(lir::InstructionMov *i) {
+        successors.clear();
+        successors.push_back(next_index[i]);
+    }
 
-    void SuccessorVisitor::visit(lir::InstructionPush *i) {}
+    void SuccessorVisitor::visit(lir::InstructionPush *i) {
+        successors.clear();
+        successors.push_back(next_index[i]);
+    }
 
-    void SuccessorVisitor::visit(lir::InstructionPop *i) {}
+    void SuccessorVisitor::visit(lir::InstructionPop *i) {
+        successors.clear();
+        successors.push_back(next_index[i]);
+    }
 
-    void SuccessorVisitor::visit(lir::InstructionConvert *i) {}
+    void SuccessorVisitor::visit(lir::InstructionConvert *i) {
+        successors.clear();
+        successors.push_back(next_index[i]);
+    }
 
-    void SuccessorVisitor::visit(lir::InstructionBinaryOp *i) {}
+    void SuccessorVisitor::visit(lir::InstructionBinaryOp *i) {
+        successors.clear();
+        successors.push_back(next_index[i]);
+    }
 
-    void SuccessorVisitor::visit(lir::InstructionSpecialOp *i) {}
+    void SuccessorVisitor::visit(lir::InstructionSpecialOp *i) {
+        successors.clear();
+        successors.push_back(next_index[i]);
+    }
 
-    void SuccessorVisitor::visit(lir::InstructionLea *i) {}
+    void SuccessorVisitor::visit(lir::InstructionLea *i) {
+        successors.clear();
+        successors.push_back(next_index[i]);
+    }
 
-    void SuccessorVisitor::visit(lir::InstructionCmp *i) {}
+    void SuccessorVisitor::visit(lir::InstructionCmp *i) {
+        successors.clear();
+        successors.push_back(next_index[i]);
+    }
 
-    void SuccessorVisitor::visit(lir::InstructionJmp *i) {}
+    void SuccessorVisitor::visit(lir::InstructionJmp *i) {
+        successors.clear();
+        successors.push_back(label_index[i->getLabel()]);
+    }
 
-    void SuccessorVisitor::visit(lir::InstructionCJmp *i) {}
+    void SuccessorVisitor::visit(lir::InstructionCJmp *i) {
+        successors.clear();
+        successors.push_back(label_index[i->getLabel()]);
+        successors.push_back(next_index[i]);
+    }
 
-    void SuccessorVisitor::visit(lir::InstructionCall *i) {}
+    void SuccessorVisitor::visit(lir::InstructionCall *i) {
+        successors.clear();
+        successors.push_back(next_index[i]);
+    }
 
-    void SuccessorVisitor::visit(lir::InstructionRet *i) {}
+    void SuccessorVisitor::visit(lir::InstructionRet *i) { successors.clear(); }
 
-    void SuccessorVisitor::visit(lir::InstructionPhi *i) {}
+    void SuccessorVisitor::visit(lir::InstructionPhi *i) {
+        successors.clear();
+        successors.push_back(next_index[i]);
+    }
 
-    void SuccessorVisitor::visit(lir::InstructionVirtual *i) {}
+    void SuccessorVisitor::visit(lir::InstructionVirtual *i) {
+        // TODO: maybe account for jmp/cjmp?
+        successors.clear();
+        successors.push_back(next_index[i]);
+    }
 
-    void SuccessorVisitor::visit(lir::InstructionUnknown *i) {}
+    void SuccessorVisitor::visit(lir::InstructionUnknown *i) {
+        successors.clear();
+        successors.push_back(next_index[i]);
+    }
 
     Liveness::Liveness(lir::Program &p)
         : program(p), gsv(GenSetVisitor(p.getOm())),
@@ -252,6 +309,7 @@ namespace backend {
         for (auto &i : program.getInstructions()) {
             i->accept(&gsv);
             i->accept(&ksv);
+            i->accept(&sv);
 
             gen.push_back(std::move(gsv.getResult()));
             kill.push_back(std::move(ksv.getResult()));
