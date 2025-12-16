@@ -22,12 +22,20 @@ namespace backend {
     void GenSetVisitor::visit(lir::InstructionPush *i) {
         gen.clear();
 
+        auto rsp = om->getRegister(lir::RegisterNum::RSP);
+        gen.insert(rsp);
+
         auto src = dynamic_cast<lir::Register *>(i->getSrc());
         if (src)
             gen.insert(src);
     }
 
-    void GenSetVisitor::visit(lir::InstructionPop *i) { gen.clear(); }
+    void GenSetVisitor::visit(lir::InstructionPop *i) {
+        gen.clear();
+
+        auto rsp = om->getRegister(lir::RegisterNum::RSP);
+        gen.insert(rsp);
+    }
 
     void GenSetVisitor::visit(lir::InstructionConvert *i) {
         gen.clear();
@@ -126,10 +134,18 @@ namespace backend {
             kill.insert(dst);
     }
 
-    void KillSetVisitor::visit(lir::InstructionPush *i) {}
+    void KillSetVisitor::visit(lir::InstructionPush *i) {
+        kill.clear();
+
+        auto rsp = om->getRegister(lir::RegisterNum::RSP);
+        kill.insert(rsp);
+    }
 
     void KillSetVisitor::visit(lir::InstructionPop *i) {
         kill.clear();
+
+        auto rsp = om->getRegister(lir::RegisterNum::RSP);
+        kill.insert(rsp);
 
         auto dst = dynamic_cast<lir::Register *>(i->getDst());
         if (dst)
