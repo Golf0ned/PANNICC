@@ -347,28 +347,47 @@ namespace backend {
         }
     }
 
-    void Liveness::printGenKill() {
+    void Liveness::printLiveness() {
         auto line = 0;
         for (auto &i : program.getInstructions()) {
             lir::ToStringVisitor tsv;
             i->accept(&tsv);
-            std::cout << line++ << ": " << tsv.getResult() << std::endl;
+            std::cout << line << ": " << tsv.getResult() << std::endl;
 
             i->accept(&gsv);
             i->accept(&ksv);
+            i->accept(&sv);
 
             auto gen = gsv.getResult();
             auto kill = ksv.getResult();
+            auto successors = sv.getResult();
 
-            std::cout << "- gen:  ";
+            std::cout << "- gen:        ";
             for (auto *reg : gen)
                 std::cout << reg->toString() << ", ";
             std::cout << std::endl;
 
-            std::cout << "- kill: ";
+            std::cout << "- kill:       ";
             for (auto *reg : kill)
                 std::cout << reg->toString() << ", ";
             std::cout << std::endl;
+
+            std::cout << "- successors: ";
+            for (auto i : successors)
+                std::cout << i << ", ";
+            std::cout << std::endl;
+
+            std::cout << "- in:         ";
+            for (auto *reg : in[line])
+                std::cout << reg->toString() << ", ";
+            std::cout << std::endl;
+
+            std::cout << "- out:        ";
+            for (auto *reg : out[line])
+                std::cout << reg->toString() << ", ";
+            std::cout << std::endl;
+
+            line++;
         }
     }
 

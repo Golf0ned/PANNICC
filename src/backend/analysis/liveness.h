@@ -103,7 +103,7 @@ namespace backend {
     public:
         Liveness(lir::Program &p);
         void computeLiveRanges();
-        void printGenKill();
+        void printLiveness();
         std::vector<RegisterSet> getIn();
         std::vector<RegisterSet> getOut();
 
