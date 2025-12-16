@@ -1,0 +1,9 @@
+int square(int i_0) {
+    __entry:
+    int __v;
+    __v = i_0;
+    int __v1;
+    __v1 = i_0;
+    __v = __v * __v1;
+    return __v;
+}

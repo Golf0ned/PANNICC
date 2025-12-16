@@ -1,0 +1,23 @@
+define i32 @square(i32 %0) {
+entry:
+  %1 = alloca i32
+  %2 = alloca i32
+  %3 = alloca i32
+  %4 = alloca i32
+  store i32 %0, ptr %4
+  %5 = load ptr %4
+  store i32 %5, ptr %1
+  %6 = load ptr %4
+  store i32 %6, ptr %2
+  %7 = load ptr %1
+  %8 = load ptr %2
+  %9 = mul i32 %7, i32 %8
+  store i32 %9, ptr %1
+  %10 = load ptr %1
+  store i32 %10, ptr %3
+  br label 11
+
+11:
+  %12 = load ptr %3
+  ret i32 %12
+}
