@@ -18,14 +18,17 @@ for test in ${INPUT_DIR}/*.c; do
     $(${PANNICC} --dump-mir -O0 ${test} > ${OUTPUT_DIR}/${INPUT}_o0.mir)
     $(${PANNICC} --dump-mir -O1 ${test} > ${OUTPUT_DIR}/${INPUT}_o1.mir)
 
-    $(${PANNICC} -O0 ${test} > ${OUTPUT_DIR}/${INPUT}_o0.lir)
-    $(${PANNICC} -O1 ${test} > ${OUTPUT_DIR}/${INPUT}_o1.lir)
+    $(${PANNICC} --dump-lir-initial -O0 ${test} > ${OUTPUT_DIR}/${INPUT}_o0_initial.lir)
+    $(${PANNICC} --dump-lir-initial -O1 ${test} > ${OUTPUT_DIR}/${INPUT}_o1_initial.lir)
+    $(${PANNICC} --dump-lir -O0 ${test} > ${OUTPUT_DIR}/${INPUT}_o0.lir)
+    $(${PANNICC} --dump-lir -O1 ${test} > ${OUTPUT_DIR}/${INPUT}_o1.lir)
 
     PASSES=${INPUT_DIR}/${INPUT}.passes
     if [ -e ${PASSES} ]; then
         PARAMS=$(paste -sd, ${PASSES})
         $(${PANNICC} --dump-mir -O0 --passes=${PARAMS} ${test} > ${OUTPUT_DIR}/${INPUT}_select.mir)
-        $(${PANNICC} -O0 --passes=${PARAMS} ${test} > ${OUTPUT_DIR}/${INPUT}_select.lir)
+        $(${PANNICC} --dump-lir-initial -O0 --passes=${PARAMS} ${test} > ${OUTPUT_DIR}/${INPUT}_select_initial.lir)
+        $(${PANNICC} --dump-lir -O0 --passes=${PARAMS} ${test} > ${OUTPUT_DIR}/${INPUT}_select.lir)
     fi
 done
 

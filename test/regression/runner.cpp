@@ -5,6 +5,7 @@
 
 #include "gtest/gtest.h"
 
+#include "backend/analysis/liveness.h"
 #include "backend/mir_to_lir.h"
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
@@ -114,12 +115,45 @@ TEST_P(RegressionTest, MIRWithSelectPasses) {
     compareIfFileExists(mir.toString(), mir_select_path);
 }
 
+TEST_P(RegressionTest, LIRInitial) {
+    auto ast = frontend::parse(input_path);
+    auto hir = frontend::astToHir(ast);
+    auto mir = frontend::hirToMir(hir);
+    auto lir = backend::mirToLir(mir);
+    compareIfFileExists(lir.toString(), lir_path);
+}
+
+TEST_P(RegressionTest, LIRInitialWithO1) {
+    auto pm = middleend::initializeO1();
+    auto ast = frontend::parse(input_path);
+    auto hir = frontend::astToHir(ast);
+    auto mir = frontend::hirToMir(hir);
+    pm->runPasses(mir);
+    auto lir = backend::mirToLir(mir);
+    compareIfFileExists(lir.toString(), lir_o1_path);
+}
+
+TEST_P(RegressionTest, LIRInitialWithSelectPasses) {
+    auto pm = buildPassesFromFile(passes_path);
+    if (!pm)
+        GTEST_SKIP();
+
+    auto ast = frontend::parse(input_path);
+    auto hir = frontend::astToHir(ast);
+    auto mir = frontend::hirToMir(hir);
+    pm->runPasses(mir);
+    auto lir = backend::mirToLir(mir);
+    compareIfFileExists(lir.toString(), lir_select_path);
+}
+
 TEST_P(RegressionTest, LIR) {
     auto ast = frontend::parse(input_path);
     auto hir = frontend::astToHir(ast);
     auto mir = frontend::hirToMir(hir);
     auto lir = backend::mirToLir(mir);
     compareIfFileExists(lir.toString(), lir_path);
+    backend::Liveness liveness(lir);
+    liveness.computeLiveRanges();
 }
 
 TEST_P(RegressionTest, LIRWithO1) {
@@ -129,6 +163,8 @@ TEST_P(RegressionTest, LIRWithO1) {
     auto mir = frontend::hirToMir(hir);
     pm->runPasses(mir);
     auto lir = backend::mirToLir(mir);
+    backend::Liveness liveness(lir);
+    liveness.computeLiveRanges();
     compareIfFileExists(lir.toString(), lir_o1_path);
 }
 
@@ -142,6 +178,8 @@ TEST_P(RegressionTest, LIRWithSelectPasses) {
     auto mir = frontend::hirToMir(hir);
     pm->runPasses(mir);
     auto lir = backend::mirToLir(mir);
+    backend::Liveness liveness(lir);
+    liveness.computeLiveRanges();
     compareIfFileExists(lir.toString(), lir_select_path);
 }
 
