@@ -94,7 +94,8 @@ namespace backend {
         void visit(lir::InstructionUnknown *i) override;
 
     private:
-        std::list<std::unique_ptr<lir::Instruction>> &instructions;
+        std::unordered_map<lir::Instruction *, int> next_index;
+        std::unordered_map<std::string, int> label_index;
         std::vector<int> successors;
     };
 
