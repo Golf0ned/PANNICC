@@ -12,7 +12,7 @@
 #define ERROR(str) (std::cerr << "ERROR: " << str << std::endl)
 #define OUTPUT(str) (std::cout << str << std::endl)
 
-enum class OutputLevel { AST, HIR, MIR, LIR };
+enum class OutputLevel { AST, HIR, MIR, LIR, LIR_INITIAL };
 
 void printHelp(const std::string &program_name) {
     PRINT("USAGE: " + program_name + " [options] <input-file>");
@@ -27,6 +27,9 @@ void printHelp(const std::string &program_name) {
     PRINT("  --dump-mir           Print MIR only (after passes)");
     PRINT("  -O0|1                Opt level");
     PRINT("  --passes=<passes>    Run comma-separated list of passes");
+    PRINT("");
+    PRINT("  --dump-lir           Print LIR only (after transforms)");
+    PRINT("  --dump-lir-initial   Print LIR only (straight after isel)");
 }
 
 int main(int argc, char *argv[]) {
@@ -55,6 +58,10 @@ int main(int argc, char *argv[]) {
             output_level = OutputLevel::HIR;
         } else if (arg == "--dump-mir") {
             output_level = OutputLevel::MIR;
+        } else if (arg == "--dump-lir-initial") {
+            output_level = OutputLevel::LIR_INITIAL;
+        } else if (arg == "--dump-lir") {
+            output_level = OutputLevel::LIR;
         } else if (arg.starts_with("-O") && arg.size() == 3) {
             switch (arg.back()) {
             case '0':
@@ -98,6 +105,7 @@ int main(int argc, char *argv[]) {
             output_file.replace_extension(".mir");
             break;
         case OutputLevel::LIR:
+        case OutputLevel::LIR_INITIAL:
             output_file.replace_extension(".lir");
             break;
         }
@@ -126,13 +134,16 @@ int main(int argc, char *argv[]) {
     }
 
     backend::lir::Program lir = backend::mirToLir(mir);
+    if (output_level == OutputLevel::LIR_INITIAL) {
+        OUTPUT(lir.toString());
+        return 0;
+    }
+
+    backend::Liveness liveness(lir);
+    liveness.computeLiveRanges();
+
     if (output_level == OutputLevel::LIR) {
         OUTPUT(lir.toString());
-        // Temporary OM output
-        backend::Liveness liveness(lir);
-        liveness.computeLiveRanges();
-        liveness.printLiveness();
-
         return 0;
     }
 
