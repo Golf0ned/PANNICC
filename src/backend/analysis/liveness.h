@@ -29,7 +29,6 @@ namespace backend {
         void visit(lir::InstructionRet *i) override;
 
         void visit(lir::InstructionPhi *i) override;
-        void visit(lir::InstructionVirtual *i) override;
         void visit(lir::InstructionUnknown *i) override;
 
     private:
@@ -59,7 +58,6 @@ namespace backend {
         void visit(lir::InstructionRet *i) override;
 
         void visit(lir::InstructionPhi *i) override;
-        void visit(lir::InstructionVirtual *i) override;
         void visit(lir::InstructionUnknown *i) override;
 
     private:
@@ -90,7 +88,6 @@ namespace backend {
         void visit(lir::InstructionRet *i) override;
 
         void visit(lir::InstructionPhi *i) override;
-        void visit(lir::InstructionVirtual *i) override;
         void visit(lir::InstructionUnknown *i) override;
 
     private:

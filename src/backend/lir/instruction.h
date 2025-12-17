@@ -211,16 +211,6 @@ namespace backend::lir {
         Operand *dst;
     };
 
-    class InstructionVirtual : public Instruction {
-    public:
-        InstructionVirtual(std::unique_ptr<Instruction> i);
-        std::unique_ptr<Instruction> &getInstruction();
-        void accept(InstructionVisitor *v) override;
-
-    private:
-        std::unique_ptr<Instruction> instruction;
-    };
-
     // TODO: remove once tiling's implemented
     class InstructionUnknown : public Instruction {
     public:
@@ -245,7 +235,6 @@ namespace backend::lir {
         virtual void visit(InstructionRet *i) = 0;
 
         virtual void visit(InstructionPhi *i) = 0;
-        virtual void visit(InstructionVirtual *i) = 0;
         virtual void visit(InstructionUnknown *i) = 0;
     };
 } // namespace backend::lir

@@ -183,14 +183,5 @@ namespace backend::lir {
 
     void InstructionPhi::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionVirtual::InstructionVirtual(std::unique_ptr<Instruction> i)
-        : instruction(std::move(i)) {}
-
-    std::unique_ptr<Instruction> &InstructionVirtual::getInstruction() {
-        return instruction;
-    }
-
-    void InstructionVirtual::accept(InstructionVisitor *v) { v->visit(this); }
-
     void InstructionUnknown::accept(InstructionVisitor *v) { v->visit(this); }
 } // namespace backend::lir

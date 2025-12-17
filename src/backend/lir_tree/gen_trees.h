@@ -35,6 +35,7 @@ namespace backend::lir_tree {
     private:
         middleend::NumberIR nir;
         lir::OperandManager *om;
+        uint64_t num_args;
         std::string function_name;
         middleend::mir::BasicBlock *next_block;
         uint64_t stack_space;

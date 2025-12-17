@@ -169,11 +169,6 @@ namespace backend::lir {
             src_str + "] <-> " + i->getDst()->toString() + "    # [virtual]";
     }
 
-    void ToStringVisitor::visit(InstructionVirtual *i) {
-        i->getInstruction()->accept(this);
-        result += "    # [virtual]";
-    }
-
     void ToStringVisitor::visit(InstructionUnknown *i) {
         if (!result.empty())
             result += "\n        ";
