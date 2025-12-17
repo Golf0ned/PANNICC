@@ -39,7 +39,6 @@ namespace backend::lir {
         void visit(InstructionRet *i) override;
 
         void visit(InstructionPhi *i) override;
-        void visit(InstructionVirtual *i) override;
         void visit(InstructionUnknown *i) override;
 
     private:

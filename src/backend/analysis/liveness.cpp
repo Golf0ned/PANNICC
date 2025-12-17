@@ -112,10 +112,6 @@ namespace backend {
         }
     }
 
-    void GenSetVisitor::visit(lir::InstructionVirtual *i) {
-        i->getInstruction()->accept(this);
-    }
-
     void GenSetVisitor::visit(lir::InstructionUnknown *i) {}
 
     KillSetVisitor::KillSetVisitor(lir::OperandManager *om) : om(om) {}
@@ -210,10 +206,6 @@ namespace backend {
             kill.insert(dst);
     }
 
-    void KillSetVisitor::visit(lir::InstructionVirtual *i) {
-        i->getInstruction()->accept(this);
-    }
-
     void KillSetVisitor::visit(lir::InstructionUnknown *i) {}
 
     SuccessorVisitor::SuccessorVisitor(
@@ -298,12 +290,6 @@ namespace backend {
     void SuccessorVisitor::visit(lir::InstructionRet *i) { successors.clear(); }
 
     void SuccessorVisitor::visit(lir::InstructionPhi *i) {
-        successors.clear();
-        successors.push_back(next_index[i]);
-    }
-
-    void SuccessorVisitor::visit(lir::InstructionVirtual *i) {
-        // TODO: maybe account for jmp/cjmp?
         successors.clear();
         successors.push_back(next_index[i]);
     }
