@@ -221,9 +221,8 @@ namespace backend::lir_tree {
         if (op == middleend::mir::BinaryOp::SDIV) {
             auto eax = om->getRegister(lir::RegisterNum::EAX);
 
-            std::list<lir::Operand *> in_src_list = {left};
-            auto in_asm = std::make_unique<lir::InstructionPhi>(
-                std::move(in_src_list), eax);
+            auto in_asm = std::make_unique<lir::InstructionMov>(
+                lir::Extend::NONE, size, size, left, eax);
             assembly.push_back(std::move(in_asm));
 
             auto extend_asm =
@@ -234,20 +233,13 @@ namespace backend::lir_tree {
                 bin_op, size, right);
             assembly.push_back(std::move(div_asm));
 
-            std::list<lir::Operand *> out_src_list = {eax};
-            auto out_asm = std::make_unique<lir::InstructionPhi>(
-                std::move(out_src_list), dst);
+            auto out_asm = std::make_unique<lir::InstructionMov>(
+                lir::Extend::NONE, size, size, eax, dst);
             assembly.push_back(std::move(out_asm));
         } else {
-            std::list<lir::Operand *> phi_list = {left};
-            if (op == middleend::mir::BinaryOp::SHL ||
-                op == middleend::mir::BinaryOp::ASHR) {
-                phi_list.push_back(om->getRegister(lir::RegisterNum::RCX));
-            }
-
-            auto phi_asm =
-                std::make_unique<lir::InstructionPhi>(std::move(phi_list), dst);
-            assembly.push_back(std::move(phi_asm));
+            auto mov_asm = std::make_unique<lir::InstructionMov>(
+                lir::Extend::NONE, size, size, left, dst);
+            assembly.push_back(std::move(mov_asm));
 
             auto op_asm = std::make_unique<lir::InstructionBinaryOp>(
                 bin_op, size, right, dst);

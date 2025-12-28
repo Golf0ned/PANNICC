@@ -1,5 +1,3 @@
-#include <algorithm>
-
 #include "backend/lir/lir.h"
 
 namespace backend::lir {
@@ -146,27 +144,6 @@ namespace backend::lir {
         if (!result.empty())
             result += "\n        ";
         result += "ret";
-    }
-
-    void ToStringVisitor::visit(InstructionPhi *i) {
-        if (!result.empty())
-            result += "\n        ";
-        result += "phi     [";
-
-        std::vector<std::string> ordered;
-        for (auto src : i->getSrc()) {
-            ordered.push_back(src->toString());
-        }
-        std::sort(ordered.begin(), ordered.end());
-
-        std::string src_str = "";
-        for (auto src : ordered) {
-            if (!src_str.empty())
-                src_str += ", ";
-            src_str += src;
-        }
-        result +=
-            src_str + "] <-> " + i->getDst()->toString() + "    # [virtual]";
     }
 
     void ToStringVisitor::visit(InstructionUnknown *i) {
