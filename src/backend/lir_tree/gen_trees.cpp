@@ -204,8 +204,7 @@ namespace backend::lir_tree {
         for (auto &[_, v] : i->getPredecessors())
             from.push_back(resolveOperand(v));
 
-        auto phi = std::make_unique<lir::InstructionPhi>(std::move(from), to);
-        instructions.push_back(std::move(phi));
+        // TODO: make copies in predecessor blocks?
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
         function_trees.insertAsm(std::move(assembly));

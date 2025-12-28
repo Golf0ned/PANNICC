@@ -1,7 +1,5 @@
 #pragma once
 
-#include <list>
-
 #include "backend/lir/condition_code.h"
 #include "backend/lir/data_size.h"
 #include "backend/lir/operand.h"
@@ -199,18 +197,6 @@ namespace backend::lir {
         void accept(InstructionVisitor *v) override;
     };
 
-    class InstructionCoalesce : public Instruction {
-    public:
-        InstructionCoalesce(Operand *src, Operand *dst);
-        Operand *getSrc();
-        Operand *getDst();
-        void accept(InstructionVisitor *v) override;
-
-    private:
-        Operand *src;
-        Operand *dst;
-    };
-
     // TODO: remove once tiling's implemented
     class InstructionUnknown : public Instruction {
     public:
@@ -234,7 +220,6 @@ namespace backend::lir {
         virtual void visit(InstructionCall *i) = 0;
         virtual void visit(InstructionRet *i) = 0;
 
-        virtual void visit(InstructionPhi *i) = 0;
         virtual void visit(InstructionUnknown *i) = 0;
     };
 } // namespace backend::lir

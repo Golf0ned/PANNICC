@@ -102,16 +102,6 @@ namespace backend {
 
     void GenSetVisitor::visit(lir::InstructionRet *i) { gen.clear(); }
 
-    void GenSetVisitor::visit(lir::InstructionPhi *i) {
-        gen.clear();
-
-        for (auto src : i->getSrc()) {
-            auto reg = dynamic_cast<lir::Register *>(src);
-            if (reg)
-                gen.insert(reg);
-        }
-    }
-
     void GenSetVisitor::visit(lir::InstructionUnknown *i) {}
 
     KillSetVisitor::KillSetVisitor(lir::OperandManager *om) : om(om) {}
@@ -198,14 +188,6 @@ namespace backend {
     // TODO: is this correct?
     void KillSetVisitor::visit(lir::InstructionRet *i) { kill.clear(); }
 
-    void KillSetVisitor::visit(lir::InstructionPhi *i) {
-        kill.clear();
-
-        auto dst = dynamic_cast<lir::Register *>(i->getDst());
-        if (dst)
-            kill.insert(dst);
-    }
-
     void KillSetVisitor::visit(lir::InstructionUnknown *i) {}
 
     SuccessorVisitor::SuccessorVisitor(
@@ -288,11 +270,6 @@ namespace backend {
     }
 
     void SuccessorVisitor::visit(lir::InstructionRet *i) { successors.clear(); }
-
-    void SuccessorVisitor::visit(lir::InstructionPhi *i) {
-        successors.clear();
-        successors.push_back(next_index[i]);
-    }
 
     void SuccessorVisitor::visit(lir::InstructionUnknown *i) {
         successors.clear();
