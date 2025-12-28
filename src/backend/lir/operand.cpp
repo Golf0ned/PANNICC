@@ -345,6 +345,14 @@ namespace backend::lir {
         return res;
     }
 
+    StackArg::StackArg(uint64_t arg_num) : arg_num(arg_num) {}
+
+    uint64_t StackArg::getArgNum() { return arg_num; }
+
+    std::string StackArg::toString() {
+        return "(stack " + std::to_string(arg_num) + ")";
+    }
+
     Immediate *OperandManager::getImmediate(uint64_t value) {
         if (!immediates.contains(value))
             immediates.insert({value, std::make_unique<Immediate>(value)});
@@ -381,5 +389,11 @@ namespace backend::lir {
         addresses.push_back(
             std::make_unique<Address>(base, index, scale, displacement));
         return addresses.back().get();
+    }
+
+    StackArg *OperandManager::getStackArg(uint64_t arg_num) {
+        if (!stack_args.contains(arg_num))
+            stack_args.insert({arg_num, std::make_unique<StackArg>(arg_num)});
+        return stack_args.at(arg_num).get();
     }
 } // namespace backend::lir
