@@ -33,10 +33,8 @@ namespace backend::lir_tree {
             auto src = param_num < 6
                            ? static_cast<lir::Operand *>(
                                  om->getRegister(arg_registers[param_num]))
-                           : static_cast<lir::Operand *>(om->getAddress(
-                                 om->getRegister(lir::RegisterNum::RSP),
-                                 nullptr, om->getImmediate(0),
-                                 om->getImmediate(8 * (param_num - 6 + 1))));
+                           : static_cast<lir::Operand *>(
+                                 om->getStackArg(6 - param_num));
             auto dst = resolveOperand(params[param_num].get());
             auto mov = std::make_unique<lir::InstructionMov>(extend, size, size,
                                                              src, dst);
