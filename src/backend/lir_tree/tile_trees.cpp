@@ -241,6 +241,10 @@ namespace backend::lir_tree {
                 lir::Extend::NONE, size, size, left, dst);
             assembly.push_back(std::move(mov_asm));
 
+            if (op == middleend::mir::BinaryOp::ASHR ||
+                op == middleend::mir::BinaryOp::SHL)
+                dst = om->getConstrainedRegister(dst, lir::RegisterNum::ECX);
+
             auto op_asm = std::make_unique<lir::InstructionBinaryOp>(
                 bin_op, size, right, dst);
             assembly.push_back(std::move(op_asm));
