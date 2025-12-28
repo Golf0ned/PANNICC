@@ -199,15 +199,15 @@ namespace backend::lir {
         void accept(InstructionVisitor *v) override;
     };
 
-    class InstructionPhi : public Instruction {
+    class InstructionCoalesce : public Instruction {
     public:
-        InstructionPhi(std::list<Operand *> src, Operand *dst);
-        std::list<Operand *> &getSrc();
+        InstructionCoalesce(Operand *src, Operand *dst);
+        Operand *getSrc();
         Operand *getDst();
         void accept(InstructionVisitor *v) override;
 
     private:
-        std::list<Operand *> src;
+        Operand *src;
         Operand *dst;
     };
 
