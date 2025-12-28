@@ -119,6 +119,16 @@ namespace backend::lir {
         Immediate *displacement;
     };
 
+    class StackArg : public Operand {
+    public:
+        StackArg(uint64_t arg_num);
+        uint64_t getArgNum();
+        std::string toString();
+
+    private:
+        uint64_t arg_num;
+    };
+
     class OperandManager {
     public:
         Immediate *getImmediate(uint64_t value);
@@ -128,6 +138,7 @@ namespace backend::lir {
                                                     RegisterNum constraint);
         Address *getAddress(Register *base, Register *index, Immediate *scale,
                             Immediate *displacement);
+        StackArg *getStackArg(uint64_t arg_num);
 
     private:
         std::unordered_map<uint64_t, std::unique_ptr<Immediate>> immediates;
@@ -136,5 +147,6 @@ namespace backend::lir {
             virtual_registers;
         std::vector<std::unique_ptr<ConstrainedRegister>> constrained_registers;
         std::vector<std::unique_ptr<Address>> addresses;
+        std::unordered_map<uint64_t, std::unique_ptr<StackArg>> stack_args;
     };
 } // namespace backend::lir
