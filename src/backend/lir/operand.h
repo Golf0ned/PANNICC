@@ -92,6 +92,16 @@ namespace backend::lir {
         std::string name;
     };
 
+    class ConstrainedRegister : public VirtualRegister {
+    public:
+        ConstrainedRegister(VirtualRegister *reg, RegisterNum constraint);
+        RegisterNum getConstraint();
+        std::string toString() override;
+
+    private:
+        RegisterNum constraint;
+    };
+
     class Address : public Operand {
     public:
         Address(Register *base, Register *index, Immediate *scale,
@@ -114,6 +124,8 @@ namespace backend::lir {
         Immediate *getImmediate(uint64_t value);
         Register *getRegister(RegisterNum reg);
         VirtualRegister *getRegister(std::string name);
+        ConstrainedRegister *getConstrainedRegister(VirtualRegister *reg,
+                                                    RegisterNum constraint);
         Address *getAddress(Register *base, Register *index, Immediate *scale,
                             Immediate *displacement);
 
@@ -122,6 +134,7 @@ namespace backend::lir {
         std::unordered_map<RegisterNum, std::unique_ptr<Register>> registers;
         std::unordered_map<std::string, std::unique_ptr<VirtualRegister>>
             virtual_registers;
+        std::vector<std::unique_ptr<ConstrainedRegister>> constrained_registers;
         std::vector<std::unique_ptr<Address>> addresses;
     };
 } // namespace backend::lir

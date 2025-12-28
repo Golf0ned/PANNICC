@@ -294,6 +294,17 @@ namespace backend::lir {
 
     std::string VirtualRegister::toString() { return "%" + name; }
 
+    ConstrainedRegister::ConstrainedRegister(VirtualRegister *reg,
+                                             RegisterNum constraint)
+        : VirtualRegister(reg->getName()), constraint(constraint) {}
+
+    RegisterNum ConstrainedRegister::getConstraint() { return constraint; }
+
+    std::string ConstrainedRegister::toString() {
+        return "[" + VirtualRegister::toString() + " -> %" +
+               ::backend::lir::toString(constraint) + "]";
+    }
+
     Address::Address(Register *base, Register *index, Immediate *scale,
                      Immediate *displacement)
         : base(base), index(index), scale(scale), displacement(displacement) {}
@@ -354,6 +365,14 @@ namespace backend::lir {
             virtual_registers.insert(
                 {name, std::make_unique<VirtualRegister>(name)});
         return virtual_registers.at(name).get();
+    }
+
+    ConstrainedRegister *
+    OperandManager::getConstrainedRegister(VirtualRegister *reg,
+                                           RegisterNum constraint) {
+        constrained_registers.push_back(
+            std::make_unique<ConstrainedRegister>(reg, constraint));
+        return constrained_registers.back().get();
     }
 
     Address *OperandManager::getAddress(Register *base, Register *index,
