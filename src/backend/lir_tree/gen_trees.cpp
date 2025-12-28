@@ -24,18 +24,23 @@ namespace backend::lir_tree {
 
         //
         // Mark param registers OR pop registers off stack
-        // TODO: maybe do this without popping?
         //
         auto &params = f->getParameters();
+        auto &arg_registers = lir::getArgRegisters();
         for (int param_num = 0; param_num < params.size(); param_num++) {
+            auto extend = lir::Extend::NONE;
+            auto size = lir::DataSize::QUADWORD;
+            auto src = param_num < 6
+                           ? static_cast<lir::Operand *>(
+                                 om->getRegister(arg_registers[param_num]))
+                           : static_cast<lir::Operand *>(om->getAddress(
+                                 om->getRegister(lir::RegisterNum::RSP),
+                                 nullptr, om->getImmediate(0),
+                                 om->getImmediate(8 * (param_num - 6 + 1))));
             auto dst = resolveOperand(params[param_num].get());
-            if (param_num < 6) {
-                // TODO: mark register as param, somehow
-            } else {
-                auto src_size = lir::fromMir(params[param_num]->getType());
-                auto pop = std::make_unique<lir::InstructionPop>(src_size, dst);
-                instructions.push_back(std::move(pop));
-            }
+            auto mov = std::make_unique<lir::InstructionMov>(extend, size, size,
+                                                             src, dst);
+            instructions.push_back(std::move(mov));
         }
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
