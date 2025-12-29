@@ -27,14 +27,14 @@ namespace backend::lir_tree {
         //
         auto &params = f->getParameters();
         auto &arg_registers = lir::getArgRegisters();
-        for (int param_num = 0; param_num < params.size(); param_num++) {
+        for (size_t param_num = 0; param_num < params.size(); param_num++) {
             auto extend = lir::Extend::NONE;
             auto size = lir::DataSize::QUADWORD;
             auto src = param_num < 6
                            ? static_cast<lir::Operand *>(
                                  om->getRegister(arg_registers[param_num]))
                            : static_cast<lir::Operand *>(
-                                 om->getStackArg(6 - param_num));
+                                 om->getStackArg(param_num - 6));
             auto dst = resolveOperand(params[param_num].get());
             auto mov = std::make_unique<lir::InstructionMov>(extend, size, size,
                                                              src, dst);
