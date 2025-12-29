@@ -1,5 +1,6 @@
 #include "backend/lir_tree/gen_trees.h"
 #include "backend/lir/data_size.h"
+#include "backend/lir/operand.h"
 
 namespace backend::lir_tree {
     TreeGenVisitor::TreeGenVisitor(middleend::mir::Program &p,
@@ -29,10 +30,10 @@ namespace backend::lir_tree {
         auto &arg_registers = lir::getArgRegisters();
         for (size_t param_num = 0; param_num < params.size(); param_num++) {
             auto extend = lir::Extend::NONE;
-            auto size = lir::DataSize::QUADWORD;
+            auto size = lir::DataSize::DOUBLEWORD;
             auto src = param_num < 6
-                           ? static_cast<lir::Operand *>(
-                                 om->getRegister(arg_registers[param_num]))
+                           ? static_cast<lir::Operand *>(om->getRegister(
+                                 lir::toSized(arg_registers[param_num], size)))
                            : static_cast<lir::Operand *>(
                                  om->getStackArg(param_num - 6));
             auto dst = resolveOperand(params[param_num].get());
