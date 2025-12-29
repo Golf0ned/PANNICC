@@ -120,36 +120,29 @@ namespace backend::lir_tree {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
         //
-        // Mark arg registers OR push extra args to stack
+        // Mark arg registers
         //
-        auto args = i->getArguments();
-        for (int arg_num = 0; arg_num < args.size(); arg_num++) {
-            auto src = resolveOperand(args[arg_num]);
-            auto src_size = lir::fromMir(args[arg_num]->getType());
-            if (arg_num < 6) {
-                // TODO: mark arg registers
-            } else {
-                auto push =
-                    std::make_unique<lir::InstructionPush>(src_size, src);
-                instructions.push_back(std::move(push));
-            }
-        }
-
-        //
-        // TODO: fix alignment
-        //
+        std::vector<lir::Operand *> args;
+        for (auto arg : i->getArguments())
+            args.push_back(resolveOperand(arg));
 
         //
         // Call the function
         //
         auto function_name = i->getCallee()->getName();
-        auto call = std::make_unique<lir::InstructionCall>(function_name);
+        auto call =
+            std::make_unique<lir::InstructionVirtualCall>(function_name, args);
         instructions.push_back(std::move(call));
 
         //
-        // Mark return register
-        // TODO
+        // Move return value
         //
+        auto size = lir::DataSize::DOUBLEWORD;
+        auto src = om->getRegister(lir::RegisterNum::EAX);
+        auto dst = resolveOperand(i);
+        auto mov_ret = std::make_unique<lir::InstructionMov>(
+            lir::Extend::NONE, size, size, src, dst);
+        instructions.push_back(std::move(mov_ret));
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
         function_trees.insertAsm(std::move(assembly));
