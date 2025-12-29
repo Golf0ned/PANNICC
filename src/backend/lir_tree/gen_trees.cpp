@@ -211,9 +211,15 @@ namespace backend::lir_tree {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
         //
-        // Mark return register
-        // TODO
+        // Move value into return register
         //
+        auto src = resolveOperand(t->getValue());
+        auto src_size = lir::DataSize::QUADWORD;
+        auto dst = om->getRegister(lir::RegisterNum::RAX);
+        auto dst_size = lir::DataSize::QUADWORD;
+        auto mov_ret = std::make_unique<lir::InstructionMov>(
+            lir::Extend::NONE, src_size, dst_size, src, dst);
+        instructions.push_back(std::move(mov_ret));
 
         //
         // Return lmao
