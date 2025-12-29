@@ -174,5 +174,17 @@ namespace backend::lir {
 
     void InstructionRet::accept(InstructionVisitor *v) { v->visit(this); }
 
+    InstructionVirtualCall::InstructionVirtualCall(std::string label,
+                                                   std::vector<Operand *> args)
+        : InstructionCall(label), args(args) {}
+
+    const std::vector<Operand *> &InstructionVirtualCall::getArgs() {
+        return args;
+    }
+
+    void InstructionVirtualCall::accept(InstructionVisitor *v) {
+        v->visit(this);
+    }
+
     void InstructionUnknown::accept(InstructionVisitor *v) { v->visit(this); }
 } // namespace backend::lir

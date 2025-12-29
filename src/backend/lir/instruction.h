@@ -197,6 +197,16 @@ namespace backend::lir {
         void accept(InstructionVisitor *v) override;
     };
 
+    class InstructionVirtualCall : public InstructionCall {
+    public:
+        InstructionVirtualCall(std::string label, std::vector<Operand *> args);
+        const std::vector<Operand *> &getArgs();
+        void accept(InstructionVisitor *v) override;
+
+    private:
+        std::vector<Operand *> args;
+    };
+
     // TODO: remove once tiling's implemented
     class InstructionUnknown : public Instruction {
     public:
@@ -220,6 +230,7 @@ namespace backend::lir {
         virtual void visit(InstructionCall *i) = 0;
         virtual void visit(InstructionRet *i) = 0;
 
+        virtual void visit(InstructionVirtualCall *i) = 0;
         virtual void visit(InstructionUnknown *i) = 0;
     };
 } // namespace backend::lir
