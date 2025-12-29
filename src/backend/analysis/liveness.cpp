@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "backend/analysis/liveness.h"
+#include "backend/lir/operand.h"
 
 namespace backend {
     GenSetVisitor::GenSetVisitor(lir::OperandManager *om) : om(om) {}
@@ -102,6 +103,17 @@ namespace backend {
 
     void GenSetVisitor::visit(lir::InstructionRet *i) { gen.clear(); }
 
+    void GenSetVisitor::visit(lir::InstructionVirtualCall *i) {
+        gen.clear();
+
+        auto &args = i->getArgs();
+        for (auto arg : args) {
+            auto reg = dynamic_cast<lir::Register *>(arg);
+            if (reg)
+                gen.insert(reg);
+        }
+    }
+
     void GenSetVisitor::visit(lir::InstructionUnknown *i) {}
 
     KillSetVisitor::KillSetVisitor(lir::OperandManager *om) : om(om) {}
@@ -185,8 +197,13 @@ namespace backend {
     // TODO: is this correct?
     void KillSetVisitor::visit(lir::InstructionCall *i) { kill.clear(); }
 
-    // TODO: is this correct?
     void KillSetVisitor::visit(lir::InstructionRet *i) { kill.clear(); }
+
+    void KillSetVisitor::visit(lir::InstructionVirtualCall *i) {
+        kill.clear();
+        for (auto reg : lir::getCallerSavedRegisters())
+            kill.insert(om->getRegister(reg));
+    }
 
     void KillSetVisitor::visit(lir::InstructionUnknown *i) {}
 
@@ -270,6 +287,11 @@ namespace backend {
     }
 
     void SuccessorVisitor::visit(lir::InstructionRet *i) { successors.clear(); }
+
+    void SuccessorVisitor::visit(lir::InstructionVirtualCall *i) {
+        successors.clear();
+        successors.push_back(next_index[i]);
+    }
 
     void SuccessorVisitor::visit(lir::InstructionUnknown *i) {
         successors.clear();

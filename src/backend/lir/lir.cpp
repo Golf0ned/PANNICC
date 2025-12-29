@@ -146,6 +146,21 @@ namespace backend::lir {
         result += "ret";
     }
 
+    void ToStringVisitor::visit(InstructionVirtualCall *i) {
+        if (!result.empty())
+            result += "\n        ";
+        result += "call    " + i->getLabel() + "(";
+
+        auto &args = i->getArgs();
+        for (auto arg = args.begin(); arg != args.end(); arg++) {
+            if (arg != args.begin())
+                result += ", ";
+            result += (*arg)->toString();
+        }
+
+        result += ')';
+    }
+
     void ToStringVisitor::visit(InstructionUnknown *i) {
         if (!result.empty())
             result += "\n        ";
