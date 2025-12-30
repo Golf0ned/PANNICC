@@ -12,11 +12,13 @@ namespace middleend {
     }
 
     void PassManager::addPass(const std::string &pass_name) {
-        if (pass_name == "mem2reg")
+        if (pass_name == "inst_combine")
+            addPass(std::make_unique<middleend::InstCombine>());
+        else if (pass_name == "mem2reg")
             addPass(std::make_unique<middleend::Mem2Reg>());
         else if (pass_name == "simplify_cfg")
             addPass(std::make_unique<middleend::SimplifyCFG>());
-        else if (pass_name == "inst_combine")
+        else if (pass_name == "split_critical")
             addPass(std::make_unique<middleend::InstCombine>());
         else
             throw std::invalid_argument("invalid pass: \"" + pass_name + "\"");
