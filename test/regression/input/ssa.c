@@ -1,0 +1,19 @@
+int lost_copy_problem(int i) {
+    int y;
+    while (i - 10) {
+        y = i;
+        i += 1;
+    }
+
+    return y + 3;
+}
+
+int swap_problem(int x, int y) {
+    while (1) {
+        int t = x;
+        x = y;
+        y = t;
+    }
+
+    return x + y;
+}
