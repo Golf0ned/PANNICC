@@ -27,9 +27,11 @@ To view the help message:
 
 ## Contributing
 
-something about using git hook, use it or -3000 aura
+Due to the pedagogical nature of this project, pull requests by users other than @golf0ned will most likely be closed.
 
-install with:
+With that being said, you are free to submit any issues or bug reports that you may encounter on GitHub.
+
+If you still wish to submit changes anyways, there is a git hook to enforce formatting. You can install it with:
 
 ```
 git config --local core.hooksPath .githooks/
