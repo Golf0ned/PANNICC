@@ -199,6 +199,7 @@ namespace middleend {
 
                 return false;
             };
+
             for (auto &[bb, map] : phis) {
                 std::vector<std::unique_ptr<mir::InstructionPhi>> to_sort;
                 for (auto &[_, phi] : map) {
@@ -211,7 +212,10 @@ namespace middleend {
                     case 1: // single branch phi: replace use with value
                         ReplaceUsesVisitor ruv(
                             phi.get(), phi->getPredecessors().begin()->second);
-                        for (auto &[use, _] : phi->getUses())
+                        auto uses_range = std::views::keys(phi->getUses());
+                        std::vector<mir::Instruction *> uses(uses_range.begin(),
+                                                             uses_range.end());
+                        for (auto use : uses)
                             use->accept(&ruv);
                         phi->accept(&euv);
                         continue;
