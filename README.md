@@ -1,8 +1,8 @@
-# PANNICC
+# PANNICC: Prototype And Non-Negligibly Instructive C Compiler
 
-Prototype And Non-Negligibly Instructive C Compiler
+A pedagogical attempt at recreating a chunk of LLVM's infrastructure from scratch.
 
-## Installation
+## Installation/Usage
 
 Clone the repo:
 
@@ -17,9 +17,7 @@ To build and run tests, run:
 make
 ```
 
-## Usage
-
-To view the help message:
+To view the help message, run:
 
 ```
 ./build/bin/pannicc
@@ -27,7 +25,7 @@ To view the help message:
 
 ## Contributing
 
-Due to the pedagogical nature of this project, pull requests by users other than @golf0ned will most likely be closed.
+Due to the pedagogical nature of this project, pull requests by users other than me ([@golf0ned](https://github.com/Golf0ned/)) will most likely be closed.
 
 With that being said, you are free to submit any issues or bug reports that you may encounter on GitHub.
 
@@ -36,3 +34,5 @@ If you still wish to submit changes anyways, there is a git hook to enforce form
 ```
 git config --local core.hooksPath .githooks/
 ```
+
+You can also indirectly support this project by [sponsoring me](https://github.com/sponsors/Golf0ned).
