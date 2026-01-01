@@ -16,6 +16,7 @@ namespace middleend {
         void visit(mir::InstructionLoad *i) override;
         void visit(mir::InstructionStore *i) override;
         void visit(mir::InstructionPhi *i) override;
+        void visit(mir::InstructionParallelCopy *i) override;
 
         void visit(mir::TerminatorReturn *t) override;
         void visit(mir::TerminatorBranch *t) override;

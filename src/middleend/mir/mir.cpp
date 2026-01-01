@@ -240,6 +240,25 @@ namespace middleend::mir {
         }
     }
 
+    void ToStringVisitor::visit(InstructionParallelCopy *i) {
+        auto comp = [&](Value *a, Value *b) {
+            return nir->getNumber(a) < nir->getNumber(b);
+        };
+
+        auto pairs = i->getCopies();
+        std::map<Value *, Value *, decltype(comp)> ordered(pairs.begin(),
+                                                           pairs.end(), comp);
+
+        result = "parallel ";
+        for (auto iter = ordered.begin(); iter != ordered.end(); iter++) {
+            if (iter != ordered.begin())
+                result += ", ";
+            std::string copied_val = valueToString(iter->second);
+            std::string phi_val = valueToString(iter->first);
+            result += "[ " + copied_val + ", " + phi_val + " ]";
+        }
+    }
+
     void ToStringVisitor::visit(TerminatorReturn *t) {
         std::string value = valueToTypedString(t->getValue());
 

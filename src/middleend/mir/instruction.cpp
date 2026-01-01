@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "middleend/mir/instruction.h"
 #include "middleend/mir/operator.h"
 #include "middleend/mir/value.h"
@@ -103,6 +101,23 @@ namespace middleend::mir {
 
     void InstructionPhi::accept(InstructionVisitor *v) { v->visit(this); }
 
+    void InstructionParallelCopy::setCopy(Value *phi_val, Value *copied_val) {
+        if (copies.contains(phi_val))
+            delUse(copies.at(phi_val));
+        else
+            addUse(phi_val);
+        addUse(copied_val);
+        copies[phi_val] = copied_val;
+    }
+
+    std::unordered_map<Value *, Value *> &InstructionParallelCopy::getCopies() {
+        return copies;
+    }
+
+    void InstructionParallelCopy::accept(InstructionVisitor *v) {
+        v->visit(this);
+    }
+
     TerminatorReturn::TerminatorReturn(Value *value) : value(value) {
         addUse(value);
     }
@@ -132,9 +147,6 @@ namespace middleend::mir {
                                                BasicBlock *t_successor,
                                                BasicBlock *f_successor)
         : t_successor(t_successor), f_successor(f_successor) {
-        // if (cond->getType() != Type::I1)
-        //     throw std::invalid_argument("TerminatorCondBranch cond must be
-        //     i1");
         this->cond = cond;
         addUse(cond);
     }

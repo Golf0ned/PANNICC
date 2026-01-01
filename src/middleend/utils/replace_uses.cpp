@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "middleend/utils/replace_uses.h"
 
 namespace middleend {
@@ -37,6 +39,17 @@ namespace middleend {
         for (auto &[bb, val] : i->getPredecessors()) {
             if (val == old_value)
                 i->setPredecessor(bb, new_value);
+        }
+    }
+
+    void ReplaceUsesVisitor::visit(mir::InstructionParallelCopy *i) {
+        for (auto [phi_val, copy_val] : i->getCopies()) {
+            if (phi_val == old_value) {
+                // TODO: do this in a way that doesnt invalidate the iterator
+                std::unreachable();
+            }
+            if (copy_val == old_value)
+                i->setCopy(phi_val, new_value);
         }
     }
 

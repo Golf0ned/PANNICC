@@ -27,6 +27,13 @@ namespace middleend {
             i->delUse(val);
     }
 
+    void EraseUsesVisitor::visit(mir::InstructionParallelCopy *i) {
+        for (auto [phi_val, copy_val] : i->getCopies()) {
+            i->delUse(phi_val);
+            i->delUse(copy_val);
+        }
+    }
+
     void EraseUsesVisitor::visit(mir::TerminatorReturn *t) {
         t->delUse(t->getValue());
     }

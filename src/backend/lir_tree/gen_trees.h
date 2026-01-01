@@ -27,6 +27,7 @@ namespace backend::lir_tree {
         void visit(middleend::mir::InstructionLoad *i) override;
         void visit(middleend::mir::InstructionStore *i) override;
         void visit(middleend::mir::InstructionPhi *i) override;
+        void visit(middleend::mir::InstructionParallelCopy *i) override;
 
         void visit(middleend::mir::TerminatorReturn *t) override;
         void visit(middleend::mir::TerminatorBranch *t) override;

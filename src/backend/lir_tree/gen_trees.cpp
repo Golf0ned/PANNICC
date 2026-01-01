@@ -193,15 +193,12 @@ namespace backend::lir_tree {
                                   true);
     }
 
-    void TreeGenVisitor::visit(middleend::mir::InstructionPhi *i) {
+    void TreeGenVisitor::visit(middleend::mir::InstructionPhi *i) {}
+
+    void TreeGenVisitor::visit(middleend::mir::InstructionParallelCopy *i) {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
-        auto to = resolveOperand(i);
-        std::list<lir::Operand *> from;
-        for (auto &[_, v] : i->getPredecessors())
-            from.push_back(resolveOperand(v));
-
-        // TODO: make copies in predecessor blocks?
+        // TODO: resolve parallel copies
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
         function_trees.insertAsm(std::move(assembly));
