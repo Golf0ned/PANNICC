@@ -97,6 +97,7 @@ namespace middleend::mir {
         void visit(InstructionLoad *i) override;
         void visit(InstructionStore *i) override;
         void visit(InstructionPhi *i) override;
+        void visit(InstructionParallelCopy *i) override;
 
         void visit(TerminatorReturn *t) override;
         void visit(TerminatorBranch *t) override;

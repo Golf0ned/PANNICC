@@ -92,6 +92,16 @@ namespace middleend::mir {
         std::unordered_map<BasicBlock *, Value *> predecessors;
     };
 
+    class InstructionParallelCopy : public Instruction {
+    public:
+        void setCopy(Value *phi_val, Value *copied_val);
+        std::unordered_map<Value *, Value *> &getCopies();
+        void accept(InstructionVisitor *v) override;
+
+    private:
+        std::unordered_map<Value *, Value *> copies;
+    };
+
     class Terminator : public Instruction {
     public:
         virtual void accept(InstructionVisitor *v) = 0;
@@ -146,6 +156,7 @@ namespace middleend::mir {
         virtual void visit(InstructionLoad *i) = 0;
         virtual void visit(InstructionStore *i) = 0;
         virtual void visit(InstructionPhi *i) = 0;
+        virtual void visit(InstructionParallelCopy *i) = 0;
 
         virtual void visit(TerminatorReturn *t) = 0;
         virtual void visit(TerminatorBranch *t) = 0;
