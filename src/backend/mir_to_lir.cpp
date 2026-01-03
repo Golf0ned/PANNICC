@@ -2,11 +2,20 @@
 #include "backend/lir_tree/gen_trees.h"
 #include "backend/lir_tree/merge_trees.h"
 #include "backend/lir_tree/tile_trees.h"
+#include "middleend/transform/insert_parallel_copies.h"
+#include "middleend/transform/split_critical.h"
+
 #include "middleend/utils/traversal.h"
 
 namespace backend {
     lir::Program mirToLir(middleend::mir::Program &mir) {
         auto om = std::make_unique<lir::OperandManager>();
+
+        // Construct conventional SSA + begin SSA destruction
+        middleend::SplitCritical sc;
+        sc.run(mir);
+        middleend::InsertParallelCopies ipc;
+        ipc.run(mir);
 
         // Generate trees per instruction
         lir_tree::TreeGenVisitor tgv(mir, om.get());
