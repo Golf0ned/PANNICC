@@ -1,6 +1,7 @@
 #include <stdexcept>
 
 #include "middleend/pass_manager.h"
+#include "middleend/transform/insert_parallel_copies.h"
 #include "middleend/transform/inst_combine.h"
 #include "middleend/transform/mem2reg.h"
 #include "middleend/transform/simplify_cfg.h"
@@ -12,7 +13,9 @@ namespace middleend {
     }
 
     void PassManager::addPass(const std::string &pass_name) {
-        if (pass_name == "inst_combine")
+        if (pass_name == "insert_parallel_copies")
+            addPass(std::make_unique<middleend::InsertParallelCopies>());
+        else if (pass_name == "inst_combine")
             addPass(std::make_unique<middleend::InstCombine>());
         else if (pass_name == "mem2reg")
             addPass(std::make_unique<middleend::Mem2Reg>());
