@@ -101,17 +101,19 @@ namespace middleend::mir {
 
     void InstructionPhi::accept(InstructionVisitor *v) { v->visit(this); }
 
-    void InstructionParallelCopy::setCopy(Value *phi_val, Value *copied_val) {
+    std::unordered_map<InstructionPhi *, Value *> &
+    InstructionParallelCopy::getCopies() {
+        return copies;
+    }
+
+    void InstructionParallelCopy::setCopy(InstructionPhi *phi_val,
+                                          Value *copied_val) {
         if (copies.contains(phi_val))
             delUse(copies.at(phi_val));
         else
             addUse(phi_val);
         addUse(copied_val);
         copies[phi_val] = copied_val;
-    }
-
-    std::unordered_map<Value *, Value *> &InstructionParallelCopy::getCopies() {
-        return copies;
     }
 
     void InstructionParallelCopy::accept(InstructionVisitor *v) {
