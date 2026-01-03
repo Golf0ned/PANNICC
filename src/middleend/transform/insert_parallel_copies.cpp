@@ -9,11 +9,26 @@ namespace middleend {
                     auto phi = dynamic_cast<mir::InstructionPhi *>(i.get());
                     if (!phi)
                         break;
+                    auto &phi_preds = phi->getPredecessors();
 
                     auto &preds = bb->getPredecessors();
                     for (auto &pred : preds.getUniqueEdges()) {
-                        // TODO: insert parallel copies in predecessors if none
-                        // TODO: update parallel copies in predecessors
+                        auto &pred_instructions = pred->getInstructions();
+
+                        if (pred_instructions.empty() ||
+                            !dynamic_cast<mir::InstructionParallelCopy *>(
+                                pred_instructions.back().get())) {
+                            auto parallel_copy = std::make_unique<
+                                mir::InstructionParallelCopy>();
+                            pred_instructions.push_back(
+                                std::move(parallel_copy));
+                        }
+
+                        auto parallel_copy =
+                            static_cast<mir::InstructionParallelCopy *>(
+                                pred_instructions.back().get());
+
+                        parallel_copy->setCopy(phi, phi_preds.at(pred));
                     }
                 }
             }
