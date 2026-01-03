@@ -1,6 +1,8 @@
-#include "backend/lir_tree/gen_trees.h"
+#include <unordered_set>
+
 #include "backend/lir/data_size.h"
 #include "backend/lir/operand.h"
+#include "backend/lir_tree/gen_trees.h"
 
 namespace backend::lir_tree {
     TreeGenVisitor::TreeGenVisitor(middleend::mir::Program &p,
@@ -198,7 +200,50 @@ namespace backend::lir_tree {
     void TreeGenVisitor::visit(middleend::mir::InstructionParallelCopy *i) {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
-        // TODO: resolve parallel copies
+        std::list<std::pair<lir::Operand *, lir::Operand *>> worklist;
+        std::unordered_multiset<lir::Operand *> src_vals;
+        for (auto &[phi, val] : i->getCopies()) {
+            if (static_cast<middleend::mir::Value *>(phi) == val)
+                continue;
+
+            auto src = resolveOperand(val), dst = resolveOperand(phi);
+            worklist.push_back({src, dst});
+            src_vals.insert(src);
+        }
+
+        while (!worklist.empty()) {
+            auto changed = false;
+            auto worklist_iter = worklist.begin();
+            while (worklist_iter != worklist.end()) {
+                auto src = worklist_iter->first, dst = worklist_iter->second;
+
+                if (src_vals.contains(dst)) {
+                    worklist_iter++;
+                    continue;
+                }
+
+                // TODO: is this necessarily correct?
+                auto size = lir::DataSize::DOUBLEWORD;
+                auto copy = std::make_unique<lir::InstructionMov>(
+                    lir::Extend::NONE, size, size, src, dst);
+                instructions.push_back(std::move(copy));
+
+                src_vals.erase(src_vals.find(dst));
+                worklist.erase(worklist_iter);
+
+                changed = true;
+            }
+
+            if (changed)
+                continue;
+
+            // TODO: add copy (new identifier helper?)
+            // - [src, dst] = front of worklist
+            // - make new virtual register
+            // - add src->new to instructions
+            // - replace src->dst in worklist with new->dst
+            // - add new to src_vals
+        }
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
         function_trees.insertAsm(std::move(assembly));
