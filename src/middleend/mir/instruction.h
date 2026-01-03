@@ -94,12 +94,12 @@ namespace middleend::mir {
 
     class InstructionParallelCopy : public Instruction {
     public:
-        void setCopy(Value *phi_val, Value *copied_val);
-        std::unordered_map<Value *, Value *> &getCopies();
+        std::unordered_map<InstructionPhi *, Value *> &getCopies();
+        void setCopy(InstructionPhi *phi_val, Value *copied_val);
         void accept(InstructionVisitor *v) override;
 
     private:
-        std::unordered_map<Value *, Value *> copies;
+        std::unordered_map<InstructionPhi *, Value *> copies;
     };
 
     class Terminator : public Instruction {
