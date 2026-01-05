@@ -32,7 +32,6 @@ namespace middleend {
                             preds.addEdge(new_block.get());
                         }
 
-                    // update phis in bb
                     for (auto &i : bb->getInstructions()) {
                         auto phi = dynamic_cast<mir::InstructionPhi *>(i.get());
                         if (!phi)
@@ -41,6 +40,25 @@ namespace middleend {
                         auto &phi_preds = phi->getPredecessors();
                         phi_preds[new_block.get()] = phi_preds.at(pred);
                         phi_preds.erase(pred);
+                    }
+
+                    auto pred_terminator = pred->getTerminator().get();
+
+                    auto branch =
+                        dynamic_cast<mir::TerminatorBranch *>(pred_terminator);
+                    if (branch) {
+                        branch->setSuccessor(new_block.get());
+                        continue;
+                    }
+
+                    auto cond_branch =
+                        dynamic_cast<mir::TerminatorCondBranch *>(
+                            pred_terminator);
+                    if (cond_branch) {
+                        if (cond_branch->getTSuccessor() == bb)
+                            cond_branch->setTSuccessor(new_block.get());
+                        if (cond_branch->getFSuccessor() == bb)
+                            cond_branch->setFSuccessor(new_block.get());
                     }
 
                     bbs.insert(bb_iter, std::move(new_block));
