@@ -1,32 +1,6 @@
 scope:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
 
 .scope_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %19
         movl    %19, (%rsp)
@@ -71,38 +45,11 @@ scope:
 .scope_37:
         movl    $72(%rsp), %38
         movq    %38, %rax
-        addq    $76, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 scope_reassign_variable:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
 
 .scope_reassign_variable_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %12
         movl    %12, (%rsp)
@@ -144,34 +91,11 @@ scope_reassign_variable:
 .scope_reassign_variable_31:
         movl    $44(%rsp), %32
         movq    %32, %rax
-        addq    $48, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 scope_reassign_in_parallel_scopes:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
 
 .scope_reassign_in_parallel_scopes_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %8
         movl    %8, (%rsp)
@@ -189,12 +113,4 @@ scope_reassign_in_parallel_scopes:
 .scope_reassign_in_parallel_scopes_13:
         movl    $28(%rsp), %14
         movq    %14, %rax
-        addq    $32, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret

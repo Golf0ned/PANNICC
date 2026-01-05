@@ -1,63 +1,21 @@
 main:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
 
 .main_entry:
-        subq    $4, %rsp    # [virtual]
         movl    $0, (%rsp)
 
 .main_1:
         movl    (%rsp), %2
         movq    %2, %rax
-        addq    $4, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 compound:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
 
 .compound_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    $9, $4(%rsp)
         movl    $123, $8(%rsp)
         movl    $4(%rsp), %19
         movl    $8(%rsp), %20
-        phi     [%19] <-> %21    # [virtual]
+        movl    %19, %21
         imull   %20, %21
         movl    %21, $4(%rsp)
         movl    $3, $12(%rsp)
@@ -69,12 +27,12 @@ compound:
         movl    $122, $20(%rsp)
         movl    $16(%rsp), %25
         movl    $20(%rsp), %26
-        phi     [%25] <-> %27    # [virtual]
+        movl    %25, %27
         subl    %26, %27
         movl    %27, $16(%rsp)
         movl    $4(%rsp), %28
         movl    $16(%rsp), %29
-        phi     [%28] <-> %30    # [virtual]
+        movl    %28, %30
         andl    %29, %30
         movl    %30, $4(%rsp)
         movl    $4(%rsp), %31
@@ -84,7 +42,7 @@ compound:
         movl    $3, $36(%rsp)
         movl    $32(%rsp), %32
         movl    $36(%rsp), %33
-        phi     [%32] <-> %34    # [virtual]
+        movl    %32, %34
         imull   %33, %34
         movl    %34, $32(%rsp)
         movl    $28(%rsp), %35
@@ -94,7 +52,7 @@ compound:
         movl    $4, $40(%rsp)
         movl    $28(%rsp), %38
         movl    $40(%rsp), %39
-        phi     [%38] <-> %40    # [virtual]
+        movl    %38, %40
         subl    %39, %40
         movl    %40, $28(%rsp)
         movl    $28(%rsp), %41
@@ -138,48 +96,28 @@ compound:
 .compound_63:
         movl    $72(%rsp), %64
         movq    %64, %rax
-        addq    $76, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 parens:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
 
 .parens_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    $4, (%rsp)
         movl    $3, $4(%rsp)
         movl    $2, $8(%rsp)
         movl    $1, $12(%rsp)
         movl    $8(%rsp), %5
         movl    $12(%rsp), %6
-        phi     [%5] <-> %7    # [virtual]
+        movl    %5, %7
         subl    %6, %7
         movl    %7, $8(%rsp)
         movl    $4(%rsp), %8
         movl    $8(%rsp), %9
-        phi     [%8] <-> %10    # [virtual]
+        movl    %8, %10
         subl    %9, %10
         movl    %10, $4(%rsp)
         movl    (%rsp), %11
         movl    $4(%rsp), %12
-        phi     [%11] <-> %13    # [virtual]
+        movl    %11, %13
         imull   %12, %13
         movl    %13, (%rsp)
         movl    (%rsp), %14
@@ -188,12 +126,4 @@ parens:
 .parens_15:
         movl    $16(%rsp), %16
         movq    %16, %rax
-        addq    $20, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret

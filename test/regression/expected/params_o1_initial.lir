@@ -1,316 +1,102 @@
 fun1:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
-        movq    %rdi, %0
+        movl    %edi, %0
 
 .fun1_entry:
-        phi     [%0] <-> %1    # [virtual]
+        movl    %0, %1
         imull   %0, %1
         movq    %1, %rax
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 fun2:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
-        movq    %rdi, %0
-        movq    %rsi, %1
+        movl    %edi, %0
+        movl    %esi, %1
 
 .fun2_entry:
-        pushq   %rax    # [virtual]
-        pushq   %rdi    # [virtual]
-        pushq   %rsi    # [virtual]
-        pushq   %rdx    # [virtual]
-        pushq   %rcx    # [virtual]
-        pushq   %r8    # [virtual]
-        pushq   %r9    # [virtual]
-        pushq   %r10    # [virtual]
-        pushq   %r11    # [virtual]
-        movslq  %0, %rdi
-        call    fun1
-        movq    %rax, %2
-        popq    %rax    # [virtual]
-        popq    %rdi    # [virtual]
-        popq    %rsi    # [virtual]
-        popq    %rdx    # [virtual]
-        popq    %rcx    # [virtual]
-        popq    %r8    # [virtual]
-        popq    %r9    # [virtual]
-        popq    %r10    # [virtual]
-        popq    %r11    # [virtual]
+        call    fun1(%0)
+        movl    %eax, %2
         leal    (,%0,2), %3
-        phi     [%3] <-> %4    # [virtual]
+        movl    %3, %4
         imull   %1, %4
         leal    (%2,%4), %5
-        pushq   %rax    # [virtual]
-        pushq   %rdi    # [virtual]
-        pushq   %rsi    # [virtual]
-        pushq   %rdx    # [virtual]
-        pushq   %rcx    # [virtual]
-        pushq   %r8    # [virtual]
-        pushq   %r9    # [virtual]
-        pushq   %r10    # [virtual]
-        pushq   %r11    # [virtual]
-        movslq  %1, %rdi
-        call    fun1
-        movq    %rax, %6
-        popq    %rax    # [virtual]
-        popq    %rdi    # [virtual]
-        popq    %rsi    # [virtual]
-        popq    %rdx    # [virtual]
-        popq    %rcx    # [virtual]
-        popq    %r8    # [virtual]
-        popq    %r9    # [virtual]
-        popq    %r10    # [virtual]
-        popq    %r11    # [virtual]
+        call    fun1(%1)
+        movl    %eax, %6
         leal    (%5,%6), %7
         movq    %7, %rax
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 fun3:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
-        movq    %rdi, %0
-        movq    %rsi, %1
-        movq    %rdx, %2
-        movq    %rcx, %3
+        movl    %edi, %0
+        movl    %esi, %1
+        movl    %edx, %2
+        movl    %ecx, %3
 
 .fun3_entry:
-        pushq   %rax    # [virtual]
-        pushq   %rdi    # [virtual]
-        pushq   %rsi    # [virtual]
-        pushq   %rdx    # [virtual]
-        pushq   %rcx    # [virtual]
-        pushq   %r8    # [virtual]
-        pushq   %r9    # [virtual]
-        pushq   %r10    # [virtual]
-        pushq   %r11    # [virtual]
-        movslq  %3, %rdi
-        call    fun1
-        movq    %rax, %4
-        popq    %rax    # [virtual]
-        popq    %rdi    # [virtual]
-        popq    %rsi    # [virtual]
-        popq    %rdx    # [virtual]
-        popq    %rcx    # [virtual]
-        popq    %r8    # [virtual]
-        popq    %r9    # [virtual]
-        popq    %r10    # [virtual]
-        popq    %r11    # [virtual]
-        phi     [%0] <-> %5    # [virtual]
+        call    fun1(%3)
+        movl    %eax, %4
+        movl    %0, %5
         imull   %4, %5
-        phi     [%1] <-> %6    # [virtual]
+        movl    %1, %6
         imull   %3, %6
         leal    (%5,%6), %7
         leal    (%7,%2), %8
         movq    %8, %rax
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 call1:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
 
 .call1_entry:
-        pushq   %rax    # [virtual]
-        pushq   %rdi    # [virtual]
-        pushq   %rsi    # [virtual]
-        pushq   %rdx    # [virtual]
-        pushq   %rcx    # [virtual]
-        pushq   %r8    # [virtual]
-        pushq   %r9    # [virtual]
-        pushq   %r10    # [virtual]
-        pushq   %r11    # [virtual]
-        movslq  $5, %rdi
-        call    fun1
-        movq    %rax, %0
-        popq    %rax    # [virtual]
-        popq    %rdi    # [virtual]
-        popq    %rsi    # [virtual]
-        popq    %rdx    # [virtual]
-        popq    %rcx    # [virtual]
-        popq    %r8    # [virtual]
-        popq    %r9    # [virtual]
-        popq    %r10    # [virtual]
-        popq    %r11    # [virtual]
+        call    fun1($5)
+        movl    %eax, %0
         movq    %0, %rax
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 call2:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
-        movq    %rdi, %0
-        movq    %rsi, %1
+        movl    %edi, %0
+        movl    %esi, %1
 
 .call2_entry:
-        pushq   %rax    # [virtual]
-        pushq   %rdi    # [virtual]
-        pushq   %rsi    # [virtual]
-        pushq   %rdx    # [virtual]
-        pushq   %rcx    # [virtual]
-        pushq   %r8    # [virtual]
-        pushq   %r9    # [virtual]
-        pushq   %r10    # [virtual]
-        pushq   %r11    # [virtual]
-        movslq  %0, %rdi
-        movslq  %1, %rsi
-        call    fun2
-        movq    %rax, %2
-        popq    %rax    # [virtual]
-        popq    %rdi    # [virtual]
-        popq    %rsi    # [virtual]
-        popq    %rdx    # [virtual]
-        popq    %rcx    # [virtual]
-        popq    %r8    # [virtual]
-        popq    %r9    # [virtual]
-        popq    %r10    # [virtual]
-        popq    %r11    # [virtual]
+        call    fun2(%0, %1)
+        movl    %eax, %2
         movq    %2, %rax
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 call3:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
-        movq    %rdi, %0
-        movq    %rsi, %1
+        movl    %edi, %0
+        movl    %esi, %1
 
 .call3_entry:
-        pushq   %rax    # [virtual]
-        pushq   %rdi    # [virtual]
-        pushq   %rsi    # [virtual]
-        pushq   %rdx    # [virtual]
-        pushq   %rcx    # [virtual]
-        pushq   %r8    # [virtual]
-        pushq   %r9    # [virtual]
-        pushq   %r10    # [virtual]
-        pushq   %r11    # [virtual]
-        movslq  %0, %rdi
-        movslq  %1, %rsi
-        movslq  $1, %rdx
-        movslq  $0, %rcx
-        call    fun3
-        movq    %rax, %2
-        popq    %rax    # [virtual]
-        popq    %rdi    # [virtual]
-        popq    %rsi    # [virtual]
-        popq    %rdx    # [virtual]
-        popq    %rcx    # [virtual]
-        popq    %r8    # [virtual]
-        popq    %r9    # [virtual]
-        popq    %r10    # [virtual]
-        popq    %r11    # [virtual]
+        call    fun3(%0, %1, $1, $0)
+        movl    %eax, %2
         movq    %2, %rax
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 call4:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
 
 .call4_entry:
-        pushq   %rax    # [virtual]
-        pushq   %rdi    # [virtual]
-        pushq   %rsi    # [virtual]
-        pushq   %rdx    # [virtual]
-        pushq   %rcx    # [virtual]
-        pushq   %r8    # [virtual]
-        pushq   %r9    # [virtual]
-        pushq   %r10    # [virtual]
-        pushq   %r11    # [virtual]
-        movslq  $10, %rdi
-        call    fun1
-        movq    %rax, %0
-        popq    %rax    # [virtual]
-        popq    %rdi    # [virtual]
-        popq    %rsi    # [virtual]
-        popq    %rdx    # [virtual]
-        popq    %rcx    # [virtual]
-        popq    %r8    # [virtual]
-        popq    %r9    # [virtual]
-        popq    %r10    # [virtual]
-        popq    %r11    # [virtual]
-        phi     [%0] <-> %1    # [virtual]
+        call    fun1($10)
+        movl    %eax, %0
+        movl    %0, %1
         subl    $100, %1
         movq    %1, %rax
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
+        ret
+
+super_fun:
+        movl    %edi, %0
+        movl    %esi, %1
+        movl    %edx, %2
+        movl    %ecx, %3
+        movl    %r8d, %4
+        movl    %r9d, %5
+        movl    (stack 0), %6
+        movl    (stack 1), %7
+
+.super_fun_entry:
+        leal    (%0,%1), %8
+        leal    (%8,%2), %9
+        leal    (%9,%3), %10
+        leal    (%10,%4), %11
+        leal    (%11,%5), %12
+        leal    (%12,%6), %13
+        leal    (%13,%7), %14
+        movq    %14, %rax
         ret

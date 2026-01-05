@@ -1,0 +1,53 @@
+int lost_copy_problem(int i_0) {
+    __entry:
+    int y_1;
+    __while_cond:
+    int __v;
+    __v = i_0;
+    int __v1;
+    __v1 = 10;
+    __v = __v - __v1;
+    goto_if (__v) __while_body __while_cont;
+    __while_body:
+    int __v2;
+    __v2 = i_0;
+    y_1 = __v2;
+    int __v3;
+    __v3 = 1;
+    i_0 = i_0 + __v3;
+    goto __while_cond;
+    __while_cont:
+    int __v4;
+    __v4 = y_1;
+    int __v5;
+    __v5 = 3;
+    __v4 = __v4 + __v5;
+    return __v4;
+}
+
+int swap_problem(int x_0, int y_0) {
+    __entry:
+    __while_cond:
+    int __v;
+    __v = 1;
+    goto_if (__v) __while_body __while_cont;
+    __while_body:
+    int t_2;
+    int __v1;
+    __v1 = x_0;
+    t_2 = __v1;
+    int __v2;
+    __v2 = y_0;
+    x_0 = __v2;
+    int __v3;
+    __v3 = t_2;
+    y_0 = __v3;
+    goto __while_cond;
+    __while_cont:
+    int __v4;
+    __v4 = x_0;
+    int __v5;
+    __v5 = y_0;
+    __v4 = __v4 + __v5;
+    return __v4;
+}
