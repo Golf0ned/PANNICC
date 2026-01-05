@@ -1,118 +1,75 @@
 fun_call:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
 
 .fun_call_entry:
 
 .fun_call_0:
         movq    $42, %rax
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 mem2reg_basic:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
 
 .mem2reg_basic_entry:
 
 .mem2reg_basic_0:
         movq    $5, %rax
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 mem2reg_branching:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
-        movq    %rdi, %0
+        movl    %edi, %0
 
 .mem2reg_branching_entry:
-        phi     [%0] <-> %1    # [virtual]
+        movl    %0, %1
         subl    $42, %1
         cmpl    %1, $0
-        jne     .mem2reg_branching_3
-
-.mem2reg_branching_2:
+        je      .mem2reg_branching_3
         jmp     .mem2reg_branching_5
 
+.mem2reg_branching_2:
+
 .mem2reg_branching_3:
-        phi     [%0] <-> %4    # [virtual]
-        addl    $2, %4
+        movl    $1, %8
+        jmp     .mem2reg_branching_7
+
+.mem2reg_branching_4:
 
 .mem2reg_branching_5:
-        phi     [$1, %4] <-> %6    # [virtual]
+        movl    %0, %6
+        addl    $2, %6
+        movl    %6, %8
 
 .mem2reg_branching_7:
-        movq    %6, %rax
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
+
+.mem2reg_branching_9:
+        movq    %8, %rax
         ret
 
 mem2reg_while:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
 
 .mem2reg_while_entry:
+        movl    $0, %2
+        movl    $0, %1
 
 .mem2reg_while_0:
-        phi     [$0, %6] <-> %1    # [virtual]
-        phi     [$0, %5] <-> %2    # [virtual]
-        phi     [%1] <-> %3    # [virtual]
+        movl    %1, %3
         subl    $10, %3
         cmpl    %3, $0
-        jne     .mem2reg_while_7
+        je      .mem2reg_while_5
+        jmp     .mem2reg_while_9
 
 .mem2reg_while_4:
-        leal    (%2,%1), %5
-        phi     [%1] <-> %6    # [virtual]
-        addl    $1, %6
+
+.mem2reg_while_5:
+        leal    (%2,%1), %6
+        movl    %1, %7
+        addl    $1, %7
+        movl    %6, %2
+        movl    %7, %1
         jmp     .mem2reg_while_0
 
-.mem2reg_while_7:
-
 .mem2reg_while_8:
+
+.mem2reg_while_9:
+
+.mem2reg_while_10:
         movq    %2, %rax
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret

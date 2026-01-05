@@ -25,3 +25,7 @@ int call3(int foo, int bar) {
 int call4() {
     return fun1(10) - 100;
 }
+
+int super_fun(int a, int b, int c, int d, int e, int f, int g, int h) {
+    return a + b + c + d + e + f + g + h;
+}

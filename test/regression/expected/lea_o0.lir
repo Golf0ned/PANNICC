@@ -1,23 +1,9 @@
 leaBI:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
-        movq    %rdi, %0
-        movq    %rsi, %1
+        movl    %edi, %0
+        movl    %esi, %1
 
 .leaBI_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    %0, $20(%rsp)
-        subq    $4, %rsp    # [virtual]
         movl    %1, $24(%rsp)
         movl    $20(%rsp), %9
         movl    %9, $4(%rsp)
@@ -36,61 +22,19 @@ leaBI:
 .leaBI_16:
         movl    $16(%rsp), %17
         movq    %17, %rax
-        addq    $28, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 leaIS:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
-        movq    %rdi, %0
+        movl    %edi, %0
 
 .leaIS_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    %0, $104(%rsp)
         movl    $104(%rsp), %28
         movl    %28, (%rsp)
         movl    $1, $4(%rsp)
         movl    (%rsp), %29
         movl    $4(%rsp), %30
-        phi     [%29] <-> %31    # [virtual]
+        movl    %29, %31
         imull   %30, %31
         movl    %31, (%rsp)
         movl    (%rsp), %32
@@ -100,7 +44,7 @@ leaIS:
         movl    $2, $16(%rsp)
         movl    $12(%rsp), %34
         movl    $16(%rsp), %35
-        phi     [%34] <-> %36    # [virtual]
+        movl    %34, %36
         imull   %35, %36
         movl    %36, $12(%rsp)
         movl    $12(%rsp), %37
@@ -110,7 +54,7 @@ leaIS:
         movl    $4, $32(%rsp)
         movl    $24(%rsp), %39
         movl    $32(%rsp), %40
-        phi     [%39] <-> %41    # [virtual]
+        movl    %39, %41
         imull   %40, %41
         movl    %41, $24(%rsp)
         movl    $24(%rsp), %42
@@ -120,7 +64,7 @@ leaIS:
         movl    $8, $44(%rsp)
         movl    $40(%rsp), %44
         movl    $44(%rsp), %45
-        phi     [%44] <-> %46    # [virtual]
+        movl    %44, %46
         imull   %45, %46
         movl    %46, $40(%rsp)
         movl    $40(%rsp), %47
@@ -130,7 +74,7 @@ leaIS:
         movl    %48, $56(%rsp)
         movl    $52(%rsp), %49
         movl    $56(%rsp), %50
-        phi     [%49] <-> %51    # [virtual]
+        movl    %49, %51
         imull   %50, %51
         movl    %51, $52(%rsp)
         movl    $52(%rsp), %52
@@ -140,7 +84,7 @@ leaIS:
         movl    %53, $68(%rsp)
         movl    $64(%rsp), %54
         movl    $68(%rsp), %55
-        phi     [%54] <-> %56    # [virtual]
+        movl    %54, %56
         imull   %55, %56
         movl    %56, $64(%rsp)
         movl    $64(%rsp), %57
@@ -150,7 +94,7 @@ leaIS:
         movl    %58, $80(%rsp)
         movl    $76(%rsp), %59
         movl    $80(%rsp), %60
-        phi     [%59] <-> %61    # [virtual]
+        movl    %59, %61
         imull   %60, %61
         movl    %61, $76(%rsp)
         movl    $76(%rsp), %62
@@ -160,7 +104,7 @@ leaIS:
         movl    %63, $92(%rsp)
         movl    $88(%rsp), %64
         movl    $92(%rsp), %65
-        phi     [%64] <-> %66    # [virtual]
+        movl    %64, %66
         imull   %65, %66
         movl    %66, $88(%rsp)
         movl    $88(%rsp), %67
@@ -172,51 +116,14 @@ leaIS:
 .leaIS_69:
         movl    $100(%rsp), %70
         movq    %70, %rax
-        addq    $108, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 leaBIS:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
-        movq    %rdi, %0
-        movq    %rsi, %1
+        movl    %edi, %0
+        movl    %esi, %1
 
 .leaBIS_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    %0, $84(%rsp)
-        subq    $4, %rsp    # [virtual]
         movl    %1, $88(%rsp)
         movl    $2, $4(%rsp)
         movl    $4(%rsp), %24
@@ -229,7 +136,7 @@ leaBIS:
         movl    %27, $20(%rsp)
         movl    $16(%rsp), %28
         movl    $20(%rsp), %29
-        phi     [%28] <-> %30    # [virtual]
+        movl    %28, %30
         imull   %29, %30
         movl    %30, $16(%rsp)
         movl    $12(%rsp), %31
@@ -246,7 +153,7 @@ leaBIS:
         movl    %37, $40(%rsp)
         movl    $36(%rsp), %38
         movl    $40(%rsp), %39
-        phi     [%38] <-> %40    # [virtual]
+        movl    %38, %40
         imull   %39, %40
         movl    %40, $36(%rsp)
         movl    $32(%rsp), %41
@@ -261,7 +168,7 @@ leaBIS:
         movl    %46, $52(%rsp)
         movl    $48(%rsp), %47
         movl    $52(%rsp), %48
-        phi     [%47] <-> %49    # [virtual]
+        movl    %47, %49
         imull   %48, %49
         movl    %49, $48(%rsp)
         movl    $84(%rsp), %50
@@ -278,7 +185,7 @@ leaBIS:
         movl    %56, $68(%rsp)
         movl    $64(%rsp), %57
         movl    $68(%rsp), %58
-        phi     [%57] <-> %59    # [virtual]
+        movl    %57, %59
         imull   %58, %59
         movl    %59, $64(%rsp)
         movl    $84(%rsp), %60
@@ -296,59 +203,14 @@ leaBIS:
 .leaBIS_66:
         movl    $80(%rsp), %67
         movq    %67, %rax
-        addq    $88, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 leaBID:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
-        movq    %rdi, %0
-        movq    %rsi, %1
+        movl    %edi, %0
+        movl    %esi, %1
 
 .leaBID_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    %0, $112(%rsp)
-        subq    $4, %rsp    # [virtual]
         movl    %1, $116(%rsp)
         movl    $13, $4(%rsp)
         movl    $4(%rsp), %32
@@ -456,55 +318,19 @@ leaBID:
 .leaBID_94:
         movl    $108(%rsp), %95
         movq    %95, %rax
-        addq    $120, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 leaIIS:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
-        movq    %rdi, %0
+        movl    %edi, %0
 
 .leaIIS_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    %0, $80(%rsp)
         movl    $80(%rsp), %22
         movl    %22, (%rsp)
         movl    $3, $4(%rsp)
         movl    (%rsp), %23
         movl    $4(%rsp), %24
-        phi     [%23] <-> %25    # [virtual]
+        movl    %23, %25
         imull   %24, %25
         movl    %25, (%rsp)
         movl    (%rsp), %26
@@ -514,7 +340,7 @@ leaIIS:
         movl    $5, $16(%rsp)
         movl    $12(%rsp), %28
         movl    $16(%rsp), %29
-        phi     [%28] <-> %30    # [virtual]
+        movl    %28, %30
         imull   %29, %30
         movl    %30, $12(%rsp)
         movl    $12(%rsp), %31
@@ -524,7 +350,7 @@ leaIIS:
         movl    $9, $32(%rsp)
         movl    $24(%rsp), %33
         movl    $32(%rsp), %34
-        phi     [%33] <-> %35    # [virtual]
+        movl    %33, %35
         imull   %34, %35
         movl    %35, $24(%rsp)
         movl    $24(%rsp), %36
@@ -534,7 +360,7 @@ leaIIS:
         movl    %37, $44(%rsp)
         movl    $40(%rsp), %38
         movl    $44(%rsp), %39
-        phi     [%38] <-> %40    # [virtual]
+        movl    %38, %40
         imull   %39, %40
         movl    %40, $40(%rsp)
         movl    $40(%rsp), %41
@@ -544,7 +370,7 @@ leaIIS:
         movl    %42, $56(%rsp)
         movl    $52(%rsp), %43
         movl    $56(%rsp), %44
-        phi     [%43] <-> %45    # [virtual]
+        movl    %43, %45
         imull   %44, %45
         movl    %45, $52(%rsp)
         movl    $52(%rsp), %46
@@ -554,7 +380,7 @@ leaIIS:
         movl    %47, $68(%rsp)
         movl    $64(%rsp), %48
         movl    $68(%rsp), %49
-        phi     [%48] <-> %50    # [virtual]
+        movl    %48, %50
         imull   %49, %50
         movl    %50, $64(%rsp)
         movl    $64(%rsp), %51
@@ -566,50 +392,12 @@ leaIIS:
 .leaIIS_53:
         movl    $76(%rsp), %54
         movq    %54, %rax
-        addq    $84, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 leaISD:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
-        movq    %rdi, %0
+        movl    %edi, %0
 
 .leaISD_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    %0, $88(%rsp)
         movl    $4, (%rsp)
         movl    (%rsp), %24
@@ -623,7 +411,7 @@ leaISD:
         movl    %27, $20(%rsp)
         movl    $16(%rsp), %28
         movl    $20(%rsp), %29
-        phi     [%28] <-> %30    # [virtual]
+        movl    %28, %30
         imull   %29, %30
         movl    %30, $16(%rsp)
         movl    $4(%rsp), %31
@@ -640,7 +428,7 @@ leaISD:
         movl    %37, $40(%rsp)
         movl    $36(%rsp), %38
         movl    $40(%rsp), %39
-        phi     [%38] <-> %40    # [virtual]
+        movl    %38, %40
         imull   %39, %40
         movl    %40, $36(%rsp)
         movl    $4(%rsp), %41
@@ -659,7 +447,7 @@ leaISD:
         movl    %48, $60(%rsp)
         movl    $56(%rsp), %49
         movl    $60(%rsp), %50
-        phi     [%49] <-> %51    # [virtual]
+        movl    %49, %51
         imull   %50, %51
         movl    %51, $56(%rsp)
         movl    $52(%rsp), %52
@@ -676,7 +464,7 @@ leaISD:
         movl    %58, $76(%rsp)
         movl    $72(%rsp), %59
         movl    $76(%rsp), %60
-        phi     [%59] <-> %61    # [virtual]
+        movl    %59, %61
         imull   %60, %61
         movl    %61, $72(%rsp)
         movl    $68(%rsp), %62
@@ -692,48 +480,12 @@ leaISD:
 .leaISD_67:
         movl    $84(%rsp), %68
         movq    %68, %rax
-        addq    $92, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 leaIISD:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
-        movq    %rdi, %0
+        movl    %edi, %0
 
 .leaIISD_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    %0, $80(%rsp)
         movl    $60, (%rsp)
         movl    (%rsp), %22
@@ -743,7 +495,7 @@ leaIISD:
         movl    $3, $12(%rsp)
         movl    $8(%rsp), %24
         movl    $12(%rsp), %25
-        phi     [%24] <-> %26    # [virtual]
+        movl    %24, %26
         imull   %25, %26
         movl    %26, $8(%rsp)
         movl    (%rsp), %27
@@ -759,7 +511,7 @@ leaIISD:
         movl    %32, $32(%rsp)
         movl    $24(%rsp), %33
         movl    $32(%rsp), %34
-        phi     [%33] <-> %35    # [virtual]
+        movl    %33, %35
         imull   %34, %35
         movl    %35, $24(%rsp)
         movl    (%rsp), %36
@@ -777,7 +529,7 @@ leaIISD:
         movl    $9, $52(%rsp)
         movl    $48(%rsp), %43
         movl    $52(%rsp), %44
-        phi     [%43] <-> %45    # [virtual]
+        movl    %43, %45
         imull   %44, %45
         movl    %45, $48(%rsp)
         movl    $44(%rsp), %46
@@ -793,7 +545,7 @@ leaIISD:
         movl    %51, $68(%rsp)
         movl    $64(%rsp), %52
         movl    $68(%rsp), %53
-        phi     [%52] <-> %54    # [virtual]
+        movl    %52, %54
         imull   %53, %54
         movl    %54, $64(%rsp)
         movl    $60(%rsp), %55
@@ -809,157 +561,14 @@ leaIISD:
 .leaIISD_60:
         movl    $76(%rsp), %61
         movq    %61, %rax
-        addq    $84, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 leaBISD:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
-        movq    %rdi, %0
-        movq    %rsi, %1
+        movl    %edi, %0
+        movl    %esi, %1
 
 .leaBISD_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    %0, $504(%rsp)
-        subq    $4, %rsp    # [virtual]
         movl    %1, $508(%rsp)
         movl    $8, $4(%rsp)
         movl    $4(%rsp), %130
@@ -975,7 +584,7 @@ leaBISD:
         movl    %134, $32(%rsp)
         movl    $24(%rsp), %135
         movl    $32(%rsp), %136
-        phi     [%135] <-> %137    # [virtual]
+        movl    %135, %137
         imull   %136, %137
         movl    %137, $24(%rsp)
         movl    $20(%rsp), %138
@@ -998,7 +607,7 @@ leaBISD:
         movl    %148, $52(%rsp)
         movl    $48(%rsp), %149
         movl    $52(%rsp), %150
-        phi     [%149] <-> %151    # [virtual]
+        movl    %149, %151
         imull   %150, %151
         movl    %151, $48(%rsp)
         movl    $44(%rsp), %152
@@ -1019,7 +628,7 @@ leaBISD:
         movl    %161, $68(%rsp)
         movl    $64(%rsp), %162
         movl    $68(%rsp), %163
-        phi     [%162] <-> %164    # [virtual]
+        movl    %162, %164
         imull   %163, %164
         movl    %164, $64(%rsp)
         movl    $504(%rsp), %165
@@ -1042,7 +651,7 @@ leaBISD:
         movl    %175, $88(%rsp)
         movl    $84(%rsp), %176
         movl    $88(%rsp), %177
-        phi     [%176] <-> %178    # [virtual]
+        movl    %176, %178
         imull   %177, %178
         movl    %178, $84(%rsp)
         movl    $8(%rsp), %179
@@ -1073,7 +682,7 @@ leaBISD:
         movl    %194, $112(%rsp)
         movl    $108(%rsp), %195
         movl    $112(%rsp), %196
-        phi     [%195] <-> %197    # [virtual]
+        movl    %195, %197
         imull   %196, %197
         movl    %197, $108(%rsp)
         movl    $104(%rsp), %198
@@ -1096,7 +705,7 @@ leaBISD:
         movl    %208, $132(%rsp)
         movl    $128(%rsp), %209
         movl    $132(%rsp), %210
-        phi     [%209] <-> %211    # [virtual]
+        movl    %209, %211
         imull   %210, %211
         movl    %211, $128(%rsp)
         movl    $120(%rsp), %212
@@ -1113,7 +722,7 @@ leaBISD:
         movl    %218, $148(%rsp)
         movl    $144(%rsp), %219
         movl    $148(%rsp), %220
-        phi     [%219] <-> %221    # [virtual]
+        movl    %219, %221
         imull   %220, %221
         movl    %221, $144(%rsp)
         movl    $140(%rsp), %222
@@ -1136,7 +745,7 @@ leaBISD:
         movl    %232, $168(%rsp)
         movl    $164(%rsp), %233
         movl    $168(%rsp), %234
-        phi     [%233] <-> %235    # [virtual]
+        movl    %233, %235
         imull   %234, %235
         movl    %235, $164(%rsp)
         movl    $160(%rsp), %236
@@ -1157,7 +766,7 @@ leaBISD:
         movl    %245, $184(%rsp)
         movl    $180(%rsp), %246
         movl    $184(%rsp), %247
-        phi     [%246] <-> %248    # [virtual]
+        movl    %246, %248
         imull   %247, %248
         movl    %248, $180(%rsp)
         movl    $504(%rsp), %249
@@ -1180,7 +789,7 @@ leaBISD:
         movl    %259, $204(%rsp)
         movl    $200(%rsp), %260
         movl    $204(%rsp), %261
-        phi     [%260] <-> %262    # [virtual]
+        movl    %260, %262
         imull   %261, %262
         movl    %262, $200(%rsp)
         movl    $8(%rsp), %263
@@ -1211,7 +820,7 @@ leaBISD:
         movl    %278, $232(%rsp)
         movl    $228(%rsp), %279
         movl    $232(%rsp), %280
-        phi     [%279] <-> %281    # [virtual]
+        movl    %279, %281
         imull   %280, %281
         movl    %281, $228(%rsp)
         movl    $220(%rsp), %282
@@ -1234,7 +843,7 @@ leaBISD:
         movl    %292, $252(%rsp)
         movl    $248(%rsp), %293
         movl    $252(%rsp), %294
-        phi     [%293] <-> %295    # [virtual]
+        movl    %293, %295
         imull   %294, %295
         movl    %295, $248(%rsp)
         movl    $240(%rsp), %296
@@ -1251,7 +860,7 @@ leaBISD:
         movl    %302, $268(%rsp)
         movl    $264(%rsp), %303
         movl    $268(%rsp), %304
-        phi     [%303] <-> %305    # [virtual]
+        movl    %303, %305
         imull   %304, %305
         movl    %305, $264(%rsp)
         movl    $8(%rsp), %306
@@ -1274,7 +883,7 @@ leaBISD:
         movl    %316, $288(%rsp)
         movl    $284(%rsp), %317
         movl    $288(%rsp), %318
-        phi     [%317] <-> %319    # [virtual]
+        movl    %317, %319
         imull   %318, %319
         movl    %319, $284(%rsp)
         movl    $504(%rsp), %320
@@ -1295,7 +904,7 @@ leaBISD:
         movl    %329, $304(%rsp)
         movl    $300(%rsp), %330
         movl    $304(%rsp), %331
-        phi     [%330] <-> %332    # [virtual]
+        movl    %330, %332
         imull   %331, %332
         movl    %332, $300(%rsp)
         movl    $504(%rsp), %333
@@ -1318,7 +927,7 @@ leaBISD:
         movl    %343, $324(%rsp)
         movl    $320(%rsp), %344
         movl    $324(%rsp), %345
-        phi     [%344] <-> %346    # [virtual]
+        movl    %344, %346
         imull   %345, %346
         movl    %346, $320(%rsp)
         movl    $8(%rsp), %347
@@ -1345,7 +954,7 @@ leaBISD:
         movl    %359, $352(%rsp)
         movl    $348(%rsp), %360
         movl    $352(%rsp), %361
-        phi     [%360] <-> %362    # [virtual]
+        movl    %360, %362
         imull   %361, %362
         movl    %362, $348(%rsp)
         movl    $344(%rsp), %363
@@ -1368,7 +977,7 @@ leaBISD:
         movl    %373, $372(%rsp)
         movl    $368(%rsp), %374
         movl    $372(%rsp), %375
-        phi     [%374] <-> %376    # [virtual]
+        movl    %374, %376
         imull   %375, %376
         movl    %376, $368(%rsp)
         movl    $364(%rsp), %377
@@ -1389,7 +998,7 @@ leaBISD:
         movl    %386, $388(%rsp)
         movl    $384(%rsp), %387
         movl    $388(%rsp), %388
-        phi     [%387] <-> %389    # [virtual]
+        movl    %387, %389
         imull   %388, %389
         movl    %389, $384(%rsp)
         movl    $8(%rsp), %390
@@ -1412,7 +1021,7 @@ leaBISD:
         movl    %400, $408(%rsp)
         movl    $404(%rsp), %401
         movl    $408(%rsp), %402
-        phi     [%401] <-> %403    # [virtual]
+        movl    %401, %403
         imull   %402, %403
         movl    %403, $404(%rsp)
         movl    $504(%rsp), %404
@@ -1433,7 +1042,7 @@ leaBISD:
         movl    %413, $424(%rsp)
         movl    $420(%rsp), %414
         movl    $424(%rsp), %415
-        phi     [%414] <-> %416    # [virtual]
+        movl    %414, %416
         imull   %415, %416
         movl    %416, $420(%rsp)
         movl    $504(%rsp), %417
@@ -1456,7 +1065,7 @@ leaBISD:
         movl    %427, $444(%rsp)
         movl    $440(%rsp), %428
         movl    $444(%rsp), %429
-        phi     [%428] <-> %430    # [virtual]
+        movl    %428, %430
         imull   %429, %430
         movl    %430, $440(%rsp)
         movl    $8(%rsp), %431
@@ -1483,7 +1092,7 @@ leaBISD:
         movl    %443, $472(%rsp)
         movl    $468(%rsp), %444
         movl    $472(%rsp), %445
-        phi     [%444] <-> %446    # [virtual]
+        movl    %444, %446
         imull   %445, %446
         movl    %446, $468(%rsp)
         movl    $464(%rsp), %447
@@ -1506,7 +1115,7 @@ leaBISD:
         movl    %457, $492(%rsp)
         movl    $488(%rsp), %458
         movl    $492(%rsp), %459
-        phi     [%458] <-> %460    # [virtual]
+        movl    %458, %460
         imull   %459, %460
         movl    %460, $488(%rsp)
         movl    $484(%rsp), %461
@@ -1526,12 +1135,4 @@ leaBISD:
 .leaBISD_469:
         movl    $500(%rsp), %470
         movq    %470, %rax
-        addq    $512, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret

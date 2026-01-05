@@ -1,31 +1,6 @@
 constant_fold:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
 
 .constant_fold_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %18
         movl    %18, (%rsp)
@@ -54,7 +29,7 @@ constant_fold:
         movl    %31, $40(%rsp)
         movl    $36(%rsp), %32
         movl    $40(%rsp), %33
-        phi     [%32] <-> %34    # [virtual]
+        movl    %32, %34
         imull   %33, %34
         movl    %34, $36(%rsp)
         movl    $36(%rsp), %35
@@ -75,7 +50,7 @@ constant_fold:
         movl    %43, $60(%rsp)
         movl    $56(%rsp), %44
         movl    $60(%rsp), %45
-        phi     [%44] <-> %46    # [virtual]
+        movl    %44, %46
         subl    %45, %46
         movl    %46, $56(%rsp)
         movl    $56(%rsp), %47
@@ -88,31 +63,11 @@ constant_fold:
 .constant_fold_50:
         movl    $68(%rsp), %51
         movq    %51, %rax
-        addq    $72, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 constant_fold_overflow:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
 
 .constant_fold_overflow_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    $2147483647, $4(%rsp)
         movl    $1, $8(%rsp)
         movl    $4(%rsp), %5
@@ -129,36 +84,16 @@ constant_fold_overflow:
 .constant_fold_overflow_11:
         movl    $16(%rsp), %12
         movq    %12, %rax
-        addq    $20, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
 
 constant_fold_underflow:
-        pushq   %rbx    # [virtual]
-        pushq   %rsp    # [virtual]
-        pushq   %rbp    # [virtual]
-        pushq   %r12    # [virtual]
-        pushq   %r13    # [virtual]
-        pushq   %r14    # [virtual]
-        pushq   %r15    # [virtual]
 
 .constant_fold_underflow_entry:
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
-        subq    $4, %rsp    # [virtual]
         movl    $18446744071562067968, $4(%rsp)
         movl    $1, $8(%rsp)
         movl    $4(%rsp), %5
         movl    $8(%rsp), %6
-        phi     [%5] <-> %7    # [virtual]
+        movl    %5, %7
         subl    %6, %7
         movl    %7, $4(%rsp)
         movl    $4(%rsp), %8
@@ -171,12 +106,4 @@ constant_fold_underflow:
 .constant_fold_underflow_11:
         movl    $16(%rsp), %12
         movq    %12, %rax
-        addq    $20, %rsp    # [virtual]
-        popq    %rbx    # [virtual]
-        popq    %rsp    # [virtual]
-        popq    %rbp    # [virtual]
-        popq    %r12    # [virtual]
-        popq    %r13    # [virtual]
-        popq    %r14    # [virtual]
-        popq    %r15    # [virtual]
         ret
