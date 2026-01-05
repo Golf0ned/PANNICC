@@ -228,8 +228,8 @@ namespace backend::lir_tree {
                     lir::Extend::NONE, size, size, src, dst);
                 instructions.push_back(std::move(copy));
 
-                src_vals.erase(src_vals.find(dst));
-                worklist.erase(worklist_iter);
+                src_vals.erase(src_vals.find(src));
+                worklist_iter = worklist.erase(worklist_iter);
 
                 changed = true;
             }
@@ -237,12 +237,19 @@ namespace backend::lir_tree {
             if (changed)
                 continue;
 
-            // TODO: add copy (new identifier helper?)
-            // - [src, dst] = front of worklist
-            // - make new virtual register
-            // - add src->new to instructions
-            // - replace src->dst in worklist with new->dst
-            // - add new to src_vals
+            auto &[src, dst] = worklist.front();
+            auto dst_reg = static_cast<lir::VirtualRegister *>(dst);
+            auto tmp = om->getRegister("tmp" + dst_reg->getName());
+
+            // TODO: is this necessarily correct?
+            auto size = lir::DataSize::DOUBLEWORD;
+            auto copy = std::make_unique<lir::InstructionMov>(
+                lir::Extend::NONE, size, size, src, tmp);
+            instructions.push_back(std::move(copy));
+            src_vals.erase(src_vals.find(src));
+            src_vals.insert(tmp);
+
+            src = tmp;
         }
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
