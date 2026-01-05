@@ -15,6 +15,7 @@ namespace middleend {
                     for (auto &pred : preds.getUniqueEdges()) {
                         auto &pred_instructions = pred->getInstructions();
 
+                        // TODO: represent with attribute, not instruction
                         if (pred_instructions.empty() ||
                             !dynamic_cast<mir::InstructionParallelCopy *>(
                                 pred_instructions.back().get())) {
