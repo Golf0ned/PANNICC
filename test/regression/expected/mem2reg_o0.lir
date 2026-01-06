@@ -48,8 +48,7 @@ mem2reg_branching:
         movl    %13, $8(%rsp)
         movl    $8(%rsp), %14
         cmpl    %14, $0
-        je      .mem2reg_branching_16
-        jmp     .mem2reg_branching_19
+        jne     .mem2reg_branching_18
 
 .mem2reg_branching_15:
 
@@ -104,8 +103,7 @@ mem2reg_while:
         movl    %18, $16(%rsp)
         movl    $16(%rsp), %19
         cmpl    %19, $0
-        je      .mem2reg_while_21
-        jmp     .mem2reg_while_34
+        jne     .mem2reg_while_33
 
 .mem2reg_while_20:
 

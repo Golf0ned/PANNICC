@@ -8,8 +8,7 @@ lost_copy_problem:
         movl    %2, %3
         subl    $10, %3
         cmpl    %3, $0
-        je      .lost_copy_problem_5
-        jmp     .lost_copy_problem_8
+        jne     .lost_copy_problem_7
 
 .lost_copy_problem_4:
 
@@ -37,8 +36,7 @@ swap_problem:
 
 .swap_problem_2:
         cmpl    $1, $0
-        je      .swap_problem_6
-        jmp     .swap_problem_8
+        jne     .swap_problem_7
 
 .swap_problem_5:
 

@@ -4,8 +4,7 @@ simplify_cfg_delete_orphaned:
         movl    $1, (%rsp)
         movl    (%rsp), %4
         cmpl    %4, $0
-        je      .simplify_cfg_delete_orphaned_6
-        jmp     .simplify_cfg_delete_orphaned_9
+        jne     .simplify_cfg_delete_orphaned_8
 
 .simplify_cfg_delete_orphaned_5:
 
@@ -36,8 +35,7 @@ simplify_cfg_merge_straight_line:
         movl    $1, $8(%rsp)
         movl    $8(%rsp), %11
         cmpl    %11, $0
-        je      .simplify_cfg_merge_straight_line_13
-        jmp     .simplify_cfg_merge_straight_line_28
+        jne     .simplify_cfg_merge_straight_line_27
 
 .simplify_cfg_merge_straight_line_12:
 
@@ -45,8 +43,7 @@ simplify_cfg_merge_straight_line:
         movl    $2, $12(%rsp)
         movl    $12(%rsp), %14
         cmpl    %14, $0
-        je      .simplify_cfg_merge_straight_line_16
-        jmp     .simplify_cfg_merge_straight_line_19
+        jne     .simplify_cfg_merge_straight_line_18
 
 .simplify_cfg_merge_straight_line_15:
 
@@ -92,8 +89,7 @@ simplify_cfg_delete_empty:
         movl    $1, (%rsp)
         movl    (%rsp), %5
         cmpl    %5, $0
-        je      .simplify_cfg_delete_empty_7
-        jmp     .simplify_cfg_delete_empty_10
+        jne     .simplify_cfg_delete_empty_9
 
 .simplify_cfg_delete_empty_6:
 
@@ -131,8 +127,7 @@ simplify_cfg_empty_loop:
         movl    $0, (%rsp)
         movl    (%rsp), %5
         cmpl    %5, $0
-        je      .simplify_cfg_empty_loop_4
-        jmp     .simplify_cfg_empty_loop_7
+        je      .simplify_cfg_empty_loop_3
 
 .simplify_cfg_empty_loop_6:
 
