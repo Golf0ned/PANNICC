@@ -75,8 +75,9 @@ namespace middleend {
                     return nir.getNumber(first) > nir.getNumber(second);
                 };
                 std::ranges::sort(successors, cmp);
+                std::ranges::reverse_view reverse_edges{successors};
+                for (auto succ : reverse_edges) {
 
-                for (auto succ : successors) {
                     if (visited.contains(succ))
                         continue;
 
