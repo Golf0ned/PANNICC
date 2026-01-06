@@ -234,9 +234,10 @@ namespace middleend::mir {
             if (iter != ordered.begin())
                 result += ", ";
             std::string value = valueToString(iter->second);
+            auto bb_num = nir->getNumber(iter->first);
             std::string bb_name =
-                '%' + std::to_string(nir->getNumber(iter->first));
-            result += "[ " + value + ", " + bb_name + " ]";
+                bb_num == -1 ? "entry" : std::to_string(bb_num);
+            result += "[ " + value + ", %" + bb_name + " ]";
         }
     }
 
