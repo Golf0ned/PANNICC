@@ -27,7 +27,12 @@ mem2reg_branching:
 
 .mem2reg_branching_3:
         movl    $1, %8
-        jmp     .mem2reg_branching_7
+
+.mem2reg_branching_7:
+
+.mem2reg_branching_9:
+        movq    %8, %rax
+        ret
 
 .mem2reg_branching_4:
 
@@ -35,12 +40,7 @@ mem2reg_branching:
         movl    %0, %6
         addl    $2, %6
         movl    %6, %8
-
-.mem2reg_branching_7:
-
-.mem2reg_branching_9:
-        movq    %8, %rax
-        ret
+        jmp     .mem2reg_branching_7
 
 mem2reg_while:
 

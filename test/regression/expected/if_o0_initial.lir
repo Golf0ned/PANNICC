@@ -22,9 +22,6 @@ if_basic:
         movl    %15, $12(%rsp)
         movl    $12(%rsp), %16
         movl    %16, (%rsp)
-        jmp     .if_basic_18
-
-.if_basic_17:
 
 .if_basic_18:
         movl    (%rsp), %19
@@ -36,6 +33,9 @@ if_basic:
         movl    $24(%rsp), %22
         movq    %22, %rax
         ret
+
+.if_basic_17:
+        jmp     .if_basic_18
 
 if_basic_else:
 
@@ -61,7 +61,17 @@ if_basic_else:
         movl    %17, $12(%rsp)
         movl    $12(%rsp), %18
         movl    %18, (%rsp)
-        jmp     .if_basic_else_26
+
+.if_basic_else_26:
+        movl    (%rsp), %27
+        movl    %27, $28(%rsp)
+        movl    $28(%rsp), %28
+        movl    %28, $32(%rsp)
+
+.if_basic_else_29:
+        movl    $32(%rsp), %30
+        movq    %30, %rax
+        ret
 
 .if_basic_else_19:
 
@@ -75,17 +85,7 @@ if_basic_else:
         movl    %24, $20(%rsp)
         movl    $20(%rsp), %25
         movl    %25, (%rsp)
-
-.if_basic_else_26:
-        movl    (%rsp), %27
-        movl    %27, $28(%rsp)
-        movl    $28(%rsp), %28
-        movl    %28, $32(%rsp)
-
-.if_basic_else_29:
-        movl    $32(%rsp), %30
-        movq    %30, %rax
-        ret
+        jmp     .if_basic_else_26
 
 if_no_braces:
 
@@ -106,7 +106,11 @@ if_no_braces:
         movl    %11, $12(%rsp)
         movl    $12(%rsp), %12
         movl    %12, $20(%rsp)
-        jmp     .if_no_braces_18
+
+.if_no_braces_18:
+        movl    $20(%rsp), %19
+        movq    %19, %rax
+        ret
 
 .if_no_braces_13:
 
@@ -116,13 +120,6 @@ if_no_braces:
         movl    $16(%rsp), %16
         movl    %16, $20(%rsp)
         jmp     .if_no_braces_18
-
-.if_no_braces_17:
-
-.if_no_braces_18:
-        movl    $20(%rsp), %19
-        movq    %19, %rax
-        ret
 
 if_chain:
 
@@ -154,12 +151,11 @@ if_chain:
         movl    $0, $24(%rsp)
         movl    $24(%rsp), %19
         movl    %19, $32(%rsp)
-        jmp     .if_chain_25
 
-.if_chain_20:
-
-.if_chain_21:
-        jmp     .if_chain_23
+.if_chain_25:
+        movl    $32(%rsp), %26
+        movq    %26, %rax
+        ret
 
 .if_chain_22:
 
@@ -167,11 +163,12 @@ if_chain:
         movl    $1, $28(%rsp)
         movl    $28(%rsp), %24
         movl    %24, $32(%rsp)
+        jmp     .if_chain_25
 
-.if_chain_25:
-        movl    $32(%rsp), %26
-        movq    %26, %rax
-        ret
+.if_chain_20:
+
+.if_chain_21:
+        jmp     .if_chain_23
 
 if_chain_many:
 
@@ -215,7 +212,24 @@ if_chain_many:
         movl    $0, $36(%rsp)
         movl    $36(%rsp), %28
         movl    %28, $48(%rsp)
+
+.if_chain_many_38:
+        movl    $48(%rsp), %39
+        movq    %39, %rax
+        ret
+
+.if_chain_many_35:
+
+.if_chain_many_36:
+        movl    $1, $44(%rsp)
+        movl    $44(%rsp), %37
+        movl    %37, $48(%rsp)
         jmp     .if_chain_many_38
+
+.if_chain_many_33:
+
+.if_chain_many_34:
+        jmp     .if_chain_many_36
 
 .if_chain_many_29:
 
@@ -224,26 +238,6 @@ if_chain_many:
         movl    $40(%rsp), %31
         movl    %31, $48(%rsp)
         jmp     .if_chain_many_38
-
-.if_chain_many_32:
-        jmp     .if_chain_many_34
-
-.if_chain_many_33:
-
-.if_chain_many_34:
-        jmp     .if_chain_many_36
-
-.if_chain_many_35:
-
-.if_chain_many_36:
-        movl    $1, $44(%rsp)
-        movl    $44(%rsp), %37
-        movl    %37, $48(%rsp)
-
-.if_chain_many_38:
-        movl    $48(%rsp), %39
-        movq    %39, %rax
-        ret
 
 if_else_if:
 
@@ -259,7 +253,11 @@ if_else_if:
         movl    $2, $4(%rsp)
         movl    $4(%rsp), %9
         movl    %9, $20(%rsp)
-        jmp     .if_else_if_21
+
+.if_else_if_21:
+        movl    $20(%rsp), %22
+        movq    %22, %rax
+        ret
 
 .if_else_if_10:
 
@@ -284,12 +282,3 @@ if_else_if:
         movl    $16(%rsp), %18
         movl    %18, $20(%rsp)
         jmp     .if_else_if_21
-
-.if_else_if_19:
-
-.if_else_if_20:
-
-.if_else_if_21:
-        movl    $20(%rsp), %22
-        movq    %22, %rax
-        ret

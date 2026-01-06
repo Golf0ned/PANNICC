@@ -144,15 +144,6 @@ while_if:
 .while_if_14:
 
 .while_if_15:
-        jmp     .while_if_19
-
-.while_if_16:
-
-.while_if_17:
-        movl    $500, $16(%rsp)
-        movl    $16(%rsp), %18
-        movl    %18, $24(%rsp)
-        jmp     .while_if_23
 
 .while_if_19:
         jmp     .while_if_8
@@ -168,3 +159,11 @@ while_if:
         movl    $24(%rsp), %24
         movq    %24, %rax
         ret
+
+.while_if_16:
+
+.while_if_17:
+        movl    $500, $16(%rsp)
+        movl    $16(%rsp), %18
+        movl    %18, $24(%rsp)
+        jmp     .while_if_23
