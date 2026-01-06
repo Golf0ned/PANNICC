@@ -4,7 +4,6 @@
 #include "backend/lir_tree/tile_trees.h"
 #include "middleend/transform/insert_parallel_copies.h"
 #include "middleend/transform/split_critical.h"
-
 #include "middleend/utils/traversal.h"
 
 namespace backend {
@@ -23,15 +22,15 @@ namespace backend {
             auto linearized = middleend::traverseTraces(f.get());
 
             tgv.startFunction(f.get());
-            auto &bbs = f->getBasicBlocks();
-            for (auto iter = bbs.begin(); iter != bbs.end(); iter++) {
+            for (auto iter = linearized.begin(); iter != linearized.end();
+                 iter++) {
                 auto next = std::next(iter);
 
-                auto bb = iter->get();
-                auto next_bb = next == bbs.end() ? nullptr : next->get();
+                auto bb = *iter;
+                auto next_bb = next == linearized.end() ? nullptr : *next;
 
                 tgv.startBasicBlock(bb, next_bb);
-                for (auto &i : iter->get()->getInstructions())
+                for (auto &i : (*iter)->getInstructions())
                     i->accept(&tgv);
 
                 bb->getTerminator()->accept(&tgv);
