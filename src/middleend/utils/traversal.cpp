@@ -1,6 +1,8 @@
+#include <algorithm>
 #include <deque>
 #include <ranges>
 
+#include "middleend/analysis/number_ir.h"
 #include "middleend/mir/mir.h"
 #include "middleend/utils/traversal.h"
 
@@ -44,6 +46,9 @@ namespace middleend {
     }
 
     std::list<mir::BasicBlock *> traverseTraces(mir::Function *f) {
+        NumberIR nir;
+        nir.run(f);
+
         std::list<mir::BasicBlock *> traversal_order;
 
         auto entry = f->getEntryBlock();
@@ -64,8 +69,14 @@ namespace middleend {
 
                 mir::BasicBlock *next = nullptr;
                 auto successors = cur->getSuccessors().getEdges();
-                std::ranges::reverse_view reverse_edges{successors};
-                for (auto succ : reverse_edges) {
+
+                auto cmp = [&](mir::BasicBlock *first,
+                               mir::BasicBlock *second) {
+                    return nir.getNumber(first) > nir.getNumber(second);
+                };
+                std::ranges::sort(successors, cmp);
+
+                for (auto succ : successors) {
                     if (visited.contains(succ))
                         continue;
 
