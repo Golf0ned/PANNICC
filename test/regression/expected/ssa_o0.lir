@@ -15,8 +15,7 @@ lost_copy_problem:
         movl    %14, $4(%rsp)
         movl    $4(%rsp), %15
         cmpl    %15, $0
-        je      .lost_copy_problem_17
-        jmp     .lost_copy_problem_24
+        jne     .lost_copy_problem_23
 
 .lost_copy_problem_16:
 
@@ -62,8 +61,7 @@ swap_problem:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %13
         cmpl    %13, $0
-        je      .swap_problem_15
-        jmp     .swap_problem_23
+        jne     .swap_problem_22
 
 .swap_problem_14:
 

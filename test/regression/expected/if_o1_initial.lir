@@ -2,8 +2,7 @@ if_basic:
 
 .if_basic_entry:
         cmpl    $1, $0
-        je      .if_basic_1
-        jmp     .if_basic_3
+        jne     .if_basic_2
 
 .if_basic_0:
 
@@ -22,8 +21,7 @@ if_basic_else:
 
 .if_basic_else_entry:
         cmpl    $1, $0
-        je      .if_basic_else_1
-        jmp     .if_basic_else_3
+        jne     .if_basic_else_2
 
 .if_basic_else_0:
 
@@ -44,8 +42,7 @@ if_no_braces:
 
 .if_no_braces_entry:
         cmpl    $1, $0
-        je      .if_no_braces_1
-        jmp     .if_no_braces_3
+        jne     .if_no_braces_2
 
 .if_no_braces_0:
 
@@ -66,15 +63,13 @@ if_chain:
 
 .if_chain_entry:
         cmpl    $1, $0
-        je      .if_chain_1
-        jmp     .if_chain_6
+        jne     .if_chain_4
 
 .if_chain_0:
 
 .if_chain_1:
         cmpl    $2, $0
-        je      .if_chain_3
-        jmp     .if_chain_6
+        jne     .if_chain_5
 
 .if_chain_2:
 
@@ -98,22 +93,19 @@ if_chain_many:
 
 .if_chain_many_entry:
         cmpl    $1, $0
-        je      .if_chain_many_1
-        jmp     .if_chain_many_10
+        jne     .if_chain_many_8
 
 .if_chain_many_0:
 
 .if_chain_many_1:
         cmpl    $2, $0
-        je      .if_chain_many_3
-        jmp     .if_chain_many_10
+        jne     .if_chain_many_9
 
 .if_chain_many_2:
 
 .if_chain_many_3:
         cmpl    $0, $0
-        je      .if_chain_many_5
-        jmp     .if_chain_many_7
+        jne     .if_chain_many_6
 
 .if_chain_many_4:
 
@@ -143,8 +135,7 @@ if_else_if:
 
 .if_else_if_entry:
         cmpl    $1, $0
-        je      .if_else_if_1
-        jmp     .if_else_if_3
+        jne     .if_else_if_2
 
 .if_else_if_0:
 
@@ -156,8 +147,7 @@ if_else_if:
 
 .if_else_if_3:
         cmpl    $3, $0
-        je      .if_else_if_5
-        jmp     .if_else_if_7
+        jne     .if_else_if_6
 
 .if_else_if_4:
 

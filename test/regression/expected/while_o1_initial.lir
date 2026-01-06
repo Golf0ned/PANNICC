@@ -5,8 +5,7 @@ while_basic:
 
 .while_basic_0:
         cmpl    $1, $0
-        je      .while_basic_3
-        jmp     .while_basic_6
+        jne     .while_basic_5
 
 .while_basic_2:
 
@@ -30,8 +29,7 @@ while_complex:
 
 .while_complex_0:
         cmpl    %1, $0
-        je      .while_complex_4
-        jmp     .while_complex_8
+        jne     .while_complex_7
 
 .while_complex_3:
 
@@ -56,8 +54,7 @@ while_empty:
 
 .while_empty_entry:
         cmpl    $0, $0
-        je      .while_empty_entry
-        jmp     .while_empty_2
+        je      .while_empty_0
 
 .while_empty_1:
 
@@ -71,8 +68,7 @@ while_if:
 
 .while_if_1:
         cmpl    $200, $0
-        je      .while_if_entry
-        jmp     .while_if_3
+        je      .while_if_4
 
 .while_if_2:
 
@@ -84,8 +80,7 @@ while_if:
 
 .while_if_entry:
         cmpl    $1, $0
-        je      .while_if_1
-        jmp     .while_if_6
+        je      .while_if_0
 
 .while_if_5:
 

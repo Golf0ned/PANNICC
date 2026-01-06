@@ -4,8 +4,7 @@ simplify_cfg_delete_orphaned:
         movl    $1, (%rsp)
         movl    (%rsp), %4
         cmpl    %4, $0
-        je      .simplify_cfg_delete_orphaned_6
-        jmp     .simplify_cfg_delete_orphaned_9
+        jne     .simplify_cfg_delete_orphaned_8
 
 .simplify_cfg_delete_orphaned_5:
 
@@ -39,8 +38,7 @@ simplify_cfg_merge_straight_line:
         movl    $1, $8(%rsp)
         movl    $8(%rsp), %11
         cmpl    %11, $0
-        je      .simplify_cfg_merge_straight_line_13
-        jmp     .simplify_cfg_merge_straight_line_26
+        jne     .simplify_cfg_merge_straight_line_25
 
 .simplify_cfg_merge_straight_line_12:
 
@@ -48,8 +46,7 @@ simplify_cfg_merge_straight_line:
         movl    $2, $12(%rsp)
         movl    $12(%rsp), %14
         cmpl    %14, $0
-        je      .simplify_cfg_merge_straight_line_16
-        jmp     .simplify_cfg_merge_straight_line_19
+        jne     .simplify_cfg_merge_straight_line_18
 
 .simplify_cfg_merge_straight_line_15:
 
@@ -98,8 +95,7 @@ simplify_cfg_delete_empty:
         movl    $1, (%rsp)
         movl    (%rsp), %5
         cmpl    %5, $0
-        je      .simplify_cfg_delete_empty_7
-        jmp     .simplify_cfg_delete_empty_15
+        jne     .simplify_cfg_delete_empty_14
 
 .simplify_cfg_delete_empty_6:
 
@@ -107,8 +103,7 @@ simplify_cfg_delete_empty:
         movl    $2, $4(%rsp)
         movl    $4(%rsp), %8
         cmpl    %8, $0
-        je      .simplify_cfg_delete_empty_10
-        jmp     .simplify_cfg_delete_empty_12
+        jne     .simplify_cfg_delete_empty_11
 
 .simplify_cfg_delete_empty_9:
 
@@ -128,8 +123,7 @@ simplify_cfg_delete_empty:
         movl    $3, $8(%rsp)
         movl    $8(%rsp), %16
         cmpl    %16, $0
-        je      .simplify_cfg_delete_empty_18
-        jmp     .simplify_cfg_delete_empty_20
+        jne     .simplify_cfg_delete_empty_19
 
 .simplify_cfg_delete_empty_17:
 
@@ -160,8 +154,7 @@ simplify_cfg_empty_loop:
         movl    $0, (%rsp)
         movl    (%rsp), %4
         cmpl    %4, $0
-        je      .simplify_cfg_empty_loop_6
-        jmp     .simplify_cfg_empty_loop_8
+        jne     .simplify_cfg_empty_loop_7
 
 .simplify_cfg_empty_loop_5:
 

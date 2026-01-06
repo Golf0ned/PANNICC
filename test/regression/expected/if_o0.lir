@@ -8,8 +8,7 @@ if_basic:
         movl    %8, $8(%rsp)
         movl    $8(%rsp), %9
         cmpl    %9, $0
-        je      .if_basic_11
-        jmp     .if_basic_18
+        jne     .if_basic_17
 
 .if_basic_10:
 
@@ -48,8 +47,7 @@ if_basic_else:
         movl    %10, $8(%rsp)
         movl    $8(%rsp), %11
         cmpl    %11, $0
-        je      .if_basic_else_13
-        jmp     .if_basic_else_20
+        jne     .if_basic_else_19
 
 .if_basic_else_12:
 
@@ -99,8 +97,7 @@ if_no_braces:
         movl    %7, $8(%rsp)
         movl    $8(%rsp), %8
         cmpl    %8, $0
-        je      .if_no_braces_10
-        jmp     .if_no_braces_14
+        jne     .if_no_braces_13
 
 .if_no_braces_9:
 
@@ -140,8 +137,7 @@ if_chain:
         movl    %11, $16(%rsp)
         movl    $16(%rsp), %12
         cmpl    %12, $0
-        je      .if_chain_14
-        jmp     .if_chain_23
+        jne     .if_chain_22
 
 .if_chain_13:
 
@@ -150,8 +146,7 @@ if_chain:
         movl    %15, $20(%rsp)
         movl    $20(%rsp), %16
         cmpl    %16, $0
-        je      .if_chain_18
-        jmp     .if_chain_21
+        jne     .if_chain_20
 
 .if_chain_17:
 
@@ -194,8 +189,7 @@ if_chain_many:
         movl    %16, $24(%rsp)
         movl    $24(%rsp), %17
         cmpl    %17, $0
-        je      .if_chain_many_19
-        jmp     .if_chain_many_36
+        jne     .if_chain_many_35
 
 .if_chain_many_18:
 
@@ -204,8 +198,7 @@ if_chain_many:
         movl    %20, $28(%rsp)
         movl    $28(%rsp), %21
         cmpl    %21, $0
-        je      .if_chain_many_23
-        jmp     .if_chain_many_34
+        jne     .if_chain_many_33
 
 .if_chain_many_22:
 
@@ -214,8 +207,7 @@ if_chain_many:
         movl    %24, $32(%rsp)
         movl    $32(%rsp), %25
         cmpl    %25, $0
-        je      .if_chain_many_27
-        jmp     .if_chain_many_30
+        jne     .if_chain_many_29
 
 .if_chain_many_26:
 
@@ -259,8 +251,7 @@ if_else_if:
         movl    $1, (%rsp)
         movl    (%rsp), %6
         cmpl    %6, $0
-        je      .if_else_if_8
-        jmp     .if_else_if_11
+        jne     .if_else_if_10
 
 .if_else_if_7:
 
@@ -276,8 +267,7 @@ if_else_if:
         movl    $3, $8(%rsp)
         movl    $8(%rsp), %12
         cmpl    %12, $0
-        je      .if_else_if_14
-        jmp     .if_else_if_17
+        jne     .if_else_if_16
 
 .if_else_if_13:
 
