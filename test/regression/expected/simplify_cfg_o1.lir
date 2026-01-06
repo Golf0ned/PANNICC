@@ -8,16 +8,16 @@ simplify_cfg_delete_orphaned:
 
 .simplify_cfg_delete_orphaned_1:
         movl    $2, %5
-        jmp     .simplify_cfg_delete_orphaned_4
+
+.simplify_cfg_delete_orphaned_4:
+        movq    %5, %rax
+        ret
 
 .simplify_cfg_delete_orphaned_2:
 
 .simplify_cfg_delete_orphaned_3:
         movl    $3, %5
-
-.simplify_cfg_delete_orphaned_4:
-        movq    %5, %rax
-        ret
+        jmp     .simplify_cfg_delete_orphaned_4
 
 simplify_cfg_merge_straight_line:
 
@@ -35,7 +35,10 @@ simplify_cfg_merge_straight_line:
 
 .simplify_cfg_merge_straight_line_3:
         movl    $3, %9
-        jmp     .simplify_cfg_merge_straight_line_8
+
+.simplify_cfg_merge_straight_line_8:
+        movq    %9, %rax
+        ret
 
 .simplify_cfg_merge_straight_line_4:
 
@@ -47,10 +50,7 @@ simplify_cfg_merge_straight_line:
 
 .simplify_cfg_merge_straight_line_7:
         movl    $4, %9
-
-.simplify_cfg_merge_straight_line_8:
-        movq    %9, %rax
-        ret
+        jmp     .simplify_cfg_merge_straight_line_8
 
 simplify_cfg_delete_empty:
 
@@ -62,26 +62,27 @@ simplify_cfg_delete_empty:
 
 .simplify_cfg_delete_empty_1:
         cmpl    $2, $0
-        je      .simplify_cfg_delete_empty_4
-        jmp     .simplify_cfg_delete_empty_4
-
-.simplify_cfg_delete_empty_2:
-
-.simplify_cfg_delete_empty_3:
-        cmpl    $3, $0
         jne     .simplify_cfg_delete_empty_4
 
 .simplify_cfg_delete_empty_4:
         movq    $4, %rax
         ret
 
-simplify_cfg_empty_loop:
+.simplify_cfg_delete_empty_2:
 
-.simplify_cfg_empty_loop_0:
+.simplify_cfg_delete_empty_3:
+        cmpl    $3, $0
+        je      .simplify_cfg_delete_empty_4
+        jmp     .simplify_cfg_delete_empty_4
+
+simplify_cfg_empty_loop:
 
 .simplify_cfg_empty_loop_entry:
         cmpl    $0, $0
-        je      .simplify_cfg_empty_loop_0
+        jne     .simplify_cfg_empty_loop_1
+
+.simplify_cfg_empty_loop_0:
+        jmp     .simplify_cfg_empty_loop_entry
 
 .simplify_cfg_empty_loop_1:
 

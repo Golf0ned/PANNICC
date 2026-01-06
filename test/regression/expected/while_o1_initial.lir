@@ -50,11 +50,12 @@ while_complex:
 
 while_empty:
 
-.while_empty_0:
-
 .while_empty_entry:
         cmpl    $0, $0
-        je      .while_empty_0
+        jne     .while_empty_1
+
+.while_empty_0:
+        jmp     .while_empty_entry
 
 .while_empty_1:
 
@@ -63,6 +64,10 @@ while_empty:
         ret
 
 while_if:
+
+.while_if_entry:
+        cmpl    $1, $0
+        jne     .while_if_5
 
 .while_if_0:
 
@@ -74,19 +79,16 @@ while_if:
 
 .while_if_3:
         movl    $500, %8
-        jmp     .while_if_7
 
-.while_if_4:
-
-.while_if_entry:
-        cmpl    $1, $0
-        je      .while_if_0
+.while_if_7:
+        movq    %8, %rax
+        ret
 
 .while_if_5:
 
 .while_if_6:
         movl    $0, %8
+        jmp     .while_if_7
 
-.while_if_7:
-        movq    %8, %rax
-        ret
+.while_if_4:
+        jmp     .while_if_entry

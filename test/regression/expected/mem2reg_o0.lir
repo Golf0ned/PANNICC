@@ -56,7 +56,17 @@ mem2reg_branching:
         movl    $1, $16(%rsp)
         movl    $16(%rsp), %17
         movl    %17, $4(%rsp)
-        jmp     .mem2reg_branching_25
+
+.mem2reg_branching_25:
+        movl    $4(%rsp), %26
+        movl    %26, $24(%rsp)
+        movl    $24(%rsp), %27
+        movl    %27, $28(%rsp)
+
+.mem2reg_branching_28:
+        movl    $28(%rsp), %29
+        movq    %29, %rax
+        ret
 
 .mem2reg_branching_18:
 
@@ -70,17 +80,7 @@ mem2reg_branching:
         movl    %23, $20(%rsp)
         movl    $20(%rsp), %24
         movl    %24, $4(%rsp)
-
-.mem2reg_branching_25:
-        movl    $4(%rsp), %26
-        movl    %26, $24(%rsp)
-        movl    $24(%rsp), %27
-        movl    %27, $28(%rsp)
-
-.mem2reg_branching_28:
-        movl    $28(%rsp), %29
-        movq    %29, %rax
-        ret
+        jmp     .mem2reg_branching_25
 
 mem2reg_while:
 
