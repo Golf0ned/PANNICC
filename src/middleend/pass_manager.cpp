@@ -5,6 +5,7 @@
 #include "middleend/transform/inst_combine.h"
 #include "middleend/transform/mem2reg.h"
 #include "middleend/transform/simplify_cfg.h"
+#include "middleend/transform/split_critical.h"
 
 namespace middleend {
     void PassManager::addPass(std::unique_ptr<TransformPass> p) {
@@ -22,7 +23,7 @@ namespace middleend {
         else if (pass_name == "simplify_cfg")
             addPass(std::make_unique<middleend::SimplifyCFG>());
         else if (pass_name == "split_critical")
-            addPass(std::make_unique<middleend::InstCombine>());
+            addPass(std::make_unique<middleend::SplitCritical>());
         else
             throw std::invalid_argument("invalid pass: \"" + pass_name + "\"");
     }
