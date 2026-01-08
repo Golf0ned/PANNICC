@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <iostream>
 
+#include "backend/analysis/interference.h"
 #include "backend/analysis/liveness.h"
 #include "backend/mir_to_lir.h"
 #include "frontend/ast_to_hir.h"
@@ -140,7 +141,9 @@ int main(int argc, char *argv[]) {
     }
 
     backend::Liveness liveness(lir);
+    backend::Interference interference(lir);
     liveness.computeLiveRanges();
+    interference.computeInterference(liveness);
 
     if (output_level == OutputLevel::LIR) {
         OUTPUT(lir.toString());
