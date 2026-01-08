@@ -68,6 +68,7 @@ namespace backend::lir {
 
     RegisterNum toSized(RegisterNum rn, DataSize size);
 
+    const std::vector<RegisterNum> &getAllRegisters();
     const std::vector<RegisterNum> &getArgRegisters();
     const std::vector<RegisterNum> &getCalleeSavedRegisters();
     const std::vector<RegisterNum> &getCallerSavedRegisters();
