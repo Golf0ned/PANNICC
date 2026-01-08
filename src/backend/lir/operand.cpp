@@ -5,7 +5,18 @@
 
 namespace backend::lir {
     // TODO: support different calling convention (looking at you, windows)
-    // Also applies to callee and caller saved registers
+    const std::vector<RegisterNum> &getAllRegisters() {
+        static std::vector<RegisterNum> all_registers = {
+            RegisterNum::RAX, RegisterNum::RCX, RegisterNum::RDX,
+            RegisterNum::RBX, RegisterNum::RSI, RegisterNum::RDI,
+            RegisterNum::RSP, RegisterNum::RBP, RegisterNum::R8,
+            RegisterNum::R9,  RegisterNum::R10, RegisterNum::R11,
+            RegisterNum::R12, RegisterNum::R13, RegisterNum::R14,
+            RegisterNum::R15,
+        };
+        return all_registers;
+    }
+
     const std::vector<RegisterNum> &getArgRegisters() {
         static std::vector<RegisterNum> arg_registers = {
             RegisterNum::RDI, RegisterNum::RSI, RegisterNum::RDX,
