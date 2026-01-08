@@ -353,6 +353,10 @@ namespace backend::lir {
         return "(stack " + std::to_string(arg_num) + ")";
     }
 
+    uint64_t OperandManager::getNumRegisters() {
+        return registers.size() + virtual_registers.size();
+    }
+
     Immediate *OperandManager::getImmediate(uint64_t value) {
         if (!immediates.contains(value))
             immediates.insert({value, std::make_unique<Immediate>(value)});

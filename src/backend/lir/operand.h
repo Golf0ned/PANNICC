@@ -131,6 +131,7 @@ namespace backend::lir {
 
     class OperandManager {
     public:
+        uint64_t getNumRegisters();
         Immediate *getImmediate(uint64_t value);
         Register *getRegister(RegisterNum reg);
         VirtualRegister *getRegister(std::string name);
