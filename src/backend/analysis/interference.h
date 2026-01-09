@@ -6,8 +6,8 @@ namespace backend {
     class Interference {
     public:
         Interference(lir::Program &p);
-        void computeInterference(Liveness &liveness);
         void addEdge(lir::Register *first, lir::Register *second);
+        void computeInterference(Liveness &liveness);
 
     private:
         lir::Program &program;
