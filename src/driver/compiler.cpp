@@ -144,6 +144,7 @@ int main(int argc, char *argv[]) {
     backend::Interference interference(lir);
     liveness.computeLiveRanges();
     interference.computeInterference(liveness);
+    interference.printInterference();
 
     if (output_level == OutputLevel::LIR) {
         OUTPUT(lir.toString());
