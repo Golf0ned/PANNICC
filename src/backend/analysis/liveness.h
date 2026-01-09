@@ -101,10 +101,14 @@ namespace backend {
         Liveness(lir::Program &p);
         void computeLiveRanges();
         void printLiveness();
+        std::vector<RegisterSet> getGen();
+        std::vector<RegisterSet> getKill();
         std::vector<RegisterSet> getIn();
         std::vector<RegisterSet> getOut();
 
     private:
+        std::vector<RegisterSet> gen;
+        std::vector<RegisterSet> kill;
         std::vector<RegisterSet> in;
         std::vector<RegisterSet> out;
         lir::Program &program;

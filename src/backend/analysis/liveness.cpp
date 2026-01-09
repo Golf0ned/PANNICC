@@ -303,8 +303,9 @@ namespace backend {
           ksv(KillSetVisitor(p.getOm())), sv(p.getInstructions()) {}
 
     void Liveness::computeLiveRanges() {
-        std::vector<RegisterSet> gen;
-        std::vector<RegisterSet> kill;
+        auto size = program.getInstructions().size();
+        gen.clear();
+        kill.clear();
         std::vector<std::vector<int>> successors;
 
         for (auto &i : program.getInstructions()) {
@@ -317,7 +318,6 @@ namespace backend {
             successors.push_back(std::move(sv.getResult()));
         }
 
-        auto size = program.getInstructions().size();
         in = std::vector<RegisterSet>(size);
         out = std::vector<RegisterSet>(size);
 
@@ -391,6 +391,10 @@ namespace backend {
             line++;
         }
     }
+
+    std::vector<RegisterSet> Liveness::getGen() { return gen; }
+
+    std::vector<RegisterSet> Liveness::getKill() { return kill; }
 
     std::vector<RegisterSet> Liveness::getIn() { return in; }
 
