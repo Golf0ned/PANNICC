@@ -3,7 +3,13 @@
 namespace backend {
     Interference::Interference(lir::Program &p) : program(p) {}
 
-    void Interference::addEdge(lir::Register *first, lir::Register *second) {}
+    void Interference::addEdge(lir::Register *first, lir::Register *second) {
+        auto first_idx = reg_to_index.at(first),
+             second_idx = reg_to_index.at(second);
+
+        adj_matrix[first_idx][second_idx] = true;
+        adj_matrix[second_idx][first_idx] = true;
+    }
 
     void Interference::computeInterference(Liveness &liveness) {
         auto om = program.getOm();
