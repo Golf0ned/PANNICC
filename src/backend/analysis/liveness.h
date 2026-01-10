@@ -12,6 +12,8 @@ namespace backend {
         GenSetVisitor(lir::OperandManager *om);
 
         RegisterSet getResult();
+        void checkOperand(lir::Operand *o);
+        void addRegister(lir::RegisterNum reg);
 
         void visit(lir::Instruction *i) override;
         void visit(lir::Label *l) override;
@@ -41,6 +43,8 @@ namespace backend {
         KillSetVisitor(lir::OperandManager *om);
 
         RegisterSet getResult();
+        void checkOperand(lir::Operand *o);
+        void addRegister(lir::RegisterNum reg);
 
         void visit(lir::Instruction *i) override;
         void visit(lir::Label *l) override;

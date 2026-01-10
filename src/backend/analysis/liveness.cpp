@@ -8,91 +8,77 @@ namespace backend {
 
     RegisterSet GenSetVisitor::getResult() { return gen; }
 
+    void GenSetVisitor::checkOperand(lir::Operand *o) {
+        auto reg = dynamic_cast<lir::Register *>(o);
+        if (reg) {
+            gen.insert(reg);
+            return;
+        }
+
+        auto address = dynamic_cast<lir::Address *>(o);
+        if (address) {
+            auto base = address->getBase();
+            if (base)
+                gen.insert(base);
+
+            auto index = address->getIndex();
+            if (index)
+                gen.insert(index);
+        }
+    }
+
+    void GenSetVisitor::addRegister(lir::RegisterNum reg) {
+        auto physical_reg = om->getRegister(reg);
+        gen.insert(physical_reg);
+    }
+
     void GenSetVisitor::visit(lir::Instruction *i) {}
 
     void GenSetVisitor::visit(lir::Label *l) { gen.clear(); }
 
     void GenSetVisitor::visit(lir::InstructionMov *i) {
         gen.clear();
-
-        auto src = dynamic_cast<lir::Register *>(i->getSrc());
-        if (src)
-            gen.insert(src);
+        checkOperand(i->getSrc());
     }
 
     void GenSetVisitor::visit(lir::InstructionPush *i) {
         gen.clear();
-
-        auto rsp = om->getRegister(lir::RegisterNum::RSP);
-        gen.insert(rsp);
-
-        auto src = dynamic_cast<lir::Register *>(i->getSrc());
-        if (src)
-            gen.insert(src);
+        addRegister(lir::RegisterNum::RSP);
+        checkOperand(i->getSrc());
     }
 
     void GenSetVisitor::visit(lir::InstructionPop *i) {
         gen.clear();
-
-        auto rsp = om->getRegister(lir::RegisterNum::RSP);
-        gen.insert(rsp);
+        addRegister(lir::RegisterNum::RSP);
     }
 
     void GenSetVisitor::visit(lir::InstructionConvert *i) {
         gen.clear();
-
-        auto from = lir::toSized(lir::RegisterNum::RAX, i->getFrom());
-        auto reg = om->getRegister(from);
-        gen.insert(reg);
+        addRegister(lir::toSized(lir::RegisterNum::RAX, i->getFrom()));
     }
 
     void GenSetVisitor::visit(lir::InstructionBinaryOp *i) {
         gen.clear();
-
-        auto src = dynamic_cast<lir::Register *>(i->getSrc());
-        if (src)
-            gen.insert(src);
-
-        auto dst = dynamic_cast<lir::Register *>(i->getDst());
-        if (dst)
-            gen.insert(dst);
+        checkOperand(i->getSrc());
+        checkOperand(i->getDst());
     }
 
     void GenSetVisitor::visit(lir::InstructionSpecialOp *i) {
         gen.clear();
-
-        auto src = dynamic_cast<lir::Register *>(i->getSrc());
-        if (src)
-            gen.insert(src);
-
+        checkOperand(i->getSrc());
         if (i->getOp() == lir::BinaryOp::IDIV)
-            gen.insert(om->getRegister(lir::RegisterNum::EAX));
+            addRegister(lir::RegisterNum::EAX);
     }
 
     void GenSetVisitor::visit(lir::InstructionLea *i) {
         gen.clear();
-
-        auto address = i->getSrc();
-
-        auto base = address->getBase();
-        if (base)
-            gen.insert(base);
-
-        auto index = address->getIndex();
-        if (index)
-            gen.insert(index);
+        checkOperand(i->getSrc());
     }
 
     void GenSetVisitor::visit(lir::InstructionCmp *i) {
         gen.clear();
-
-        auto src1 = dynamic_cast<lir::Register *>(i->getSrc1());
-        if (src1)
-            gen.insert(src1);
-
-        auto src2 = dynamic_cast<lir::Register *>(i->getSrc2());
-        if (src2)
-            gen.insert(src2);
+        checkOperand(i->getSrc1());
+        checkOperand(i->getSrc2());
     }
 
     void GenSetVisitor::visit(lir::InstructionJmp *i) { gen.clear(); }
@@ -105,13 +91,8 @@ namespace backend {
 
     void GenSetVisitor::visit(lir::InstructionVirtualCall *i) {
         gen.clear();
-
-        auto &args = i->getArgs();
-        for (auto arg : args) {
-            auto reg = dynamic_cast<lir::Register *>(arg);
-            if (reg)
-                gen.insert(reg);
-        }
+        for (auto arg : i->getArgs())
+            checkOperand(arg);
     }
 
     void GenSetVisitor::visit(lir::InstructionUnknown *i) {}
@@ -120,34 +101,48 @@ namespace backend {
 
     RegisterSet KillSetVisitor::getResult() { return kill; }
 
+    void KillSetVisitor::checkOperand(lir::Operand *o) {
+        auto reg = dynamic_cast<lir::Register *>(o);
+        if (reg) {
+            kill.insert(reg);
+            return;
+        }
+
+        auto address = dynamic_cast<lir::Address *>(o);
+        if (address) {
+            auto base = address->getBase();
+            if (base)
+                kill.insert(base);
+
+            auto index = address->getIndex();
+            if (index)
+                kill.insert(index);
+        }
+    }
+
+    void KillSetVisitor::addRegister(lir::RegisterNum reg) {
+        auto physical_reg = om->getRegister(reg);
+        kill.insert(physical_reg);
+    }
+
     void KillSetVisitor::visit(lir::Instruction *i) {}
 
     void KillSetVisitor::visit(lir::Label *l) { kill.clear(); }
 
     void KillSetVisitor::visit(lir::InstructionMov *i) {
         kill.clear();
-
-        auto dst = dynamic_cast<lir::Register *>(i->getDst());
-        if (dst)
-            kill.insert(dst);
+        checkOperand(i->getDst());
     }
 
     void KillSetVisitor::visit(lir::InstructionPush *i) {
         kill.clear();
-
-        auto rsp = om->getRegister(lir::RegisterNum::RSP);
-        kill.insert(rsp);
+        addRegister(lir::RegisterNum::RSP);
     }
 
     void KillSetVisitor::visit(lir::InstructionPop *i) {
         kill.clear();
-
-        auto rsp = om->getRegister(lir::RegisterNum::RSP);
-        kill.insert(rsp);
-
-        auto dst = dynamic_cast<lir::Register *>(i->getDst());
-        if (dst)
-            kill.insert(dst);
+        addRegister(lir::RegisterNum::RSP);
+        checkOperand(i->getDst());
     }
 
     void KillSetVisitor::visit(lir::InstructionConvert *i) {
@@ -156,36 +151,26 @@ namespace backend {
         auto from = i->getFrom();
         auto to = i->getTo();
 
-        kill.insert(om->getRegister(lir::toSized(lir::RegisterNum::RAX, to)));
-
-        if (from == to) {
-            kill.insert(
-                om->getRegister(lir::toSized(lir::RegisterNum::RDX, to)));
-        }
+        addRegister(lir::toSized(lir::RegisterNum::RAX, to));
+        if (from == to)
+            addRegister(lir::toSized(lir::RegisterNum::RDX, to));
     }
 
     void KillSetVisitor::visit(lir::InstructionBinaryOp *i) {
         kill.clear();
-
-        auto dst = dynamic_cast<lir::Register *>(i->getDst());
-        if (dst)
-            kill.insert(dst);
+        checkOperand(i->getDst());
     }
 
     void KillSetVisitor::visit(lir::InstructionSpecialOp *i) {
         kill.clear();
 
         if (i->getOp() == lir::BinaryOp::IDIV)
-            kill.insert(om->getRegister(
-                lir::toSized(lir::RegisterNum::RAX, i->getSize())));
+            addRegister(lir::toSized(lir::RegisterNum::RAX, i->getSize()));
     }
 
     void KillSetVisitor::visit(lir::InstructionLea *i) {
         kill.clear();
-
-        auto dst = dynamic_cast<lir::Register *>(i->getDst());
-        if (dst)
-            kill.insert(dst);
+        checkOperand(i->getDst());
     }
 
     void KillSetVisitor::visit(lir::InstructionCmp *i) { kill.clear(); }
@@ -202,7 +187,7 @@ namespace backend {
     void KillSetVisitor::visit(lir::InstructionVirtualCall *i) {
         kill.clear();
         for (auto reg : lir::getCallerSavedRegisters())
-            kill.insert(om->getRegister(reg));
+            addRegister(reg);
     }
 
     void KillSetVisitor::visit(lir::InstructionUnknown *i) {}
