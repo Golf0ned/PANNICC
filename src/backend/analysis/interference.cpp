@@ -65,20 +65,25 @@ namespace backend {
     }
 
     void Interference::printInterference() {
-        for (auto &[reg, idx] : reg_to_index) {
-            std::cout << reg->toString() << ": " << idx << std::endl;
-        }
-
-        std::cout << std::endl;
+        std::vector<lir::Register *> index_to_reg(reg_to_index.size());
+        for (auto &[reg, idx] : reg_to_index)
+            index_to_reg[idx] = reg;
 
         size_t r = adj_matrix.size(), c = adj_matrix[0].size();
         for (size_t i = 0; i < r; i++) {
-            std::cout << i << ": {";
+            std::cout << index_to_reg[i]->toString() << ": {";
+
+            bool first_element = true;
             for (size_t j = 0; j < c; j++) {
-                if (j)
-                    std::cout << ", ";
-                std::cout << adj_matrix[i][j];
+                if (adj_matrix[i][j]) {
+                    if (first_element)
+                        first_element = false;
+                    else
+                        std::cout << ", ";
+                    std::cout << index_to_reg[j]->toString();
+                }
             }
+
             std::cout << "}" << std::endl;
         }
     }
