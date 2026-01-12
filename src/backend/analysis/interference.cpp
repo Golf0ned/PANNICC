@@ -4,7 +4,7 @@
 #include "backend/lir/operand.h"
 
 namespace backend {
-    Interference::Interference(lir::Program &p) : program(p) {}
+    Interference::Interference(lir::Program &p) : om(p.getOm()) {}
 
     void Interference::addRegister(lir::Register *reg) {
         if (!reg_to_index.contains(reg))
