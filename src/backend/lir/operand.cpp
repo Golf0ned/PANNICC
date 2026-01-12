@@ -365,7 +365,7 @@ namespace backend::lir {
     }
 
     uint64_t OperandManager::getNumRegisters() {
-        return getAllRegisters().size() + virtual_registers.size();
+        return 2 * getAllRegisters().size() + virtual_registers.size();
     }
 
     Immediate *OperandManager::getImmediate(uint64_t value) {
