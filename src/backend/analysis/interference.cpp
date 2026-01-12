@@ -23,20 +23,22 @@ namespace backend {
     }
 
     void Interference::computeInterference(Liveness &liveness) {
-        auto om = program.getOm();
-
         auto num_regs = om->getNumRegisters();
         adj_matrix = std::vector<std::vector<bool>>(
             num_regs, std::vector<bool>(num_regs, false));
         reg_to_index.clear();
 
         for (auto reg : lir::getAllRegisters()) {
-            auto new_reg = om->getRegister(reg);
-            addRegister(new_reg);
+            auto new_reg_64 = om->getRegister(reg);
+            auto new_reg_32 =
+                om->getRegister(lir::toSized(reg, lir::DataSize::DOUBLEWORD));
+            addRegister(new_reg_64);
+            addRegister(new_reg_32);
             for (auto &[prev_reg, _] : reg_to_index) {
-                if (prev_reg == new_reg)
+                if (prev_reg == new_reg_64 || prev_reg == new_reg_32)
                     continue;
-                addEdge(prev_reg, new_reg);
+                addEdge(prev_reg, new_reg_64);
+                addEdge(prev_reg, new_reg_32);
             }
         }
 
