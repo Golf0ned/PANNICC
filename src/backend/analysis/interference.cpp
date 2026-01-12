@@ -12,6 +12,7 @@ namespace backend {
     }
 
     void Interference::addEdge(lir::Register *first, lir::Register *second) {
+        // TODO: interfere with all size regs
         addRegister(first);
         addRegister(second);
 
