@@ -12,7 +12,7 @@ namespace backend {
         void printInterference();
 
     private:
-        lir::Program &program;
+        lir::OperandManager *om;
         std::unordered_map<lir::Register *, size_t> reg_to_index;
         std::vector<std::vector<bool>> adj_matrix;
     };
