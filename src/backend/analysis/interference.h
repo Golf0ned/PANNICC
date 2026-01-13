@@ -6,8 +6,14 @@ namespace backend {
     class Interference {
     public:
         Interference(lir::Program &p);
+
         void addRegister(lir::Register *reg);
         void addEdge(lir::Register *first, lir::Register *second);
+        bool sameReg(lir::Register *first, lir::Register *second);
+        std::vector<lir::Register *> getSizedRegisters(lir::Register *reg);
+        void addAllEdges(lir::Register *first, lir::Register *second);
+        void addPhysicalRegisters();
+
         void computeInterference(Liveness &liveness);
         void printInterference();
 

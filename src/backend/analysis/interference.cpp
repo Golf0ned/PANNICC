@@ -12,15 +12,75 @@ namespace backend {
     }
 
     void Interference::addEdge(lir::Register *first, lir::Register *second) {
-        // TODO: interfere with all size regs
-        addRegister(first);
-        addRegister(second);
-
         auto first_idx = reg_to_index.at(first),
              second_idx = reg_to_index.at(second);
 
         adj_matrix[first_idx][second_idx] = true;
         adj_matrix[second_idx][first_idx] = true;
+    }
+
+    bool Interference::sameReg(lir::Register *first, lir::Register *second) {
+        auto first_num = first->getRegNum(), second_num = second->getRegNum();
+
+        if (first_num == lir::RegisterNum::VIRTUAL &&
+            second_num == lir::RegisterNum::VIRTUAL) {
+            auto first_virtual = static_cast<lir::VirtualRegister *>(first);
+            auto second_virtual = static_cast<lir::VirtualRegister *>(second);
+            return first_virtual->getName() == second_virtual->getName();
+        }
+
+        if (first_num != lir::RegisterNum::VIRTUAL &&
+            second_num != lir::RegisterNum::VIRTUAL) {
+            auto first_64 = lir::toSized(first_num, lir::DataSize::QUADWORD);
+            auto second_64 = lir::toSized(second_num, lir::DataSize::QUADWORD);
+            return first_64 == second_64;
+        }
+
+        return false;
+    }
+
+    std::vector<lir::Register *>
+    Interference::getSizedRegisters(lir::Register *reg) {
+        auto reg_num = reg->getRegNum();
+        if (reg_num == lir::RegisterNum::VIRTUAL) {
+            return {reg};
+        }
+
+        return {
+            om->getRegister(lir::toSized(reg_num, lir::DataSize::QUADWORD)),
+            om->getRegister(lir::toSized(reg_num, lir::DataSize::DOUBLEWORD)),
+        };
+    }
+
+    void Interference::addAllEdges(lir::Register *first,
+                                   lir::Register *second) {
+        auto first_regs = getSizedRegisters(first),
+             second_regs = getSizedRegisters(second);
+
+        for (auto first_reg : first_regs)
+            for (auto second_reg : second_regs)
+                addEdge(first_reg, second_reg);
+    }
+
+    void Interference::addPhysicalRegisters() {
+        auto &all_regs = lir::getAllRegisters();
+
+        for (auto reg : all_regs) {
+            auto new_reg_64 = om->getRegister(reg);
+            auto new_reg_32 =
+                om->getRegister(lir::toSized(reg, lir::DataSize::DOUBLEWORD));
+
+            addRegister(new_reg_64);
+            addRegister(new_reg_32);
+        }
+
+        for (auto reg1 : all_regs) {
+            for (auto reg2 : all_regs) {
+                if (reg1 == reg2)
+                    break;
+                addAllEdges(om->getRegister(reg1), om->getRegister(reg2));
+            }
+        }
     }
 
     void Interference::computeInterference(Liveness &liveness) {
@@ -29,37 +89,30 @@ namespace backend {
             num_regs, std::vector<bool>(num_regs, false));
         reg_to_index.clear();
 
-        for (auto reg : lir::getAllRegisters()) {
-            auto new_reg_64 = om->getRegister(reg);
-            auto new_reg_32 =
-                om->getRegister(lir::toSized(reg, lir::DataSize::DOUBLEWORD));
-            addRegister(new_reg_64);
-            addRegister(new_reg_32);
-            for (auto &[prev_reg, _] : reg_to_index) {
-                if (prev_reg == new_reg_64 || prev_reg == new_reg_32)
-                    continue;
-                addEdge(prev_reg, new_reg_64);
-                addEdge(prev_reg, new_reg_32);
-            }
-        }
+        addPhysicalRegisters();
 
         auto out = liveness.getOut();
         auto gen = liveness.getGen();
 
         for (size_t i = 0; i < out.size(); i++) {
             auto &gen_i = gen[i], &out_i = out[i];
+
+            for (auto gen_reg : gen_i)
+                addRegister(gen_reg);
+            for (auto out_reg : out_i)
+                addRegister(out_reg);
+
             for (auto gen_reg : gen_i) {
-                // TODO: make this not ugly thanks
                 for (auto prev_gen_reg : gen_i) {
-                    if (gen_reg == prev_gen_reg)
+                    if (sameReg(prev_gen_reg, gen_reg))
                         continue;
-                    addEdge(gen_reg, prev_gen_reg);
+                    addAllEdges(prev_gen_reg, gen_reg);
                 }
 
                 for (auto out_reg : out_i) {
-                    if (gen_reg == out_reg)
+                    if (sameReg(out_reg, gen_reg))
                         continue;
-                    addEdge(out_reg, gen_reg);
+                    addAllEdges(out_reg, gen_reg);
                 }
             }
         }
