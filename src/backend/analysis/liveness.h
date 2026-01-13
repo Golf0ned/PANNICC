@@ -5,13 +5,11 @@
 #include "backend/lir/lir.h"
 
 namespace backend {
-    using RegisterSet = std::unordered_set<lir::Register *>;
-
     class GenSetVisitor : public lir::InstructionVisitor {
     public:
         GenSetVisitor(lir::OperandManager *om);
 
-        RegisterSet getResult();
+        std::unordered_set<lir::Register *> getResult();
         void checkOperand(lir::Operand *o);
         void addRegister(lir::RegisterNum reg);
 
@@ -34,7 +32,7 @@ namespace backend {
         void visit(lir::InstructionUnknown *i) override;
 
     private:
-        RegisterSet gen;
+        std::unordered_set<lir::Register *> gen;
         lir::OperandManager *om;
     };
 
@@ -42,7 +40,7 @@ namespace backend {
     public:
         KillSetVisitor(lir::OperandManager *om);
 
-        RegisterSet getResult();
+        std::unordered_set<lir::Register *> getResult();
         void checkOperand(lir::Operand *o);
         void addRegister(lir::RegisterNum reg);
 
@@ -65,7 +63,7 @@ namespace backend {
         void visit(lir::InstructionUnknown *i) override;
 
     private:
-        RegisterSet kill;
+        std::unordered_set<lir::Register *> kill;
         lir::OperandManager *om;
     };
 
@@ -105,16 +103,16 @@ namespace backend {
         Liveness(lir::Program &p);
         void computeLiveRanges();
         void printLiveness();
-        std::vector<RegisterSet> getGen();
-        std::vector<RegisterSet> getKill();
-        std::vector<RegisterSet> getIn();
-        std::vector<RegisterSet> getOut();
+        std::vector<std::vector<lir::Register *>> getGen();
+        std::vector<std::vector<lir::Register *>> getKill();
+        std::vector<std::vector<lir::Register *>> getIn();
+        std::vector<std::vector<lir::Register *>> getOut();
 
     private:
-        std::vector<RegisterSet> gen;
-        std::vector<RegisterSet> kill;
-        std::vector<RegisterSet> in;
-        std::vector<RegisterSet> out;
+        std::vector<std::unordered_set<lir::Register *>> gen;
+        std::vector<std::unordered_set<lir::Register *>> kill;
+        std::vector<std::unordered_set<lir::Register *>> in;
+        std::vector<std::unordered_set<lir::Register *>> out;
         lir::Program &program;
         GenSetVisitor gsv;
         KillSetVisitor ksv;

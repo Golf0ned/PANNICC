@@ -6,7 +6,9 @@
 namespace backend {
     GenSetVisitor::GenSetVisitor(lir::OperandManager *om) : om(om) {}
 
-    RegisterSet GenSetVisitor::getResult() { return gen; }
+    std::unordered_set<lir::Register *> GenSetVisitor::getResult() {
+        return gen;
+    }
 
     void GenSetVisitor::checkOperand(lir::Operand *o) {
         auto reg = dynamic_cast<lir::Register *>(o);
@@ -99,7 +101,9 @@ namespace backend {
 
     KillSetVisitor::KillSetVisitor(lir::OperandManager *om) : om(om) {}
 
-    RegisterSet KillSetVisitor::getResult() { return kill; }
+    std::unordered_set<lir::Register *> KillSetVisitor::getResult() {
+        return kill;
+    }
 
     void KillSetVisitor::checkOperand(lir::Operand *o) {
         auto reg = dynamic_cast<lir::Register *>(o);
@@ -303,10 +307,10 @@ namespace backend {
             successors.push_back(std::move(sv.getResult()));
         }
 
-        in = std::vector<RegisterSet>(size);
-        out = std::vector<RegisterSet>(size);
+        in = std::vector<std::unordered_set<lir::Register *>>(size);
+        out = std::vector<std::unordered_set<lir::Register *>>(size);
 
-        RegisterSet new_in, new_out;
+        std::unordered_set<lir::Register *> new_in, new_out;
         bool changed = true;
         while (changed) {
             changed = false;
@@ -377,11 +381,49 @@ namespace backend {
         }
     }
 
-    std::vector<RegisterSet> Liveness::getGen() { return gen; }
+    // TODO: sort the result vectors
 
-    std::vector<RegisterSet> Liveness::getKill() { return kill; }
+    std::vector<std::vector<lir::Register *>> Liveness::getGen() {
+        std::vector<std::vector<lir::Register *>> gen_list;
 
-    std::vector<RegisterSet> Liveness::getIn() { return in; }
+        for (auto &gen_set : gen) {
+            gen_list.push_back(
+                std::vector<lir::Register *>(gen_set.begin(), gen_set.end()));
+        }
 
-    std::vector<RegisterSet> Liveness::getOut() { return out; }
+        return gen_list;
+    }
+
+    std::vector<std::vector<lir::Register *>> Liveness::getKill() {
+        std::vector<std::vector<lir::Register *>> kill_list;
+
+        for (auto &kill_set : kill) {
+            kill_list.push_back(
+                std::vector<lir::Register *>(kill_set.begin(), kill_set.end()));
+        }
+
+        return kill_list;
+    }
+
+    std::vector<std::vector<lir::Register *>> Liveness::getIn() {
+        std::vector<std::vector<lir::Register *>> in_list;
+
+        for (auto &in_set : in) {
+            in_list.push_back(
+                std::vector<lir::Register *>(in_set.begin(), in_set.end()));
+        }
+
+        return in_list;
+    }
+
+    std::vector<std::vector<lir::Register *>> Liveness::getOut() {
+        std::vector<std::vector<lir::Register *>> out_list;
+
+        for (auto &out_set : out) {
+            out_list.push_back(
+                std::vector<lir::Register *>(out_set.begin(), out_set.end()));
+        }
+
+        return out_list;
+    }
 } // namespace backend
