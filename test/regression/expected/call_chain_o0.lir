@@ -7,7 +7,7 @@ first:
 
 .first_3:
         movl    $4(%rsp), %4
-        movq    %4, %rax
+        movq    %4, %eax
         ret
 
 second:
@@ -26,7 +26,7 @@ second:
 
 .second_8:
         movl    $8(%rsp), %9
-        movq    %9, %rax
+        movq    %9, %eax
         ret
 
 third:
@@ -45,7 +45,7 @@ third:
 
 .third_8:
         movl    $8(%rsp), %9
-        movq    %9, %rax
+        movq    %9, %eax
         ret
 
 fourth:
@@ -64,7 +64,7 @@ fourth:
 
 .fourth_8:
         movl    $8(%rsp), %9
-        movq    %9, %rax
+        movq    %9, %eax
         ret
 
 fifth:
@@ -83,7 +83,7 @@ fifth:
 
 .fifth_8:
         movl    $8(%rsp), %9
-        movq    %9, %rax
+        movq    %9, %eax
         ret
 
 sixth:
@@ -102,7 +102,7 @@ sixth:
 
 .sixth_8:
         movl    $8(%rsp), %9
-        movq    %9, %rax
+        movq    %9, %eax
         ret
 
 main:
@@ -233,5 +233,5 @@ main:
 
 .main_90:
         movl    $92(%rsp), %91
-        movq    %91, %rax
+        movq    %91, %eax
         ret

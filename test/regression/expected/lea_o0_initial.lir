@@ -21,7 +21,7 @@ leaBI:
 
 .leaBI_16:
         movl    $16(%rsp), %17
-        movq    %17, %rax
+        movq    %17, %eax
         ret
 
 leaIS:
@@ -115,7 +115,7 @@ leaIS:
 
 .leaIS_69:
         movl    $100(%rsp), %70
-        movq    %70, %rax
+        movq    %70, %eax
         ret
 
 leaBIS:
@@ -202,7 +202,7 @@ leaBIS:
 
 .leaBIS_66:
         movl    $80(%rsp), %67
-        movq    %67, %rax
+        movq    %67, %eax
         ret
 
 leaBID:
@@ -317,7 +317,7 @@ leaBID:
 
 .leaBID_94:
         movl    $108(%rsp), %95
-        movq    %95, %rax
+        movq    %95, %eax
         ret
 
 leaIIS:
@@ -391,7 +391,7 @@ leaIIS:
 
 .leaIIS_53:
         movl    $76(%rsp), %54
-        movq    %54, %rax
+        movq    %54, %eax
         ret
 
 leaISD:
@@ -479,7 +479,7 @@ leaISD:
 
 .leaISD_67:
         movl    $84(%rsp), %68
-        movq    %68, %rax
+        movq    %68, %eax
         ret
 
 leaIISD:
@@ -560,7 +560,7 @@ leaIISD:
 
 .leaIISD_60:
         movl    $76(%rsp), %61
-        movq    %61, %rax
+        movq    %61, %eax
         ret
 
 leaBISD:
@@ -1134,5 +1134,5 @@ leaBISD:
 
 .leaBISD_469:
         movl    $500(%rsp), %470
-        movq    %470, %rax
+        movq    %470, %eax
         ret

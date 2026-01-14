@@ -35,7 +35,7 @@ while_basic:
 
 .while_basic_21:
         movl    $24(%rsp), %22
-        movq    %22, %rax
+        movq    %22, %eax
         ret
 
 while_complex:
@@ -89,7 +89,7 @@ while_complex:
 
 .while_complex_32:
         movl    $40(%rsp), %33
-        movq    %33, %rax
+        movq    %33, %eax
         ret
 
 while_empty:
@@ -116,7 +116,7 @@ while_empty:
 
 .while_empty_10:
         movl    $8(%rsp), %11
-        movq    %11, %rax
+        movq    %11, %eax
         ret
 
 while_if:
@@ -157,7 +157,7 @@ while_if:
 
 .while_if_23:
         movl    $24(%rsp), %24
-        movq    %24, %rax
+        movq    %24, %eax
         ret
 
 .while_if_16:

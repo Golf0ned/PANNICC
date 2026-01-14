@@ -44,7 +44,7 @@ scope:
 
 .scope_37:
         movl    $72(%rsp), %38
-        movq    %38, %rax
+        movq    %38, %eax
         ret
 
 scope_reassign_variable:
@@ -90,7 +90,7 @@ scope_reassign_variable:
 
 .scope_reassign_variable_31:
         movl    $44(%rsp), %32
-        movq    %32, %rax
+        movq    %32, %eax
         ret
 
 scope_reassign_in_parallel_scopes:
@@ -112,5 +112,5 @@ scope_reassign_in_parallel_scopes:
 
 .scope_reassign_in_parallel_scopes_13:
         movl    $28(%rsp), %14
-        movq    %14, %rax
+        movq    %14, %eax
         ret

@@ -10,7 +10,7 @@ simplify_cfg_delete_orphaned:
         movl    $2, %5
 
 .simplify_cfg_delete_orphaned_4:
-        movq    %5, %rax
+        movq    %5, %eax
         ret
 
 .simplify_cfg_delete_orphaned_2:
@@ -37,7 +37,7 @@ simplify_cfg_merge_straight_line:
         movl    $3, %9
 
 .simplify_cfg_merge_straight_line_8:
-        movq    %9, %rax
+        movq    %9, %eax
         ret
 
 .simplify_cfg_merge_straight_line_4:
@@ -65,7 +65,7 @@ simplify_cfg_delete_empty:
         jne     .simplify_cfg_delete_empty_4
 
 .simplify_cfg_delete_empty_4:
-        movq    $4, %rax
+        movq    $4, %eax
         ret
 
 .simplify_cfg_delete_empty_2:
@@ -87,5 +87,5 @@ simplify_cfg_empty_loop:
 .simplify_cfg_empty_loop_1:
 
 .simplify_cfg_empty_loop_2:
-        movq    $0, %rax
+        movq    $0, %eax
         ret

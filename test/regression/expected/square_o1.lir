@@ -4,5 +4,5 @@ square:
 .square_entry:
         movl    %0, %1
         imull   %0, %1
-        movq    %1, %rax
+        movq    %1, %eax
         ret

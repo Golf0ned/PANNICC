@@ -3,7 +3,7 @@ fun_call:
 .fun_call_entry:
 
 .fun_call_0:
-        movq    $42, %rax
+        movq    $42, %eax
         ret
 
 mem2reg_basic:
@@ -11,7 +11,7 @@ mem2reg_basic:
 .mem2reg_basic_entry:
 
 .mem2reg_basic_0:
-        movq    $5, %rax
+        movq    $5, %eax
         ret
 
 mem2reg_branching:
@@ -31,7 +31,7 @@ mem2reg_branching:
 .mem2reg_branching_7:
 
 .mem2reg_branching_9:
-        movq    %8, %rax
+        movq    %8, %eax
         ret
 
 .mem2reg_branching_4:
@@ -69,5 +69,5 @@ mem2reg_while:
 .mem2reg_while_9:
 
 .mem2reg_while_10:
-        movq    %2, %rax
+        movq    %2, %eax
         ret

@@ -20,7 +20,7 @@ add:
 
 .add_15:
         movl    $24(%rsp), %16
-        movq    %16, %rax
+        movq    %16, %eax
         ret
 
 sub:
@@ -46,7 +46,7 @@ sub:
 
 .sub_15:
         movl    $24(%rsp), %16
-        movq    %16, %rax
+        movq    %16, %eax
         ret
 
 mul:
@@ -72,7 +72,7 @@ mul:
 
 .mul_15:
         movl    $24(%rsp), %16
-        movq    %16, %rax
+        movq    %16, %eax
         ret
 
 div:
@@ -100,7 +100,7 @@ div:
 
 .div_15:
         movl    $24(%rsp), %16
-        movq    %16, %rax
+        movq    %16, %eax
         ret
 
 lshift:
@@ -126,7 +126,7 @@ lshift:
 
 .lshift_15:
         movl    $24(%rsp), %16
-        movq    %16, %rax
+        movq    %16, %eax
         ret
 
 rshift:
@@ -152,7 +152,7 @@ rshift:
 
 .rshift_15:
         movl    $24(%rsp), %16
-        movq    %16, %rax
+        movq    %16, %eax
         ret
 
 bit_and:
@@ -178,7 +178,7 @@ bit_and:
 
 .bit_and_15:
         movl    $24(%rsp), %16
-        movq    %16, %rax
+        movq    %16, %eax
         ret
 
 bit_or:
@@ -204,7 +204,7 @@ bit_or:
 
 .bit_or_15:
         movl    $24(%rsp), %16
-        movq    %16, %rax
+        movq    %16, %eax
         ret
 
 bit_xor:
@@ -230,7 +230,7 @@ bit_xor:
 
 .bit_xor_15:
         movl    $24(%rsp), %16
-        movq    %16, %rax
+        movq    %16, %eax
         ret
 
 unary_plus:
@@ -248,7 +248,7 @@ unary_plus:
 
 .unary_plus_8:
         movl    $12(%rsp), %9
-        movq    %9, %rax
+        movq    %9, %eax
         ret
 
 unary_minus:
@@ -268,7 +268,7 @@ unary_minus:
 
 .unary_minus_9:
         movl    $12(%rsp), %10
-        movq    %10, %rax
+        movq    %10, %eax
         ret
 
 unary_bitwise_not:
@@ -288,7 +288,7 @@ unary_bitwise_not:
 
 .unary_bitwise_not_9:
         movl    $12(%rsp), %10
-        movq    %10, %rax
+        movq    %10, %eax
         ret
 
 add_equals:
@@ -309,7 +309,7 @@ add_equals:
 
 .add_equals_11:
         movl    $16(%rsp), %12
-        movq    %12, %rax
+        movq    %12, %eax
         ret
 
 sub_equals:
@@ -331,7 +331,7 @@ sub_equals:
 
 .sub_equals_11:
         movl    $16(%rsp), %12
-        movq    %12, %rax
+        movq    %12, %eax
         ret
 
 mul_equals:
@@ -353,7 +353,7 @@ mul_equals:
 
 .mul_equals_11:
         movl    $16(%rsp), %12
-        movq    %12, %rax
+        movq    %12, %eax
         ret
 
 div_equals:
@@ -377,7 +377,7 @@ div_equals:
 
 .div_equals_11:
         movl    $16(%rsp), %12
-        movq    %12, %rax
+        movq    %12, %eax
         ret
 
 lshift_equals:
@@ -399,7 +399,7 @@ lshift_equals:
 
 .lshift_equals_11:
         movl    $16(%rsp), %12
-        movq    %12, %rax
+        movq    %12, %eax
         ret
 
 rshift_equals:
@@ -421,7 +421,7 @@ rshift_equals:
 
 .rshift_equals_11:
         movl    $16(%rsp), %12
-        movq    %12, %rax
+        movq    %12, %eax
         ret
 
 bit_and_equals:
@@ -443,7 +443,7 @@ bit_and_equals:
 
 .bit_and_equals_11:
         movl    $16(%rsp), %12
-        movq    %12, %rax
+        movq    %12, %eax
         ret
 
 bit_or_equals:
@@ -465,7 +465,7 @@ bit_or_equals:
 
 .bit_or_equals_11:
         movl    $16(%rsp), %12
-        movq    %12, %rax
+        movq    %12, %eax
         ret
 
 bit_xor_equals:
@@ -487,5 +487,5 @@ bit_xor_equals:
 
 .bit_xor_equals_11:
         movl    $16(%rsp), %12
-        movq    %12, %rax
+        movq    %12, %eax
         ret

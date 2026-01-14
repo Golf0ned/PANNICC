@@ -46,7 +46,7 @@ lost_copy_problem:
 
 .lost_copy_problem_30:
         movl    $28(%rsp), %31
-        movq    %31, %rax
+        movq    %31, %eax
         ret
 
 swap_problem:
@@ -96,5 +96,5 @@ swap_problem:
 
 .swap_problem_30:
         movl    $32(%rsp), %31
-        movq    %31, %rax
+        movq    %31, %eax
         ret

@@ -1,17 +1,17 @@
 scope:
 
 .scope_entry:
-        movq    $0, %rax
+        movq    $0, %eax
         ret
 
 scope_reassign_variable:
 
 .scope_reassign_variable_entry:
-        movq    $7, %rax
+        movq    $7, %eax
         ret
 
 scope_reassign_in_parallel_scopes:
 
 .scope_reassign_in_parallel_scopes_entry:
-        movq    $1, %rax
+        movq    $1, %eax
         ret
