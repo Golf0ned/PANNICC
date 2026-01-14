@@ -111,17 +111,6 @@ namespace backend {
             kill.insert(reg);
             return;
         }
-
-        auto address = dynamic_cast<lir::Address *>(o);
-        if (address) {
-            auto base = address->getBase();
-            if (base)
-                kill.insert(base);
-
-            auto index = address->getIndex();
-            if (index)
-                kill.insert(index);
-        }
     }
 
     void KillSetVisitor::addRegister(lir::RegisterNum reg) {
@@ -316,7 +305,7 @@ namespace backend {
             changed = false;
             for (int i = 0; i < size; i++) {
                 new_in = gen[i];
-                for (auto *reg : out[i])
+                for (auto reg : out[i])
                     if (!kill[i].contains(reg))
                         new_in.insert(reg);
 
