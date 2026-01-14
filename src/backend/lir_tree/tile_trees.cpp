@@ -124,7 +124,7 @@ namespace backend::lir_tree {
         if (node->getSource())
             worklist.push_back(node);
 
-        return om->getRegister(node->getName());
+        return node->getReg();
     }
 
     StoreTile::StoreTile(lir::OperandManager *om) : Tile(om) {}
