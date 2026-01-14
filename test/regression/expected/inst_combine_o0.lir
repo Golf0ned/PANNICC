@@ -62,7 +62,7 @@ constant_fold:
 
 .constant_fold_50:
         movl    $68(%rsp), %51
-        movq    %51, %rax
+        movq    %51, %eax
         ret
 
 constant_fold_overflow:
@@ -83,7 +83,7 @@ constant_fold_overflow:
 
 .constant_fold_overflow_11:
         movl    $16(%rsp), %12
-        movq    %12, %rax
+        movq    %12, %eax
         ret
 
 constant_fold_underflow:
@@ -105,5 +105,5 @@ constant_fold_underflow:
 
 .constant_fold_underflow_11:
         movl    $16(%rsp), %12
-        movq    %12, %rax
+        movq    %12, %eax
         ret

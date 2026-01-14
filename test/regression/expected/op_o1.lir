@@ -1,125 +1,125 @@
 add:
 
 .add_entry:
-        movq    $3, %rax
+        movq    $3, %eax
         ret
 
 sub:
 
 .sub_entry:
-        movq    $9, %rax
+        movq    $9, %eax
         ret
 
 mul:
 
 .mul_entry:
-        movq    $12, %rax
+        movq    $12, %eax
         ret
 
 div:
 
 .div_entry:
-        movq    $4, %rax
+        movq    $4, %eax
         ret
 
 lshift:
 
 .lshift_entry:
-        movq    $16, %rax
+        movq    $16, %eax
         ret
 
 rshift:
 
 .rshift_entry:
-        movq    $2, %rax
+        movq    $2, %eax
         ret
 
 bit_and:
 
 .bit_and_entry:
-        movq    $4, %rax
+        movq    $4, %eax
         ret
 
 bit_or:
 
 .bit_or_entry:
-        movq    $15, %rax
+        movq    $15, %eax
         ret
 
 bit_xor:
 
 .bit_xor_entry:
-        movq    $11, %rax
+        movq    $11, %eax
         ret
 
 unary_plus:
 
 .unary_plus_entry:
-        movq    $42, %rax
+        movq    $42, %eax
         ret
 
 unary_minus:
 
 .unary_minus_entry:
-        movq    $18446744073709551574, %rax
+        movq    $18446744073709551574, %eax
         ret
 
 unary_bitwise_not:
 
 .unary_bitwise_not_entry:
-        movq    $18446744073709551573, %rax
+        movq    $18446744073709551573, %eax
         ret
 
 add_equals:
 
 .add_equals_entry:
-        movq    $3, %rax
+        movq    $3, %eax
         ret
 
 sub_equals:
 
 .sub_equals_entry:
-        movq    $8, %rax
+        movq    $8, %eax
         ret
 
 mul_equals:
 
 .mul_equals_entry:
-        movq    $12, %rax
+        movq    $12, %eax
         ret
 
 div_equals:
 
 .div_equals_entry:
-        movq    $4, %rax
+        movq    $4, %eax
         ret
 
 lshift_equals:
 
 .lshift_equals_entry:
-        movq    $16, %rax
+        movq    $16, %eax
         ret
 
 rshift_equals:
 
 .rshift_equals_entry:
-        movq    $2, %rax
+        movq    $2, %eax
         ret
 
 bit_and_equals:
 
 .bit_and_equals_entry:
-        movq    $4, %rax
+        movq    $4, %eax
         ret
 
 bit_or_equals:
 
 .bit_or_equals_entry:
-        movq    $15, %rax
+        movq    $15, %eax
         ret
 
 bit_xor_equals:
 
 .bit_xor_equals_entry:
-        movq    $11, %rax
+        movq    $11, %eax
         ret

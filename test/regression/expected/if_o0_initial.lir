@@ -31,7 +31,7 @@ if_basic:
 
 .if_basic_21:
         movl    $24(%rsp), %22
-        movq    %22, %rax
+        movq    %22, %eax
         ret
 
 .if_basic_17:
@@ -70,7 +70,7 @@ if_basic_else:
 
 .if_basic_else_29:
         movl    $32(%rsp), %30
-        movq    %30, %rax
+        movq    %30, %eax
         ret
 
 .if_basic_else_19:
@@ -109,7 +109,7 @@ if_no_braces:
 
 .if_no_braces_18:
         movl    $20(%rsp), %19
-        movq    %19, %rax
+        movq    %19, %eax
         ret
 
 .if_no_braces_13:
@@ -154,7 +154,7 @@ if_chain:
 
 .if_chain_25:
         movl    $32(%rsp), %26
-        movq    %26, %rax
+        movq    %26, %eax
         ret
 
 .if_chain_22:
@@ -215,7 +215,7 @@ if_chain_many:
 
 .if_chain_many_38:
         movl    $48(%rsp), %39
-        movq    %39, %rax
+        movq    %39, %eax
         ret
 
 .if_chain_many_35:
@@ -256,7 +256,7 @@ if_else_if:
 
 .if_else_if_21:
         movl    $20(%rsp), %22
-        movq    %22, %rax
+        movq    %22, %eax
         ret
 
 .if_else_if_10:

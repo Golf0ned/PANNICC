@@ -17,5 +17,5 @@ square:
 
 .square_11:
         movl    $8(%rsp), %12
-        movq    %12, %rax
+        movq    %12, %eax
         ret

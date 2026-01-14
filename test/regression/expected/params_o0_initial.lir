@@ -17,7 +17,7 @@ fun1:
 
 .fun1_11:
         movl    $8(%rsp), %12
-        movq    %12, %rax
+        movq    %12, %eax
         ret
 
 fun2:
@@ -67,7 +67,7 @@ fun2:
 
 .fun2_33:
         movl    $28(%rsp), %34
-        movq    %34, %rax
+        movq    %34, %eax
         ret
 
 fun3:
@@ -118,7 +118,7 @@ fun3:
 
 .fun3_35:
         movl    $32(%rsp), %36
-        movq    %36, %rax
+        movq    %36, %eax
         ret
 
 call1:
@@ -134,7 +134,7 @@ call1:
 
 .call1_6:
         movl    $4(%rsp), %7
-        movq    %7, %rax
+        movq    %7, %eax
         ret
 
 call2:
@@ -158,7 +158,7 @@ call2:
 
 .call2_14:
         movl    $12(%rsp), %15
-        movq    %15, %rax
+        movq    %15, %eax
         ret
 
 call3:
@@ -186,7 +186,7 @@ call3:
 
 .call3_18:
         movl    $20(%rsp), %19
-        movq    %19, %rax
+        movq    %19, %eax
         ret
 
 call4:
@@ -208,7 +208,7 @@ call4:
 
 .call4_10:
         movl    $8(%rsp), %11
-        movq    %11, %rax
+        movq    %11, %eax
         ret
 
 super_fun:
@@ -279,5 +279,5 @@ super_fun:
 
 .super_fun_55:
         movl    $32(%rsp), %56
-        movq    %56, %rax
+        movq    %56, %eax
         ret

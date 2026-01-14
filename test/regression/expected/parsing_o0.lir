@@ -5,7 +5,7 @@ main:
 
 .main_1:
         movl    (%rsp), %2
-        movq    %2, %rax
+        movq    %2, %eax
         ret
 
 compound:
@@ -95,7 +95,7 @@ compound:
 
 .compound_63:
         movl    $72(%rsp), %64
-        movq    %64, %rax
+        movq    %64, %eax
         ret
 
 parens:
@@ -125,5 +125,5 @@ parens:
 
 .parens_15:
         movl    $16(%rsp), %16
-        movq    %16, %rax
+        movq    %16, %eax
         ret

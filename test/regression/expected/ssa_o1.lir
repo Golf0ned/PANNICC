@@ -23,7 +23,7 @@ lost_copy_problem:
 .lost_copy_problem_8:
         movl    %2, %9
         addl    $3, %9
-        movq    %9, %rax
+        movq    %9, %eax
         ret
 
 swap_problem:
@@ -50,5 +50,5 @@ swap_problem:
 
 .swap_problem_8:
         leal    (%4,%3), %9
-        movq    %9, %rax
+        movq    %9, %eax
         ret

@@ -1,7 +1,7 @@
 first:
 
 .first_entry:
-        movq    $1, %rax
+        movq    $1, %eax
         ret
 
 second:
@@ -11,7 +11,7 @@ second:
         movl    %eax, %0
         movl    %0, %1
         addl    $1, %1
-        movq    %1, %rax
+        movq    %1, %eax
         ret
 
 third:
@@ -21,7 +21,7 @@ third:
         movl    %eax, %0
         movl    %0, %1
         addl    $2, %1
-        movq    %1, %rax
+        movq    %1, %eax
         ret
 
 fourth:
@@ -31,7 +31,7 @@ fourth:
         movl    %eax, %0
         movl    %0, %1
         addl    $3, %1
-        movq    %1, %rax
+        movq    %1, %eax
         ret
 
 fifth:
@@ -41,7 +41,7 @@ fifth:
         movl    %eax, %0
         movl    %0, %1
         addl    $4, %1
-        movq    %1, %rax
+        movq    %1, %eax
         ret
 
 sixth:
@@ -51,7 +51,7 @@ sixth:
         movl    %eax, %0
         movl    %0, %1
         addl    $5, %1
-        movq    %1, %rax
+        movq    %1, %eax
         ret
 
 main:
@@ -96,5 +96,5 @@ main:
         call    sixth()
         movl    %eax, %23
         leal    (%22,%23), %24
-        movq    %24, %rax
+        movq    %24, %eax
         ret

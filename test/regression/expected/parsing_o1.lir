@@ -1,17 +1,17 @@
 main:
 
 .main_entry:
-        movq    $0, %rax
+        movq    $0, %eax
         ret
 
 compound:
 
 .compound_entry:
-        movq    $23, %rax
+        movq    $23, %eax
         ret
 
 parens:
 
 .parens_entry:
-        movq    $8, %rax
+        movq    $8, %eax
         ret
