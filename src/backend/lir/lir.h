@@ -6,16 +6,32 @@
 #include "backend/lir/instruction.h"
 
 namespace backend::lir {
+    class Function {
+    public:
+        Function(std::list<std::unique_ptr<Instruction>> instructions,
+                 uint64_t num_params, uint64_t stack_bytes);
+        uint64_t getNumParams();
+        uint64_t getStackBytes();
+        std::list<std::unique_ptr<Instruction>> &getInstructions();
+        std::string toString();
+
+    private:
+        std::string name;
+        uint64_t num_params;
+        uint64_t stack_bytes;
+        std::list<std::unique_ptr<Instruction>> instructions;
+    };
+
     class Program {
     public:
-        Program(std::list<std::unique_ptr<Instruction>> instructions,
+        Program(std::list<std::unique_ptr<Function>> functions,
                 std::unique_ptr<OperandManager> om);
-        std::list<std::unique_ptr<Instruction>> &getInstructions();
+        std::list<std::unique_ptr<Function>> &getFunctions();
         OperandManager *getOm();
         std::string toString();
 
     private:
-        std::list<std::unique_ptr<Instruction>> instructions;
+        std::list<std::unique_ptr<Function>> functions;
         std::unique_ptr<OperandManager> om;
     };
 
