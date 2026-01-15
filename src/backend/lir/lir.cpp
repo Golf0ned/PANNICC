@@ -1,21 +1,46 @@
 #include "backend/lir/lir.h"
 
 namespace backend::lir {
-    Program::Program(std::list<std::unique_ptr<Instruction>> instructions,
-                     std::unique_ptr<OperandManager> om)
-        : instructions(std::move(instructions)), om(std::move(om)) {}
+    Function::Function(std::list<std::unique_ptr<Instruction>> instructions,
+                       uint64_t num_params, uint64_t stack_bytes)
+        : instructions(std::move(instructions)), num_params(num_params),
+          stack_bytes(stack_bytes) {}
 
-    std::list<std::unique_ptr<Instruction>> &Program::getInstructions() {
+    uint64_t Function::getNumParams() { return num_params; }
+
+    uint64_t Function::getStackBytes() { return stack_bytes; }
+
+    std::list<std::unique_ptr<Instruction>> &Function::getInstructions() {
         return instructions;
+    }
+
+    std::string Function::toString() {
+        // TODO: braces? some sort of grouping?
+
+        std::string header = name + "(" + std::to_string(num_params) + ", " +
+                             std::to_string(stack_bytes) + ")";
+
+        ToStringVisitor tsv;
+        for (auto &i : instructions)
+            i->accept(&tsv);
+        return header + "\n\n" + tsv.getResult();
+    }
+
+    Program::Program(std::list<std::unique_ptr<Function>> functions,
+                     std::unique_ptr<OperandManager> om)
+        : functions(std::move(functions)), om(std::move(om)) {}
+
+    std::list<std::unique_ptr<Function>> &Program::getFunctions() {
+        return functions;
     }
 
     OperandManager *Program::getOm() { return om.get(); }
 
     std::string Program::toString() {
-        ToStringVisitor tsv;
-        for (auto &i : instructions)
-            i->accept(&tsv);
-        return tsv.getResult();
+        std::string res = "";
+        for (auto &f : functions)
+            res += f->toString();
+        return res;
     }
 
     std::string ToStringVisitor::getResult() { return result; }
