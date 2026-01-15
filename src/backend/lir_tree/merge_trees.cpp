@@ -14,6 +14,8 @@ namespace backend::lir_tree {
         std::unordered_map<lir::Register *, std::list<Node *>> uses;
         std::list<std::unique_ptr<Node>> context;
 
+        program_trees.clear();
+
         auto try_merge_context = [&]() {
             bool changed = true;
             while (changed) {

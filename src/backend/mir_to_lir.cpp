@@ -41,18 +41,28 @@ namespace backend {
         // Merge trees
         lir_tree::TreeMerger merger;
         auto program_trees = tgv.getResult();
-        for (auto &fn_trees : program_trees)
+        std::list<std::list<std::unique_ptr<lir_tree::Node>>> merged_trees = {};
+        for (auto &fn_trees : program_trees) {
             merger.mergeTrees(fn_trees, om.get());
+            merged_trees.push_back(merger.getResult());
+        }
 
         // Tile trees
         lir_tree::TreeTiler tiler(om.get());
-        auto merged_trees = merger.getResult();
-        for (auto &tree : merged_trees)
-            tiler.tile(tree.get());
+        std::list<std::unique_ptr<lir::Function>> functions;
+        for (auto &fn_trees : merged_trees) {
+            tiler.reset();
+            for (auto &tree : fn_trees)
+                tiler.tile(tree.get());
+
+            // TODO: preserve num params + stack bytes
+            auto instructions = std::move(tiler.getResult());
+            auto function =
+                std::make_unique<lir::Function>(std::move(instructions), 0, 0);
+        }
 
         // Final cleanup
-        auto instructions = tiler.getResult();
-        lir::Program lir(std::move(instructions), std::move(om));
+        lir::Program lir(std::move(functions), std::move(om));
         return std::move(lir);
     }
 } // namespace backend
