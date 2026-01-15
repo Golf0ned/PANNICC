@@ -851,6 +851,8 @@ namespace backend::lir_tree {
         return std::move(assembly);
     }
 
+    void TreeTiler::reset() { assembly.clear(); }
+
     void TreeTiler::tile(Node *tree) {
         auto asm_node = dynamic_cast<AsmNode *>(tree);
         if (asm_node) {

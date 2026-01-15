@@ -182,6 +182,7 @@ namespace backend::lir_tree {
     public:
         TreeTiler(lir::OperandManager *om);
 
+        void reset();
         std::list<std::unique_ptr<lir::Instruction>> getResult();
 
         void tile(Node *tree);
