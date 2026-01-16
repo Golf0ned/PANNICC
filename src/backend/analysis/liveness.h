@@ -10,7 +10,7 @@ namespace backend {
     using Liveness = std::array<std::vector<std::vector<RegisterSet>>, 4>;
 
     Liveness computeLiveness(lir::Program &p);
-    void printLiveness(Liveness &l);
+    void printLiveness(lir::Program &p, Liveness &l);
 
     class GenSetVisitor : public lir::InstructionVisitor {
     public:
