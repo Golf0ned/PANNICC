@@ -1,10 +1,17 @@
 #pragma once
 
+#include <array>
 #include <unordered_set>
 
 #include "backend/lir/lir.h"
 
 namespace backend {
+    using RegisterSet = std::unordered_set<lir::Register *>;
+    using Liveness = std::array<std::vector<std::vector<RegisterSet>>, 4>;
+
+    Liveness computeLiveness(lir::Program &p);
+    void printLiveness(Liveness &l);
+
     class GenSetVisitor : public lir::InstructionVisitor {
     public:
         GenSetVisitor(lir::OperandManager *om);
@@ -69,8 +76,7 @@ namespace backend {
 
     class SuccessorVisitor : public lir::InstructionVisitor {
     public:
-        SuccessorVisitor(
-            std::list<std::unique_ptr<lir::Instruction>> &instructions);
+        SuccessorVisitor(lir::Program &p);
 
         std::vector<int> getResult();
 
@@ -96,26 +102,5 @@ namespace backend {
         std::unordered_map<lir::Instruction *, int> next_index;
         std::unordered_map<std::string, int> label_index;
         std::vector<int> successors;
-    };
-
-    class Liveness {
-    public:
-        Liveness(lir::Program &p);
-        void computeLiveRanges();
-        void printLiveness();
-        std::vector<std::vector<lir::Register *>> getGen();
-        std::vector<std::vector<lir::Register *>> getKill();
-        std::vector<std::vector<lir::Register *>> getIn();
-        std::vector<std::vector<lir::Register *>> getOut();
-
-    private:
-        std::vector<std::unordered_set<lir::Register *>> gen;
-        std::vector<std::unordered_set<lir::Register *>> kill;
-        std::vector<std::unordered_set<lir::Register *>> in;
-        std::vector<std::unordered_set<lir::Register *>> out;
-        lir::Program &program;
-        GenSetVisitor gsv;
-        KillSetVisitor ksv;
-        SuccessorVisitor sv;
     };
 } // namespace backend
