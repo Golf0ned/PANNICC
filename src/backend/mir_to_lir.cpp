@@ -59,6 +59,7 @@ namespace backend {
             auto instructions = std::move(tiler.getResult());
             auto function =
                 std::make_unique<lir::Function>(std::move(instructions), 0, 0);
+            functions.push_back(std::move(function));
         }
 
         // Final cleanup
