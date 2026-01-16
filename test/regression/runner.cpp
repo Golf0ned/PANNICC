@@ -152,8 +152,7 @@ TEST_P(RegressionTest, LIR) {
     auto mir = frontend::hirToMir(hir);
     auto lir = backend::mirToLir(mir);
     compareIfFileExists(lir.toString(), lir_path);
-    backend::Liveness liveness(lir);
-    liveness.computeLiveRanges();
+    auto liveness = backend::computeLiveness(lir);
 }
 
 TEST_P(RegressionTest, LIRWithO1) {
@@ -163,8 +162,7 @@ TEST_P(RegressionTest, LIRWithO1) {
     auto mir = frontend::hirToMir(hir);
     pm->runPasses(mir);
     auto lir = backend::mirToLir(mir);
-    backend::Liveness liveness(lir);
-    liveness.computeLiveRanges();
+    auto liveness = backend::computeLiveness(lir);
     compareIfFileExists(lir.toString(), lir_o1_path);
 }
 
@@ -178,8 +176,7 @@ TEST_P(RegressionTest, LIRWithSelectPasses) {
     auto mir = frontend::hirToMir(hir);
     pm->runPasses(mir);
     auto lir = backend::mirToLir(mir);
-    backend::Liveness liveness(lir);
-    liveness.computeLiveRanges();
+    auto liveness = backend::computeLiveness(lir);
     compareIfFileExists(lir.toString(), lir_select_path);
 }
 
