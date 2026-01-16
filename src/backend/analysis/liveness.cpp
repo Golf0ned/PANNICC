@@ -193,8 +193,8 @@ namespace backend {
     void KillSetVisitor::visit(lir::InstructionUnknown *i) {}
 
     SuccessorVisitor::SuccessorVisitor(lir::Program &p) {
-        auto idx = 0;
         for (auto &f : p.getFunctions()) {
+            auto idx = 0;
             auto &instructions = f->getInstructions();
             for (auto &i : instructions) {
                 auto label = dynamic_cast<lir::Label *>(i.get());
@@ -283,7 +283,7 @@ namespace backend {
         successors.push_back(next_index[i]);
     }
 
-    Liveness computeLiveRanges(lir::Program &p) {
+    Liveness computeLiveness(lir::Program &p) {
         std::vector<std::vector<RegisterSet>> gen, kill, in, out;
 
         GenSetVisitor gsv(p.getOm());
@@ -343,46 +343,38 @@ namespace backend {
         return {gen, kill, in, out};
     }
 
-    void printLiveness(Liveness &l) {
-        // for (auto &i : program.getInstructions()) {
-        //     lir::ToStringVisitor tsv;
-        //     i->accept(&tsv);
-        //     std::cout << line << ": " << tsv.getResult() << std::endl;
-        //
-        //     i->accept(&gsv);
-        //     i->accept(&ksv);
-        //     i->accept(&sv);
-        //
-        //     auto gen = gsv.getResult();
-        //     auto kill = ksv.getResult();
-        //     auto successors = sv.getResult();
-        //
-        //     std::cout << "- gen:        ";
-        //     for (auto *reg : gen)
-        //         std::cout << reg->toString() << ", ";
-        //     std::cout << std::endl;
-        //
-        //     std::cout << "- kill:       ";
-        //     for (auto *reg : kill)
-        //         std::cout << reg->toString() << ", ";
-        //     std::cout << std::endl;
-        //
-        //     std::cout << "- successors: ";
-        //     for (auto i : successors)
-        //         std::cout << i << ", ";
-        //     std::cout << std::endl;
-        //
-        //     std::cout << "- in:         ";
-        //     for (auto *reg : in[line])
-        //         std::cout << reg->toString() << ", ";
-        //     std::cout << std::endl;
-        //
-        //     std::cout << "- out:        ";
-        //     for (auto *reg : out[line])
-        //         std::cout << reg->toString() << ", ";
-        //     std::cout << std::endl;
-        //
-        //     line++;
-        // }
+    void printLiveness(lir::Program &p, Liveness &l) {
+        std::array<std::string, 4> sets = {"gen", "kill", "in", "out"};
+
+        size_t f_index = 0;
+        for (auto &f : p.getFunctions()) {
+            std::cout << f->getName() << " {\n";
+
+            size_t i_index = 0;
+            for (auto &i : f->getInstructions()) {
+                lir::ToStringVisitor tsv;
+                i->accept(&tsv);
+                std::cout << "    " << i_index << ": " << tsv.getResult()
+                          << '\n';
+
+                for (size_t set_index = 0; set_index < 4; set_index++) {
+                    std::cout << "    - " << sets[set_index] << ": {";
+                    auto regs = l[set_index][f_index][i_index];
+                    for (auto reg = regs.begin(); reg != regs.end(); reg++) {
+                        if (reg != regs.begin())
+                            std::cout << ", ";
+                        std::cout << (*reg)->toString();
+                    }
+                    std::cout << "}\n";
+                }
+
+                i_index++;
+            }
+
+            std::cout << "}\n";
+            f_index++;
+        }
+
+        std::cout << std::endl;
     }
 } // namespace backend
