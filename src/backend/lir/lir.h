@@ -10,6 +10,7 @@ namespace backend::lir {
     public:
         Function(std::list<std::unique_ptr<Instruction>> instructions,
                  uint64_t num_params, uint64_t stack_bytes);
+        std::string getName();
         uint64_t getNumParams();
         uint64_t getStackBytes();
         std::list<std::unique_ptr<Instruction>> &getInstructions();

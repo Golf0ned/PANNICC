@@ -6,6 +6,8 @@ namespace backend::lir {
         : instructions(std::move(instructions)), num_params(num_params),
           stack_bytes(stack_bytes) {}
 
+    std::string Function::getName() { return name; };
+
     uint64_t Function::getNumParams() { return num_params; }
 
     uint64_t Function::getStackBytes() { return stack_bytes; }
