@@ -91,28 +91,28 @@ namespace backend {
 
         addPhysicalRegisters();
 
-        auto out = liveness.getOut();
-        auto gen = liveness.getGen();
+        auto gen = liveness[0], out = liveness[3];
+        for (size_t f = 0; f < out.size(); f++) {
+            for (size_t i = 0; i < out[f].size(); i++) {
+                auto &gen_i = gen[f][i], &out_i = out[f][i];
 
-        for (size_t i = 0; i < out.size(); i++) {
-            auto &gen_i = gen[i], &out_i = out[i];
+                for (auto gen_reg : gen_i)
+                    addRegister(gen_reg);
+                for (auto out_reg : out_i)
+                    addRegister(out_reg);
 
-            for (auto gen_reg : gen_i)
-                addRegister(gen_reg);
-            for (auto out_reg : out_i)
-                addRegister(out_reg);
+                for (auto gen_reg : gen_i) {
+                    for (auto prev_gen_reg : gen_i) {
+                        if (sameReg(prev_gen_reg, gen_reg))
+                            continue;
+                        addAllEdges(prev_gen_reg, gen_reg);
+                    }
 
-            for (auto gen_reg : gen_i) {
-                for (auto prev_gen_reg : gen_i) {
-                    if (sameReg(prev_gen_reg, gen_reg))
-                        continue;
-                    addAllEdges(prev_gen_reg, gen_reg);
-                }
-
-                for (auto out_reg : out_i) {
-                    if (sameReg(out_reg, gen_reg))
-                        continue;
-                    addAllEdges(out_reg, gen_reg);
+                    for (auto out_reg : out_i) {
+                        if (sameReg(out_reg, gen_reg))
+                            continue;
+                        addAllEdges(out_reg, gen_reg);
+                    }
                 }
             }
         }
