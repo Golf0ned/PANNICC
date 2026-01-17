@@ -142,6 +142,9 @@ int main(int argc, char *argv[]) {
 
     backend::Liveness lir_liveness = backend::computeLiveness(lir);
     backend::printLiveness(lir, lir_liveness);
+    backend::Interference lir_interference =
+        backend::computeInterference(lir, lir_liveness);
+    backend::printInterference(lir_interference);
 
     if (output_level == OutputLevel::LIR) {
         OUTPUT(lir.toString());

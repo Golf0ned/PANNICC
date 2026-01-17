@@ -3,23 +3,23 @@
 #include "backend/analysis/liveness.h"
 
 namespace backend {
-    class Interference {
-    public:
-        Interference(lir::Program &p);
+    using Interference = std::unordered_map<lir::Register *, RegisterSet>;
 
-        void addRegister(lir::Register *reg);
-        void addEdge(lir::Register *first, lir::Register *second);
+    Interference computeInterference(lir::Program &p, Liveness &l);
+    void printInterference(Interference &i);
+
+    class InterferenceBuilder {
+    public:
+        InterferenceBuilder(lir::OperandManager *om);
+
+        Interference getInterference();
+
         bool sameReg(lir::Register *first, lir::Register *second);
         std::vector<lir::Register *> getSizedRegisters(lir::Register *reg);
-        void addAllEdges(lir::Register *first, lir::Register *second);
-        void addPhysicalRegisters();
-
-        void computeInterference(Liveness &liveness);
-        void printInterference();
+        void interfere(lir::Register *first, lir::Register *second);
 
     private:
         lir::OperandManager *om;
-        std::unordered_map<lir::Register *, size_t> reg_to_index;
-        std::vector<std::vector<bool>> adj_matrix;
+        Interference interference;
     };
 } // namespace backend
