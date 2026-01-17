@@ -20,12 +20,13 @@ namespace backend::lir {
         // TODO: braces? some sort of grouping?
 
         std::string header = name + "(" + std::to_string(num_params) + ", " +
-                             std::to_string(stack_bytes) + ")";
+                             std::to_string(stack_bytes) + ")\n";
 
         ToStringVisitor tsv;
         for (auto &i : instructions)
             i->accept(&tsv);
-        return header + "\n\n" + tsv.getResult();
+
+        return header + tsv.getResult();
     }
 
     Program::Program(std::list<std::unique_ptr<Function>> functions,
@@ -40,8 +41,11 @@ namespace backend::lir {
 
     std::string Program::toString() {
         std::string res = "";
-        for (auto &f : functions)
-            res += f->toString();
+        for (auto iter = functions.begin(); iter != functions.end(); iter++) {
+            if (iter != functions.begin())
+                res += "\n\n";
+            res += (*iter)->toString();
+        }
         return res;
     }
 
