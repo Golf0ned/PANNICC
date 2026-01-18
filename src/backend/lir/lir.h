@@ -8,8 +8,8 @@
 namespace backend::lir {
     class Function {
     public:
-        Function(std::list<std::unique_ptr<Instruction>> instructions,
-                 uint64_t num_params, uint64_t stack_bytes);
+        Function(std::string name, uint64_t num_params, uint64_t stack_bytes,
+                 std::list<std::unique_ptr<Instruction>> instructions);
         std::string getName();
         uint64_t getNumParams();
         uint64_t getStackBytes();
