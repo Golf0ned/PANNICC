@@ -6,11 +6,22 @@
 #include "middleend/mir/mir.h"
 
 namespace backend::lir_tree {
+    class FunctionInfo {
+    public:
+        FunctionInfo();
+
+        // TODO: end this misery
+        std::string name;
+        uint64_t num_params;
+        uint64_t stack_bytes;
+    };
+
     class TreeGenVisitor : public middleend::mir::InstructionVisitor {
     public:
         TreeGenVisitor(middleend::mir::Program &p, lir::OperandManager *om);
 
         std::list<Forest> getResult();
+        std::vector<FunctionInfo> getProgramInfo();
 
         void startFunction(middleend::mir::Function *f);
         void endFunction();
@@ -36,12 +47,12 @@ namespace backend::lir_tree {
     private:
         middleend::NumberIR nir;
         lir::OperandManager *om;
-        uint64_t num_args;
-        std::string function_name;
+
         middleend::mir::BasicBlock *next_block;
-        uint64_t stack_space;
         std::unordered_map<std::string, uint64_t> stack_variables;
+        FunctionInfo function_info;
         Forest function_trees;
         std::list<Forest> program_trees;
+        std::vector<FunctionInfo> program_info;
     };
 } // namespace backend::lir_tree

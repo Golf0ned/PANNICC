@@ -5,9 +5,11 @@
 #include "backend/lir_tree/gen_trees.h"
 
 namespace backend::lir_tree {
+    FunctionInfo::FunctionInfo() : num_params(0), stack_bytes(0) {}
+
     TreeGenVisitor::TreeGenVisitor(middleend::mir::Program &p,
                                    lir::OperandManager *om)
-        : next_block(nullptr), om(om), stack_space(0) {
+        : next_block(nullptr), om(om) {
         nir.run(p);
     }
 
@@ -15,20 +17,21 @@ namespace backend::lir_tree {
         return std::move(program_trees);
     }
 
+    std::vector<FunctionInfo> TreeGenVisitor::getProgramInfo() {
+        return program_info;
+    }
+
     void TreeGenVisitor::startFunction(middleend::mir::Function *f) {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
-        //
-        // Function label
-        //
-        function_name = f->getName();
-        auto label = std::make_unique<lir::Label>(function_name);
-        instructions.push_back(std::move(label));
+        function_info.name = f->getName();
 
         //
         // Mark param registers OR pop registers off stack
         //
         auto &params = f->getParameters();
+        function_info.num_params = params.size();
+
         auto &arg_registers = lir::getArgRegisters();
         for (size_t param_num = 0; param_num < params.size(); param_num++) {
             auto extend = lir::Extend::NONE;
@@ -49,9 +52,12 @@ namespace backend::lir_tree {
     }
 
     void TreeGenVisitor::endFunction() {
+        // TODO: what am i doing
+        program_info.push_back(std::move(function_info));
+        function_info = FunctionInfo();
+
         program_trees.push_back(std::move(function_trees));
         function_trees = Forest();
-        stack_space = 0;
     }
 
     void TreeGenVisitor::startBasicBlock(middleend::mir::BasicBlock *bb,
@@ -70,7 +76,7 @@ namespace backend::lir_tree {
 
     std::string TreeGenVisitor::resolveLabel(middleend::mir::BasicBlock *bb) {
         auto bb_num = nir.getNumber(bb);
-        return "." + function_name + '_' +
+        return "." + function_info.name + '_' +
                (bb_num == -1 ? "entry" : std::to_string(bb_num));
     }
 
@@ -156,8 +162,9 @@ namespace backend::lir_tree {
 
         // TODO: unhardcode size lol
         auto size = om->getImmediate(4);
-        stack_variables.insert({std::to_string(nir.getNumber(i)), stack_space});
-        stack_space += 4;
+        stack_variables.insert(
+            {std::to_string(nir.getNumber(i)), function_info.stack_bytes});
+        function_info.stack_bytes += 4;
 
         // TODO: turn this into some temporary alloca instruction
         auto rsp = om->getRegister(lir::RegisterNum::RSP);
