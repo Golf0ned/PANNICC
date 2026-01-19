@@ -50,17 +50,18 @@ namespace backend {
         // Tile trees
         lir_tree::TreeTiler tiler(om.get());
         std::list<std::unique_ptr<lir::Function>> functions;
-        auto program_info = tgv.getProgramInfo();
-        auto fn_trees = merged_trees.begin();
-        for (auto function_info : program_info) {
+        auto all_function_info = tgv.getInfo();
+        auto function_trees = merged_trees.begin();
+        for (auto &function_info : all_function_info) {
             tiler.reset();
-            for (auto &tree : *fn_trees++)
+            for (auto &tree : *function_trees++)
                 tiler.tile(tree.get());
 
-            auto name = function_info.name;
-            auto num_params = function_info.num_params;
-            auto stack_bytes = function_info.stack_bytes;
+            auto name = function_info->getName();
+            auto num_params = function_info->getNumParams();
+            auto stack_bytes = function_info->getStackBytes();
             auto instructions = std::move(tiler.getResult());
+
             auto function = std::make_unique<lir::Function>(
                 name, num_params, stack_bytes, std::move(instructions));
             functions.push_back(std::move(function));
