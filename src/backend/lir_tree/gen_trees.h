@@ -1,27 +1,19 @@
 #pragma once
 
 #include "backend/lir/operand.h"
+#include "backend/lir_tree/function_info.h"
 #include "backend/lir_tree/node.h"
 #include "middleend/analysis/number_ir.h"
 #include "middleend/mir/mir.h"
 
 namespace backend::lir_tree {
-    class FunctionInfo {
-    public:
-        FunctionInfo();
-
-        // TODO: end this misery
-        std::string name;
-        uint64_t num_params;
-        uint64_t stack_bytes;
-    };
 
     class TreeGenVisitor : public middleend::mir::InstructionVisitor {
     public:
         TreeGenVisitor(middleend::mir::Program &p, lir::OperandManager *om);
 
         std::list<Forest> getResult();
-        std::vector<FunctionInfo> getProgramInfo();
+        std::vector<std::unique_ptr<FunctionInfo>> getInfo();
 
         void startFunction(middleend::mir::Function *f);
         void endFunction();
@@ -47,12 +39,12 @@ namespace backend::lir_tree {
     private:
         middleend::NumberIR nir;
         lir::OperandManager *om;
-
         middleend::mir::BasicBlock *next_block;
         std::unordered_map<std::string, uint64_t> stack_variables;
-        FunctionInfo function_info;
+
+        std::unique_ptr<FunctionInfo> function_info;
         Forest function_trees;
-        std::list<Forest> program_trees;
-        std::vector<FunctionInfo> program_info;
+        std::vector<std::unique_ptr<FunctionInfo>> all_function_info;
+        std::list<Forest> all_function_trees;
     };
 } // namespace backend::lir_tree
