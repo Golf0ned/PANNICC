@@ -18,16 +18,16 @@ namespace backend::lir {
     }
 
     std::string Function::toString() {
-        // TODO: braces? some sort of grouping?
-
-        std::string header = name + "(" + std::to_string(num_params) + ", " +
-                             std::to_string(stack_bytes) + ")\n";
+        std::string label = name + ":";
+        std::string annotation = " # " + std::to_string(num_params) +
+                                 " params, " + std::to_string(stack_bytes) +
+                                 " stack bytes";
 
         ToStringVisitor tsv;
         for (auto &i : instructions)
             i->accept(&tsv);
 
-        return header + tsv.getResult();
+        return label + annotation + tsv.getResult();
     }
 
     Program::Program(std::list<std::unique_ptr<Function>> functions,
@@ -55,15 +55,12 @@ namespace backend::lir {
     void ToStringVisitor::visit(Instruction *i) {}
 
     void ToStringVisitor::visit(Label *l) {
-        if (!result.empty())
-            result += "\n\n";
+        result += "\n";
         result += l->getName() + ':';
     }
 
     void ToStringVisitor::visit(InstructionMov *i) {
-        if (!result.empty())
-            result += "\n        ";
-
+        result += "\n        ";
         result += "mov";
 
         auto extend = i->getExtend();
@@ -81,24 +78,21 @@ namespace backend::lir {
     }
 
     void ToStringVisitor::visit(InstructionPush *i) {
-        if (!result.empty())
-            result += "\n        ";
+        result += "\n        ";
         result += "push";
         result += toChar(i->getSize());
         result += "   " + i->getSrc()->toString();
     }
 
     void ToStringVisitor::visit(InstructionPop *i) {
-        if (!result.empty())
-            result += "\n        ";
+        result += "\n        ";
         result += "pop";
         result += toChar(i->getSize());
         result += "    " + i->getDst()->toString();
     }
 
     void ToStringVisitor::visit(InstructionConvert *i) {
-        if (!result.empty())
-            result += "\n        ";
+        result += "\n        ";
 
         auto from = i->getFrom();
         auto to = i->getTo();
@@ -116,8 +110,7 @@ namespace backend::lir {
     }
 
     void ToStringVisitor::visit(InstructionBinaryOp *i) {
-        if (!result.empty())
-            result += "\n        ";
+        result += "\n        ";
         auto op_str = toString(i->getOp());
         result += op_str + toChar(i->getSize());
         result += std::string(8 - op_str.size() - 1, ' ');
@@ -125,8 +118,7 @@ namespace backend::lir {
     }
 
     void ToStringVisitor::visit(InstructionSpecialOp *i) {
-        if (!result.empty())
-            result += "\n        ";
+        result += "\n        ";
         auto op_str = toString(i->getOp());
         result += op_str + toChar(i->getSize());
         result += std::string(8 - op_str.size() - 1, ' ');
@@ -134,8 +126,7 @@ namespace backend::lir {
     }
 
     void ToStringVisitor::visit(InstructionLea *i) {
-        if (!result.empty())
-            result += "\n        ";
+        result += "\n        ";
         result += "lea";
         result += toChar(i->getSize());
         result +=
@@ -143,8 +134,7 @@ namespace backend::lir {
     }
 
     void ToStringVisitor::visit(InstructionCmp *i) {
-        if (!result.empty())
-            result += "\n        ";
+        result += "\n        ";
         result += "cmp";
         result += toChar(i->getSize());
         result +=
@@ -152,14 +142,12 @@ namespace backend::lir {
     }
 
     void ToStringVisitor::visit(InstructionJmp *i) {
-        if (!result.empty())
-            result += "\n        ";
+        result += "\n        ";
         result += "jmp     " + i->getLabel();
     }
 
     void ToStringVisitor::visit(InstructionCJmp *i) {
-        if (!result.empty())
-            result += "\n        ";
+        result += "\n        ";
         auto cc_str = toString(i->getCmp());
         result += "j" + cc_str;
         result += std::string(8 - cc_str.size() - 1, ' ');
@@ -167,20 +155,17 @@ namespace backend::lir {
     }
 
     void ToStringVisitor::visit(InstructionCall *i) {
-        if (!result.empty())
-            result += "\n        ";
+        result += "\n        ";
         result += "call    " + i->getLabel();
     }
 
     void ToStringVisitor::visit(InstructionRet *i) {
-        if (!result.empty())
-            result += "\n        ";
+        result += "\n        ";
         result += "ret";
     }
 
     void ToStringVisitor::visit(InstructionVirtualCall *i) {
-        if (!result.empty())
-            result += "\n        ";
+        result += "\n        ";
         result += "call    " + i->getLabel() + "(";
 
         auto &args = i->getArgs();
@@ -194,8 +179,7 @@ namespace backend::lir {
     }
 
     void ToStringVisitor::visit(InstructionUnknown *i) {
-        if (!result.empty())
-            result += "\n        ";
+        result += "\n        ";
         result += "unknown";
     }
 } // namespace backend::lir
