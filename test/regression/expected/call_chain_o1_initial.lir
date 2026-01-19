@@ -1,11 +1,9 @@
-first:
-
+first: # 0 params, 0 stack bytes
 .first_entry:
         movq    $1, %eax
         ret
 
-second:
-
+second: # 0 params, 0 stack bytes
 .second_entry:
         call    first()
         movl    %eax, %0
@@ -14,8 +12,7 @@ second:
         movq    %1, %eax
         ret
 
-third:
-
+third: # 0 params, 0 stack bytes
 .third_entry:
         call    second()
         movl    %eax, %0
@@ -24,8 +21,7 @@ third:
         movq    %1, %eax
         ret
 
-fourth:
-
+fourth: # 0 params, 0 stack bytes
 .fourth_entry:
         call    third()
         movl    %eax, %0
@@ -34,8 +30,7 @@ fourth:
         movq    %1, %eax
         ret
 
-fifth:
-
+fifth: # 0 params, 0 stack bytes
 .fifth_entry:
         call    fourth()
         movl    %eax, %0
@@ -44,8 +39,7 @@ fifth:
         movq    %1, %eax
         ret
 
-sixth:
-
+sixth: # 0 params, 0 stack bytes
 .sixth_entry:
         call    fifth()
         movl    %eax, %0
@@ -54,8 +48,7 @@ sixth:
         movq    %1, %eax
         ret
 
-main:
-
+main: # 0 params, 0 stack bytes
 .main_entry:
         call    sixth()
         movl    %eax, %0

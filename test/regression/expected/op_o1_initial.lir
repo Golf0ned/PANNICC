@@ -1,125 +1,104 @@
-add:
-
+add: # 0 params, 0 stack bytes
 .add_entry:
         movq    $3, %eax
         ret
 
-sub:
-
+sub: # 0 params, 0 stack bytes
 .sub_entry:
         movq    $9, %eax
         ret
 
-mul:
-
+mul: # 0 params, 0 stack bytes
 .mul_entry:
         movq    $12, %eax
         ret
 
-div:
-
+div: # 0 params, 0 stack bytes
 .div_entry:
         movq    $4, %eax
         ret
 
-lshift:
-
+lshift: # 0 params, 0 stack bytes
 .lshift_entry:
         movq    $16, %eax
         ret
 
-rshift:
-
+rshift: # 0 params, 0 stack bytes
 .rshift_entry:
         movq    $2, %eax
         ret
 
-bit_and:
-
+bit_and: # 0 params, 0 stack bytes
 .bit_and_entry:
         movq    $4, %eax
         ret
 
-bit_or:
-
+bit_or: # 0 params, 0 stack bytes
 .bit_or_entry:
         movq    $15, %eax
         ret
 
-bit_xor:
-
+bit_xor: # 0 params, 0 stack bytes
 .bit_xor_entry:
         movq    $11, %eax
         ret
 
-unary_plus:
-
+unary_plus: # 0 params, 0 stack bytes
 .unary_plus_entry:
         movq    $42, %eax
         ret
 
-unary_minus:
-
+unary_minus: # 0 params, 0 stack bytes
 .unary_minus_entry:
         movq    $18446744073709551574, %eax
         ret
 
-unary_bitwise_not:
-
+unary_bitwise_not: # 0 params, 0 stack bytes
 .unary_bitwise_not_entry:
         movq    $18446744073709551573, %eax
         ret
 
-add_equals:
-
+add_equals: # 0 params, 0 stack bytes
 .add_equals_entry:
         movq    $3, %eax
         ret
 
-sub_equals:
-
+sub_equals: # 0 params, 0 stack bytes
 .sub_equals_entry:
         movq    $8, %eax
         ret
 
-mul_equals:
-
+mul_equals: # 0 params, 0 stack bytes
 .mul_equals_entry:
         movq    $12, %eax
         ret
 
-div_equals:
-
+div_equals: # 0 params, 0 stack bytes
 .div_equals_entry:
         movq    $4, %eax
         ret
 
-lshift_equals:
-
+lshift_equals: # 0 params, 0 stack bytes
 .lshift_equals_entry:
         movq    $16, %eax
         ret
 
-rshift_equals:
-
+rshift_equals: # 0 params, 0 stack bytes
 .rshift_equals_entry:
         movq    $2, %eax
         ret
 
-bit_and_equals:
-
+bit_and_equals: # 0 params, 0 stack bytes
 .bit_and_equals_entry:
         movq    $4, %eax
         ret
 
-bit_or_equals:
-
+bit_or_equals: # 0 params, 0 stack bytes
 .bit_or_equals_entry:
         movq    $15, %eax
         ret
 
-bit_xor_equals:
-
+bit_xor_equals: # 0 params, 0 stack bytes
 .bit_xor_equals_entry:
         movq    $11, %eax
         ret

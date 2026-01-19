@@ -1,5 +1,4 @@
-constant_fold:
-
+constant_fold: # 0 params, 72 stack bytes
 .constant_fold_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %18
@@ -59,14 +58,12 @@ constant_fold:
         movl    %48, $64(%rsp)
         movl    $64(%rsp), %49
         movl    %49, $68(%rsp)
-
 .constant_fold_50:
         movl    $68(%rsp), %51
         movq    %51, %eax
         ret
 
-constant_fold_overflow:
-
+constant_fold_overflow: # 0 params, 20 stack bytes
 .constant_fold_overflow_entry:
         movl    $2147483647, $4(%rsp)
         movl    $1, $8(%rsp)
@@ -80,14 +77,12 @@ constant_fold_overflow:
         movl    %9, $12(%rsp)
         movl    $12(%rsp), %10
         movl    %10, $16(%rsp)
-
 .constant_fold_overflow_11:
         movl    $16(%rsp), %12
         movq    %12, %eax
         ret
 
-constant_fold_underflow:
-
+constant_fold_underflow: # 0 params, 20 stack bytes
 .constant_fold_underflow_entry:
         movl    $18446744071562067968, $4(%rsp)
         movl    $1, $8(%rsp)
@@ -102,7 +97,6 @@ constant_fold_underflow:
         movl    %9, $12(%rsp)
         movl    $12(%rsp), %10
         movl    %10, $16(%rsp)
-
 .constant_fold_underflow_11:
         movl    $16(%rsp), %12
         movq    %12, %eax
