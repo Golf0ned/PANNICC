@@ -1,17 +1,14 @@
-first:
-
+first: # 0 params, 8 stack bytes
 .first_entry:
         movl    $1, (%rsp)
         movl    (%rsp), %2
         movl    %2, $4(%rsp)
-
 .first_3:
         movl    $4(%rsp), %4
         movq    %4, %eax
         ret
 
-second:
-
+second: # 0 params, 12 stack bytes
 .second_entry:
         call    first()
         movl    %eax, %3
@@ -23,14 +20,12 @@ second:
         movl    %6, (%rsp)
         movl    (%rsp), %7
         movl    %7, $8(%rsp)
-
 .second_8:
         movl    $8(%rsp), %9
         movq    %9, %eax
         ret
 
-third:
-
+third: # 0 params, 12 stack bytes
 .third_entry:
         call    second()
         movl    %eax, %3
@@ -42,14 +37,12 @@ third:
         movl    %6, (%rsp)
         movl    (%rsp), %7
         movl    %7, $8(%rsp)
-
 .third_8:
         movl    $8(%rsp), %9
         movq    %9, %eax
         ret
 
-fourth:
-
+fourth: # 0 params, 12 stack bytes
 .fourth_entry:
         call    third()
         movl    %eax, %3
@@ -61,14 +54,12 @@ fourth:
         movl    %6, (%rsp)
         movl    (%rsp), %7
         movl    %7, $8(%rsp)
-
 .fourth_8:
         movl    $8(%rsp), %9
         movq    %9, %eax
         ret
 
-fifth:
-
+fifth: # 0 params, 12 stack bytes
 .fifth_entry:
         call    fourth()
         movl    %eax, %3
@@ -80,14 +71,12 @@ fifth:
         movl    %6, (%rsp)
         movl    (%rsp), %7
         movl    %7, $8(%rsp)
-
 .fifth_8:
         movl    $8(%rsp), %9
         movq    %9, %eax
         ret
 
-sixth:
-
+sixth: # 0 params, 12 stack bytes
 .sixth_entry:
         call    fifth()
         movl    %eax, %3
@@ -99,14 +88,12 @@ sixth:
         movl    %6, (%rsp)
         movl    (%rsp), %7
         movl    %7, $8(%rsp)
-
 .sixth_8:
         movl    $8(%rsp), %9
         movq    %9, %eax
         ret
 
-main:
-
+main: # 0 params, 96 stack bytes
 .main_entry:
         call    sixth()
         movl    %eax, %24
@@ -230,7 +217,6 @@ main:
         movl    %88, $88(%rsp)
         movl    $88(%rsp), %89
         movl    %89, $92(%rsp)
-
 .main_90:
         movl    $92(%rsp), %91
         movq    %91, %eax

@@ -1,17 +1,14 @@
-fun_call:
-
+fun_call: # 0 params, 8 stack bytes
 .fun_call_entry:
         movl    $42, (%rsp)
         movl    (%rsp), %2
         movl    %2, $4(%rsp)
-
 .fun_call_3:
         movl    $4(%rsp), %4
         movq    %4, %eax
         ret
 
-mem2reg_basic:
-
+mem2reg_basic: # 0 params, 28 stack bytes
 .mem2reg_basic_entry:
         movl    $0, $8(%rsp)
         movl    $8(%rsp), %7
@@ -27,15 +24,13 @@ mem2reg_basic:
         movl    %11, $20(%rsp)
         movl    $20(%rsp), %12
         movl    %12, $24(%rsp)
-
 .mem2reg_basic_13:
         movl    $24(%rsp), %14
         movq    %14, %eax
         ret
 
-mem2reg_branching:
+mem2reg_branching: # 1 params, 36 stack bytes
         movl    %edi, %0
-
 .mem2reg_branching_entry:
         movl    %0, $32(%rsp)
         movl    $32(%rsp), %10
@@ -49,27 +44,21 @@ mem2reg_branching:
         movl    $8(%rsp), %14
         cmpl    %14, $0
         jne     .mem2reg_branching_18
-
 .mem2reg_branching_15:
-
 .mem2reg_branching_16:
         movl    $1, $16(%rsp)
         movl    $16(%rsp), %17
         movl    %17, $4(%rsp)
-
 .mem2reg_branching_25:
         movl    $4(%rsp), %26
         movl    %26, $24(%rsp)
         movl    $24(%rsp), %27
         movl    %27, $28(%rsp)
-
 .mem2reg_branching_28:
         movl    $28(%rsp), %29
         movq    %29, %eax
         ret
-
 .mem2reg_branching_18:
-
 .mem2reg_branching_19:
         movl    $32(%rsp), %20
         movl    %20, $20(%rsp)
@@ -82,8 +71,7 @@ mem2reg_branching:
         movl    %24, $4(%rsp)
         jmp     .mem2reg_branching_25
 
-mem2reg_while:
-
+mem2reg_while: # 0 params, 48 stack bytes
 .mem2reg_while_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %12
@@ -91,7 +79,6 @@ mem2reg_while:
         movl    $0, $12(%rsp)
         movl    $12(%rsp), %13
         movl    %13, $8(%rsp)
-
 .mem2reg_while_14:
         movl    (%rsp), %15
         movl    %15, $16(%rsp)
@@ -104,9 +91,7 @@ mem2reg_while:
         movl    $16(%rsp), %19
         cmpl    %19, $0
         jne     .mem2reg_while_33
-
 .mem2reg_while_20:
-
 .mem2reg_while_21:
         movl    $8(%rsp), %22
         movl    %22, $24(%rsp)
@@ -128,15 +113,12 @@ mem2reg_while:
         movl    $28(%rsp), %32
         movl    %32, (%rsp)
         jmp     .mem2reg_while_14
-
 .mem2reg_while_33:
-
 .mem2reg_while_34:
         movl    $8(%rsp), %35
         movl    %35, $40(%rsp)
         movl    $40(%rsp), %36
         movl    %36, $44(%rsp)
-
 .mem2reg_while_37:
         movl    $44(%rsp), %38
         movq    %38, %eax

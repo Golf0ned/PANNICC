@@ -1,16 +1,14 @@
-fun1:
+fun1: # 1 params, 0 stack bytes
         movl    %edi, %0
-
 .fun1_entry:
         movl    %0, %1
         imull   %0, %1
         movq    %1, %eax
         ret
 
-fun2:
+fun2: # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-
 .fun2_entry:
         call    fun1(%0)
         movl    %eax, %2
@@ -24,12 +22,11 @@ fun2:
         movq    %7, %eax
         ret
 
-fun3:
+fun3: # 4 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
         movl    %edx, %2
         movl    %ecx, %3
-
 .fun3_entry:
         call    fun1(%3)
         movl    %eax, %4
@@ -42,36 +39,32 @@ fun3:
         movq    %8, %eax
         ret
 
-call1:
-
+call1: # 0 params, 0 stack bytes
 .call1_entry:
         call    fun1($5)
         movl    %eax, %0
         movq    %0, %eax
         ret
 
-call2:
+call2: # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-
 .call2_entry:
         call    fun2(%0, %1)
         movl    %eax, %2
         movq    %2, %eax
         ret
 
-call3:
+call3: # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-
 .call3_entry:
         call    fun3(%0, %1, $1, $0)
         movl    %eax, %2
         movq    %2, %eax
         ret
 
-call4:
-
+call4: # 0 params, 0 stack bytes
 .call4_entry:
         call    fun1($10)
         movl    %eax, %0
@@ -80,7 +73,7 @@ call4:
         movq    %1, %eax
         ret
 
-super_fun:
+super_fun: # 8 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
         movl    %edx, %2
@@ -89,7 +82,6 @@ super_fun:
         movl    %r9d, %5
         movl    (stack 0), %6
         movl    (stack 1), %7
-
 .super_fun_entry:
         leal    (%0,%1), %8
         leal    (%8,%2), %9

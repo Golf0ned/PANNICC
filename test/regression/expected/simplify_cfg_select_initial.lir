@@ -1,33 +1,26 @@
-simplify_cfg_delete_orphaned:
-
+simplify_cfg_delete_orphaned: # 0 params, 16 stack bytes
 .simplify_cfg_delete_orphaned_entry:
         movl    $1, (%rsp)
         movl    (%rsp), %4
         cmpl    %4, $0
         jne     .simplify_cfg_delete_orphaned_8
-
 .simplify_cfg_delete_orphaned_5:
-
 .simplify_cfg_delete_orphaned_6:
         movl    $2, $4(%rsp)
         movl    $4(%rsp), %7
         movl    %7, $12(%rsp)
-
 .simplify_cfg_delete_orphaned_11:
         movl    $12(%rsp), %12
         movq    %12, %eax
         ret
-
 .simplify_cfg_delete_orphaned_8:
-
 .simplify_cfg_delete_orphaned_9:
         movl    $3, $8(%rsp)
         movl    $8(%rsp), %10
         movl    %10, $12(%rsp)
         jmp     .simplify_cfg_delete_orphaned_11
 
-simplify_cfg_merge_straight_line:
-
+simplify_cfg_merge_straight_line: # 0 params, 40 stack bytes
 .simplify_cfg_merge_straight_line_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %10
@@ -36,37 +29,28 @@ simplify_cfg_merge_straight_line:
         movl    $8(%rsp), %11
         cmpl    %11, $0
         jne     .simplify_cfg_merge_straight_line_27
-
 .simplify_cfg_merge_straight_line_12:
-
 .simplify_cfg_merge_straight_line_13:
         movl    $2, $12(%rsp)
         movl    $12(%rsp), %14
         cmpl    %14, $0
         jne     .simplify_cfg_merge_straight_line_18
-
 .simplify_cfg_merge_straight_line_15:
-
 .simplify_cfg_merge_straight_line_16:
         movl    $3, $16(%rsp)
         movl    $16(%rsp), %17
         movl    %17, $36(%rsp)
-
 .simplify_cfg_merge_straight_line_30:
         movl    $36(%rsp), %31
         movq    %31, %eax
         ret
-
 .simplify_cfg_merge_straight_line_27:
-
 .simplify_cfg_merge_straight_line_28:
         movl    $5, $28(%rsp)
         movl    $28(%rsp), %29
         movl    %29, $36(%rsp)
         jmp     .simplify_cfg_merge_straight_line_30
-
 .simplify_cfg_merge_straight_line_18:
-
 .simplify_cfg_merge_straight_line_19:
         movl    (%rsp), %20
         movl    %20, $20(%rsp)
@@ -83,22 +67,18 @@ simplify_cfg_merge_straight_line:
         movl    %26, $36(%rsp)
         jmp     .simplify_cfg_merge_straight_line_30
 
-simplify_cfg_delete_empty:
-
+simplify_cfg_delete_empty: # 0 params, 20 stack bytes
 .simplify_cfg_delete_empty_entry:
         movl    $1, (%rsp)
         movl    (%rsp), %5
         cmpl    %5, $0
         jne     .simplify_cfg_delete_empty_9
-
 .simplify_cfg_delete_empty_6:
-
 .simplify_cfg_delete_empty_7:
         movl    $2, $4(%rsp)
         movl    $4(%rsp), %8
         cmpl    %8, $0
         jne     .simplify_cfg_delete_empty_12
-
 .simplify_cfg_delete_empty_12:
         movl    $4, $12(%rsp)
         movl    $12(%rsp), %13
@@ -106,9 +86,7 @@ simplify_cfg_delete_empty:
         movl    $16(%rsp), %14
         movq    %14, %eax
         ret
-
 .simplify_cfg_delete_empty_9:
-
 .simplify_cfg_delete_empty_10:
         movl    $3, $8(%rsp)
         movl    $8(%rsp), %11
@@ -116,21 +94,16 @@ simplify_cfg_delete_empty:
         je      .simplify_cfg_delete_empty_12
         jmp     .simplify_cfg_delete_empty_12
 
-simplify_cfg_empty_loop:
-
+simplify_cfg_empty_loop: # 0 params, 12 stack bytes
 .simplify_cfg_empty_loop_entry:
-
 .simplify_cfg_empty_loop_4:
         movl    $0, (%rsp)
         movl    (%rsp), %5
         cmpl    %5, $0
         jne     .simplify_cfg_empty_loop_6
-
 .simplify_cfg_empty_loop_3:
         jmp     .simplify_cfg_empty_loop_4
-
 .simplify_cfg_empty_loop_6:
-
 .simplify_cfg_empty_loop_7:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %8

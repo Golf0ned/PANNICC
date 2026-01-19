@@ -1,6 +1,5 @@
-square:
+square: # 1 params, 0 stack bytes
         movl    %edi, %0
-
 .square_entry:
         movl    %0, %1
         imull   %0, %1
