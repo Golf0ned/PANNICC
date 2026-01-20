@@ -148,6 +148,19 @@ namespace backend::lir_tree {
         std::string result;
     };
 
+    class TreeInfo {
+    public:
+        void insertTree(Node *tree, std::list<Node *> leaves,
+                        bool has_memory_instruction);
+        std::list<Node *> &getLeaves(Node *tree);
+        bool hasMemInst(Node *tree);
+        void setMemInst(Node *tree);
+
+    private:
+        std::unordered_map<Node *, std::list<Node *>> tree_leaves;
+        std::unordered_set<Node *> trees_with_memory_instruction;
+    };
+
     class TreeManager {
     public:
         void insertAsm(std::unique_ptr<Node> tree);
