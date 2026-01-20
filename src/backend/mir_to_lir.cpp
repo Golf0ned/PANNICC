@@ -7,17 +7,10 @@
 #include "middleend/utils/traversal.h"
 
 namespace backend {
-    lir::Program mirToLir(middleend::mir::Program &mir) {
-        auto om = std::make_unique<lir::OperandManager>();
-
-        // Construct conventional SSA + begin SSA destruction
-        middleend::SplitCritical sc;
-        sc.run(mir);
-        middleend::InsertParallelCopies ipc;
-        ipc.run(mir);
-
-        // Generate trees per instruction
-        lir_tree::TreeGenVisitor tgv(mir, om.get());
+    std::pair<std::list<lir_tree::TreeManager>,
+              std::vector<std::unique_ptr<lir_tree::FunctionInfo>>>
+    generateTrees(middleend::mir::Program &mir, lir::OperandManager *om) {
+        lir_tree::TreeGenVisitor tgv(mir, om);
         for (auto &f : mir.getFunctions()) {
             auto linearized = middleend::traverseTraces(f.get());
 
@@ -38,20 +31,29 @@ namespace backend {
             tgv.endFunction();
         }
 
-        // Merge trees
+        return {tgv.getResult(), tgv.getInfo()};
+    }
+
+    std::list<std::list<std::unique_ptr<lir_tree::Node>>>
+    mergeTrees(std::list<lir_tree::TreeManager> &trees,
+               lir::OperandManager *om) {
         lir_tree::TreeMerger merger;
-        auto program_trees = tgv.getResult();
         std::list<std::list<std::unique_ptr<lir_tree::Node>>> merged_trees = {};
-        for (auto &fn_trees : program_trees) {
-            merger.mergeTrees(fn_trees, om.get());
+        for (auto &fn_trees : trees) {
+            merger.mergeTrees(fn_trees, om);
             merged_trees.push_back(merger.getResult());
         }
 
-        // Tile trees
-        lir_tree::TreeTiler tiler(om.get());
+        return std::move(merged_trees);
+    }
+
+    std::list<std::unique_ptr<lir::Function>> tileTrees(
+        std::list<std::list<std::unique_ptr<lir_tree::Node>>> &trees,
+        std::vector<std::unique_ptr<lir_tree::FunctionInfo>> &all_function_info,
+        lir::OperandManager *om) {
+        lir_tree::TreeTiler tiler(om);
         std::list<std::unique_ptr<lir::Function>> functions;
-        auto all_function_info = tgv.getInfo();
-        auto function_trees = merged_trees.begin();
+        auto function_trees = trees.begin();
         for (auto &function_info : all_function_info) {
             tiler.reset();
             for (auto &tree : *function_trees++)
@@ -66,6 +68,23 @@ namespace backend {
                 name, num_params, stack_bytes, std::move(instructions));
             functions.push_back(std::move(function));
         }
+
+        return std::move(functions);
+    }
+
+    lir::Program mirToLir(middleend::mir::Program &mir) {
+        auto om = std::make_unique<lir::OperandManager>();
+        bool merge = true;
+
+        // Construct conventional SSA + begin SSA destruction
+        middleend::SplitCritical sc;
+        sc.run(mir);
+        middleend::InsertParallelCopies ipc;
+        ipc.run(mir);
+
+        auto [trees, info] = generateTrees(mir, om.get());
+        auto merged = mergeTrees(trees, om.get());
+        auto functions = tileTrees(merged, info, om.get());
 
         // Final cleanup
         lir::Program lir(std::move(functions), std::move(om));

@@ -11,7 +11,7 @@ namespace backend::lir_tree {
         nir.run(p);
     }
 
-    std::list<Forest> TreeGenVisitor::getResult() {
+    std::list<TreeManager> TreeGenVisitor::getResult() {
         return std::move(all_function_trees);
     }
 
@@ -22,7 +22,7 @@ namespace backend::lir_tree {
     void TreeGenVisitor::startFunction(middleend::mir::Function *f) {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
-        function_trees = Forest();
+        function_trees = TreeManager();
 
         //
         // Mark param registers OR pop registers off stack

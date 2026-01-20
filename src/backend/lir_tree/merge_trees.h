@@ -7,7 +7,7 @@ namespace backend::lir_tree {
     public:
         std::list<std::unique_ptr<Node>> getResult();
 
-        void mergeTrees(Forest &trees, lir::OperandManager *om);
+        void mergeTrees(TreeManager &trees, lir::OperandManager *om);
 
     private:
         std::list<std::unique_ptr<Node>> function_trees;
