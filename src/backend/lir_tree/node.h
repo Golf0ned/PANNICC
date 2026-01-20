@@ -148,7 +148,7 @@ namespace backend::lir_tree {
         std::string result;
     };
 
-    class Forest {
+    class TreeManager {
     public:
         void insertAsm(std::unique_ptr<Node> tree);
         void insertTree(std::unique_ptr<Node> tree, std::list<Node *> leaves,

@@ -10,7 +10,7 @@ namespace backend::lir_tree {
         return std::move(program_trees);
     }
 
-    void TreeMerger::mergeTrees(Forest &trees, lir::OperandManager *om) {
+    void TreeMerger::mergeTrees(TreeManager &trees, lir::OperandManager *om) {
         std::unordered_map<lir::Register *, std::list<Node *>> uses;
         std::list<std::unique_ptr<Node>> context;
 

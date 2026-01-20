@@ -12,7 +12,7 @@ namespace backend::lir_tree {
     public:
         TreeGenVisitor(middleend::mir::Program &p, lir::OperandManager *om);
 
-        std::list<Forest> getResult();
+        std::list<TreeManager> getResult();
         std::vector<std::unique_ptr<FunctionInfo>> getInfo();
 
         void startFunction(middleend::mir::Function *f);
@@ -43,8 +43,8 @@ namespace backend::lir_tree {
         std::unordered_map<std::string, uint64_t> stack_variables;
 
         std::unique_ptr<FunctionInfo> function_info;
-        Forest function_trees;
+        TreeManager function_trees;
         std::vector<std::unique_ptr<FunctionInfo>> all_function_info;
-        std::list<Forest> all_function_trees;
+        std::list<TreeManager> all_function_trees;
     };
 } // namespace backend::lir_tree

@@ -159,40 +159,40 @@ namespace backend::lir_tree {
 
     void ToStringVisitor::visit(AsmNode *n) { result = "AsmNode"; }
 
-    void Forest::insertAsm(std::unique_ptr<Node> tree) {
+    void TreeManager::insertAsm(std::unique_ptr<Node> tree) {
         trees.push_back(std::move(tree));
     }
 
-    void Forest::insertTree(std::unique_ptr<Node> tree,
-                            std::list<Node *> leaves,
-                            bool has_memory_instruction) {
+    void TreeManager::insertTree(std::unique_ptr<Node> tree,
+                                 std::list<Node *> leaves,
+                                 bool has_memory_instruction) {
         tree_leaves[tree.get()] = std::move(leaves);
         if (has_memory_instruction)
             trees_with_memory_instruction.insert(tree.get());
         trees.push_back(std::move(tree));
     }
 
-    std::unique_ptr<Node> Forest::pop() {
+    std::unique_ptr<Node> TreeManager::pop() {
         auto res = std::move(trees.back());
         trees.pop_back();
         return std::move(res);
     }
 
-    std::list<Node *> &Forest::getLeaves(Node *tree) {
+    std::list<Node *> &TreeManager::getLeaves(Node *tree) {
         return tree_leaves[tree];
     }
 
-    bool Forest::hasMemInst(Node *tree) {
+    bool TreeManager::hasMemInst(Node *tree) {
         return trees_with_memory_instruction.contains(tree);
     }
 
-    void Forest::setMemInst(Node *tree) {
+    void TreeManager::setMemInst(Node *tree) {
         trees_with_memory_instruction.insert(tree);
     }
 
-    bool Forest::empty() { return trees.empty(); }
+    bool TreeManager::empty() { return trees.empty(); }
 
-    std::string Forest::toString(lir::OperandManager *om) {
+    std::string TreeManager::toString(lir::OperandManager *om) {
         ToStringVisitor tsv(om);
         std::string res;
         for (auto &tree : trees) {
