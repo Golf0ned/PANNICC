@@ -159,6 +159,25 @@ namespace backend::lir_tree {
 
     void ToStringVisitor::visit(AsmNode *n) { result = "AsmNode"; }
 
+    void TreeInfo::insertTree(Node *tree, std::list<Node *> leaves,
+                              bool has_memory_instruction) {
+        tree_leaves[tree] = std::move(leaves);
+        if (has_memory_instruction)
+            trees_with_memory_instruction.insert(tree);
+    }
+
+    std::list<Node *> &TreeInfo::getLeaves(Node *tree) {
+        return tree_leaves[tree];
+    }
+
+    bool TreeInfo::hasMemInst(Node *tree) {
+        return trees_with_memory_instruction.contains(tree);
+    }
+
+    void TreeInfo::setMemInst(Node *tree) {
+        trees_with_memory_instruction.insert(tree);
+    }
+
     void TreeManager::insertAsm(std::unique_ptr<Node> tree) {
         trees.push_back(std::move(tree));
     }
