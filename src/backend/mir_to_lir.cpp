@@ -7,10 +7,13 @@
 #include "middleend/utils/traversal.h"
 
 namespace backend {
-    std::pair<std::list<lir_tree::TreeManager>,
-              std::vector<std::unique_ptr<lir_tree::FunctionInfo>>>
+    using FunctionTrees = std::list<std::unique_ptr<lir_tree::Node>>;
+
+    std::tuple<std::list<FunctionTrees>, std::unique_ptr<lir_tree::TreeInfo>,
+               std::vector<std::unique_ptr<lir_tree::FunctionInfo>>>
     generateTrees(middleend::mir::Program &mir, lir::OperandManager *om) {
         lir_tree::TreeGenVisitor tgv(mir, om);
+
         for (auto &f : mir.getFunctions()) {
             auto linearized = middleend::traverseTraces(f.get());
 
@@ -34,9 +37,8 @@ namespace backend {
         return {tgv.getResult(), tgv.getInfo()};
     }
 
-    std::list<std::list<std::unique_ptr<lir_tree::Node>>>
-    mergeTrees(std::list<lir_tree::TreeManager> &trees,
-               lir::OperandManager *om) {
+    void mergeTrees(std::list<FunctionTrees> &trees,
+                    lir_tree::TreeInfo *tree_info, lir::OperandManager *om) {
         lir_tree::TreeMerger merger;
         std::list<std::list<std::unique_ptr<lir_tree::Node>>> merged_trees = {};
         for (auto &fn_trees : trees) {
@@ -48,20 +50,20 @@ namespace backend {
     }
 
     std::list<std::unique_ptr<lir::Function>> tileTrees(
-        std::list<std::list<std::unique_ptr<lir_tree::Node>>> &trees,
-        std::vector<std::unique_ptr<lir_tree::FunctionInfo>> &all_function_info,
+        std::list<FunctionTrees> &trees,
+        std::vector<std::unique_ptr<lir_tree::FunctionInfo>> &function_info,
         lir::OperandManager *om) {
         lir_tree::TreeTiler tiler(om);
         std::list<std::unique_ptr<lir::Function>> functions;
-        auto function_trees = trees.begin();
-        for (auto &function_info : all_function_info) {
+        auto f_trees = trees.begin();
+        for (auto &f_info : function_info) {
             tiler.reset();
-            for (auto &tree : *function_trees++)
+            for (auto &tree : *f_trees++)
                 tiler.tile(tree.get());
 
-            auto name = function_info->getName();
-            auto num_params = function_info->getNumParams();
-            auto stack_bytes = function_info->getStackBytes();
+            auto name = f_info->getName();
+            auto num_params = f_info->getNumParams();
+            auto stack_bytes = f_info->getStackBytes();
             auto instructions = std::move(tiler.getResult());
 
             auto function = std::make_unique<lir::Function>(
@@ -82,9 +84,11 @@ namespace backend {
         middleend::InsertParallelCopies ipc;
         ipc.run(mir);
 
-        auto [trees, info] = generateTrees(mir, om.get());
-        auto merged = mergeTrees(trees, om.get());
-        auto functions = tileTrees(merged, info, om.get());
+        // Perform isel
+        auto [trees, tree_info, function_info] = generateTrees(mir, om.get());
+        if (merge)
+            mergeTrees(trees, tree_info.get(), om.get());
+        auto functions = tileTrees(trees, function_info, om.get());
 
         // Final cleanup
         lir::Program lir(std::move(functions), std::move(om));
