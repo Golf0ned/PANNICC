@@ -7,9 +7,8 @@
 #include "middleend/utils/traversal.h"
 
 namespace backend {
-    using FunctionTrees = std::list<std::unique_ptr<lir_tree::Node>>;
-
-    std::tuple<std::list<FunctionTrees>, std::unique_ptr<lir_tree::TreeInfo>,
+    std::tuple<std::list<lir_tree::FunctionTrees>,
+               std::unique_ptr<lir_tree::TreeInfo>,
                std::vector<std::unique_ptr<lir_tree::FunctionInfo>>>
     generateTrees(middleend::mir::Program &mir, lir::OperandManager *om) {
         lir_tree::TreeGenVisitor tgv(mir, om);
@@ -34,10 +33,10 @@ namespace backend {
             tgv.endFunction();
         }
 
-        return {tgv.getResult(), tgv.getInfo()};
+        return {tgv.getResult(), tgv.getTreeInfo(), tgv.getFunctionInfo()};
     }
 
-    void mergeTrees(std::list<FunctionTrees> &trees,
+    void mergeTrees(std::list<lir_tree::FunctionTrees> &trees,
                     lir_tree::TreeInfo *tree_info, lir::OperandManager *om) {
         lir_tree::TreeMerger merger;
         std::list<std::list<std::unique_ptr<lir_tree::Node>>> merged_trees = {};
@@ -45,12 +44,10 @@ namespace backend {
             merger.mergeTrees(fn_trees, om);
             merged_trees.push_back(merger.getResult());
         }
-
-        return std::move(merged_trees);
     }
 
     std::list<std::unique_ptr<lir::Function>> tileTrees(
-        std::list<FunctionTrees> &trees,
+        std::list<lir_tree::FunctionTrees> &trees,
         std::vector<std::unique_ptr<lir_tree::FunctionInfo>> &function_info,
         lir::OperandManager *om) {
         lir_tree::TreeTiler tiler(om);
