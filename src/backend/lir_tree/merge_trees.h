@@ -5,12 +5,14 @@
 namespace backend::lir_tree {
     class TreeMerger {
     public:
-        std::list<std::unique_ptr<Node>> getResult();
-
-        void mergeTrees(TreeManager &trees, lir::OperandManager *om);
+        TreeMerger(TreeInfo *tree_info, lir::OperandManager *om);
+        void
+        tryMerge(FunctionTrees &context,
+                 std::unordered_map<lir::Register *, std::list<Node *>> &uses);
+        void mergeTrees(FunctionTrees &trees);
 
     private:
-        std::list<std::unique_ptr<Node>> function_trees;
-        std::list<std::unique_ptr<Node>> program_trees;
+        lir::OperandManager *om;
+        TreeInfo *tree_info;
     };
 } // namespace backend::lir_tree

@@ -38,12 +38,9 @@ namespace backend {
 
     void mergeTrees(std::list<lir_tree::FunctionTrees> &trees,
                     lir_tree::TreeInfo *tree_info, lir::OperandManager *om) {
-        lir_tree::TreeMerger merger;
-        std::list<std::list<std::unique_ptr<lir_tree::Node>>> merged_trees = {};
-        for (auto &fn_trees : trees) {
-            merger.mergeTrees(fn_trees, om);
-            merged_trees.push_back(merger.getResult());
-        }
+        lir_tree::TreeMerger merger(tree_info, om);
+        for (auto &fn_trees : trees)
+            merger.mergeTrees(fn_trees);
     }
 
     std::list<std::unique_ptr<lir::Function>> tileTrees(
@@ -52,6 +49,7 @@ namespace backend {
         lir::OperandManager *om) {
         lir_tree::TreeTiler tiler(om);
         std::list<std::unique_ptr<lir::Function>> functions;
+
         auto f_trees = trees.begin();
         for (auto &f_info : function_info) {
             tiler.reset();
