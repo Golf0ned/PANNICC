@@ -15,6 +15,10 @@ namespace backend::lir_tree {
         return std::move(all_function_trees);
     }
 
+    std::unique_ptr<TreeInfo> TreeGenVisitor::getTreeInfo() {
+        return std::move(tree_info);
+    }
+
     std::vector<std::unique_ptr<FunctionInfo>>
     TreeGenVisitor::getFunctionInfo() {
         return std::move(all_function_info);
@@ -23,7 +27,7 @@ namespace backend::lir_tree {
     void TreeGenVisitor::startFunction(middleend::mir::Function *f) {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
-        function_trees = {};
+        function_trees.clear();
 
         //
         // Mark param registers OR pop registers off stack
