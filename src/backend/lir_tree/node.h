@@ -148,6 +148,8 @@ namespace backend::lir_tree {
         std::string result;
     };
 
+    using FunctionTrees = std::list<std::unique_ptr<lir_tree::Node>>;
+
     class TreeInfo {
     public:
         void insertTree(Node *tree, std::list<Node *> leaves,

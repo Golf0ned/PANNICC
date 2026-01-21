@@ -12,8 +12,9 @@ namespace backend::lir_tree {
     public:
         TreeGenVisitor(middleend::mir::Program &p, lir::OperandManager *om);
 
-        std::list<TreeManager> getResult();
-        std::vector<std::unique_ptr<FunctionInfo>> getInfo();
+        std::list<FunctionTrees> getResult();
+        std::unique_ptr<TreeInfo> getTreeInfo();
+        std::vector<std::unique_ptr<FunctionInfo>> getFunctionInfo();
 
         void startFunction(middleend::mir::Function *f);
         void endFunction();
@@ -42,9 +43,10 @@ namespace backend::lir_tree {
         middleend::mir::BasicBlock *next_block;
         std::unordered_map<std::string, uint64_t> stack_variables;
 
+        FunctionTrees function_trees;
         std::unique_ptr<FunctionInfo> function_info;
-        TreeManager function_trees;
+        std::list<FunctionTrees> all_function_trees;
         std::vector<std::unique_ptr<FunctionInfo>> all_function_info;
-        std::list<TreeManager> all_function_trees;
+        std::unique_ptr<TreeInfo> tree_info;
     };
 } // namespace backend::lir_tree
