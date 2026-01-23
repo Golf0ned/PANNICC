@@ -177,48 +177,4 @@ namespace backend::lir_tree {
     void TreeInfo::setMemInst(Node *tree) {
         trees_with_memory_instruction.insert(tree);
     }
-
-    void TreeManager::insertAsm(std::unique_ptr<Node> tree) {
-        trees.push_back(std::move(tree));
-    }
-
-    void TreeManager::insertTree(std::unique_ptr<Node> tree,
-                                 std::list<Node *> leaves,
-                                 bool has_memory_instruction) {
-        tree_leaves[tree.get()] = std::move(leaves);
-        if (has_memory_instruction)
-            trees_with_memory_instruction.insert(tree.get());
-        trees.push_back(std::move(tree));
-    }
-
-    std::unique_ptr<Node> TreeManager::pop() {
-        auto res = std::move(trees.back());
-        trees.pop_back();
-        return std::move(res);
-    }
-
-    std::list<Node *> &TreeManager::getLeaves(Node *tree) {
-        return tree_leaves[tree];
-    }
-
-    bool TreeManager::hasMemInst(Node *tree) {
-        return trees_with_memory_instruction.contains(tree);
-    }
-
-    void TreeManager::setMemInst(Node *tree) {
-        trees_with_memory_instruction.insert(tree);
-    }
-
-    bool TreeManager::empty() { return trees.empty(); }
-
-    std::string TreeManager::toString(lir::OperandManager *om) {
-        ToStringVisitor tsv(om);
-        std::string res;
-        for (auto &tree : trees) {
-            tree->accept(&tsv);
-            res += tsv.getResult() + '\n';
-        }
-
-        return res;
-    }
 } // namespace backend::lir_tree
