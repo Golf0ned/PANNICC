@@ -7,7 +7,7 @@
 namespace backend::lir_tree {
     TreeGenVisitor::TreeGenVisitor(middleend::mir::Program &p,
                                    lir::OperandManager *om)
-        : next_block(nullptr), om(om) {
+        : next_block(nullptr), om(om), tree_info(std::make_unique<TreeInfo>()) {
         nir.run(p);
     }
 
