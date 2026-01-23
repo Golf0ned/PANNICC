@@ -52,7 +52,12 @@ int main(int argc, char *argv[]) {
             printHelp(argv[0]);
             return 1;
         } else if (arg == "-o") {
-            output_file = argv[++i];
+            if (++i == argc) {
+                ERROR("no output file provided");
+                printHelp(argv[0]);
+                return 1;
+            }
+            output_file = argv[i];
         } else if (arg == "--dump-ast") {
             output_level = OutputLevel::AST;
         } else if (arg == "--dump-hir") {
