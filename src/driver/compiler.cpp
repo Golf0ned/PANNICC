@@ -1,9 +1,8 @@
 #include <filesystem>
 #include <iostream>
 
-#include "backend/analysis/interference.h"
-#include "backend/analysis/liveness.h"
 #include "backend/mir_to_lir.h"
+#include "backend/regalloc.h"
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"
@@ -145,9 +144,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    backend::Liveness lir_liveness = backend::computeLiveness(lir);
-    backend::Interference lir_interference =
-        backend::computeInterference(lir, lir_liveness);
+    backend::allocateRegisters(lir);
 
     if (output_level == OutputLevel::LIR) {
         OUTPUT(lir.toString());
