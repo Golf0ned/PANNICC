@@ -1,30 +1,10 @@
 #include "backend/regalloc.h"
-#include "backend/analysis/interference.h"
-#include "backend/analysis/liveness.h"
+#include "backend/passes/coalesce.h"
+#include "backend/passes/coloring.h"
+#include "backend/passes/interference.h"
+#include "backend/passes/liveness.h"
 
 namespace backend {
-    bool tryCoalesce(lir::Program &lir, Interference &interference) {
-        // TODO: coalesce registers
-        return false;
-    }
-
-    void color() {
-        // TODO: color/"prune(?)" graph
-    }
-
-    bool assignRegisters() {
-        // TODO: color graph
-        return true;
-    }
-
-    void commitRegisters() {
-        // TODO: make changes to lir
-    }
-
-    void spillRegisters() {
-        // TODO: spill and make changes to lir
-    }
-
     void allocateRegisters(lir::Program &lir) {
         Liveness liveness;
         Interference interference;
@@ -32,23 +12,20 @@ namespace backend {
         while (true) {
             bool changed = true;
             while (changed) {
-                changed = false;
-
                 liveness = computeLiveness(lir);
                 interference = computeInterference(lir, liveness);
 
                 changed = tryCoalesce(lir, interference);
             }
 
-            // TODO: compute spill costs
-            color();
-
-            if (assignRegisters()) {
-                commitRegisters();
+            auto [can_color, coloring] = tryColor(lir, interference);
+            if (can_color) {
+                colorRegisters(lir, coloring);
                 break;
             }
 
-            spillRegisters();
+            // TODO: compute spill costs
+            // TODO: spill registers
         }
     }
 } // namespace backend

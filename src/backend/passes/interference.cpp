@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "backend/analysis/interference.h"
 #include "backend/lir/operand.h"
+#include "backend/passes/interference.h"
 
 namespace backend {
     InterferenceBuilder::InterferenceBuilder(lir::OperandManager *om)
