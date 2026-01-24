@@ -1,6 +1,6 @@
 #pragma once
 
-#include "backend/analysis/liveness.h"
+#include "backend/passes/liveness.h"
 
 namespace backend {
     using Interference = std::unordered_map<lir::Register *, RegisterSet>;

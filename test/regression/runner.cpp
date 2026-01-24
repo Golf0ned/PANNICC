@@ -5,8 +5,8 @@
 
 #include "gtest/gtest.h"
 
-#include "backend/analysis/liveness.h"
 #include "backend/mir_to_lir.h"
+#include "backend/passes/liveness.h"
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"

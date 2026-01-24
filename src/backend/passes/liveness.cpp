@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "backend/analysis/liveness.h"
 #include "backend/lir/operand.h"
+#include "backend/passes/liveness.h"
 
 namespace backend {
     GenSetVisitor::GenSetVisitor(lir::OperandManager *om) : om(om) {}
