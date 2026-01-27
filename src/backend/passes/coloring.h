@@ -5,7 +5,7 @@
 
 namespace backend {
     using RegisterColoring =
-        std::unordered_map<lir::VirtualRegister *, lir::Register *>;
+        std::unordered_map<lir::Register *, lir::Register *>;
 
     std::pair<bool, RegisterColoring> tryColor(lir::Program &lir,
                                                Interference &interference);
