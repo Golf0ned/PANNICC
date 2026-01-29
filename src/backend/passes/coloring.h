@@ -10,4 +10,5 @@ namespace backend {
     std::pair<bool, RegisterColoring> tryColor(lir::Program &lir,
                                                Interference &interference);
     void colorRegisters(lir::Program &lir, RegisterColoring &coloring);
+    void printColoring(RegisterColoring &coloring);
 } // namespace backend

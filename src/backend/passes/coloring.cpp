@@ -110,4 +110,11 @@ namespace backend {
     void colorRegisters(lir::Program &lir, RegisterColoring &coloring) {
         // TODO: make changes to lir
     }
+
+    void printColoring(RegisterColoring &coloring) {
+        for (auto &[reg, color] : coloring) {
+            auto color_str = color ? color->toString() : "UNCOLORABLE";
+            std::cout << reg->toString() << ": " << color_str << std::endl;
+        }
+    }
 } // namespace backend
