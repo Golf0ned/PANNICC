@@ -11,4 +11,29 @@ namespace backend {
                                                Interference &interference);
     void colorRegisters(lir::Program &lir, RegisterColoring &coloring);
     void printColoring(RegisterColoring &coloring);
+
+    class PrecoloringVisitor : public lir::InstructionVisitor {
+    public:
+        RegisterColoring getResult();
+
+        void visit(lir::Instruction *i);
+        void visit(lir::Label *l);
+        void visit(lir::InstructionMov *i);
+        void visit(lir::InstructionPush *i);
+        void visit(lir::InstructionPop *i);
+        void visit(lir::InstructionConvert *i);
+        void visit(lir::InstructionBinaryOp *i);
+        void visit(lir::InstructionSpecialOp *i);
+        void visit(lir::InstructionLea *i);
+        void visit(lir::InstructionCmp *i);
+        void visit(lir::InstructionJmp *i);
+        void visit(lir::InstructionCJmp *i);
+        void visit(lir::InstructionCall *i);
+        void visit(lir::InstructionRet *i);
+        void visit(lir::InstructionVirtualCall *i);
+        void visit(lir::InstructionUnknown *i);
+
+    private:
+        RegisterColoring precolorings;
+    };
 } // namespace backend

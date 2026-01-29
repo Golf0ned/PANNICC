@@ -117,4 +117,38 @@ namespace backend {
             std::cout << reg->toString() << ": " << color_str << std::endl;
         }
     }
+
+    RegisterColoring PrecoloringVisitor::getResult() { return precolorings; }
+
+    void visit(lir::Instruction *i) {}
+
+    void PrecoloringVisitor::visit(lir::Label *l) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionMov *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionPush *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionPop *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionConvert *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionBinaryOp *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionSpecialOp *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionLea *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionCmp *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionJmp *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionCJmp *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionCall *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionRet *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionVirtualCall *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionUnknown *i) {}
 } // namespace backend
