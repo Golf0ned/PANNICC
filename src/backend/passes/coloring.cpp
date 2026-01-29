@@ -7,7 +7,7 @@ namespace backend {
         int num_regs = 16;
 
         //
-        // "Pruning"
+        // "Pruning" (degree < R)
         //
         Interference remaining = interference;
         std::vector<lir::Register *> pruned_regs;
