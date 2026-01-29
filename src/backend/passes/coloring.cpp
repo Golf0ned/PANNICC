@@ -1,5 +1,7 @@
-#include "backend/passes/coloring.h"
+#include <iostream>
+
 #include "backend/lir/operand.h"
+#include "backend/passes/coloring.h"
 
 namespace backend {
     std::pair<bool, RegisterColoring> tryColor(lir::Program &lir,
@@ -11,6 +13,13 @@ namespace backend {
         //
         Interference remaining = interference;
         std::vector<lir::Register *> pruned_regs;
+        auto move_to_stack = [&](lir::Register *reg) {
+            pruned_regs.push_back(reg);
+            for (auto neighbor : remaining.at(reg))
+                remaining[neighbor].erase(reg);
+            remaining.erase(reg);
+        };
+
         bool changed = true;
         while (changed) {
             changed = false;
@@ -19,23 +28,32 @@ namespace backend {
                 if (edges.size() >= num_regs)
                     continue;
 
-                pruned_regs.push_back(reg);
-
-                for (auto neighbor : edges)
-                    remaining[neighbor].erase(reg);
-                remaining.erase(reg);
-
+                move_to_stack(reg);
                 changed = true;
                 break;
             }
 
             if (!remaining.empty()) {
-                // TODO: find node with min spill cost divided by degree, push
-                // onto stack
+                // TODO: find reg with min spill cost divided by degree,
+                // and push onto stack
+                // We haven't implemented spill cost yet!
+                // Therefore, big number if physical reg
+                uint64_t min_val = -1;
+                auto min_reg = remaining.begin()->first;
+                for (auto &[reg, edges] : remaining) {
+                    auto cost = reg->getRegNum() == lir::RegisterNum::VIRTUAL
+                                    ? 1000
+                                    : 100000;
 
-                // For now, we just stick topmost node on the stack lol
-                pruned_regs.push_back(remaining.begin()->first);
+                    auto cur_val = edges.size() == 0 ? 0 : cost / edges.size();
+                    if (cur_val >= min_val)
+                        continue;
 
+                    min_val = cur_val;
+                    min_reg = reg;
+                }
+
+                move_to_stack(min_reg);
                 changed = true;
             }
         }
