@@ -4,6 +4,61 @@
 #include "backend/passes/coloring.h"
 
 namespace backend {
+    PrecoloringVisitor::PrecoloringVisitor(lir::OperandManager *om) : om(om) {}
+
+    // TODO: fill the rest of this in, im lazy rn
+    RegisterColoring PrecoloringVisitor::getResult() { return precolorings; }
+
+    void PrecoloringVisitor::checkConstrained(lir::Operand *operand) {
+        auto constrained = dynamic_cast<lir::ConstrainedRegister *>(operand);
+        if (!constrained)
+            return;
+
+        auto color_size = lir::DataSize::QUADWORD;
+        auto color = lir::toSized(constrained->getConstraint(), color_size);
+
+        auto physical_reg = om->getRegister(color);
+        auto virtual_reg = om->getRegister(constrained->getName());
+
+        precolorings[physical_reg] = physical_reg;
+        precolorings[virtual_reg] = physical_reg;
+    }
+
+    void PrecoloringVisitor::visit(lir::Instruction *i) {}
+
+    void PrecoloringVisitor::visit(lir::Label *l) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionMov *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionPush *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionPop *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionConvert *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionBinaryOp *i) {
+        checkConstrained(i->getSrc());
+        checkConstrained(i->getDst());
+    }
+
+    void PrecoloringVisitor::visit(lir::InstructionSpecialOp *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionLea *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionCmp *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionJmp *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionCJmp *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionCall *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionRet *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionVirtualCall *i) {}
+
+    void PrecoloringVisitor::visit(lir::InstructionUnknown *i) {}
+
     RegisterColoring getPrecoloring(lir::Program &lir) {
         PrecoloringVisitor pcv(lir.getOm());
         for (auto &f : lir.getFunctions())
@@ -126,59 +181,4 @@ namespace backend {
             std::cout << reg->toString() << ": " << color_str << std::endl;
         }
     }
-
-    PrecoloringVisitor::PrecoloringVisitor(lir::OperandManager *om) : om(om) {}
-
-    // TODO: fill the rest of this in, im lazy rn
-    RegisterColoring PrecoloringVisitor::getResult() { return precolorings; }
-
-    void PrecoloringVisitor::checkConstrained(lir::Operand *operand) {
-        auto constrained = dynamic_cast<lir::ConstrainedRegister *>(operand);
-        if (!constrained)
-            return;
-
-        auto color_size = lir::DataSize::QUADWORD;
-        auto color = lir::toSized(constrained->getConstraint(), color_size);
-
-        auto physical_reg = om->getRegister(color);
-        auto virtual_reg = om->getRegister(constrained->getName());
-
-        precolorings[physical_reg] = physical_reg;
-        precolorings[virtual_reg] = physical_reg;
-    }
-
-    void PrecoloringVisitor::visit(lir::Instruction *i) {}
-
-    void PrecoloringVisitor::visit(lir::Label *l) {}
-
-    void PrecoloringVisitor::visit(lir::InstructionMov *i) {}
-
-    void PrecoloringVisitor::visit(lir::InstructionPush *i) {}
-
-    void PrecoloringVisitor::visit(lir::InstructionPop *i) {}
-
-    void PrecoloringVisitor::visit(lir::InstructionConvert *i) {}
-
-    void PrecoloringVisitor::visit(lir::InstructionBinaryOp *i) {
-        checkConstrained(i->getSrc());
-        checkConstrained(i->getDst());
-    }
-
-    void PrecoloringVisitor::visit(lir::InstructionSpecialOp *i) {}
-
-    void PrecoloringVisitor::visit(lir::InstructionLea *i) {}
-
-    void PrecoloringVisitor::visit(lir::InstructionCmp *i) {}
-
-    void PrecoloringVisitor::visit(lir::InstructionJmp *i) {}
-
-    void PrecoloringVisitor::visit(lir::InstructionCJmp *i) {}
-
-    void PrecoloringVisitor::visit(lir::InstructionCall *i) {}
-
-    void PrecoloringVisitor::visit(lir::InstructionRet *i) {}
-
-    void PrecoloringVisitor::visit(lir::InstructionVirtualCall *i) {}
-
-    void PrecoloringVisitor::visit(lir::InstructionUnknown *i) {}
 } // namespace backend
