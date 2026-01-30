@@ -25,6 +25,10 @@ namespace backend::lir {
 
     Operand *InstructionMov::getDst() { return dst; }
 
+    void InstructionMov::setSrc(lir::Operand *new_src) { src = new_src; }
+
+    void InstructionMov::setDst(lir::Operand *new_dst) { dst = new_dst; }
+
     void InstructionMov::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionPush::InstructionPush(DataSize size, Operand *src)
@@ -34,6 +38,8 @@ namespace backend::lir {
 
     Operand *InstructionPush::getSrc() { return src; }
 
+    void InstructionPush::setSrc(lir::Operand *new_src) { src = new_src; }
+
     void InstructionPush::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionPop::InstructionPop(DataSize size, Operand *dst)
@@ -42,6 +48,8 @@ namespace backend::lir {
     DataSize InstructionPop::getSize() { return size; }
 
     Operand *InstructionPop::getDst() { return dst; }
+
+    void InstructionPop::setDst(lir::Operand *new_dst) { dst = new_dst; }
 
     void InstructionPop::accept(InstructionVisitor *v) { v->visit(this); }
 
@@ -114,6 +122,10 @@ namespace backend::lir {
 
     Operand *InstructionBinaryOp::getDst() { return dst; }
 
+    void InstructionBinaryOp::setSrc(lir::Operand *new_src) { src = new_src; }
+
+    void InstructionBinaryOp::setDst(lir::Operand *new_dst) { dst = new_dst; }
+
     void InstructionBinaryOp::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionSpecialOp::InstructionSpecialOp(BinaryOp op, DataSize size,
@@ -126,6 +138,8 @@ namespace backend::lir {
 
     Operand *InstructionSpecialOp::getSrc() { return src; }
 
+    void InstructionSpecialOp::setSrc(lir::Operand *new_src) { src = new_src; }
+
     void InstructionSpecialOp::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionLea::InstructionLea(DataSize size, Address *src, Operand *dst)
@@ -136,6 +150,10 @@ namespace backend::lir {
     Address *InstructionLea::getSrc() { return src; }
 
     Operand *InstructionLea::getDst() { return dst; }
+
+    void InstructionLea::setSrc(lir::Address *new_src) { src = new_src; }
+
+    void InstructionLea::setDst(lir::Operand *new_dst) { dst = new_dst; }
 
     void InstructionLea::accept(InstructionVisitor *v) { v->visit(this); }
 
@@ -148,6 +166,10 @@ namespace backend::lir {
     Operand *InstructionCmp::getSrc1() { return src_1; }
 
     Operand *InstructionCmp::getSrc2() { return src_2; }
+
+    void InstructionCmp::setSrc1(lir::Operand *new_src_1) { src_1 = new_src_1; }
+
+    void InstructionCmp::setSrc2(lir::Operand *new_src_2) { src_1 = new_src_2; }
 
     void InstructionCmp::accept(InstructionVisitor *v) { v->visit(this); }
 
@@ -180,6 +202,10 @@ namespace backend::lir {
 
     const std::vector<Operand *> &InstructionVirtualCall::getArgs() {
         return args;
+    }
+
+    void InstructionVirtualCall::setArgs(std::vector<Operand *> new_args) {
+        args = new_args;
     }
 
     void InstructionVirtualCall::accept(InstructionVisitor *v) {
