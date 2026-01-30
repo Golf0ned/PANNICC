@@ -5,7 +5,7 @@
 
 namespace backend {
     using RegisterColoring =
-        std::unordered_map<lir::Register *, lir::Register *>;
+        std::unordered_map<lir::Register *, lir::RegisterNum>;
 
     class PrecoloringVisitor : public lir::InstructionVisitor {
     public:

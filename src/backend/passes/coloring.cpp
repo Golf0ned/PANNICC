@@ -20,8 +20,8 @@ namespace backend {
         auto physical_reg = om->getRegister(color);
         auto virtual_reg = om->getRegister(constrained->getName());
 
-        precolorings[physical_reg] = physical_reg;
-        precolorings[virtual_reg] = physical_reg;
+        precolorings[physical_reg] = color;
+        precolorings[virtual_reg] = color;
     }
 
     void PrecoloringVisitor::visit(lir::Instruction *i) {}
@@ -64,20 +64,31 @@ namespace backend {
         : coloring(coloring), om(om) {}
 
     lir::Operand *ColoringVisitor::tryColorOperand(lir::Operand *operand) {
+        // TODO: unhardcode virtual reg size
+        auto size = lir::DataSize::DOUBLEWORD;
+
         auto constrained = dynamic_cast<lir::ConstrainedRegister *>(operand);
-        if (constrained)
-            return coloring.at(om->getRegister(constrained->getName()));
+        if (constrained) {
+            auto color = coloring.at(om->getRegister(constrained->getName()));
+            return om->getRegister(lir::toSized(color, size));
+        }
 
         // Skip physical for now because I'm too lazy to deal with sized
         auto reg = dynamic_cast<lir::VirtualRegister *>(operand);
-        if (reg)
-            return coloring.at(reg);
+        if (reg) {
+            auto color = coloring.at(reg);
+            return om->getRegister(lir::toSized(color, size));
+        }
 
         auto address = dynamic_cast<lir::Address *>(operand);
         if (address) {
             auto base = address->getBase(), index = address->getIndex();
-            auto new_base = base ? coloring.at(base) : nullptr;
-            auto new_index = index ? coloring.at(index) : nullptr;
+            auto new_base =
+                base ? om->getRegister(lir::toSized(coloring.at(base), size))
+                     : nullptr;
+            auto new_index =
+                index ? om->getRegister(lir::toSized(coloring.at(index), size))
+                      : nullptr;
 
             return om->getAddress(new_base, new_index, address->getScale(),
                                   address->getDisplacement());
@@ -239,12 +250,12 @@ namespace backend {
         // Assigning Registers
         //
         auto coloring = getPrecoloring(lir);
-        std::unordered_set<lir::Register *> seen_colors;
+        std::unordered_set<lir::RegisterNum> seen_colors;
         for (auto &[_, color] : coloring)
             seen_colors.insert(color);
 
-        std::vector<lir::Register *> available_colors(seen_colors.begin(),
-                                                      seen_colors.end());
+        std::vector<lir::RegisterNum> available_colors(seen_colors.begin(),
+                                                       seen_colors.end());
         bool can_color = true;
 
         while (!pruned_regs.empty()) {
@@ -253,7 +264,7 @@ namespace backend {
             if (coloring.contains(reg))
                 continue;
 
-            std::unordered_set<lir::Register *> neighbor_colors;
+            std::unordered_set<lir::RegisterNum> neighbor_colors;
             for (auto neighbor : interference[reg]) {
                 auto iter = coloring.find(neighbor);
                 if (iter == coloring.end())
@@ -271,13 +282,15 @@ namespace backend {
             if (!coloring.contains(reg)) {
                 auto virtual_reg = dynamic_cast<lir::VirtualRegister *>(reg);
                 if (virtual_reg) {
-                    coloring[reg] = nullptr;
+                    coloring[reg] = lir::RegisterNum::VIRTUAL;
                     can_color = false;
                     continue;
                 }
 
-                coloring[reg] = reg;
-                available_colors.push_back(reg);
+                auto new_color =
+                    lir::toSized(reg->getRegNum(), lir::DataSize::QUADWORD);
+                coloring[reg] = new_color;
+                available_colors.push_back(new_color);
             }
         }
 
@@ -292,9 +305,8 @@ namespace backend {
     }
 
     void printColoring(RegisterColoring &coloring) {
-        for (auto &[reg, color] : coloring) {
-            auto color_str = color ? color->toString() : "UNCOLORABLE";
-            std::cout << reg->toString() << ": " << color_str << std::endl;
-        }
+        for (auto &[reg, color] : coloring)
+            std::cout << reg->toString() << ": " << lir::toString(color)
+                      << std::endl;
     }
 } // namespace backend
