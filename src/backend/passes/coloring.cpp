@@ -59,6 +59,119 @@ namespace backend {
 
     void PrecoloringVisitor::visit(lir::InstructionUnknown *i) {}
 
+    ColoringVisitor::ColoringVisitor(const RegisterColoring &coloring,
+                                     lir::OperandManager *om)
+        : coloring(coloring), om(om) {}
+
+    lir::Operand *ColoringVisitor::tryColorOperand(lir::Operand *operand) {
+        auto constrained = dynamic_cast<lir::ConstrainedRegister *>(operand);
+        if (constrained)
+            return coloring.at(om->getRegister(constrained->getName()));
+
+        // Skip physical for now because I'm too lazy to deal with sized
+        auto reg = dynamic_cast<lir::VirtualRegister *>(operand);
+        if (reg)
+            return coloring.at(reg);
+
+        auto address = dynamic_cast<lir::Address *>(operand);
+        if (address) {
+            auto base = address->getBase(), index = address->getIndex();
+            auto new_base = base ? coloring.at(base) : nullptr;
+            auto new_index = index ? coloring.at(index) : nullptr;
+
+            return om->getAddress(new_base, new_index, address->getScale(),
+                                  address->getDisplacement());
+        }
+
+        return nullptr;
+    }
+
+    void ColoringVisitor::visit(lir::Instruction *i) {}
+
+    void ColoringVisitor::visit(lir::Label *l) {}
+
+    void ColoringVisitor::visit(lir::InstructionMov *i) {
+        auto src = tryColorOperand(i->getSrc());
+        if (src)
+            i->setSrc(src);
+
+        auto dst = tryColorOperand(i->getDst());
+        if (dst)
+            i->setDst(dst);
+    }
+
+    void ColoringVisitor::visit(lir::InstructionPush *i) {
+        auto src = tryColorOperand(i->getSrc());
+        if (src)
+            i->setSrc(src);
+    }
+
+    void ColoringVisitor::visit(lir::InstructionPop *i) {
+        auto dst = tryColorOperand(i->getDst());
+        if (dst)
+            i->setDst(dst);
+    }
+
+    void ColoringVisitor::visit(lir::InstructionConvert *i) {}
+
+    void ColoringVisitor::visit(lir::InstructionBinaryOp *i) {
+        auto src = tryColorOperand(i->getSrc());
+        if (src)
+            i->setSrc(src);
+
+        auto dst = tryColorOperand(i->getDst());
+        if (dst)
+            i->setDst(dst);
+    }
+
+    void ColoringVisitor::visit(lir::InstructionSpecialOp *i) {
+        auto src = tryColorOperand(i->getSrc());
+        if (src)
+            i->setSrc(src);
+    }
+
+    void ColoringVisitor::visit(lir::InstructionLea *i) {
+        auto src = tryColorOperand(i->getSrc());
+        if (src)
+            i->setSrc(static_cast<lir::Address *>(src));
+
+        auto dst = tryColorOperand(i->getDst());
+        if (dst)
+            i->setDst(dst);
+    }
+
+    void ColoringVisitor::visit(lir::InstructionCmp *i) {
+        auto src1 = tryColorOperand(i->getSrc1());
+        if (src1)
+            i->setSrc1(src1);
+
+        auto src2 = tryColorOperand(i->getSrc2());
+        if (src2)
+            i->setSrc2(src2);
+    }
+
+    void ColoringVisitor::visit(lir::InstructionJmp *i) {}
+
+    void ColoringVisitor::visit(lir::InstructionCJmp *i) {}
+
+    void ColoringVisitor::visit(lir::InstructionCall *i) {}
+
+    void ColoringVisitor::visit(lir::InstructionRet *i) {}
+
+    void ColoringVisitor::visit(lir::InstructionVirtualCall *i) {
+        auto args = i->getArgs();
+
+        for (auto &arg : args) {
+            auto colored = tryColorOperand(arg);
+            if (colored)
+                arg = colored;
+        }
+
+        i->setArgs(args);
+    }
+
+    void ColoringVisitor::visit(lir::InstructionUnknown *i) {}
+
     RegisterColoring getPrecoloring(lir::Program &lir) {
         PrecoloringVisitor pcv(lir.getOm());
         for (auto &f : lir.getFunctions())
@@ -172,7 +285,10 @@ namespace backend {
     }
 
     void colorRegisters(lir::Program &lir, RegisterColoring &coloring) {
-        // TODO: make changes to lir
+        ColoringVisitor cv(coloring, lir.getOm());
+        for (auto &f : lir.getFunctions())
+            for (auto &i : f->getInstructions())
+                i->accept(&cv);
     }
 
     void printColoring(RegisterColoring &coloring) {
