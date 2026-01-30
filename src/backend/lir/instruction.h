@@ -33,6 +33,8 @@ namespace backend::lir {
         DataSize getDstSize();
         Operand *getSrc();
         Operand *getDst();
+        void setSrc(lir::Operand *new_src);
+        void setDst(lir::Operand *new_dst);
         void accept(InstructionVisitor *v) override;
 
     private:
@@ -48,6 +50,7 @@ namespace backend::lir {
         InstructionPush(DataSize size, Operand *src);
         DataSize getSize();
         Operand *getSrc();
+        void setSrc(lir::Operand *new_src);
         void accept(InstructionVisitor *v) override;
 
     private:
@@ -60,6 +63,7 @@ namespace backend::lir {
         InstructionPop(DataSize size, Operand *dst);
         DataSize getSize();
         Operand *getDst();
+        void setDst(lir::Operand *new_dst);
         void accept(InstructionVisitor *v) override;
 
     private:
@@ -105,6 +109,8 @@ namespace backend::lir {
         DataSize getSize();
         Operand *getSrc();
         Operand *getDst();
+        void setSrc(lir::Operand *new_src);
+        void setDst(lir::Operand *new_dst);
         void accept(InstructionVisitor *v) override;
 
     private:
@@ -120,6 +126,7 @@ namespace backend::lir {
         BinaryOp getOp();
         DataSize getSize();
         Operand *getSrc();
+        void setSrc(lir::Operand *new_src);
         void accept(InstructionVisitor *v) override;
 
     private:
@@ -134,6 +141,8 @@ namespace backend::lir {
         DataSize getSize();
         Address *getSrc();
         Operand *getDst();
+        void setSrc(lir::Address *new_src);
+        void setDst(lir::Operand *new_dst);
         void accept(InstructionVisitor *v) override;
 
     private:
@@ -152,6 +161,8 @@ namespace backend::lir {
         DataSize getSize();
         Operand *getSrc1();
         Operand *getSrc2();
+        void setSrc1(lir::Operand *new_src_1);
+        void setSrc2(lir::Operand *new_src_2);
         void accept(InstructionVisitor *v) override;
 
     private:
@@ -199,8 +210,10 @@ namespace backend::lir {
 
     class InstructionVirtualCall : public InstructionCall {
     public:
-        InstructionVirtualCall(std::string label, std::vector<Operand *> args);
+        InstructionVirtualCall(std::string label,
+                               std::vector<Operand *> new_args);
         const std::vector<Operand *> &getArgs();
+        void setArgs(std::vector<Operand *> args);
         void accept(InstructionVisitor *v) override;
 
     private:
