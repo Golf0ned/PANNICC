@@ -269,7 +269,8 @@ namespace backend::lir_tree {
         //
         // Move value into return register
         //
-        auto size = lir::DataSize::QUADWORD;
+        // TODO: unhardcode if we have 64 bit
+        auto size = lir::DataSize::DOUBLEWORD;
         auto src = resolveOperand(t->getValue());
         auto dst = om->getRegister(lir::RegisterNum::EAX);
         auto mov_ret = std::make_unique<lir::InstructionMov>(
