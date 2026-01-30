@@ -7,6 +7,7 @@ namespace backend {
     using RegisterColoring =
         std::unordered_map<lir::Register *, lir::Register *>;
 
+    RegisterColoring getPrecoloring(lir::Program &lir);
     std::pair<bool, RegisterColoring> tryColor(lir::Program &lir,
                                                Interference &interference);
     void colorRegisters(lir::Program &lir, RegisterColoring &coloring);
@@ -14,7 +15,11 @@ namespace backend {
 
     class PrecoloringVisitor : public lir::InstructionVisitor {
     public:
+        PrecoloringVisitor(lir::OperandManager *om);
+
         RegisterColoring getResult();
+
+        void checkConstrained(lir::Operand *operand);
 
         void visit(lir::Instruction *i);
         void visit(lir::Label *l);
@@ -34,6 +39,7 @@ namespace backend {
         void visit(lir::InstructionUnknown *i);
 
     private:
+        lir::OperandManager *om;
         RegisterColoring precolorings;
     };
 } // namespace backend

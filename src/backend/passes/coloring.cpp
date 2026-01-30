@@ -4,6 +4,15 @@
 #include "backend/passes/coloring.h"
 
 namespace backend {
+    RegisterColoring getPrecoloring(lir::Program &lir) {
+        PrecoloringVisitor pcv(lir.getOm());
+        for (auto &f : lir.getFunctions())
+            for (auto &i : f->getInstructions())
+                i->accept(&pcv);
+
+        return pcv.getResult();
+    }
+
     std::pair<bool, RegisterColoring> tryColor(lir::Program &lir,
                                                Interference &interference) {
         int num_regs = 16;
@@ -61,14 +70,14 @@ namespace backend {
         //
         // Assigning Registers
         //
-        RegisterColoring coloring;
-        std::vector<lir::Register *> available_colors;
-        bool can_color = true;
+        auto coloring = getPrecoloring(lir);
+        std::unordered_set<lir::Register *> seen_colors;
+        for (auto &[_, color] : coloring)
+            seen_colors.insert(color);
 
-        // TODO: precolor constrained (shift.)
-        // - walk program with visitor, get all constrained regs
-        // - color physical + virtual reg the same "color" (reg) in coloring
-        // - add physical to available_colors
+        std::vector<lir::Register *> available_colors(seen_colors.begin(),
+                                                      seen_colors.end());
+        bool can_color = true;
 
         while (!pruned_regs.empty()) {
             auto reg = pruned_regs.back();
@@ -118,9 +127,27 @@ namespace backend {
         }
     }
 
+    PrecoloringVisitor::PrecoloringVisitor(lir::OperandManager *om) : om(om) {}
+
+    // TODO: fill the rest of this in, im lazy rn
     RegisterColoring PrecoloringVisitor::getResult() { return precolorings; }
 
-    void visit(lir::Instruction *i) {}
+    void PrecoloringVisitor::checkConstrained(lir::Operand *operand) {
+        auto constrained = dynamic_cast<lir::ConstrainedRegister *>(operand);
+        if (!constrained)
+            return;
+
+        auto color_size = lir::DataSize::QUADWORD;
+        auto color = lir::toSized(constrained->getConstraint(), color_size);
+
+        auto physical_reg = om->getRegister(color);
+        auto virtual_reg = om->getRegister(constrained->getName());
+
+        precolorings[physical_reg] = physical_reg;
+        precolorings[virtual_reg] = physical_reg;
+    }
+
+    void PrecoloringVisitor::visit(lir::Instruction *i) {}
 
     void PrecoloringVisitor::visit(lir::Label *l) {}
 
@@ -132,7 +159,10 @@ namespace backend {
 
     void PrecoloringVisitor::visit(lir::InstructionConvert *i) {}
 
-    void PrecoloringVisitor::visit(lir::InstructionBinaryOp *i) {}
+    void PrecoloringVisitor::visit(lir::InstructionBinaryOp *i) {
+        checkConstrained(i->getSrc());
+        checkConstrained(i->getDst());
+    }
 
     void PrecoloringVisitor::visit(lir::InstructionSpecialOp *i) {}
 
