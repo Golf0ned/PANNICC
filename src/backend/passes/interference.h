@@ -19,6 +19,7 @@ namespace backend {
         bool sameReg(lir::Register *first, lir::Register *second);
         std::vector<lir::Register *> getSizedRegisters(lir::Register *reg);
         void interfere(lir::Register *first, lir::Register *second);
+        void addReg(lir::Register *reg);
 
     private:
         lir::OperandManager *om;
