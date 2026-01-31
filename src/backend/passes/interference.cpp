@@ -60,6 +60,8 @@ namespace backend {
             }
     }
 
+    void InterferenceBuilder::addReg(lir::Register *reg) { interference[reg]; }
+
     Interference computeInterference(lir::Function *f, Liveness &l,
                                      lir::OperandManager *om) {
         InterferenceBuilder ib(om);
@@ -80,6 +82,12 @@ namespace backend {
                     ib.interfere(out_reg, gen_reg);
             }
         }
+
+        // TODO: what the hell are you doing ben
+        auto kill = l[1];
+        for (auto kill_i : kill)
+            for (auto reg : kill_i)
+                ib.addReg(reg);
 
         return ib.getInterference();
     }
