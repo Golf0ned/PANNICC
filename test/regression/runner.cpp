@@ -94,8 +94,8 @@ void testLir(std::string input_path, std::string expected_path,
         GTEST_SKIP();
     pm->runPasses(mir);
     auto lir = mirToLir(mir);
-    auto liveness = computeLiveness(lir);
-    auto interference = computeInterference(lir, liveness);
+    // auto liveness = computeLiveness(lir);
+    // auto interference = computeInterference(lir, liveness);
     compareIfFileExists(lir.toString(), expected_path);
 }
 

@@ -7,10 +7,10 @@
 
 namespace backend {
     using RegisterSet = std::unordered_set<lir::Register *>;
-    using Liveness = std::array<std::vector<std::vector<RegisterSet>>, 4>;
+    using Liveness = std::array<std::vector<RegisterSet>, 4>;
 
-    Liveness computeLiveness(lir::Program &p);
-    void printLiveness(lir::Program &p, Liveness &l);
+    Liveness computeLiveness(lir::Function *f, lir::OperandManager *om);
+    void printLiveness(lir::Function *f, Liveness &l);
 
     class GenSetVisitor : public lir::InstructionVisitor {
     public:
@@ -76,7 +76,7 @@ namespace backend {
 
     class SuccessorVisitor : public lir::InstructionVisitor {
     public:
-        SuccessorVisitor(lir::Program &p);
+        SuccessorVisitor(lir::Function *f);
 
         std::vector<int> getResult();
 

@@ -183,17 +183,17 @@ namespace backend {
 
     void ColoringVisitor::visit(lir::InstructionUnknown *i) {}
 
-    RegisterColoring getPrecoloring(lir::Program &lir) {
-        PrecoloringVisitor pcv(lir.getOm());
-        for (auto &f : lir.getFunctions())
-            for (auto &i : f->getInstructions())
-                i->accept(&pcv);
+    RegisterColoring getPrecoloring(lir::Function *f, lir::OperandManager *om) {
+        PrecoloringVisitor pcv(om);
+        for (auto &i : f->getInstructions())
+            i->accept(&pcv);
 
         return pcv.getResult();
     }
 
-    std::pair<bool, RegisterColoring> tryColor(lir::Program &lir,
-                                               Interference &interference) {
+    std::pair<bool, RegisterColoring> tryColor(lir::Function *f,
+                                               Interference &interference,
+                                               lir::OperandManager *om) {
         int num_regs = 16;
 
         //
@@ -249,7 +249,7 @@ namespace backend {
         //
         // Assigning Registers
         //
-        auto coloring = getPrecoloring(lir);
+        auto coloring = getPrecoloring(f, om);
         std::unordered_set<lir::RegisterNum> seen_colors;
         for (auto &[_, color] : coloring)
             seen_colors.insert(color);
@@ -297,11 +297,11 @@ namespace backend {
         return {can_color, coloring};
     }
 
-    void colorRegisters(lir::Program &lir, RegisterColoring &coloring) {
-        ColoringVisitor cv(coloring, lir.getOm());
-        for (auto &f : lir.getFunctions())
-            for (auto &i : f->getInstructions())
-                i->accept(&cv);
+    void colorRegisters(lir::Function *f, RegisterColoring &coloring,
+                        lir::OperandManager *om) {
+        ColoringVisitor cv(coloring, om);
+        for (auto &i : f->getInstructions())
+            i->accept(&cv);
     }
 
     void printColoring(RegisterColoring &coloring) {

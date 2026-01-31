@@ -66,12 +66,14 @@ namespace backend {
         lir::OperandManager *om;
     };
 
-    RegisterColoring getPrecoloring(lir::Program &lir);
+    RegisterColoring getPrecoloring(lir::Function *f, lir::OperandManager *om);
 
-    std::pair<bool, RegisterColoring> tryColor(lir::Program &lir,
-                                               Interference &interference);
+    std::pair<bool, RegisterColoring> tryColor(lir::Function *f,
+                                               Interference &interference,
+                                               lir::OperandManager *om);
 
-    void colorRegisters(lir::Program &lir, RegisterColoring &coloring);
+    void colorRegisters(lir::Function *f, RegisterColoring &coloring,
+                        lir::OperandManager *om);
 
     void printColoring(RegisterColoring &coloring);
 

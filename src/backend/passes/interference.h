@@ -5,7 +5,9 @@
 namespace backend {
     using Interference = std::unordered_map<lir::Register *, RegisterSet>;
 
-    Interference computeInterference(lir::Program &p, Liveness &l);
+    Interference computeInterference(lir::Function *f, Liveness &l,
+                                     lir::OperandManager *om);
+
     void printInterference(Interference &i);
 
     class InterferenceBuilder {

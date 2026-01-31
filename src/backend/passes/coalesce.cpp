@@ -1,7 +1,7 @@
 #include "backend/passes/coalesce.h"
 
 namespace backend {
-    bool tryCoalesce(lir::Program &lir, Interference &interference) {
+    bool tryCoalesce(lir::Function *f, Interference &interference) {
         // TODO: coalesce registers
         return false;
     }

@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "backend/lir/lir.h"
 #include "backend/lir/operand.h"
 #include "backend/passes/liveness.h"
 
@@ -192,17 +193,15 @@ namespace backend {
 
     void KillSetVisitor::visit(lir::InstructionUnknown *i) {}
 
-    SuccessorVisitor::SuccessorVisitor(lir::Program &p) {
-        for (auto &f : p.getFunctions()) {
-            auto idx = 0;
-            auto &instructions = f->getInstructions();
-            for (auto &i : instructions) {
-                auto label = dynamic_cast<lir::Label *>(i.get());
-                if (label)
-                    label_index[label->getName()] = idx;
+    SuccessorVisitor::SuccessorVisitor(lir::Function *f) {
+        auto idx = 0;
+        auto &instructions = f->getInstructions();
+        for (auto &i : instructions) {
+            auto label = dynamic_cast<lir::Label *>(i.get());
+            if (label)
+                label_index[label->getName()] = idx;
 
-                next_index[i.get()] = ++idx == instructions.size() ? -1 : idx;
-            }
+            next_index[i.get()] = ++idx == instructions.size() ? -1 : idx;
         }
     }
 
@@ -283,98 +282,80 @@ namespace backend {
         successors.push_back(next_index[i]);
     }
 
-    Liveness computeLiveness(lir::Program &p) {
-        std::vector<std::vector<RegisterSet>> gen, kill, in, out;
+    Liveness computeLiveness(lir::Function *f, lir::OperandManager *om) {
+        GenSetVisitor gsv(om);
+        KillSetVisitor ksv(om);
+        SuccessorVisitor sv(f);
 
-        GenSetVisitor gsv(p.getOm());
-        KillSetVisitor ksv(p.getOm());
-        SuccessorVisitor sv(p);
+        auto &instructions = f->getInstructions();
 
-        for (auto &f : p.getFunctions()) {
-            auto &instructions = f->getInstructions();
+        std::vector<RegisterSet> gen, kill;
+        std::vector<std::vector<int>> successors;
+        for (auto &i : instructions) {
+            i->accept(&gsv);
+            i->accept(&ksv);
+            i->accept(&sv);
 
-            std::vector<RegisterSet> gen_f, kill_f;
-            std::vector<std::vector<int>> successors;
-            for (auto &i : instructions) {
-                i->accept(&gsv);
-                i->accept(&ksv);
-                i->accept(&sv);
+            gen.push_back(std::move(gsv.getResult()));
+            kill.push_back(std::move(ksv.getResult()));
+            successors.push_back(std::move(sv.getResult()));
+        }
 
-                gen_f.push_back(std::move(gsv.getResult()));
-                kill_f.push_back(std::move(ksv.getResult()));
-                successors.push_back(std::move(sv.getResult()));
-            }
+        auto size = instructions.size();
+        std::vector<RegisterSet> in(size), out(size);
 
-            auto size = instructions.size();
-            std::vector<RegisterSet> in_f(size), out_f(size);
+        std::unordered_set<lir::Register *> cur_in, cur_out;
+        bool changed = true;
+        while (changed) {
+            changed = false;
+            for (int i = 0; i < size; i++) {
+                cur_in = gen[i];
+                for (auto reg : out[i])
+                    if (!kill[i].contains(reg))
+                        cur_in.insert(reg);
 
-            std::unordered_set<lir::Register *> cur_in, cur_out;
-            bool changed = true;
-            while (changed) {
-                changed = false;
-                for (int i = 0; i < size; i++) {
-                    cur_in = gen_f[i];
-                    for (auto reg : out_f[i])
-                        if (!kill_f[i].contains(reg))
-                            cur_in.insert(reg);
+                cur_out.clear();
+                for (auto succ : successors[i])
+                    cur_out.insert(in[succ].begin(), in[succ].end());
 
-                    cur_out.clear();
-                    for (auto succ : successors[i])
-                        cur_out.insert(in_f[succ].begin(), in_f[succ].end());
+                if (cur_in != in[i]) {
+                    changed = true;
+                    in[i].swap(cur_in);
+                }
 
-                    if (cur_in != in_f[i]) {
-                        changed = true;
-                        in_f[i].swap(cur_in);
-                    }
-
-                    if (cur_out != out_f[i]) {
-                        changed = true;
-                        out_f[i].swap(cur_out);
-                    }
+                if (cur_out != out[i]) {
+                    changed = true;
+                    out[i].swap(cur_out);
                 }
             }
-
-            gen.push_back(std::move(gen_f));
-            kill.push_back(std::move(kill_f));
-            in.push_back(std::move(in_f));
-            out.push_back(std::move(out_f));
         }
 
         return {gen, kill, in, out};
     }
 
-    void printLiveness(lir::Program &p, Liveness &l) {
+    void printLiveness(lir::Function *f, Liveness &l) {
         std::array<std::string, 4> sets = {"gen", "kill", "in", "out"};
 
-        size_t f_index = 0;
-        for (auto &f : p.getFunctions()) {
-            std::cout << f->getName() << " {\n";
+        std::cout << f->getName() << " {\n";
+        size_t i_index = 0;
+        for (auto &i : f->getInstructions()) {
+            lir::ToStringVisitor tsv;
+            i->accept(&tsv);
+            std::cout << "    " << i_index << ": " << tsv.getResult() << '\n';
 
-            size_t i_index = 0;
-            for (auto &i : f->getInstructions()) {
-                lir::ToStringVisitor tsv;
-                i->accept(&tsv);
-                std::cout << "    " << i_index << ": " << tsv.getResult()
-                          << '\n';
-
-                for (size_t set_index = 0; set_index < 4; set_index++) {
-                    std::cout << "    - " << sets[set_index] << ": {";
-                    auto regs = l[set_index][f_index][i_index];
-                    for (auto reg = regs.begin(); reg != regs.end(); reg++) {
-                        if (reg != regs.begin())
-                            std::cout << ", ";
-                        std::cout << (*reg)->toString();
-                    }
-                    std::cout << "}\n";
+            for (size_t set_index = 0; set_index < 4; set_index++) {
+                std::cout << "    - " << sets[set_index] << ": {";
+                auto regs = l[set_index][i_index];
+                for (auto reg = regs.begin(); reg != regs.end(); reg++) {
+                    if (reg != regs.begin())
+                        std::cout << ", ";
+                    std::cout << (*reg)->toString();
                 }
-
-                i_index++;
+                std::cout << "}\n";
             }
 
-            std::cout << "}\n";
-            f_index++;
+            i_index++;
         }
-
-        std::cout << std::endl;
+        std::cout << "}" << std::endl;
     }
 } // namespace backend

@@ -60,8 +60,8 @@ namespace backend {
             }
     }
 
-    Interference computeInterference(lir::Program &p, Liveness &l) {
-        auto om = p.getOm();
+    Interference computeInterference(lir::Function *f, Liveness &l,
+                                     lir::OperandManager *om) {
         InterferenceBuilder ib(om);
 
         auto &physical_regs = lir::getAllRegisters();
@@ -71,15 +71,13 @@ namespace backend {
                              om->getRegister(physical_regs[r2]));
 
         auto gen = l[0], out = l[3];
-        for (size_t f = 0; f < gen.size(); f++) {
-            for (size_t i = 0; i < gen[f].size(); i++) {
-                auto &gen_i = gen[f][i], &out_i = out[f][i];
-                for (auto gen_reg : gen_i) {
-                    for (auto prev_gen_reg : gen_i)
-                        ib.interfere(prev_gen_reg, gen_reg);
-                    for (auto out_reg : out_i)
-                        ib.interfere(out_reg, gen_reg);
-                }
+        for (size_t i = 0; i < gen.size(); i++) {
+            auto &gen_i = gen[i], &out_i = out[i];
+            for (auto gen_reg : gen_i) {
+                for (auto prev_gen_reg : gen_i)
+                    ib.interfere(prev_gen_reg, gen_reg);
+                for (auto out_reg : out_i)
+                    ib.interfere(out_reg, gen_reg);
             }
         }
 
