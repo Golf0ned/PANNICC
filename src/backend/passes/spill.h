@@ -1,11 +1,12 @@
 #pragma once
 
 #include "backend/lir/lir.h"
+#include "backend/passes/liveness.h"
 
 namespace backend {
-    std::unordered_map<lir::VirtualRegister *, uint64_t>
-    computeSpillCosts(lir::Program &lir);
+    using SpillCosts = std::unordered_map<lir::VirtualRegister *, uint64_t>;
 
-    void spill(lir::Program &lir, lir::VirtualRegister *reg);
-    void spillAll(lir::Program &lir);
+    SpillCosts computeSpillCosts(const Liveness &l);
+
+    void spill(lir::Function *f, lir::VirtualRegister *reg);
 } // namespace backend
