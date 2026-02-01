@@ -4,7 +4,7 @@
 #include "backend/passes/liveness.h"
 
 namespace backend {
-    using SpillCosts = std::unordered_map<lir::VirtualRegister *, uint64_t>;
+    using SpillCosts = std::unordered_map<lir::Register *, uint64_t>;
 
     SpillCosts computeSpillCosts(const Liveness &l);
 

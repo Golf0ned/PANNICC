@@ -13,15 +13,13 @@ namespace backend {
             for (auto &reg : gen[i]) {
                 if (reg->getRegNum() != lir::RegisterNum::VIRTUAL)
                     continue;
-                auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
-                spill_costs[virtual_reg] += use_weight;
+                spill_costs[reg] += use_weight;
             }
 
             for (auto &reg : kill[i]) {
                 if (reg->getRegNum() != lir::RegisterNum::VIRTUAL)
                     continue;
-                auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
-                spill_costs[virtual_reg] += def_weight;
+                spill_costs[reg] += def_weight;
             }
         }
 
