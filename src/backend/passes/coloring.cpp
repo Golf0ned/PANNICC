@@ -193,6 +193,7 @@ namespace backend {
 
     std::pair<bool, RegisterColoring> tryColor(lir::Function *f,
                                                Interference &interference,
+                                               const SpillCosts &sc,
                                                lir::OperandManager *om) {
         int num_regs = 16;
 
@@ -222,22 +223,18 @@ namespace backend {
             }
 
             if (!remaining.empty()) {
-                // TODO: find reg with min spill cost divided by degree,
-                // and push onto stack
-                // We haven't implemented spill cost yet!
-                // Therefore, big number if physical reg
-                uint64_t min_val = -1;
+                uint64_t min_weight = -1;
                 auto min_reg = remaining.begin()->first;
                 for (auto &[reg, edges] : remaining) {
                     auto cost = reg->getRegNum() == lir::RegisterNum::VIRTUAL
-                                    ? 1000
+                                    ? sc.at(reg)
                                     : 100000;
 
                     auto cur_val = edges.size() == 0 ? 0 : cost / edges.size();
-                    if (cur_val >= min_val)
+                    if (cur_val >= min_weight)
                         continue;
 
-                    min_val = cur_val;
+                    min_weight = cur_val;
                     min_reg = reg;
                 }
 

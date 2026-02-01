@@ -26,7 +26,8 @@ namespace backend {
 
                 auto spill_costs = computeSpillCosts(liveness);
 
-                auto [can_color, coloring] = tryColor(f_ptr, interference, om);
+                auto [can_color, coloring] =
+                    tryColor(f_ptr, interference, spill_costs, om);
                 if (can_color) {
                     assignRegisters(f_ptr, coloring, om);
                     break;

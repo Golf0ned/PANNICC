@@ -2,6 +2,7 @@
 
 #include "backend/lir/operand.h"
 #include "backend/passes/interference.h"
+#include "backend/passes/spill.h"
 
 namespace backend {
     using RegisterColoring =
@@ -70,6 +71,7 @@ namespace backend {
 
     std::pair<bool, RegisterColoring> tryColor(lir::Function *f,
                                                Interference &interference,
+                                               const SpillCosts &sc,
                                                lir::OperandManager *om);
 
     void assignRegisters(lir::Function *f, RegisterColoring &coloring,
