@@ -37,10 +37,10 @@ namespace backend {
         RegisterColoring precolorings;
     };
 
-    class ColoringVisitor : public lir::InstructionVisitor {
+    class AssignmentVisitor : public lir::InstructionVisitor {
     public:
-        ColoringVisitor(const RegisterColoring &coloring,
-                        lir::OperandManager *om);
+        AssignmentVisitor(const RegisterColoring &coloring,
+                          lir::OperandManager *om);
 
         lir::Operand *tryColorOperand(lir::Operand *operand);
 
@@ -72,8 +72,8 @@ namespace backend {
                                                Interference &interference,
                                                lir::OperandManager *om);
 
-    void colorRegisters(lir::Function *f, RegisterColoring &coloring,
-                        lir::OperandManager *om);
+    void assignRegisters(lir::Function *f, RegisterColoring &coloring,
+                         lir::OperandManager *om);
 
     void printColoring(RegisterColoring &coloring);
 

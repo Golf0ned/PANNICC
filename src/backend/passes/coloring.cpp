@@ -59,11 +59,11 @@ namespace backend {
 
     void PrecoloringVisitor::visit(lir::InstructionUnknown *i) {}
 
-    ColoringVisitor::ColoringVisitor(const RegisterColoring &coloring,
-                                     lir::OperandManager *om)
+    AssignmentVisitor::AssignmentVisitor(const RegisterColoring &coloring,
+                                         lir::OperandManager *om)
         : coloring(coloring), om(om) {}
 
-    lir::Operand *ColoringVisitor::tryColorOperand(lir::Operand *operand) {
+    lir::Operand *AssignmentVisitor::tryColorOperand(lir::Operand *operand) {
         // TODO: unhardcode virtual reg size
         auto size = lir::DataSize::DOUBLEWORD;
 
@@ -97,11 +97,11 @@ namespace backend {
         return nullptr;
     }
 
-    void ColoringVisitor::visit(lir::Instruction *i) {}
+    void AssignmentVisitor::visit(lir::Instruction *i) {}
 
-    void ColoringVisitor::visit(lir::Label *l) {}
+    void AssignmentVisitor::visit(lir::Label *l) {}
 
-    void ColoringVisitor::visit(lir::InstructionMov *i) {
+    void AssignmentVisitor::visit(lir::InstructionMov *i) {
         auto src = tryColorOperand(i->getSrc());
         if (src)
             i->setSrc(src);
@@ -111,21 +111,21 @@ namespace backend {
             i->setDst(dst);
     }
 
-    void ColoringVisitor::visit(lir::InstructionPush *i) {
+    void AssignmentVisitor::visit(lir::InstructionPush *i) {
         auto src = tryColorOperand(i->getSrc());
         if (src)
             i->setSrc(src);
     }
 
-    void ColoringVisitor::visit(lir::InstructionPop *i) {
+    void AssignmentVisitor::visit(lir::InstructionPop *i) {
         auto dst = tryColorOperand(i->getDst());
         if (dst)
             i->setDst(dst);
     }
 
-    void ColoringVisitor::visit(lir::InstructionConvert *i) {}
+    void AssignmentVisitor::visit(lir::InstructionConvert *i) {}
 
-    void ColoringVisitor::visit(lir::InstructionBinaryOp *i) {
+    void AssignmentVisitor::visit(lir::InstructionBinaryOp *i) {
         auto src = tryColorOperand(i->getSrc());
         if (src)
             i->setSrc(src);
@@ -135,13 +135,13 @@ namespace backend {
             i->setDst(dst);
     }
 
-    void ColoringVisitor::visit(lir::InstructionSpecialOp *i) {
+    void AssignmentVisitor::visit(lir::InstructionSpecialOp *i) {
         auto src = tryColorOperand(i->getSrc());
         if (src)
             i->setSrc(src);
     }
 
-    void ColoringVisitor::visit(lir::InstructionLea *i) {
+    void AssignmentVisitor::visit(lir::InstructionLea *i) {
         auto src = tryColorOperand(i->getSrc());
         if (src)
             i->setSrc(static_cast<lir::Address *>(src));
@@ -151,7 +151,7 @@ namespace backend {
             i->setDst(dst);
     }
 
-    void ColoringVisitor::visit(lir::InstructionCmp *i) {
+    void AssignmentVisitor::visit(lir::InstructionCmp *i) {
         auto src1 = tryColorOperand(i->getSrc1());
         if (src1)
             i->setSrc1(src1);
@@ -161,15 +161,15 @@ namespace backend {
             i->setSrc2(src2);
     }
 
-    void ColoringVisitor::visit(lir::InstructionJmp *i) {}
+    void AssignmentVisitor::visit(lir::InstructionJmp *i) {}
 
-    void ColoringVisitor::visit(lir::InstructionCJmp *i) {}
+    void AssignmentVisitor::visit(lir::InstructionCJmp *i) {}
 
-    void ColoringVisitor::visit(lir::InstructionCall *i) {}
+    void AssignmentVisitor::visit(lir::InstructionCall *i) {}
 
-    void ColoringVisitor::visit(lir::InstructionRet *i) {}
+    void AssignmentVisitor::visit(lir::InstructionRet *i) {}
 
-    void ColoringVisitor::visit(lir::InstructionVirtualCall *i) {
+    void AssignmentVisitor::visit(lir::InstructionVirtualCall *i) {
         auto args = i->getArgs();
 
         for (auto &arg : args) {
@@ -181,7 +181,7 @@ namespace backend {
         i->setArgs(args);
     }
 
-    void ColoringVisitor::visit(lir::InstructionUnknown *i) {}
+    void AssignmentVisitor::visit(lir::InstructionUnknown *i) {}
 
     RegisterColoring getPrecoloring(lir::Function *f, lir::OperandManager *om) {
         PrecoloringVisitor pcv(om);
@@ -247,7 +247,7 @@ namespace backend {
         }
 
         //
-        // Assigning Registers
+        // Coloring Registers
         //
         auto coloring = getPrecoloring(f, om);
         std::unordered_set<lir::RegisterNum> seen_colors;
@@ -297,9 +297,9 @@ namespace backend {
         return {can_color, coloring};
     }
 
-    void colorRegisters(lir::Function *f, RegisterColoring &coloring,
-                        lir::OperandManager *om) {
-        ColoringVisitor cv(coloring, om);
+    void assignRegisters(lir::Function *f, RegisterColoring &coloring,
+                         lir::OperandManager *om) {
+        AssignmentVisitor cv(coloring, om);
         for (auto &i : f->getInstructions())
             i->accept(&cv);
     }

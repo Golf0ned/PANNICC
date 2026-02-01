@@ -25,7 +25,7 @@ namespace backend {
 
                 auto [can_color, coloring] = tryColor(f_ptr, interference, om);
                 if (can_color) {
-                    colorRegisters(f_ptr, coloring, om);
+                    assignRegisters(f_ptr, coloring, om);
                     break;
                 }
 
