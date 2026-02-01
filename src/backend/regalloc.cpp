@@ -3,6 +3,7 @@
 #include "backend/passes/coloring.h"
 #include "backend/passes/interference.h"
 #include "backend/passes/liveness.h"
+#include "backend/passes/spill.h"
 
 namespace backend {
     void allocateRegisters(lir::Program &lir) {
@@ -23,14 +24,15 @@ namespace backend {
                     changed = tryCoalesce(f_ptr, interference);
                 }
 
+                auto spill_costs = computeSpillCosts(liveness);
+
                 auto [can_color, coloring] = tryColor(f_ptr, interference, om);
                 if (can_color) {
                     assignRegisters(f_ptr, coloring, om);
                     break;
                 }
 
-                // TODO: compute spill costs
-                // TODO: spill registers
+                // TODO: spill lowest cost register
             }
         }
     }
