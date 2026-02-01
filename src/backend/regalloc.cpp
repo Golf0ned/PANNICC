@@ -9,8 +9,8 @@ namespace backend {
     void allocateRegisters(lir::Program &lir) {
         auto om = lir.getOm();
 
-        for (auto &f : lir.getFunctions()) {
-            auto f_ptr = f.get();
+        for (auto &unique_f : lir.getFunctions()) {
+            auto f = unique_f.get();
 
             Liveness liveness;
             Interference interference;
@@ -18,22 +18,22 @@ namespace backend {
             while (true) {
                 bool changed = true;
                 while (changed) {
-                    liveness = computeLiveness(f_ptr, om);
-                    interference = computeInterference(f_ptr, liveness, om);
+                    liveness = computeLiveness(f, om);
+                    interference = computeInterference(f, liveness, om);
 
-                    changed = tryCoalesce(f_ptr, interference);
+                    changed = tryCoalesce(f, interference);
                 }
 
                 auto spill_costs = computeSpillCosts(liveness);
 
                 auto [can_color, coloring] =
-                    tryColor(f_ptr, interference, spill_costs, om);
+                    tryColor(f, interference, spill_costs, om);
                 if (can_color) {
-                    assignRegisters(f_ptr, coloring, om);
+                    assignRegisters(f, coloring, om);
                     break;
                 }
 
-                // TODO: spill lowest cost register
+                spillLowestCost(f, spill_costs);
             }
         }
     }
