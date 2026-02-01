@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "backend/passes/spill.h"
 
 namespace backend {
@@ -26,7 +28,23 @@ namespace backend {
         return spill_costs;
     }
 
-    void spill(lir::Function *f, lir::VirtualRegister *reg) {
+    void spill(lir::Function *f, lir::Register *reg) {
         // TODO: spill and make changes to lir
+        std::cout << "[Regalloc] Try to spill " << reg->toString() << std::endl;
+    }
+
+    void spillLowestCost(lir::Function *f, const SpillCosts &sc) {
+        uint64_t min_cost = -1;
+        auto min_reg = sc.begin()->first;
+
+        for (auto &[reg, cost] : sc) {
+            if (cost >= min_cost)
+                continue;
+
+            min_cost = cost;
+            min_reg = reg;
+        }
+
+        spill(f, min_reg);
     }
 } // namespace backend
