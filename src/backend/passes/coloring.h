@@ -43,6 +43,7 @@ namespace backend {
         AssignmentVisitor(const RegisterColoring &coloring,
                           lir::OperandManager *om);
 
+        lir::Register *assignRegister(lir::Register *reg);
         lir::Operand *tryColorOperand(lir::Operand *operand);
 
         void visit(lir::Instruction *i);

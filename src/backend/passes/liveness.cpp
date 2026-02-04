@@ -14,7 +14,8 @@ namespace backend {
     void GenSetVisitor::checkOperand(lir::Operand *o) {
         auto constrained = dynamic_cast<lir::ConstrainedRegister *>(o);
         if (constrained) {
-            auto inner_reg = om->getRegister(constrained->getName());
+            auto inner_reg =
+                om->getRegister(constrained->getName(), constrained->getSize());
             gen.insert(inner_reg);
             return;
         }
