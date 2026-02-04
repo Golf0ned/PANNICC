@@ -64,7 +64,7 @@ namespace backend {
 
     lir::Register *AssignmentVisitor::assignRegister(lir::Register *reg) {
         // TODO: do we care about replacing physical?
-        if (reg->getRegNum() == lir::RegisterNum::VIRTUAL)
+        if (reg->getRegNum() != lir::RegisterNum::VIRTUAL)
             return reg;
 
         auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
