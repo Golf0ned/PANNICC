@@ -181,7 +181,7 @@ namespace backend::lir_tree {
 
         auto size = lir::DataSize::DOUBLEWORD;
         auto src = resolveOperand(tile_load->getPtr().get(), worklist);
-        auto dst = om->getRegister(tile_dst->getName());
+        auto dst = om->getRegister(tile_dst->getName(), size);
 
         auto load_asm = std::make_unique<lir::InstructionMov>(
             lir::Extend::NONE, size, size, src, dst);
@@ -209,11 +209,11 @@ namespace backend::lir_tree {
     BinOpTile::apply(std::vector<Node *> &worklist) {
         std::list<std::unique_ptr<lir::Instruction>> assembly;
 
+        auto size = lir::DataSize::DOUBLEWORD;
+
         auto left = resolveOperand(tile_op->getLeft().get(), worklist);
         auto right = resolveOperand(tile_op->getRight().get(), worklist);
-        auto dst = om->getRegister(tile_dst->getName());
-
-        auto size = lir::DataSize::DOUBLEWORD;
+        auto dst = om->getRegister(tile_dst->getName(), size);
 
         auto op = tile_op->getOp();
         auto bin_op = lir::fromMir(op);
@@ -295,7 +295,7 @@ namespace backend::lir_tree {
         auto size = lir::DataSize::DOUBLEWORD;
 
         auto src = resolveOperand(tile_src, worklist);
-        auto dst = om->getRegister(tile_dst->getName());
+        auto dst = om->getRegister(tile_dst->getName(), size);
 
         auto mov_asm = std::make_unique<lir::InstructionMov>(
             lir::Extend::NONE, size, size, src, dst);
@@ -343,7 +343,7 @@ namespace backend::lir_tree {
                                   static_cast<lir::Register *>(index), scale,
                                   displacement);
 
-        auto dst = om->getRegister(tile_dst->getName());
+        auto dst = om->getRegister(tile_dst->getName(), size);
 
         auto lea = std::make_unique<lir::InstructionLea>(size, src, dst);
         assembly.push_back(std::move(lea));
@@ -374,7 +374,7 @@ namespace backend::lir_tree {
         auto src = om->getAddress(base, static_cast<lir::Register *>(index),
                                   scale, displacement);
 
-        auto dst = om->getRegister(tile_dst->getName());
+        auto dst = om->getRegister(tile_dst->getName(), size);
 
         auto lea = std::make_unique<lir::InstructionLea>(size, src, dst);
         assembly.push_back(std::move(lea));
@@ -405,7 +405,7 @@ namespace backend::lir_tree {
         auto displacement = om->getImmediate(0);
         auto src = om->getAddress(base, index, scale, displacement);
 
-        auto dst = om->getRegister(tile_dst->getName());
+        auto dst = om->getRegister(tile_dst->getName(), size);
 
         auto lea = std::make_unique<lir::InstructionLea>(size, src, dst);
         assembly.push_back(std::move(lea));
@@ -459,7 +459,7 @@ namespace backend::lir_tree {
                                   static_cast<lir::Register *>(index), scale,
                                   displacement);
 
-        auto dst = om->getRegister(tile_dst->getName());
+        auto dst = om->getRegister(tile_dst->getName(), size);
 
         auto lea = std::make_unique<lir::InstructionLea>(size, src, dst);
         assembly.push_back(std::move(lea));
@@ -576,7 +576,7 @@ namespace backend::lir_tree {
                                   static_cast<lir::Register *>(index), scale,
                                   displacement);
 
-        auto dst = om->getRegister(tile_dst->getName());
+        auto dst = om->getRegister(tile_dst->getName(), size);
 
         auto lea = std::make_unique<lir::InstructionLea>(size, src, dst);
         assembly.push_back(std::move(lea));
@@ -631,7 +631,7 @@ namespace backend::lir_tree {
         auto src = om->getAddress(base, static_cast<lir::Register *>(index),
                                   scale, displacement);
 
-        auto dst = om->getRegister(tile_dst->getName());
+        auto dst = om->getRegister(tile_dst->getName(), size);
 
         auto lea = std::make_unique<lir::InstructionLea>(size, src, dst);
         assembly.push_back(std::move(lea));
@@ -686,7 +686,7 @@ namespace backend::lir_tree {
         auto displacement = om->getImmediate(tile_displacement->getValue());
         auto src = om->getAddress(base, index, scale, displacement);
 
-        auto dst = om->getRegister(tile_dst->getName());
+        auto dst = om->getRegister(tile_dst->getName(), size);
 
         auto lea = std::make_unique<lir::InstructionLea>(size, src, dst);
         assembly.push_back(std::move(lea));
@@ -821,7 +821,7 @@ namespace backend::lir_tree {
                                   static_cast<lir::Register *>(index), scale,
                                   displacement);
 
-        auto dst = om->getRegister(tile_dst->getName());
+        auto dst = om->getRegister(tile_dst->getName(), size);
 
         auto lea = std::make_unique<lir::InstructionLea>(size, src, dst);
         assembly.push_back(std::move(lea));
