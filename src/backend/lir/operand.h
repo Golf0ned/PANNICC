@@ -4,9 +4,8 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include <vector>
 
-#include "backend/lir/data_size.h"
+#include "backend/lir/register_num.h"
 
 namespace backend::lir {
     class Operand {
@@ -24,59 +23,11 @@ namespace backend::lir {
         uint64_t value;
     };
 
-    enum class RegisterNum {
-        VIRTUAL,
-
-        // 64-bit
-        RAX,
-        RCX,
-        RDX,
-        RBX,
-        RSI,
-        RDI,
-        RSP,
-        RBP,
-        R8,
-        R9,
-        R10,
-        R11,
-        R12,
-        R13,
-        R14,
-        R15,
-
-        // 32-bit
-        EAX,
-        ECX,
-        EDX,
-        EBX,
-        ESI,
-        EDI,
-        ESP,
-        EBP,
-        R8D,
-        R9D,
-        R10D,
-        R11D,
-        R12D,
-        R13D,
-        R14D,
-        R15D,
-    };
-
-    std::string toString(RegisterNum rn);
-
-    RegisterNum toSized(RegisterNum rn, DataSize size);
-
-    const std::vector<RegisterNum> &getAllRegisters();
-    const std::vector<RegisterNum> &getArgRegisters();
-    const std::vector<RegisterNum> &getCalleeSavedRegisters();
-    const std::vector<RegisterNum> &getCallerSavedRegisters();
-
     class Register : public Operand {
     public:
         Register(RegisterNum reg);
         RegisterNum getRegNum();
+        virtual DataSize getSize();
         virtual std::string toString();
 
     private:
@@ -85,12 +36,14 @@ namespace backend::lir {
 
     class VirtualRegister : public Register {
     public:
-        VirtualRegister(std::string name);
+        VirtualRegister(std::string name, DataSize size);
         std::string getName();
+        DataSize getSize() override;
         std::string toString() override;
 
     private:
         std::string name;
+        DataSize size;
     };
 
     class ConstrainedRegister : public VirtualRegister {
@@ -135,7 +88,7 @@ namespace backend::lir {
         uint64_t getNumRegisters();
         Immediate *getImmediate(uint64_t value);
         Register *getRegister(RegisterNum reg);
-        VirtualRegister *getRegister(std::string name);
+        VirtualRegister *getRegister(std::string name, DataSize size);
         ConstrainedRegister *getConstrainedRegister(VirtualRegister *reg,
                                                     RegisterNum constraint);
         Address *getAddress(Register *base, Register *index, Immediate *scale,
@@ -145,7 +98,9 @@ namespace backend::lir {
     private:
         std::unordered_map<uint64_t, std::unique_ptr<Immediate>> immediates;
         std::unordered_map<RegisterNum, std::unique_ptr<Register>> registers;
-        std::unordered_map<std::string, std::unique_ptr<VirtualRegister>>
+        std::unordered_map<
+            std::string,
+            std::unordered_map<DataSize, std::unique_ptr<VirtualRegister>>>
             virtual_registers;
         std::vector<std::unique_ptr<ConstrainedRegister>> constrained_registers;
         std::vector<std::unique_ptr<Address>> addresses;
