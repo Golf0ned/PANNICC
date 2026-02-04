@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "backend/passes/interference.h"
 #include "backend/passes/spill.h"
 
 namespace backend {
@@ -15,7 +16,10 @@ namespace backend {
             for (auto &reg : gen[i]) {
                 if (reg->getRegNum() != lir::RegisterNum::VIRTUAL)
                     continue;
-                spill_costs[reg] += use_weight;
+                auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
+                auto color =
+                    om->getRegister(virtual_reg->getName(), color_size);
+                spill_costs[color] += use_weight;
             }
 
             for (auto &reg : kill[i]) {
