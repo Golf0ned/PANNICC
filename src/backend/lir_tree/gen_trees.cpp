@@ -86,7 +86,9 @@ namespace backend::lir_tree {
         auto literal = dynamic_cast<middleend::mir::Literal *>(v);
         if (literal)
             return std::make_unique<ImmediateNode>(literal->getValue());
-        auto reg = om->getRegister(std::to_string(nir.getNumber(v)));
+
+        auto size = lir::fromMir(v->getType());
+        auto reg = om->getRegister(std::to_string(nir.getNumber(v)), size);
         return std::make_unique<RegisterNode>(reg, nullptr);
     }
 
@@ -105,7 +107,9 @@ namespace backend::lir_tree {
         auto literal = dynamic_cast<middleend::mir::Literal *>(v);
         if (literal)
             return om->getImmediate(literal->getValue());
-        return om->getRegister(std::to_string(nir.getNumber(v)));
+
+        auto size = lir::fromMir(v->getType());
+        return om->getRegister(std::to_string(nir.getNumber(v)), size);
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionBinaryOp *i) {
@@ -118,7 +122,8 @@ namespace backend::lir_tree {
         auto op = std::make_unique<OpNode>(i->getOp(), std::move(left),
                                            std::move(right));
 
-        auto om_reg = om->getRegister(std::to_string(nir.getNumber(i)));
+        auto size = lir::fromMir(i->getType());
+        auto om_reg = om->getRegister(std::to_string(nir.getNumber(i)), size);
         auto reg = std::make_unique<RegisterNode>(om_reg, std::move(op));
 
         tree_info->insertTree(reg.get(), {left_leaf, right_leaf}, false);
@@ -182,7 +187,8 @@ namespace backend::lir_tree {
 
         auto load = std::make_unique<LoadNode>(std::move(ptr));
 
-        auto om_reg = om->getRegister(std::to_string(nir.getNumber(i)));
+        auto size = lir::fromMir(i->getType());
+        auto om_reg = om->getRegister(std::to_string(nir.getNumber(i)), size);
         auto reg = std::make_unique<RegisterNode>(om_reg, std::move(load));
 
         tree_info->insertTree(reg.get(), {ptr_leaf}, true);
@@ -246,7 +252,8 @@ namespace backend::lir_tree {
 
             auto &[src, dst] = worklist.front();
             auto dst_reg = static_cast<lir::VirtualRegister *>(dst);
-            auto tmp = om->getRegister("tmp" + dst_reg->getName());
+            auto tmp =
+                om->getRegister("tmp" + dst_reg->getName(), dst_reg->getSize());
 
             // TODO: is this necessarily correct?
             auto size = lir::DataSize::DOUBLEWORD;
