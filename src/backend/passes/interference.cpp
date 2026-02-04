@@ -24,43 +24,39 @@ namespace backend {
         }
 
         if (!first_is_virtual && !second_is_virtual) {
-            auto size = lir::DataSize::QUADWORD;
-            auto first_64 = lir::toSized(first_num, size);
-            auto second_64 = lir::toSized(second_num, size);
-            return first_64 == second_64;
+            auto first_color = lir::toSized(first_num, color_size);
+            auto second_color = lir::toSized(second_num, color_size);
+            return first_color == second_color;
         }
 
         return false;
     }
 
-    std::vector<lir::Register *>
-    InterferenceBuilder::getSizedRegisters(lir::Register *reg) {
+    lir::Register *InterferenceBuilder::flattenRegister(lir::Register *reg) {
         auto reg_num = reg->getRegNum();
-        if (reg_num == lir::RegisterNum::VIRTUAL)
-            return {reg};
+        if (reg_num == lir::RegisterNum::VIRTUAL) {
+            auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
+            return om->getRegister(virtual_reg->getName(), color_size);
+        }
 
-        return {
-            om->getRegister(lir::toSized(reg_num, lir::DataSize::QUADWORD)),
-            om->getRegister(lir::toSized(reg_num, lir::DataSize::DOUBLEWORD)),
-        };
+        return om->getRegister(lir::toSized(reg_num, color_size));
     }
 
     void InterferenceBuilder::interfere(lir::Register *first,
                                         lir::Register *second) {
-        if (sameReg(first, second))
+        auto flat_first = flattenRegister(first),
+             flat_second = flattenRegister(second);
+
+        if (sameReg(flat_first, flat_second))
             return;
 
-        auto first_regs = getSizedRegisters(first),
-             second_regs = getSizedRegisters(second);
-
-        for (auto first_reg : first_regs)
-            for (auto second_reg : second_regs) {
-                interference[first].insert(second);
-                interference[second].insert(first);
-            }
+        interference[flat_first].insert(flat_second);
+        interference[flat_second].insert(flat_first);
     }
 
-    void InterferenceBuilder::addReg(lir::Register *reg) { interference[reg]; }
+    void InterferenceBuilder::addReg(lir::Register *reg) {
+        interference[flattenRegister(reg)];
+    }
 
     Interference computeInterference(lir::Function *f, Liveness &l,
                                      lir::OperandManager *om) {

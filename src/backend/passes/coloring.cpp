@@ -14,11 +14,10 @@ namespace backend {
         if (!constrained)
             return;
 
-        auto color_size = lir::DataSize::QUADWORD;
         auto color = lir::toSized(constrained->getConstraint(), color_size);
 
         auto physical_reg = om->getRegister(color);
-        auto virtual_reg = om->getRegister(constrained->getName());
+        auto virtual_reg = om->getRegister(constrained->getName(), color_size);
 
         precolorings[physical_reg] = color;
         precolorings[virtual_reg] = color;
@@ -63,33 +62,28 @@ namespace backend {
                                          lir::OperandManager *om)
         : coloring(coloring), om(om) {}
 
+    lir::Register *AssignmentVisitor::assignRegister(lir::Register *reg) {
+        // TODO: do we care about replacing physical?
+        if (reg->getRegNum() == lir::RegisterNum::VIRTUAL)
+            return reg;
+
+        auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
+        auto flattened_reg =
+            om->getRegister(virtual_reg->getName(), color_size);
+        auto color = coloring.at(flattened_reg);
+        return om->getRegister(lir::toSized(color, virtual_reg->getSize()));
+    }
+
     lir::Operand *AssignmentVisitor::tryColorOperand(lir::Operand *operand) {
-        // TODO: unhardcode virtual reg size
-        auto size = lir::DataSize::DOUBLEWORD;
-
-        auto constrained = dynamic_cast<lir::ConstrainedRegister *>(operand);
-        if (constrained) {
-            auto color = coloring.at(om->getRegister(constrained->getName()));
-            return om->getRegister(lir::toSized(color, size));
-        }
-
-        // Skip physical for now because I'm too lazy to deal with sized
         auto reg = dynamic_cast<lir::VirtualRegister *>(operand);
-        if (reg) {
-            auto color = coloring.at(reg);
-            return om->getRegister(lir::toSized(color, size));
-        }
+        if (reg)
+            return assignRegister(reg);
 
         auto address = dynamic_cast<lir::Address *>(operand);
         if (address) {
             auto base = address->getBase(), index = address->getIndex();
-            auto new_base =
-                base ? om->getRegister(lir::toSized(coloring.at(base), size))
-                     : nullptr;
-            auto new_index =
-                index ? om->getRegister(lir::toSized(coloring.at(index), size))
-                      : nullptr;
-
+            auto new_base = base ? assignRegister(base) : nullptr;
+            auto new_index = index ? assignRegister(index) : nullptr;
             return om->getAddress(new_base, new_index, address->getScale(),
                                   address->getDisplacement());
         }
