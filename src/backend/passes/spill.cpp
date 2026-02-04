@@ -7,7 +7,7 @@ namespace backend {
     static constexpr uint64_t use_weight = 5;
     static constexpr uint64_t copy_weight = 5;
 
-    SpillCosts computeSpillCosts(const Liveness &l) {
+    SpillCosts computeSpillCosts(const Liveness &l, lir::OperandManager *om) {
         SpillCosts spill_costs;
 
         auto gen = l[0], kill = l[1];

@@ -24,7 +24,7 @@ namespace backend {
                     changed = tryCoalesce(f, interference);
                 }
 
-                auto spill_costs = computeSpillCosts(liveness);
+                auto spill_costs = computeSpillCosts(liveness, om);
 
                 auto [can_color, coloring] =
                     tryColor(f, interference, spill_costs, om);
