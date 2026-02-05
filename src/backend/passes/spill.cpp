@@ -5,8 +5,14 @@
 
 namespace backend {
     static constexpr uint64_t def_weight = 5;
-    static constexpr uint64_t use_weight = 5;
+    static constexpr uint64_t use_weight = 10;
     static constexpr uint64_t copy_weight = 5;
+    static constexpr uint64_t max_weight = -1;
+
+    void addToCost(uint64_t &cur_cost, uint64_t to_add) {
+        cur_cost =
+            cur_cost + to_add < cur_cost ? max_weight : cur_cost + to_add;
+    }
 
     SpillCosts computeSpillCosts(const Liveness &l, lir::OperandManager *om) {
         SpillCosts spill_costs;
@@ -19,13 +25,18 @@ namespace backend {
                 auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
                 auto color =
                     om->getRegister(virtual_reg->getName(), color_size);
-                spill_costs[color] += use_weight;
+
+                addToCost(spill_costs[color], use_weight);
             }
 
             for (auto &reg : kill[i]) {
                 if (reg->getRegNum() != lir::RegisterNum::VIRTUAL)
                     continue;
-                spill_costs[reg] += def_weight;
+                auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
+                auto color =
+                    om->getRegister(virtual_reg->getName(), color_size);
+
+                addToCost(spill_costs[color], use_weight);
             }
         }
 
