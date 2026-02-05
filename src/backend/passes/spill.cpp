@@ -23,8 +23,7 @@ namespace backend {
                 if (reg->getRegNum() != lir::RegisterNum::VIRTUAL)
                     continue;
                 auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
-                auto color =
-                    om->getRegister(virtual_reg->getName(), color_size);
+                auto color = om->getRegister(virtual_reg->getName(), flat_size);
 
                 addToCost(spill_costs[color], use_weight);
             }
@@ -33,8 +32,7 @@ namespace backend {
                 if (reg->getRegNum() != lir::RegisterNum::VIRTUAL)
                     continue;
                 auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
-                auto color =
-                    om->getRegister(virtual_reg->getName(), color_size);
+                auto color = om->getRegister(virtual_reg->getName(), flat_size);
 
                 addToCost(spill_costs[color], use_weight);
             }

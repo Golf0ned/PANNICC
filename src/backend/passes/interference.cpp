@@ -24,8 +24,8 @@ namespace backend {
         }
 
         if (!first_is_virtual && !second_is_virtual) {
-            auto first_color = lir::toSized(first_num, color_size);
-            auto second_color = lir::toSized(second_num, color_size);
+            auto first_color = lir::toSized(first_num, flat_size);
+            auto second_color = lir::toSized(second_num, flat_size);
             return first_color == second_color;
         }
 
@@ -36,10 +36,10 @@ namespace backend {
         auto reg_num = reg->getRegNum();
         if (reg_num == lir::RegisterNum::VIRTUAL) {
             auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
-            return om->getRegister(virtual_reg->getName(), color_size);
+            return om->getRegister(virtual_reg->getName(), flat_size);
         }
 
-        return om->getRegister(lir::toSized(reg_num, color_size));
+        return om->getRegister(lir::toSized(reg_num, flat_size));
     }
 
     void InterferenceBuilder::interfere(lir::Register *first,

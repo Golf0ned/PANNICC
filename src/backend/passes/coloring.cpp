@@ -14,10 +14,10 @@ namespace backend {
         if (!constrained)
             return;
 
-        auto color = lir::toSized(constrained->getConstraint(), color_size);
+        auto color = lir::toSized(constrained->getConstraint(), flat_size);
 
         auto physical_reg = om->getRegister(color);
-        auto virtual_reg = om->getRegister(constrained->getName(), color_size);
+        auto virtual_reg = om->getRegister(constrained->getName(), flat_size);
 
         precolorings[physical_reg] = color;
         precolorings[virtual_reg] = color;
@@ -68,8 +68,7 @@ namespace backend {
             return reg;
 
         auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
-        auto flattened_reg =
-            om->getRegister(virtual_reg->getName(), color_size);
+        auto flattened_reg = om->getRegister(virtual_reg->getName(), flat_size);
         auto color = coloring.at(flattened_reg);
         return om->getRegister(lir::toSized(color, virtual_reg->getSize()));
     }

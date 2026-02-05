@@ -5,7 +5,7 @@
 namespace backend {
     using Interference = std::unordered_map<lir::Register *, RegisterSet>;
 
-    constexpr lir::DataSize color_size = lir::DataSize::QUADWORD;
+    constexpr lir::DataSize flat_size = lir::DataSize::QUADWORD;
 
     Interference computeInterference(lir::Function *f, Liveness &l,
                                      lir::OperandManager *om);
