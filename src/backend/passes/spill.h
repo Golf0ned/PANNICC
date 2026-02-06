@@ -6,7 +6,8 @@
 namespace backend {
     using SpillCosts = std::unordered_map<lir::Register *, uint64_t>;
 
-    SpillCosts computeSpillCosts(const Liveness &l, lir::OperandManager *om);
+    SpillCosts computeSpillCosts(lir::Function *f, const Liveness &l,
+                                 lir::OperandManager *om);
 
     void spill(lir::Function *f, lir::VirtualRegister *reg);
     void spillLowestCost(lir::Function *f, const SpillCosts &sc);
