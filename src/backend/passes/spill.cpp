@@ -6,35 +6,78 @@
 namespace backend {
     static constexpr uint64_t def_weight = 5;
     static constexpr uint64_t use_weight = 10;
-    static constexpr uint64_t copy_weight = 5;
     static constexpr uint64_t max_weight = -1;
 
-    void addToCost(uint64_t &cur_cost, uint64_t to_add) {
-        cur_cost =
-            cur_cost + to_add < cur_cost ? max_weight : cur_cost + to_add;
+    RegisterSet getRestrictedRegisters(lir::Function *f, const Liveness &l,
+                                       lir::OperandManager *om) {
+        RegisterSet load_only;
+        RegisterSet not_load_only;
+
+        size_t i_index = 0;
+        auto &gen = l[0];
+        // TODO: what in the world
+        for (auto &i : f->getInstructions()) {
+            auto &gen_i = gen[i_index++];
+            auto mov = dynamic_cast<lir::InstructionMov *>(i.get());
+            if (mov) {
+                auto src = dynamic_cast<lir::Address *>(mov->getSrc());
+                auto dst = dynamic_cast<lir::Register *>(mov->getDst());
+                if (!src || !dst ||
+                    dst->getRegNum() != lir::RegisterNum::VIRTUAL)
+                    continue;
+
+                auto virtual_reg = static_cast<lir::VirtualRegister *>(dst);
+                auto flattened_reg =
+                    om->getRegister(virtual_reg->getName(), flat_size);
+                if (!not_load_only.contains(flattened_reg)) {
+                    load_only.insert(flattened_reg);
+                    continue;
+                }
+            }
+
+            for (auto &reg : gen_i) {
+                if (reg->getRegNum() != lir::RegisterNum::VIRTUAL)
+                    continue;
+                auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
+                auto flattened_reg =
+                    om->getRegister(virtual_reg->getName(), flat_size);
+                if (load_only.contains(flattened_reg)) {
+                    load_only.erase(flattened_reg);
+                }
+            }
+        }
+
+        return load_only;
     }
 
-    SpillCosts computeSpillCosts(const Liveness &l, lir::OperandManager *om) {
+    SpillCosts computeSpillCosts(lir::Function *f, const Liveness &l,
+                                 lir::OperandManager *om) {
         SpillCosts spill_costs;
+        auto restrictions = getRestrictedRegisters(f, l, om);
+
+        auto add_to_cost = [&](lir::Register *reg, uint64_t amount) {
+            if (reg->getRegNum() != lir::RegisterNum::VIRTUAL)
+                return;
+
+            auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
+            auto flattened_reg =
+                om->getRegister(virtual_reg->getName(), flat_size);
+
+            // TODO: regret this choice
+            auto &cur_cost = spill_costs[flattened_reg];
+            cur_cost = restrictions.contains(flattened_reg) ? -1
+                       : cur_cost + amount < cur_cost       ? max_weight
+                                                            : cur_cost + amount;
+        };
 
         auto gen = l[0], kill = l[1];
         for (size_t i = 0; i < gen.size(); i++) {
             for (auto &reg : gen[i]) {
-                if (reg->getRegNum() != lir::RegisterNum::VIRTUAL)
-                    continue;
-                auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
-                auto color = om->getRegister(virtual_reg->getName(), flat_size);
-
-                addToCost(spill_costs[color], use_weight);
+                add_to_cost(reg, def_weight);
             }
 
             for (auto &reg : kill[i]) {
-                if (reg->getRegNum() != lir::RegisterNum::VIRTUAL)
-                    continue;
-                auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
-                auto color = om->getRegister(virtual_reg->getName(), flat_size);
-
-                addToCost(spill_costs[color], use_weight);
+                add_to_cost(reg, use_weight);
             }
         }
 
