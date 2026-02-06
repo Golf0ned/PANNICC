@@ -68,22 +68,19 @@ namespace backend {
                 ib.interfere(om->getRegister(physical_regs[r1]),
                              om->getRegister(physical_regs[r2]));
 
-        auto gen = l[0], out = l[3];
+        auto gen = l[0], kill = l[1], out = l[3];
         for (size_t i = 0; i < gen.size(); i++) {
-            auto &gen_i = gen[i], &out_i = out[i];
+            auto &gen_i = gen[i], &kill_i = kill[i], &out_i = out[i];
             for (auto gen_reg : gen_i) {
                 for (auto prev_gen_reg : gen_i)
                     ib.interfere(prev_gen_reg, gen_reg);
                 for (auto out_reg : out_i)
                     ib.interfere(out_reg, gen_reg);
             }
-        }
 
-        // TODO: what the hell are you doing ben
-        auto kill = l[1];
-        for (auto kill_i : kill)
             for (auto reg : kill_i)
                 ib.addReg(reg);
+        }
 
         return ib.getInterference();
     }
