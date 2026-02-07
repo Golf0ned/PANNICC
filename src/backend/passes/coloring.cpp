@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "backend/lir/operand.h"
+#include "backend/lir/register_num.h"
 #include "backend/passes/coloring.h"
 
 namespace backend {
@@ -195,8 +196,10 @@ namespace backend {
         //
         Interference remaining = interference;
         std::vector<lir::Register *> pruned_regs;
-        auto move_to_stack = [&](lir::Register *reg) {
-            pruned_regs.push_back(reg);
+        auto remove_from_graph = [&](lir::Register *reg) {
+            if (reg->getRegNum() == lir::RegisterNum::VIRTUAL)
+                pruned_regs.push_back(reg);
+
             for (auto neighbor : remaining.at(reg))
                 remaining[neighbor].erase(reg);
             remaining.erase(reg);
@@ -210,7 +213,7 @@ namespace backend {
                 if (edges.size() >= num_regs)
                     continue;
 
-                move_to_stack(reg);
+                remove_from_graph(reg);
                 changed = true;
                 break;
             }
@@ -231,7 +234,7 @@ namespace backend {
                     min_reg = reg;
                 }
 
-                move_to_stack(min_reg);
+                remove_from_graph(min_reg);
                 changed = true;
             }
         }
@@ -240,12 +243,9 @@ namespace backend {
         // Coloring Registers
         //
         auto coloring = getPrecoloring(f, om);
-        std::unordered_set<lir::RegisterNum> seen_colors;
-        for (auto &[_, color] : coloring)
-            seen_colors.insert(color);
 
-        std::vector<lir::RegisterNum> available_colors(seen_colors.begin(),
-                                                       seen_colors.end());
+        std::vector<lir::RegisterNum> available_colors =
+            lir::getColoringPriority();
         bool can_color = true;
 
         while (!pruned_regs.empty()) {
@@ -270,17 +270,8 @@ namespace backend {
             }
 
             if (!coloring.contains(reg)) {
-                auto virtual_reg = dynamic_cast<lir::VirtualRegister *>(reg);
-                if (virtual_reg) {
-                    coloring[reg] = lir::RegisterNum::VIRTUAL;
-                    can_color = false;
-                    continue;
-                }
-
-                auto new_color =
-                    lir::toSized(reg->getRegNum(), lir::DataSize::QUADWORD);
-                coloring[reg] = new_color;
-                available_colors.push_back(new_color);
+                coloring[reg] = lir::RegisterNum::VIRTUAL;
+                can_color = false;
             }
         }
 
