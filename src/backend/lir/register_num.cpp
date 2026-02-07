@@ -324,4 +324,16 @@ namespace backend::lir {
         };
         return callee_saved;
     }
+
+    const std::vector<RegisterNum> &getColoringPriority() {
+        static std::vector<RegisterNum> coloring_priority = {
+            RegisterNum::R10, RegisterNum::R11, RegisterNum::RDI,
+            RegisterNum::RSI, RegisterNum::RDX, RegisterNum::RCX,
+            RegisterNum::R8,  RegisterNum::R9,  RegisterNum::RAX,
+            RegisterNum::RBX, RegisterNum::R12, RegisterNum::R13,
+            RegisterNum::R14, RegisterNum::R15, RegisterNum::RBP,
+            RegisterNum::RSP,
+        };
+        return coloring_priority;
+    }
 } // namespace backend::lir
