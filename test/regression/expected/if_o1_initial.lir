@@ -6,7 +6,7 @@ if_basic: # 0 params, 0 stack bytes
 .if_basic_1:
         movl    $101, %4
 .if_basic_3:
-        movq    %4, %eax
+        movl    %4, %eax
         ret
 .if_basic_2:
         movl    $1, %4
@@ -20,7 +20,7 @@ if_basic_else: # 0 params, 0 stack bytes
 .if_basic_else_1:
         movl    $4, %5
 .if_basic_else_4:
-        movq    %5, %eax
+        movl    %5, %eax
         ret
 .if_basic_else_2:
 .if_basic_else_3:
@@ -35,7 +35,7 @@ if_no_braces: # 0 params, 0 stack bytes
 .if_no_braces_1:
         movl    $1, %5
 .if_no_braces_4:
-        movq    %5, %eax
+        movl    %5, %eax
         ret
 .if_no_braces_2:
 .if_no_braces_3:
@@ -54,7 +54,7 @@ if_chain: # 0 params, 0 stack bytes
 .if_chain_3:
         movl    $0, %8
 .if_chain_7:
-        movq    %8, %eax
+        movl    %8, %eax
         ret
 .if_chain_4:
 .if_chain_6:
@@ -79,7 +79,7 @@ if_chain_many: # 0 params, 0 stack bytes
 .if_chain_many_5:
         movl    $0, %12
 .if_chain_many_11:
-        movq    %12, %eax
+        movl    %12, %eax
         ret
 .if_chain_many_8:
 .if_chain_many_10:
@@ -100,7 +100,7 @@ if_else_if: # 0 params, 0 stack bytes
 .if_else_if_1:
         movl    $2, %9
 .if_else_if_8:
-        movq    %9, %eax
+        movl    %9, %eax
         ret
 .if_else_if_2:
 .if_else_if_3:

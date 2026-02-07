@@ -1,0 +1,49 @@
+int lshift() {
+    __entry:
+    int a_1;
+    int __v;
+    __v = 1;
+    a_1 = __v;
+    int b_1;
+    int __v1;
+    __v1 = 4;
+    b_1 = __v1;
+    int c_1;
+    int __v2;
+    __v2 = a_1;
+    int __v3;
+    __v3 = 8;
+    __v2 = __v2 << __v3;
+    c_1 = __v2;
+    int __v4;
+    __v4 = a_1;
+    int __v5;
+    __v5 = b_1;
+    __v4 = __v4 << __v5;
+    return __v4;
+}
+
+int rshift() {
+    __entry:
+    int a_1;
+    int __v;
+    __v = 16;
+    a_1 = __v;
+    int b_1;
+    int __v1;
+    __v1 = 3;
+    b_1 = __v1;
+    int c_1;
+    int __v2;
+    __v2 = a_1;
+    int __v3;
+    __v3 = 8;
+    __v2 = __v2 >> __v3;
+    c_1 = __v2;
+    int __v4;
+    __v4 = a_1;
+    int __v5;
+    __v5 = b_1;
+    __v4 = __v4 >> __v5;
+    return __v4;
+}

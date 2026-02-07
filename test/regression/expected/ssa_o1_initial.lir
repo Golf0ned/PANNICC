@@ -17,7 +17,7 @@ lost_copy_problem: # 1 params, 0 stack bytes
 .lost_copy_problem_8:
         movl    %2, %9
         addl    $3, %9
-        movq    %9, %eax
+        movl    %9, %eax
         ret
 
 swap_problem: # 2 params, 0 stack bytes
@@ -38,5 +38,5 @@ swap_problem: # 2 params, 0 stack bytes
 .swap_problem_7:
 .swap_problem_8:
         leal    (%4,%3), %9
-        movq    %9, %eax
+        movl    %9, %eax
         ret

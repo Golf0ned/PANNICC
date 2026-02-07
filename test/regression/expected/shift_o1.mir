@@ -1,0 +1,9 @@
+define i32 @lshift() {
+entry:
+  ret i32 16
+}
+
+define i32 @rshift() {
+entry:
+  ret i32 2
+}

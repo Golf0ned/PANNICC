@@ -11,7 +11,7 @@ simplify_cfg_delete_orphaned: # 0 params, 16 stack bytes
         movl    %7, $12(%rsp)
 .simplify_cfg_delete_orphaned_12:
         movl    $12(%rsp), %13
-        movq    %13, %eax
+        movl    %13, %eax
         ret
 .simplify_cfg_delete_orphaned_8:
 .simplify_cfg_delete_orphaned_9:
@@ -42,7 +42,7 @@ simplify_cfg_merge_straight_line: # 0 params, 40 stack bytes
         movl    %17, $36(%rsp)
 .simplify_cfg_merge_straight_line_31:
         movl    $36(%rsp), %32
-        movq    %32, %eax
+        movl    %32, %eax
         ret
 .simplify_cfg_merge_straight_line_25:
 .simplify_cfg_merge_straight_line_26:
@@ -89,7 +89,7 @@ simplify_cfg_delete_empty: # 0 params, 20 stack bytes
         movl    %23, $16(%rsp)
 .simplify_cfg_delete_empty_24:
         movl    $16(%rsp), %25
-        movq    %25, %eax
+        movl    %25, %eax
         ret
 .simplify_cfg_delete_empty_14:
 .simplify_cfg_delete_empty_15:
@@ -125,5 +125,5 @@ simplify_cfg_empty_loop: # 0 params, 12 stack bytes
         movl    %9, $8(%rsp)
 .simplify_cfg_empty_loop_10:
         movl    $8(%rsp), %11
-        movq    %11, %eax
+        movl    %11, %eax
         ret

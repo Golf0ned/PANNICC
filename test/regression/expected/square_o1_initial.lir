@@ -3,5 +3,5 @@ square: # 1 params, 0 stack bytes
 .square_entry:
         movl    %0, %1
         imull   %0, %1
-        movq    %1, %eax
+        movl    %1, %eax
         ret

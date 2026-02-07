@@ -15,5 +15,5 @@ square: # 1 params, 16 stack bytes
         movl    %10, $8(%rsp)
 .square_11:
         movl    $8(%rsp), %12
-        movq    %12, %eax
+        movl    %12, %eax
         ret
