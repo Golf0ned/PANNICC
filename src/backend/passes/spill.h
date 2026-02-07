@@ -9,6 +9,6 @@ namespace backend {
     SpillCosts computeSpillCosts(lir::Function *f, const Liveness &l,
                                  lir::OperandManager *om);
 
-    void spill(lir::Function *f, lir::VirtualRegister *reg);
-    void spillLowestCost(lir::Function *f, const SpillCosts &sc);
+    void spill(lir::Function *f, lir::VirtualRegister *reg, Liveness &l);
+    void spillLowestCost(lir::Function *f, const SpillCosts &sc, Liveness &l);
 } // namespace backend
