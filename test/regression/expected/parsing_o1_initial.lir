@@ -1,14 +1,14 @@
 main: # 0 params, 0 stack bytes
 .main_entry:
-        movq    $0, %eax
+        movl    $0, %eax
         ret
 
 compound: # 0 params, 0 stack bytes
 .compound_entry:
-        movq    $23, %eax
+        movl    $23, %eax
         ret
 
 parens: # 0 params, 0 stack bytes
 .parens_entry:
-        movq    $8, %eax
+        movl    $8, %eax
         ret

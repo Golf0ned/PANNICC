@@ -34,6 +34,8 @@ namespace backend {
                 }
 
                 spillLowestCost(f, spill_costs);
+                printColoring(coloring);
+                return;
             }
         }
     }

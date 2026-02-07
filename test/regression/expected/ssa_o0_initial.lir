@@ -39,7 +39,7 @@ lost_copy_problem: # 1 params, 36 stack bytes
         movl    %29, $28(%rsp)
 .lost_copy_problem_30:
         movl    $28(%rsp), %31
-        movq    %31, %eax
+        movl    %31, %eax
         ret
 
 swap_problem: # 2 params, 40 stack bytes
@@ -82,5 +82,5 @@ swap_problem: # 2 params, 40 stack bytes
         movl    %29, $32(%rsp)
 .swap_problem_30:
         movl    $32(%rsp), %31
-        movq    %31, %eax
+        movl    %31, %eax
         ret

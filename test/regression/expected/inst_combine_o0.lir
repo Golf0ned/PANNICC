@@ -1,103 +1,103 @@
 constant_fold: # 0 params, 72 stack bytes
 .constant_fold_entry:
         movl    $1, $4(%rsp)
-        movl    $4(%rsp), %18
-        movl    %18, (%rsp)
-        movl    (%rsp), %19
-        movl    %19, $12(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    %r10d, (%rsp)
+        movl    (%rsp), %r10d
+        movl    %r10d, $12(%rsp)
         movl    $13, $16(%rsp)
-        movl    $12(%rsp), %20
-        movl    $16(%rsp), %21
-        leal    (%20,%21), %22
-        movl    %22, $12(%rsp)
-        movl    $12(%rsp), %23
-        movl    %23, $8(%rsp)
-        movl    (%rsp), %24
-        movl    %24, $24(%rsp)
-        movl    (%rsp), %25
-        movl    %25, $28(%rsp)
-        movl    $24(%rsp), %26
-        movl    $28(%rsp), %27
-        leal    (%26,%27), %28
-        movl    %28, $24(%rsp)
-        movl    $24(%rsp), %29
-        movl    %29, $20(%rsp)
-        movl    $8(%rsp), %30
-        movl    %30, $36(%rsp)
-        movl    $20(%rsp), %31
-        movl    %31, $40(%rsp)
-        movl    $36(%rsp), %32
-        movl    $40(%rsp), %33
-        movl    %32, %34
-        imull   %33, %34
-        movl    %34, $36(%rsp)
-        movl    $36(%rsp), %35
-        movl    %35, $32(%rsp)
-        movl    $32(%rsp), %36
-        movl    %36, $44(%rsp)
-        movl    $32(%rsp), %37
-        movl    %37, $48(%rsp)
-        movl    $44(%rsp), %38
-        movl    $48(%rsp), %39
-        leal    (%38,%39), %40
-        movl    %40, $44(%rsp)
-        movl    $44(%rsp), %41
-        movl    %41, $32(%rsp)
-        movl    $32(%rsp), %42
-        movl    %42, $56(%rsp)
-        movl    (%rsp), %43
-        movl    %43, $60(%rsp)
-        movl    $56(%rsp), %44
-        movl    $60(%rsp), %45
-        movl    %44, %46
-        subl    %45, %46
-        movl    %46, $56(%rsp)
-        movl    $56(%rsp), %47
-        movl    %47, $52(%rsp)
-        movl    $52(%rsp), %48
-        movl    %48, $64(%rsp)
-        movl    $64(%rsp), %49
-        movl    %49, $68(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    $16(%rsp), %edi
+        leal    (%r10d,%edi), %r11d
+        movl    %r11d, $12(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    %r10d, $8(%rsp)
+        movl    (%rsp), %r10d
+        movl    %r10d, $24(%rsp)
+        movl    (%rsp), %r10d
+        movl    %r10d, $28(%rsp)
+        movl    $24(%rsp), %r11d
+        movl    $28(%rsp), %r10d
+        leal    (%r11d,%r10d), %edi
+        movl    %edi, $24(%rsp)
+        movl    $24(%rsp), %r10d
+        movl    %r10d, $20(%rsp)
+        movl    $8(%rsp), %r10d
+        movl    %r10d, $36(%rsp)
+        movl    $20(%rsp), %r10d
+        movl    %r10d, $40(%rsp)
+        movl    $36(%rsp), %r10d
+        movl    $40(%rsp), %edi
+        movl    %r10d, %r11d
+        imull   %edi, %r11d
+        movl    %r11d, $36(%rsp)
+        movl    $36(%rsp), %r10d
+        movl    %r10d, $32(%rsp)
+        movl    $32(%rsp), %r10d
+        movl    %r10d, $44(%rsp)
+        movl    $32(%rsp), %r10d
+        movl    %r10d, $48(%rsp)
+        movl    $44(%rsp), %r11d
+        movl    $48(%rsp), %r10d
+        leal    (%r11d,%r10d), %edi
+        movl    %edi, $44(%rsp)
+        movl    $44(%rsp), %r10d
+        movl    %r10d, $32(%rsp)
+        movl    $32(%rsp), %r10d
+        movl    %r10d, $56(%rsp)
+        movl    (%rsp), %r10d
+        movl    %r10d, $60(%rsp)
+        movl    $56(%rsp), %r11d
+        movl    $60(%rsp), %edi
+        movl    %r11d, %r10d
+        subl    %edi, %r10d
+        movl    %r10d, $56(%rsp)
+        movl    $56(%rsp), %r10d
+        movl    %r10d, $52(%rsp)
+        movl    $52(%rsp), %r10d
+        movl    %r10d, $64(%rsp)
+        movl    $64(%rsp), %r10d
+        movl    %r10d, $68(%rsp)
 .constant_fold_50:
-        movl    $68(%rsp), %51
-        movq    %51, %eax
+        movl    $68(%rsp), %r10d
+        movl    %r10d, %eax
         ret
 
 constant_fold_overflow: # 0 params, 20 stack bytes
 .constant_fold_overflow_entry:
         movl    $2147483647, $4(%rsp)
         movl    $1, $8(%rsp)
-        movl    $4(%rsp), %5
-        movl    $8(%rsp), %6
-        leal    (%5,%6), %7
-        movl    %7, $4(%rsp)
-        movl    $4(%rsp), %8
-        movl    %8, (%rsp)
-        movl    (%rsp), %9
-        movl    %9, $12(%rsp)
-        movl    $12(%rsp), %10
-        movl    %10, $16(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    $8(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, $4(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    %r10d, (%rsp)
+        movl    (%rsp), %r10d
+        movl    %r10d, $12(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    %r10d, $16(%rsp)
 .constant_fold_overflow_11:
-        movl    $16(%rsp), %12
-        movq    %12, %eax
+        movl    $16(%rsp), %r10d
+        movl    %r10d, %eax
         ret
 
 constant_fold_underflow: # 0 params, 20 stack bytes
 .constant_fold_underflow_entry:
         movl    $18446744071562067968, $4(%rsp)
         movl    $1, $8(%rsp)
-        movl    $4(%rsp), %5
-        movl    $8(%rsp), %6
-        movl    %5, %7
-        subl    %6, %7
-        movl    %7, $4(%rsp)
-        movl    $4(%rsp), %8
-        movl    %8, (%rsp)
-        movl    (%rsp), %9
-        movl    %9, $12(%rsp)
-        movl    $12(%rsp), %10
-        movl    %10, $16(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    $8(%rsp), %edi
+        movl    %r10d, %r11d
+        subl    %edi, %r11d
+        movl    %r11d, $4(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    %r10d, (%rsp)
+        movl    (%rsp), %r10d
+        movl    %r10d, $12(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    %r10d, $16(%rsp)
 .constant_fold_underflow_11:
-        movl    $16(%rsp), %12
-        movq    %12, %eax
+        movl    $16(%rsp), %r10d
+        movl    %r10d, %eax
         ret

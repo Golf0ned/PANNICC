@@ -1,6 +1,6 @@
 first: # 0 params, 0 stack bytes
 .first_entry:
-        movq    $1, %eax
+        movl    $1, %eax
         ret
 
 second: # 0 params, 0 stack bytes
@@ -9,7 +9,7 @@ second: # 0 params, 0 stack bytes
         movl    %eax, %0
         movl    %0, %1
         addl    $1, %1
-        movq    %1, %eax
+        movl    %1, %eax
         ret
 
 third: # 0 params, 0 stack bytes
@@ -18,7 +18,7 @@ third: # 0 params, 0 stack bytes
         movl    %eax, %0
         movl    %0, %1
         addl    $2, %1
-        movq    %1, %eax
+        movl    %1, %eax
         ret
 
 fourth: # 0 params, 0 stack bytes
@@ -27,7 +27,7 @@ fourth: # 0 params, 0 stack bytes
         movl    %eax, %0
         movl    %0, %1
         addl    $3, %1
-        movq    %1, %eax
+        movl    %1, %eax
         ret
 
 fifth: # 0 params, 0 stack bytes
@@ -36,7 +36,7 @@ fifth: # 0 params, 0 stack bytes
         movl    %eax, %0
         movl    %0, %1
         addl    $4, %1
-        movq    %1, %eax
+        movl    %1, %eax
         ret
 
 sixth: # 0 params, 0 stack bytes
@@ -45,7 +45,7 @@ sixth: # 0 params, 0 stack bytes
         movl    %eax, %0
         movl    %0, %1
         addl    $5, %1
-        movq    %1, %eax
+        movl    %1, %eax
         ret
 
 main: # 0 params, 0 stack bytes
@@ -89,5 +89,5 @@ main: # 0 params, 0 stack bytes
         call    sixth()
         movl    %eax, %23
         leal    (%22,%23), %24
-        movq    %24, %eax
+        movl    %24, %eax
         ret

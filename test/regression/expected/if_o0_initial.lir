@@ -26,7 +26,7 @@ if_basic: # 0 params, 28 stack bytes
         movl    %20, $24(%rsp)
 .if_basic_21:
         movl    $24(%rsp), %22
-        movq    %22, %eax
+        movl    %22, %eax
         ret
 .if_basic_17:
         jmp     .if_basic_18
@@ -59,7 +59,7 @@ if_basic_else: # 0 params, 36 stack bytes
         movl    %28, $32(%rsp)
 .if_basic_else_29:
         movl    $32(%rsp), %30
-        movq    %30, %eax
+        movl    %30, %eax
         ret
 .if_basic_else_19:
 .if_basic_else_20:
@@ -92,7 +92,7 @@ if_no_braces: # 0 params, 24 stack bytes
         movl    %12, $20(%rsp)
 .if_no_braces_18:
         movl    $20(%rsp), %19
-        movq    %19, %eax
+        movl    %19, %eax
         ret
 .if_no_braces_13:
 .if_no_braces_14:
@@ -129,7 +129,7 @@ if_chain: # 0 params, 36 stack bytes
         movl    %19, $32(%rsp)
 .if_chain_25:
         movl    $32(%rsp), %26
-        movq    %26, %eax
+        movl    %26, %eax
         ret
 .if_chain_22:
 .if_chain_23:
@@ -178,7 +178,7 @@ if_chain_many: # 0 params, 52 stack bytes
         movl    %28, $48(%rsp)
 .if_chain_many_38:
         movl    $48(%rsp), %39
-        movq    %39, %eax
+        movl    %39, %eax
         ret
 .if_chain_many_35:
 .if_chain_many_36:
@@ -209,7 +209,7 @@ if_else_if: # 0 params, 24 stack bytes
         movl    %9, $20(%rsp)
 .if_else_if_21:
         movl    $20(%rsp), %22
-        movq    %22, %eax
+        movl    %22, %eax
         ret
 .if_else_if_10:
 .if_else_if_11:

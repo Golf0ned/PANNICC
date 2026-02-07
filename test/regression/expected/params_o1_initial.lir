@@ -3,7 +3,7 @@ fun1: # 1 params, 0 stack bytes
 .fun1_entry:
         movl    %0, %1
         imull   %0, %1
-        movq    %1, %eax
+        movl    %1, %eax
         ret
 
 fun2: # 2 params, 0 stack bytes
@@ -19,7 +19,7 @@ fun2: # 2 params, 0 stack bytes
         call    fun1(%1)
         movl    %eax, %6
         leal    (%5,%6), %7
-        movq    %7, %eax
+        movl    %7, %eax
         ret
 
 fun3: # 4 params, 0 stack bytes
@@ -36,14 +36,14 @@ fun3: # 4 params, 0 stack bytes
         imull   %3, %6
         leal    (%5,%6), %7
         leal    (%7,%2), %8
-        movq    %8, %eax
+        movl    %8, %eax
         ret
 
 call1: # 0 params, 0 stack bytes
 .call1_entry:
         call    fun1($5)
         movl    %eax, %0
-        movq    %0, %eax
+        movl    %0, %eax
         ret
 
 call2: # 2 params, 0 stack bytes
@@ -52,7 +52,7 @@ call2: # 2 params, 0 stack bytes
 .call2_entry:
         call    fun2(%0, %1)
         movl    %eax, %2
-        movq    %2, %eax
+        movl    %2, %eax
         ret
 
 call3: # 2 params, 0 stack bytes
@@ -61,7 +61,7 @@ call3: # 2 params, 0 stack bytes
 .call3_entry:
         call    fun3(%0, %1, $1, $0)
         movl    %eax, %2
-        movq    %2, %eax
+        movl    %2, %eax
         ret
 
 call4: # 0 params, 0 stack bytes
@@ -70,7 +70,7 @@ call4: # 0 params, 0 stack bytes
         movl    %eax, %0
         movl    %0, %1
         subl    $100, %1
-        movq    %1, %eax
+        movl    %1, %eax
         ret
 
 super_fun: # 8 params, 0 stack bytes
@@ -90,5 +90,5 @@ super_fun: # 8 params, 0 stack bytes
         leal    (%11,%5), %12
         leal    (%12,%6), %13
         leal    (%13,%7), %14
-        movq    %14, %eax
+        movl    %14, %eax
         ret

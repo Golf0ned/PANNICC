@@ -42,7 +42,7 @@ scope: # 0 params, 76 stack bytes
         movl    %36, $72(%rsp)
 .scope_37:
         movl    $72(%rsp), %38
-        movq    %38, %eax
+        movl    %38, %eax
         ret
 
 scope_reassign_variable: # 0 params, 48 stack bytes
@@ -86,7 +86,7 @@ scope_reassign_variable: # 0 params, 48 stack bytes
         movl    %30, $44(%rsp)
 .scope_reassign_variable_31:
         movl    $44(%rsp), %32
-        movq    %32, %eax
+        movl    %32, %eax
         ret
 
 scope_reassign_in_parallel_scopes: # 0 params, 32 stack bytes
@@ -106,5 +106,5 @@ scope_reassign_in_parallel_scopes: # 0 params, 32 stack bytes
         movl    %12, $28(%rsp)
 .scope_reassign_in_parallel_scopes_13:
         movl    $28(%rsp), %14
-        movq    %14, %eax
+        movl    %14, %eax
         ret

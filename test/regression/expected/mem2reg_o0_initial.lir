@@ -5,7 +5,7 @@ fun_call: # 0 params, 8 stack bytes
         movl    %2, $4(%rsp)
 .fun_call_3:
         movl    $4(%rsp), %4
-        movq    %4, %eax
+        movl    %4, %eax
         ret
 
 mem2reg_basic: # 0 params, 28 stack bytes
@@ -26,7 +26,7 @@ mem2reg_basic: # 0 params, 28 stack bytes
         movl    %12, $24(%rsp)
 .mem2reg_basic_13:
         movl    $24(%rsp), %14
-        movq    %14, %eax
+        movl    %14, %eax
         ret
 
 mem2reg_branching: # 1 params, 36 stack bytes
@@ -56,7 +56,7 @@ mem2reg_branching: # 1 params, 36 stack bytes
         movl    %27, $28(%rsp)
 .mem2reg_branching_28:
         movl    $28(%rsp), %29
-        movq    %29, %eax
+        movl    %29, %eax
         ret
 .mem2reg_branching_18:
 .mem2reg_branching_19:
@@ -121,5 +121,5 @@ mem2reg_while: # 0 params, 48 stack bytes
         movl    %36, $44(%rsp)
 .mem2reg_while_37:
         movl    $44(%rsp), %38
-        movq    %38, %eax
+        movl    %38, %eax
         ret

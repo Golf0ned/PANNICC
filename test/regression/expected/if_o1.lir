@@ -4,12 +4,12 @@ if_basic: # 0 params, 0 stack bytes
         jne     .if_basic_2
 .if_basic_0:
 .if_basic_1:
-        movl    $101, %4
+        movl    $101, %r10d
 .if_basic_3:
-        movq    %4, %eax
+        movl    %r10d, %eax
         ret
 .if_basic_2:
-        movl    $1, %4
+        movl    $1, %r10d
         jmp     .if_basic_3
 
 if_basic_else: # 0 params, 0 stack bytes
@@ -18,13 +18,13 @@ if_basic_else: # 0 params, 0 stack bytes
         jne     .if_basic_else_2
 .if_basic_else_0:
 .if_basic_else_1:
-        movl    $4, %5
+        movl    $4, %r10d
 .if_basic_else_4:
-        movq    %5, %eax
+        movl    %r10d, %eax
         ret
 .if_basic_else_2:
 .if_basic_else_3:
-        movl    $101, %5
+        movl    $101, %r10d
         jmp     .if_basic_else_4
 
 if_no_braces: # 0 params, 0 stack bytes
@@ -33,13 +33,13 @@ if_no_braces: # 0 params, 0 stack bytes
         jne     .if_no_braces_2
 .if_no_braces_0:
 .if_no_braces_1:
-        movl    $1, %5
+        movl    $1, %r10d
 .if_no_braces_4:
-        movq    %5, %eax
+        movl    %r10d, %eax
         ret
 .if_no_braces_2:
 .if_no_braces_3:
-        movl    $1, %5
+        movl    $1, %r10d
         jmp     .if_no_braces_4
 
 if_chain: # 0 params, 0 stack bytes
@@ -52,13 +52,13 @@ if_chain: # 0 params, 0 stack bytes
         jne     .if_chain_5
 .if_chain_2:
 .if_chain_3:
-        movl    $0, %8
+        movl    $0, %r10d
 .if_chain_7:
-        movq    %8, %eax
+        movl    %r10d, %eax
         ret
 .if_chain_4:
 .if_chain_6:
-        movl    $1, %8
+        movl    $1, %r10d
         jmp     .if_chain_7
 .if_chain_5:
         jmp     .if_chain_6
@@ -77,19 +77,19 @@ if_chain_many: # 0 params, 0 stack bytes
         jne     .if_chain_many_6
 .if_chain_many_4:
 .if_chain_many_5:
-        movl    $0, %12
+        movl    $0, %r10d
 .if_chain_many_11:
-        movq    %12, %eax
+        movl    %r10d, %eax
         ret
 .if_chain_many_8:
 .if_chain_many_10:
-        movl    $1, %12
+        movl    $1, %r10d
         jmp     .if_chain_many_11
 .if_chain_many_9:
         jmp     .if_chain_many_10
 .if_chain_many_6:
 .if_chain_many_7:
-        movl    $3, %12
+        movl    $3, %r10d
         jmp     .if_chain_many_11
 
 if_else_if: # 0 params, 0 stack bytes
@@ -98,9 +98,9 @@ if_else_if: # 0 params, 0 stack bytes
         jne     .if_else_if_2
 .if_else_if_0:
 .if_else_if_1:
-        movl    $2, %9
+        movl    $2, %r10d
 .if_else_if_8:
-        movq    %9, %eax
+        movl    %r10d, %eax
         ret
 .if_else_if_2:
 .if_else_if_3:
@@ -108,9 +108,9 @@ if_else_if: # 0 params, 0 stack bytes
         jne     .if_else_if_6
 .if_else_if_4:
 .if_else_if_5:
-        movl    $4, %9
+        movl    $4, %r10d
         jmp     .if_else_if_8
 .if_else_if_6:
 .if_else_if_7:
-        movl    $5, %9
+        movl    $5, %r10d
         jmp     .if_else_if_8

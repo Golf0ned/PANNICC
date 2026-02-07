@@ -5,7 +5,7 @@ first: # 0 params, 8 stack bytes
         movl    %2, $4(%rsp)
 .first_3:
         movl    $4(%rsp), %4
-        movq    %4, %eax
+        movl    %4, %eax
         ret
 
 second: # 0 params, 12 stack bytes
@@ -22,7 +22,7 @@ second: # 0 params, 12 stack bytes
         movl    %7, $8(%rsp)
 .second_8:
         movl    $8(%rsp), %9
-        movq    %9, %eax
+        movl    %9, %eax
         ret
 
 third: # 0 params, 12 stack bytes
@@ -39,7 +39,7 @@ third: # 0 params, 12 stack bytes
         movl    %7, $8(%rsp)
 .third_8:
         movl    $8(%rsp), %9
-        movq    %9, %eax
+        movl    %9, %eax
         ret
 
 fourth: # 0 params, 12 stack bytes
@@ -56,7 +56,7 @@ fourth: # 0 params, 12 stack bytes
         movl    %7, $8(%rsp)
 .fourth_8:
         movl    $8(%rsp), %9
-        movq    %9, %eax
+        movl    %9, %eax
         ret
 
 fifth: # 0 params, 12 stack bytes
@@ -73,7 +73,7 @@ fifth: # 0 params, 12 stack bytes
         movl    %7, $8(%rsp)
 .fifth_8:
         movl    $8(%rsp), %9
-        movq    %9, %eax
+        movl    %9, %eax
         ret
 
 sixth: # 0 params, 12 stack bytes
@@ -90,7 +90,7 @@ sixth: # 0 params, 12 stack bytes
         movl    %7, $8(%rsp)
 .sixth_8:
         movl    $8(%rsp), %9
-        movq    %9, %eax
+        movl    %9, %eax
         ret
 
 main: # 0 params, 96 stack bytes
@@ -219,5 +219,5 @@ main: # 0 params, 96 stack bytes
         movl    %89, $92(%rsp)
 .main_90:
         movl    $92(%rsp), %91
-        movq    %91, %eax
+        movl    %91, %eax
         ret

@@ -1,14 +1,14 @@
 constant_fold: # 0 params, 0 stack bytes
 .constant_fold_entry:
-        movq    $55, %eax
+        movl    $55, %eax
         ret
 
 constant_fold_overflow: # 0 params, 0 stack bytes
 .constant_fold_overflow_entry:
-        movq    $18446744071562067968, %eax
+        movl    $18446744071562067968, %eax
         ret
 
 constant_fold_underflow: # 0 params, 0 stack bytes
 .constant_fold_underflow_entry:
-        movq    $2147483647, %eax
+        movl    $2147483647, %eax
         ret

@@ -12,7 +12,7 @@ while_basic: # 0 params, 0 stack bytes
         jmp     .while_basic_0
 .while_basic_5:
 .while_basic_6:
-        movq    %1, %eax
+        movl    %1, %eax
         ret
 
 while_complex: # 0 params, 0 stack bytes
@@ -33,7 +33,7 @@ while_complex: # 0 params, 0 stack bytes
         jmp     .while_complex_0
 .while_complex_7:
 .while_complex_8:
-        movq    %2, %eax
+        movl    %2, %eax
         ret
 
 while_empty: # 0 params, 0 stack bytes
@@ -44,7 +44,7 @@ while_empty: # 0 params, 0 stack bytes
         jmp     .while_empty_entry
 .while_empty_1:
 .while_empty_2:
-        movq    $0, %eax
+        movl    $0, %eax
         ret
 
 while_if: # 0 params, 0 stack bytes
@@ -59,7 +59,7 @@ while_if: # 0 params, 0 stack bytes
 .while_if_3:
         movl    $500, %8
 .while_if_7:
-        movq    %8, %eax
+        movl    %8, %eax
         ret
 .while_if_5:
 .while_if_6:
