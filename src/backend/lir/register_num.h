@@ -55,4 +55,5 @@ namespace backend::lir {
     const std::vector<RegisterNum> &getArgRegisters();
     const std::vector<RegisterNum> &getCalleeSavedRegisters();
     const std::vector<RegisterNum> &getCallerSavedRegisters();
+    const std::vector<RegisterNum> &getColoringPriority();
 } // namespace backend::lir
