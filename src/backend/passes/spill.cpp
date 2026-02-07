@@ -84,12 +84,36 @@ namespace backend {
         return spill_costs;
     }
 
-    void spill(lir::Function *f, lir::Register *reg) {
-        // TODO: spill and make changes to lir
+    void spill(lir::Function *f, lir::Register *reg, Liveness &l) {
         std::cout << "[Regalloc] Try to spill " << reg->toString() << std::endl;
+
+        auto &gen = l[0], &kill = l[1];
+
+        size_t i_index = 0;
+        auto &instructions = f->getInstructions();
+        for (auto iter = instructions.begin(); iter != instructions.end();
+             iter++) {
+            auto &gen_i = gen[i_index], &kill_i = kill[i_index];
+
+            // TODO: check against all sizes of register (64, 32)
+
+            if (gen_i.contains(reg)) {
+                // TODO: insert store
+                auto store = std::make_unique<lir::InstructionUnknown>();
+                instructions.insert(iter, std::move(store));
+            }
+
+            if (kill_i.contains(reg)) {
+                // TODO: insert load
+                auto load = std::make_unique<lir::InstructionUnknown>();
+                iter = instructions.insert(std::next(iter), std::move(load));
+            }
+
+            i_index++;
+        }
     }
 
-    void spillLowestCost(lir::Function *f, const SpillCosts &sc) {
+    void spillLowestCost(lir::Function *f, const SpillCosts &sc, Liveness &l) {
         uint64_t min_cost = -1;
         auto min_reg = sc.begin()->first;
 
@@ -101,6 +125,6 @@ namespace backend {
             min_reg = reg;
         }
 
-        spill(f, min_reg);
+        spill(f, min_reg, l);
     }
 } // namespace backend
