@@ -15,15 +15,5 @@ int main() {
     int n = m + l + k + j + i + h + g + f + e + d + c + b + a;
     int o = n + m + l + k + j + i + h + g + f + e + d + c + b + a;
     int p = o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
-    int q = p + o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
-    int r = q + p + o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
-    int s = r + q + p + o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
-    int t = s + r + q + p + o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
-    int u = t + s + r + q + p + o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
-    int v = u + t + s + r + q + p + o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
-    int w = v + u + t + s + r + q + p + o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
-    int x = w + v + u + t + s + r + q + p + o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
-    int y = x + w + v + u + t + s + r + q + p + o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
-    int z = y + x + w + v + u + t + s + r + q + p + o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
-    return z + y + x + w + v + u + t + s + r + q + p + o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
+    return p + o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
 }
