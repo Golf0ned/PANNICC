@@ -84,9 +84,26 @@ namespace backend {
         return spill_costs;
     }
 
-    void spill(lir::Function *f, lir::Register *reg, Liveness &l) {
+    void spill(lir::Function *f, lir::VirtualRegister *reg, Liveness &l,
+               lir::OperandManager *om) {
         std::cout << "[Regalloc] Try to spill " << reg->toString() << std::endl;
+        // TODO: generalize across register sizes
+        // - unhardcode size
+        // - check against all sizes of register (64, 32)
+        auto offset = f->getStackBytes();
+        f->setStackBytes(offset + 4);
 
+        auto base = om->getRegister(lir::RegisterNum::RSP);
+        auto index = static_cast<lir::Register *>(nullptr);
+        auto scale = om->getImmediate(0);
+        auto displacement = om->getImmediate(offset);
+        auto stack_var = om->getAddress(base, index, scale, displacement);
+
+        auto size = lir::DataSize::DOUBLEWORD;
+
+        auto reg_64 = om->getRegister(reg->getName(), lir::DataSize::QUADWORD),
+             reg_32 =
+                 om->getRegister(reg->getName(), lir::DataSize::DOUBLEWORD);
         auto &gen = l[0], &kill = l[1];
 
         size_t i_index = 0;
@@ -95,17 +112,17 @@ namespace backend {
              iter++) {
             auto &gen_i = gen[i_index], &kill_i = kill[i_index];
 
-            // TODO: check against all sizes of register (64, 32)
-
-            if (gen_i.contains(reg)) {
+            if (gen_i.contains(reg_32)) {
                 // TODO: insert store
-                auto store = std::make_unique<lir::InstructionUnknown>();
+                auto store = std::make_unique<lir::InstructionMov>(
+                    lir::Extend::NONE, size, size, reg_32, stack_var);
                 instructions.insert(iter, std::move(store));
             }
 
-            if (kill_i.contains(reg)) {
+            if (kill_i.contains(reg_32)) {
                 // TODO: insert load
-                auto load = std::make_unique<lir::InstructionUnknown>();
+                auto load = std::make_unique<lir::InstructionMov>(
+                    lir::Extend::NONE, size, size, stack_var, reg_32);
                 iter = instructions.insert(std::next(iter), std::move(load));
             }
 
@@ -113,7 +130,8 @@ namespace backend {
         }
     }
 
-    void spillLowestCost(lir::Function *f, const SpillCosts &sc, Liveness &l) {
+    void spillLowestCost(lir::Function *f, const SpillCosts &sc, Liveness &l,
+                         lir::OperandManager *om) {
         uint64_t min_cost = -1;
         auto min_reg = sc.begin()->first;
 
@@ -125,6 +143,10 @@ namespace backend {
             min_reg = reg;
         }
 
-        spill(f, min_reg, l);
+        if (min_reg->getRegNum() != lir::RegisterNum::VIRTUAL)
+            return;
+
+        auto virtual_reg = static_cast<lir::VirtualRegister *>(min_reg);
+        spill(f, virtual_reg, l, om);
     }
 } // namespace backend
