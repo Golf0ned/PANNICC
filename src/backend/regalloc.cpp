@@ -33,7 +33,7 @@ namespace backend {
                     break;
                 }
 
-                spillLowestCost(f, spill_costs, liveness);
+                spillLowestCost(f, spill_costs, liveness, om);
                 printColoring(coloring);
                 return;
             }
