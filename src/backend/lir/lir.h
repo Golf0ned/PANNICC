@@ -13,6 +13,7 @@ namespace backend::lir {
         std::string getName();
         uint64_t getNumParams();
         uint64_t getStackBytes();
+        void setStackBytes(uint64_t new_bytes);
         std::list<std::unique_ptr<Instruction>> &getInstructions();
         std::string toString();
 
