@@ -13,6 +13,10 @@ namespace backend::lir {
 
     uint64_t Function::getStackBytes() { return stack_bytes; }
 
+    void Function::setStackBytes(uint64_t new_bytes) {
+        stack_bytes = new_bytes;
+    }
+
     std::list<std::unique_ptr<Instruction>> &Function::getInstructions() {
         return instructions;
     }
