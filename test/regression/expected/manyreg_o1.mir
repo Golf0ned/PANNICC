@@ -1,4 +1,4 @@
 define i32 @main() {
 entry:
-  ret i32 16777216
+  ret i32 16384
 }
