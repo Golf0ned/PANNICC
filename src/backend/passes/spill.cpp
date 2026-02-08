@@ -1,7 +1,5 @@
-#include <iostream>
-
-#include "backend/passes/interference.h"
 #include "backend/passes/spill.h"
+#include "backend/passes/interference.h"
 
 namespace backend {
     static constexpr uint64_t def_weight = 5;
@@ -86,7 +84,6 @@ namespace backend {
 
     void spill(lir::Function *f, lir::VirtualRegister *reg, Liveness &l,
                lir::OperandManager *om) {
-        std::cout << "[Regalloc] Try to spill " << reg->toString() << std::endl;
         // TODO: generalize across register sizes
         // - unhardcode size
         // - check against all sizes of register (64, 32)
@@ -113,17 +110,15 @@ namespace backend {
             auto &gen_i = gen[i_index], &kill_i = kill[i_index];
 
             if (gen_i.contains(reg_32)) {
-                // TODO: insert store
-                auto store = std::make_unique<lir::InstructionMov>(
-                    lir::Extend::NONE, size, size, reg_32, stack_var);
-                instructions.insert(iter, std::move(store));
+                auto load = std::make_unique<lir::InstructionMov>(
+                    lir::Extend::NONE, size, size, stack_var, reg_32);
+                instructions.insert(iter, std::move(load));
             }
 
             if (kill_i.contains(reg_32)) {
-                // TODO: insert load
-                auto load = std::make_unique<lir::InstructionMov>(
-                    lir::Extend::NONE, size, size, stack_var, reg_32);
-                iter = instructions.insert(std::next(iter), std::move(load));
+                auto store = std::make_unique<lir::InstructionMov>(
+                    lir::Extend::NONE, size, size, reg_32, stack_var);
+                iter = instructions.insert(std::next(iter), std::move(store));
             }
 
             i_index++;
