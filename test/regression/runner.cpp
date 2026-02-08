@@ -6,8 +6,7 @@
 #include "gtest/gtest.h"
 
 #include "backend/mir_to_lir.h"
-#include "backend/passes/interference.h"
-#include "backend/passes/liveness.h"
+#include "backend/regalloc.h"
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"
@@ -94,8 +93,7 @@ void testLir(std::string input_path, std::string expected_path,
         GTEST_SKIP();
     pm->runPasses(mir);
     auto lir = mirToLir(mir);
-    // auto liveness = computeLiveness(lir);
-    // auto interference = computeInterference(lir, liveness);
+    allocateRegisters(lir);
     compareIfFileExists(lir.toString(), expected_path);
 }
 
@@ -105,68 +103,72 @@ class RegressionTest : public ::testing::TestWithParam<std::string> {
 protected:
     std::string test_name;
     std::string input_path, passes_path;
-    std::string ast_path, hir_path;
-    std::string mir_path, mir_o1_path, mir_select_path;
-    std::string lir_path, lir_o1_path, lir_select_path;
 
     void SetUp() override {
         test_name = GetParam();
 
         input_path = test_dir + "/input/" + test_name + ".c";
         passes_path = test_dir + "/input/" + test_name + ".passes";
-
-        ast_path = test_dir + "/expected/" + test_name + ".ast";
-        hir_path = test_dir + "/expected/" + test_name + ".hir";
-
-        mir_path = test_dir + "/expected/" + test_name + "_o0.mir";
-        mir_o1_path = test_dir + "/expected/" + test_name + "_o1.mir";
-        mir_select_path = test_dir + "/expected/" + test_name + "_select.mir";
-
-        lir_path = test_dir + "/expected/" + test_name + "_o0.lir";
-        lir_o1_path = test_dir + "/expected/" + test_name + "_o1.lir";
-        lir_select_path = test_dir + "/expected/" + test_name + "_select.lir";
     }
 };
 
-TEST_P(RegressionTest, AST) { testAst(input_path, ast_path); }
+TEST_P(RegressionTest, AST) {
+    auto expected_path = test_dir + "/expected/" + test_name + ".ast";
+    testAst(input_path, expected_path);
+}
 
-TEST_P(RegressionTest, HIR) { testHir(input_path, hir_path); }
+TEST_P(RegressionTest, HIR) {
+    auto expected_path = test_dir + "/expected/" + test_name + ".hir";
+    testHir(input_path, expected_path);
+}
 
 TEST_P(RegressionTest, MIR) {
-    testMir(input_path, mir_path, initializeO0().get());
+    auto expected_path = test_dir + "/expected/" + test_name + "_o0.mir";
+    testMir(input_path, expected_path, initializeO0().get());
 }
 
 TEST_P(RegressionTest, MIRWithO1) {
-    testMir(input_path, mir_o1_path, initializeO1().get());
+    auto expected_path = test_dir + "/expected/" + test_name + "_o1.mir";
+    testMir(input_path, expected_path, initializeO1().get());
 }
 
 TEST_P(RegressionTest, MIRWithSelectPasses) {
-    testMir(input_path, mir_select_path, buildPassManager(passes_path).get());
+    auto expected_path = test_dir + "/expected/" + test_name + "_select.mir";
+    testMir(input_path, expected_path, buildPassManager(passes_path).get());
 }
 
 TEST_P(RegressionTest, LIRInitial) {
-    testLirInitial(input_path, lir_path, initializeO0().get());
+    auto expected_path =
+        test_dir + "/expected/" + test_name + "_o0_initial.lir";
+    testLirInitial(input_path, expected_path, initializeO0().get());
 }
 
 TEST_P(RegressionTest, LIRInitialWithO1) {
-    testLirInitial(input_path, lir_o1_path, initializeO1().get());
+    auto expected_path =
+        test_dir + "/expected/" + test_name + "_o1_initial.lir";
+    testLirInitial(input_path, expected_path, initializeO1().get());
 }
 
 TEST_P(RegressionTest, LIRInitialWithSelectPasses) {
-    testLirInitial(input_path, lir_select_path,
+    auto expected_path =
+        test_dir + "/expected/" + test_name + "_select_initial.lir";
+    testLirInitial(input_path, expected_path,
                    buildPassManager(passes_path).get());
 }
 
 TEST_P(RegressionTest, LIR) {
-    testLir(input_path, lir_path, initializeO0().get());
+    auto expected_path = test_dir + "/expected/" + test_name + "_o0.lir";
+    testLir(input_path, expected_path, initializeO0().get());
 }
 
 TEST_P(RegressionTest, LIRWithO1) {
-    testLir(input_path, lir_o1_path, initializeO1().get());
+    auto expected_path = test_dir + "/expected/" + test_name + "_o1.lir";
+    testLir(input_path, expected_path, initializeO1().get());
 }
 
 TEST_P(RegressionTest, LIRWithSelectPasses) {
-    testLir(input_path, lir_select_path, buildPassManager(passes_path).get());
+    auto expected_path = test_dir + "/expected/" + test_name + "_select.lir";
+    testLir(input_path, expected_path, buildPassManager(passes_path).get());
 }
 
 std::vector<std::string> discoverTests(std::string input_dir) {
