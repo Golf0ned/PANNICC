@@ -31,19 +31,19 @@ mem2reg_branching: # 1 params, 0 stack bytes
 mem2reg_while: # 0 params, 0 stack bytes
 .mem2reg_while_entry:
         movl    $0, %edi
-        movl    $0, %r10d
+        movl    $0, %r11d
 .mem2reg_while_0:
-        movl    %r10d, %r11d
-        subl    $10, %r11d
-        cmpl    %r11d, $0
+        movl    %r11d, %r10d
+        subl    $10, %r10d
+        cmpl    %r10d, $0
         jne     .mem2reg_while_8
 .mem2reg_while_4:
 .mem2reg_while_5:
-        leal    (%edi,%r10d), %r11d
-        movl    %r10d, %esi
-        addl    $1, %esi
-        movl    %r11d, %edi
-        movl    %esi, %r10d
+        leal    (%edi,%r11d), %esi
+        movl    %r11d, %r10d
+        addl    $1, %r10d
+        movl    %esi, %edi
+        movl    %r10d, %r11d
         jmp     .mem2reg_while_0
 .mem2reg_while_8:
 .mem2reg_while_9:

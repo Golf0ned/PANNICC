@@ -1,42 +1,42 @@
 fun1: # 1 params, 0 stack bytes
-        movl    %edi, %r10d
+        movl    %edi, %r11d
 .fun1_entry:
-        movl    %r10d, %r11d
-        imull   %r10d, %r11d
-        movl    %r11d, %eax
+        movl    %r11d, %r10d
+        imull   %r11d, %r10d
+        movl    %r10d, %eax
         ret
 
 fun2: # 2 params, 0 stack bytes
-        movl    %edi, %edi
-        movl    %esi, %r10d
+        movl    %edi, %r10d
+        movl    %esi, %edx
 .fun2_entry:
-        call    fun1(%edi)
-        movl    %eax, %esi
-        leal    (,%edi,2), %r11d
-        movl    %r11d, %edi
-        imull   %r10d, %edi
-        leal    (%esi,%edi), %r11d
         call    fun1(%r10d)
-        movl    %eax, %edi
-        leal    (%r11d,%edi), %r10d
+        movl    %eax, %esi
+        leal    (,%r10d,2), %r11d
+        movl    %r11d, %r10d
+        imull   %edx, %r10d
+        leal    (%esi,%r10d), %edi
+        call    fun1(%edx)
+        movl    %eax, %r11d
+        leal    (%edi,%r11d), %r10d
         movl    %r10d, %eax
         ret
 
 fun3: # 4 params, 0 stack bytes
-        movl    %edi, %esi
-        movl    %esi, %r11d
-        movl    %edx, %ecx
-        movl    %ecx, %r10d
-.fun3_entry:
-        call    fun1(%r10d)
-        movl    %eax, %edi
+        movl    %edi, %ecx
         movl    %esi, %edx
-        imull   %edi, %edx
-        movl    %r11d, %edi
-        imull   %r10d, %edi
-        leal    (%edx,%edi), %r10d
-        leal    (%r10d,%ecx), %r11d
-        movl    %r11d, %eax
+        movl    %edx, %esi
+        movl    %ecx, %edi
+.fun3_entry:
+        call    fun1(%edi)
+        movl    %eax, %r10d
+        movl    %ecx, %r11d
+        imull   %r10d, %r11d
+        movl    %edx, %r10d
+        imull   %edi, %r10d
+        leal    (%r11d,%r10d), %edi
+        leal    (%edi,%esi), %r10d
+        movl    %r10d, %eax
         ret
 
 call1: # 0 params, 0 stack bytes
@@ -67,28 +67,28 @@ call3: # 2 params, 0 stack bytes
 call4: # 0 params, 0 stack bytes
 .call4_entry:
         call    fun1($10)
-        movl    %eax, %r10d
-        movl    %r10d, %r11d
-        subl    $100, %r11d
-        movl    %r11d, %eax
+        movl    %eax, %r11d
+        movl    %r11d, %r10d
+        subl    $100, %r10d
+        movl    %r10d, %eax
         ret
 
 super_fun: # 8 params, 0 stack bytes
         movl    %edi, %eax
         movl    %esi, %r11d
-        movl    %edx, %r8d
-        movl    %ecx, %ecx
-        movl    %r8d, %edx
-        movl    %r9d, %esi
+        movl    %edx, %r9d
+        movl    %ecx, %r8d
+        movl    %r8d, %ecx
+        movl    %r9d, %edx
         movl    (stack 0), %edi
-        movl    (stack 1), %r9d
+        movl    (stack 1), %esi
 .super_fun_entry:
         leal    (%eax,%r11d), %r10d
-        leal    (%r10d,%r8d), %r11d
-        leal    (%r11d,%ecx), %r10d
-        leal    (%r10d,%edx), %r11d
-        leal    (%r11d,%esi), %r10d
+        leal    (%r10d,%r9d), %r11d
+        leal    (%r11d,%r8d), %r10d
+        leal    (%r10d,%ecx), %r11d
+        leal    (%r11d,%edx), %r10d
         leal    (%r10d,%edi), %r11d
-        leal    (%r11d,%r9d), %r10d
+        leal    (%r11d,%esi), %r10d
         movl    %r10d, %eax
         ret
