@@ -131,7 +131,10 @@ namespace backend {
         auto min_reg = sc.begin()->first;
 
         for (auto &[reg, cost] : sc) {
-            if (cost >= min_cost)
+            if (cost > min_cost)
+                continue;
+
+            if (cost == min_cost && min_reg->getId() >= reg->getId())
                 continue;
 
             min_cost = cost;
