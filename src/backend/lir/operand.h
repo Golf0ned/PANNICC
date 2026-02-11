@@ -27,11 +27,13 @@ namespace backend::lir {
     public:
         Register(RegisterNum reg);
         RegisterNum getRegNum();
+        uint64_t getId();
         virtual DataSize getSize();
         virtual std::string toString();
 
     private:
         RegisterNum reg;
+        uint64_t id;
     };
 
     class VirtualRegister : public Register {

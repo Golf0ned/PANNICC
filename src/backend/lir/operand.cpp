@@ -3,21 +3,25 @@
 #include "backend/lir/operand.h"
 
 namespace backend::lir {
+    static uint64_t cur_id = 0;
+
     Immediate::Immediate(uint64_t value) : value(value) {}
 
     uint64_t Immediate::getValue() { return value; }
 
     std::string Immediate::toString() { return "$" + std::to_string(value); }
 
-    Register::Register(RegisterNum reg) : reg(reg) {}
+    Register::Register(RegisterNum reg) : reg(reg), id(cur_id++) {}
+
+    uint64_t Register::getId() { return id; }
+
+    RegisterNum Register::getRegNum() { return reg; }
 
     DataSize Register::getSize() { return ::backend::lir::getSize(reg); }
 
     std::string Register::toString() {
         return "%" + ::backend::lir::toString(reg);
     }
-
-    RegisterNum Register::getRegNum() { return reg; }
 
     VirtualRegister::VirtualRegister(std::string name, DataSize size)
         : Register(RegisterNum::VIRTUAL), name(name), size(size) {}
