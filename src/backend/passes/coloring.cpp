@@ -1,4 +1,5 @@
 #include <iostream>
+#include <set>
 
 #include "backend/lir/operand.h"
 #include "backend/lir/register_num.h"
@@ -194,8 +195,16 @@ namespace backend {
         //
         // "Pruning" (degree < R)
         //
-        Interference remaining = interference;
         std::vector<lir::Register *> pruned_regs;
+        Interference remaining = interference;
+
+        auto cmp = [](lir::Register *first, lir::Register *second) {
+            return first->getId() < second->getId();
+        };
+        std::set<lir::Register *, decltype(cmp)> ordered_regs;
+        for (auto &[reg, _] : interference)
+            ordered_regs.insert(reg);
+
         auto remove_from_graph = [&](lir::Register *reg) {
             if (reg->getRegNum() == lir::RegisterNum::VIRTUAL)
                 pruned_regs.push_back(reg);
@@ -203,13 +212,15 @@ namespace backend {
             for (auto neighbor : remaining.at(reg))
                 remaining[neighbor].erase(reg);
             remaining.erase(reg);
+            ordered_regs.erase(reg);
         };
 
         bool changed = true;
         while (changed) {
             changed = false;
 
-            for (auto &[reg, edges] : remaining) {
+            for (auto &reg : ordered_regs) {
+                auto &edges = remaining.at(reg);
                 if (edges.size() >= num_regs)
                     continue;
 
@@ -221,7 +232,8 @@ namespace backend {
             if (!remaining.empty()) {
                 uint64_t min_weight = -1;
                 auto min_reg = remaining.begin()->first;
-                for (auto &[reg, edges] : remaining) {
+                for (auto &reg : ordered_regs) {
+                    auto &edges = remaining.at(reg);
                     auto cost = reg->getRegNum() == lir::RegisterNum::VIRTUAL
                                     ? sc.at(reg)
                                     : 100000;

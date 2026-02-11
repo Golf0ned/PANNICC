@@ -10,10 +10,10 @@ add: # 0 params, 28 stack bytes
         movl    %r10d, $16(%rsp)
         movl    $8(%rsp), %r10d
         movl    %r10d, $20(%rsp)
-        movl    $16(%rsp), %r10d
-        movl    $20(%rsp), %edi
-        leal    (%r10d,%edi), %r11d
-        movl    %r11d, $16(%rsp)
+        movl    $16(%rsp), %edi
+        movl    $20(%rsp), %r11d
+        leal    (%edi,%r11d), %r10d
+        movl    %r10d, $16(%rsp)
         movl    $16(%rsp), %r10d
         movl    %r10d, $24(%rsp)
 .add_15:
@@ -238,10 +238,10 @@ unary_minus: # 0 params, 16 stack bytes
         movl    %r10d, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $8(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    $0, %r11d
-        subl    %r10d, %r11d
-        movl    %r11d, $8(%rsp)
+        movl    $8(%rsp), %r11d
+        movl    $0, %r10d
+        subl    %r11d, %r10d
+        movl    %r10d, $8(%rsp)
         movl    $8(%rsp), %r10d
         movl    %r10d, $12(%rsp)
 .unary_minus_9:
@@ -273,10 +273,10 @@ add_equals: # 0 params, 20 stack bytes
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
         movl    $2, $8(%rsp)
-        movl    (%rsp), %r11d
+        movl    (%rsp), %r10d
         movl    $8(%rsp), %edi
-        leal    (%r11d,%edi), %r10d
-        movl    %r10d, (%rsp)
+        leal    (%r10d,%edi), %r11d
+        movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $12(%rsp)
         movl    $12(%rsp), %r10d
