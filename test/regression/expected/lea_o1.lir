@@ -32,15 +32,15 @@ leaBIS: # 2 params, 0 stack bytes
         ret
 
 leaBID: # 2 params, 0 stack bytes
-        movl    %edi, %r11d
-        movl    %esi, %r10d
+        movl    %edi, %r10d
+        movl    %esi, %r11d
 .leaBID_entry:
-        leal    $13(%r11d,%r10d), %r10d
-        leal    $13(%r11d,%r10d), %r10d
-        leal    $13(%r11d,%r10d), %r10d
+        leal    $13(%r10d,%r11d), %r10d
         leal    $13(%r10d,%r11d), %r10d
         leal    $13(%r10d,%r11d), %r10d
         leal    $13(%r11d,%r10d), %r10d
+        leal    $13(%r11d,%r10d), %r10d
+        leal    $13(%r10d,%r11d), %r10d
         movl    $0, %eax
         ret
 

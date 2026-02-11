@@ -1,39 +1,39 @@
 while_basic: # 0 params, 0 stack bytes
 .while_basic_entry:
-        movl    $0, %r11d
+        movl    $0, %r10d
 .while_basic_0:
         cmpl    $1, $0
         jne     .while_basic_5
 .while_basic_2:
 .while_basic_3:
-        movl    %r11d, %r10d
-        addl    $2, %r10d
         movl    %r10d, %r11d
+        addl    $2, %r11d
+        movl    %r11d, %r10d
         jmp     .while_basic_0
 .while_basic_5:
 .while_basic_6:
-        movl    %r11d, %eax
+        movl    %r10d, %eax
         ret
 
 while_complex: # 0 params, 0 stack bytes
 .while_complex_entry:
-        movl    $0, %edi
-        movl    $100, %esi
+        movl    $0, %r11d
+        movl    $100, %r10d
 .while_complex_0:
-        cmpl    %esi, $0
+        cmpl    %r10d, $0
         jne     .while_complex_7
 .while_complex_3:
 .while_complex_4:
-        movl    %edi, %r11d
-        addl    $5, %r11d
-        movl    %esi, %r10d
-        subl    $1, %r10d
         movl    %r11d, %edi
+        addl    $5, %edi
         movl    %r10d, %esi
+        subl    $1, %esi
+        movl    %edi, %r11d
+        movl    %esi, %r10d
         jmp     .while_complex_0
 .while_complex_7:
 .while_complex_8:
-        movl    %edi, %eax
+        movl    %r11d, %eax
         ret
 
 while_empty: # 0 params, 0 stack bytes
