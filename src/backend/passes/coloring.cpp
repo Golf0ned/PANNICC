@@ -239,7 +239,11 @@ namespace backend {
                                     : 100000;
 
                     auto cur_val = edges.size() == 0 ? 0 : cost / edges.size();
-                    if (cur_val >= min_weight)
+                    if (cur_val > min_weight)
+                        continue;
+
+                    if (cur_val == min_weight &&
+                        min_reg->getId() >= reg->getId())
                         continue;
 
                     min_weight = cur_val;
