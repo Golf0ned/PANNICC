@@ -1,4 +1,5 @@
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 
 #include "backend/mir_to_lir.h"
@@ -10,26 +11,39 @@
 
 #define PRINT(str) (std::cerr << str << std::endl)
 #define ERROR(str) (std::cerr << "ERROR: " << str << std::endl)
-#define OUTPUT(str) (std::cout << str << std::endl)
 
-enum class OutputLevel { AST, HIR, MIR, LIR, LIR_INITIAL };
+enum class OutputLevel { AST, HIR, MIR, LIR_ISEL, LIR_REGALLOC, ASM };
 
 void printHelp(const std::string &program_name) {
     PRINT("USAGE: " + program_name + " [options] <input-file>");
     PRINT("");
     PRINT("OPTIONS:");
-    PRINT("  --help               Show this help message");
-    PRINT("  -o <file>            Output file");
+    PRINT("  --help                 Show this help message");
+    PRINT("  -o <file>              Output file");
     PRINT("");
-    PRINT("  --dump-ast           Print AST only");
-    PRINT("  --dump-hir           Print HIR only (desugared AST)");
+    PRINT("  --emit-ast             Output AST to file");
+    PRINT("  --emit-hir             Output HIR to file");
     PRINT("");
-    PRINT("  --dump-mir           Print MIR only (after passes)");
-    PRINT("  -O0|1                Opt level");
-    PRINT("  --passes=<passes>    Run comma-separated list of passes");
+    PRINT("  --emit-mir             Output MIR to file");
+    PRINT("  -O0|1                  Opt level (defualt O1)");
+    PRINT("  --passes=<passes>      Run comma-separated list of passes");
     PRINT("");
-    PRINT("  --dump-lir           Print LIR only (after transforms)");
-    PRINT("  --dump-lir-initial   Print LIR only (straight after isel)");
+    PRINT("  --emit-lir-isel        Output LIR to file, after instruction "
+          "selection");
+    PRINT("  --emit-lir-regalloc    Output LIR to file, after register "
+          "allocation");
+}
+
+void output(const std::string &output, std::filesystem::path output_path) {
+    std::ofstream output_file(output_path.c_str());
+    if (!output_file.is_open())
+        ERROR("failed to open file \"" + output_path.string() + "\"");
+
+    output_file << output;
+
+    output_file.close();
+    if (!output_file)
+        ERROR("writing to file \"" + output_path.string() + "\" failed");
 }
 
 int main(int argc, char *argv[]) {
@@ -39,7 +53,7 @@ int main(int argc, char *argv[]) {
     }
 
     std::filesystem::path input_file, output_file;
-    OutputLevel output_level = OutputLevel::LIR;
+    OutputLevel output_level = OutputLevel::ASM;
     auto pm = middleend::initializeO1();
 
     for (int i = 1; i < argc; i++) {
@@ -57,16 +71,16 @@ int main(int argc, char *argv[]) {
                 return 1;
             }
             output_file = argv[i];
-        } else if (arg == "--dump-ast") {
+        } else if (arg == "--emit-ast") {
             output_level = OutputLevel::AST;
-        } else if (arg == "--dump-hir") {
+        } else if (arg == "--emit-hir") {
             output_level = OutputLevel::HIR;
-        } else if (arg == "--dump-mir") {
+        } else if (arg == "--emit-mir") {
             output_level = OutputLevel::MIR;
-        } else if (arg == "--dump-lir-initial") {
-            output_level = OutputLevel::LIR_INITIAL;
-        } else if (arg == "--dump-lir") {
-            output_level = OutputLevel::LIR;
+        } else if (arg == "--emit-lir-isel") {
+            output_level = OutputLevel::LIR_ISEL;
+        } else if (arg == "--emit-lir-regalloc") {
+            output_level = OutputLevel::LIR_REGALLOC;
         } else if (arg.starts_with("-O") && arg.size() == 3) {
             switch (arg.back()) {
             case '0':
@@ -109,24 +123,25 @@ int main(int argc, char *argv[]) {
         case OutputLevel::MIR:
             output_file.replace_extension(".mir");
             break;
-        case OutputLevel::LIR:
-        case OutputLevel::LIR_INITIAL:
+        case OutputLevel::LIR_ISEL:
+        case OutputLevel::LIR_REGALLOC:
             output_file.replace_extension(".lir");
+            break;
+        case OutputLevel::ASM:
+            output_file.replace_extension(".s");
             break;
         }
     }
 
-    // TODO: check paths + write to paths
-
     frontend::ast::Program ast = frontend::parse(input_file);
     if (output_level == OutputLevel::AST) {
-        OUTPUT(ast.toString());
+        output(ast.toString(), output_file);
         return 0;
     }
 
     frontend::hir::Program hir = frontend::astToHir(ast);
     if (output_level == OutputLevel::HIR) {
-        OUTPUT(hir.toString());
+        output(hir.toString(), output_file);
         return 0;
     }
 
@@ -134,26 +149,30 @@ int main(int argc, char *argv[]) {
 
     pm->runPasses(mir);
     if (output_level == OutputLevel::MIR) {
-        OUTPUT(mir.toString());
+        output(mir.toString(), output_file);
         return 0;
     }
 
     backend::lir::Program lir = backend::mirToLir(mir);
-    if (output_level == OutputLevel::LIR_INITIAL) {
-        OUTPUT(lir.toString());
+    if (output_level == OutputLevel::LIR_ISEL) {
+        output(lir.toString(), output_file);
         return 0;
     }
 
     backend::allocateRegisters(lir);
 
-    if (output_level == OutputLevel::LIR) {
-        OUTPUT(lir.toString());
+    if (output_level == OutputLevel::LIR_REGALLOC) {
+        output(lir.toString(), output_file);
         return 0;
     }
+
+    // TODO: do validation + preamble gen
+    std::string assembly = lir.toString();
+    output(assembly, output_file);
 
     return 0;
 }
 
 #undef PRINT
 #undef ERROR
-#undef OUTPUT
+#undef output
