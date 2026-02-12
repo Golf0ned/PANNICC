@@ -1,0 +1,86 @@
+lost_copy_problem: # 1 params, 36 stack bytes
+        movl    %edi, %0
+.lost_copy_problem_entry:
+        movl    %0, $32(%rsp)
+.lost_copy_problem_10:
+        movl    $32(%rsp), %11
+        movl    %11, $4(%rsp)
+        movl    $10, $8(%rsp)
+        movl    $4(%rsp), %12
+        movl    $8(%rsp), %13
+        movl    %12, %14
+        subl    %13, %14
+        movl    %14, $4(%rsp)
+        movl    $4(%rsp), %15
+        cmpl    %15, $0
+        jne     .lost_copy_problem_23
+.lost_copy_problem_16:
+.lost_copy_problem_17:
+        movl    $32(%rsp), %18
+        movl    %18, $12(%rsp)
+        movl    $12(%rsp), %19
+        movl    %19, (%rsp)
+        movl    $1, $16(%rsp)
+        movl    $32(%rsp), %20
+        movl    $16(%rsp), %21
+        leal    (%20,%21), %22
+        movl    %22, $32(%rsp)
+        jmp     .lost_copy_problem_10
+.lost_copy_problem_23:
+.lost_copy_problem_24:
+        movl    (%rsp), %25
+        movl    %25, $20(%rsp)
+        movl    $3, $24(%rsp)
+        movl    $20(%rsp), %26
+        movl    $24(%rsp), %27
+        leal    (%26,%27), %28
+        movl    %28, $20(%rsp)
+        movl    $20(%rsp), %29
+        movl    %29, $28(%rsp)
+.lost_copy_problem_30:
+        movl    $28(%rsp), %31
+        movl    %31, %eax
+        ret
+
+swap_problem: # 2 params, 40 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+.swap_problem_entry:
+        movl    %0, $32(%rsp)
+        movl    %1, $36(%rsp)
+.swap_problem_12:
+        movl    $1, $4(%rsp)
+        movl    $4(%rsp), %13
+        cmpl    %13, $0
+        jne     .swap_problem_22
+.swap_problem_14:
+.swap_problem_15:
+        movl    $32(%rsp), %16
+        movl    %16, $12(%rsp)
+        movl    $12(%rsp), %17
+        movl    %17, $8(%rsp)
+        movl    $36(%rsp), %18
+        movl    %18, $16(%rsp)
+        movl    $16(%rsp), %19
+        movl    %19, $32(%rsp)
+        movl    $8(%rsp), %20
+        movl    %20, $20(%rsp)
+        movl    $20(%rsp), %21
+        movl    %21, $36(%rsp)
+        jmp     .swap_problem_12
+.swap_problem_22:
+.swap_problem_23:
+        movl    $32(%rsp), %24
+        movl    %24, $24(%rsp)
+        movl    $36(%rsp), %25
+        movl    %25, $28(%rsp)
+        movl    $24(%rsp), %26
+        movl    $28(%rsp), %27
+        leal    (%26,%27), %28
+        movl    %28, $24(%rsp)
+        movl    $24(%rsp), %29
+        movl    %29, $32(%rsp)
+.swap_problem_30:
+        movl    $32(%rsp), %31
+        movl    %31, %eax
+        ret

@@ -1,0 +1,94 @@
+fun1: # 1 params, 0 stack bytes
+        movl    %edi, %0
+.fun1_entry:
+        movl    %0, %1
+        imull   %0, %1
+        movl    %1, %eax
+        ret
+
+fun2: # 2 params, 0 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+.fun2_entry:
+        call    fun1(%0)
+        movl    %eax, %2
+        leal    (,%0,2), %3
+        movl    %3, %4
+        imull   %1, %4
+        leal    (%2,%4), %5
+        call    fun1(%1)
+        movl    %eax, %6
+        leal    (%5,%6), %7
+        movl    %7, %eax
+        ret
+
+fun3: # 4 params, 0 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+        movl    %edx, %2
+        movl    %ecx, %3
+.fun3_entry:
+        call    fun1(%3)
+        movl    %eax, %4
+        movl    %0, %5
+        imull   %4, %5
+        movl    %1, %6
+        imull   %3, %6
+        leal    (%5,%6), %7
+        leal    (%7,%2), %8
+        movl    %8, %eax
+        ret
+
+call1: # 0 params, 0 stack bytes
+.call1_entry:
+        call    fun1($5)
+        movl    %eax, %0
+        movl    %0, %eax
+        ret
+
+call2: # 2 params, 0 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+.call2_entry:
+        call    fun2(%0, %1)
+        movl    %eax, %2
+        movl    %2, %eax
+        ret
+
+call3: # 2 params, 0 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+.call3_entry:
+        call    fun3(%0, %1, $1, $0)
+        movl    %eax, %2
+        movl    %2, %eax
+        ret
+
+call4: # 0 params, 0 stack bytes
+.call4_entry:
+        call    fun1($10)
+        movl    %eax, %0
+        movl    %0, %1
+        subl    $100, %1
+        movl    %1, %eax
+        ret
+
+super_fun: # 8 params, 0 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+        movl    %edx, %2
+        movl    %ecx, %3
+        movl    %r8d, %4
+        movl    %r9d, %5
+        movl    (stack 0), %6
+        movl    (stack 1), %7
+.super_fun_entry:
+        leal    (%0,%1), %8
+        leal    (%8,%2), %9
+        leal    (%9,%3), %10
+        leal    (%10,%4), %11
+        leal    (%11,%5), %12
+        leal    (%12,%6), %13
+        leal    (%13,%7), %14
+        movl    %14, %eax
+        ret

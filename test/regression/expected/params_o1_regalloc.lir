@@ -1,0 +1,94 @@
+fun1: # 1 params, 0 stack bytes
+        movl    %edi, %r11d
+.fun1_entry:
+        movl    %r11d, %r10d
+        imull   %r11d, %r10d
+        movl    %r10d, %eax
+        ret
+
+fun2: # 2 params, 0 stack bytes
+        movl    %edi, %r10d
+        movl    %esi, %r11d
+.fun2_entry:
+        call    fun1(%r10d)
+        movl    %eax, %edi
+        leal    (,%r10d,2), %esi
+        movl    %esi, %r10d
+        imull   %r11d, %r10d
+        leal    (%edi,%r10d), %esi
+        call    fun1(%r11d)
+        movl    %eax, %r10d
+        leal    (%esi,%r10d), %r11d
+        movl    %r11d, %eax
+        ret
+
+fun3: # 4 params, 0 stack bytes
+        movl    %edi, %esi
+        movl    %esi, %edx
+        movl    %edx, %ecx
+        movl    %ecx, %edi
+.fun3_entry:
+        call    fun1(%edi)
+        movl    %eax, %r10d
+        movl    %esi, %r11d
+        imull   %r10d, %r11d
+        movl    %edx, %r10d
+        imull   %edi, %r10d
+        leal    (%r11d,%r10d), %edi
+        leal    (%edi,%ecx), %r10d
+        movl    %r10d, %eax
+        ret
+
+call1: # 0 params, 0 stack bytes
+.call1_entry:
+        call    fun1($5)
+        movl    %eax, %r10d
+        movl    %r10d, %eax
+        ret
+
+call2: # 2 params, 0 stack bytes
+        movl    %edi, %r11d
+        movl    %esi, %r10d
+.call2_entry:
+        call    fun2(%r11d, %r10d)
+        movl    %eax, %r10d
+        movl    %r10d, %eax
+        ret
+
+call3: # 2 params, 0 stack bytes
+        movl    %edi, %r11d
+        movl    %esi, %r10d
+.call3_entry:
+        call    fun3(%r11d, %r10d, $1, $0)
+        movl    %eax, %r10d
+        movl    %r10d, %eax
+        ret
+
+call4: # 0 params, 0 stack bytes
+.call4_entry:
+        call    fun1($10)
+        movl    %eax, %r11d
+        movl    %r11d, %r10d
+        subl    $100, %r10d
+        movl    %r10d, %eax
+        ret
+
+super_fun: # 8 params, 0 stack bytes
+        movl    %edi, %r10d
+        movl    %esi, %r11d
+        movl    %edx, %edi
+        movl    %ecx, %esi
+        movl    %r8d, %edx
+        movl    %r9d, %ecx
+        movl    (stack 0), %r8d
+        movl    (stack 1), %r9d
+.super_fun_entry:
+        leal    (%r10d,%r11d), %eax
+        leal    (%eax,%edi), %r11d
+        leal    (%r11d,%esi), %r10d
+        leal    (%r10d,%edx), %r11d
+        leal    (%r11d,%ecx), %r10d
+        leal    (%r10d,%r8d), %r11d
+        leal    (%r11d,%r9d), %r10d
+        movl    %r10d, %eax
+        ret

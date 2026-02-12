@@ -47,7 +47,7 @@ void compareIfFileExists(std::string actual, std::string expected_path) {
     file.close();
 
     std::string expected = buffer.str();
-    EXPECT_EQ(expected, actual + '\n');
+    EXPECT_EQ(expected, actual);
 }
 
 void testAst(std::string input_path, std::string expected_path) {
@@ -72,8 +72,8 @@ void testMir(std::string input_path, std::string expected_path,
     compareIfFileExists(mir.toString(), expected_path);
 }
 
-void testLirInitial(std::string input_path, std::string expected_path,
-                    PassManager *pm) {
+void testLirIsel(std::string input_path, std::string expected_path,
+                 PassManager *pm) {
     auto ast = parse(input_path);
     auto hir = astToHir(ast);
     auto mir = hirToMir(hir);
@@ -84,8 +84,8 @@ void testLirInitial(std::string input_path, std::string expected_path,
     compareIfFileExists(lir.toString(), expected_path);
 }
 
-void testLir(std::string input_path, std::string expected_path,
-             PassManager *pm) {
+void testLirRegalloc(std::string input_path, std::string expected_path,
+                     PassManager *pm) {
     auto ast = parse(input_path);
     auto hir = astToHir(ast);
     auto mir = hirToMir(hir);
@@ -133,43 +133,45 @@ TEST_P(RegressionTest, MIRWithO1) {
 }
 
 TEST_P(RegressionTest, MIRWithSelectPasses) {
-    auto expected_path = test_dir + "/expected/" + test_name + "_select.mir";
+    auto expected_path = test_dir + "/expected/" + test_name + "_s.mir";
     testMir(input_path, expected_path, buildPassManager(passes_path).get());
 }
 
-TEST_P(RegressionTest, LIRInitial) {
+TEST_P(RegressionTest, LIRIsel) {
+    auto expected_path = test_dir + "/expected/" + test_name + "_o0_isel.lir";
+    testLirIsel(input_path, expected_path, initializeO0().get());
+}
+
+TEST_P(RegressionTest, LIRIselWithO1) {
+    auto expected_path = test_dir + "/expected/" + test_name + "_o1_isel.lir";
+    testLirIsel(input_path, expected_path, initializeO1().get());
+}
+
+TEST_P(RegressionTest, LIRIselWithSelectPasses) {
+    auto expected_path = test_dir + "/expected/" + test_name + "_s_isel.lir";
+    testLirIsel(input_path, expected_path, buildPassManager(passes_path).get());
+}
+
+TEST_P(RegressionTest, LIRRegalloc) {
     auto expected_path =
-        test_dir + "/expected/" + test_name + "_o0_initial.lir";
-    testLirInitial(input_path, expected_path, initializeO0().get());
+        test_dir + "/expected/" + test_name + "_o0_regalloc.lir";
+    testLirRegalloc(input_path, expected_path, initializeO0().get());
 }
 
-TEST_P(RegressionTest, LIRInitialWithO1) {
+TEST_P(RegressionTest, LIRRegallocWithO1) {
     auto expected_path =
-        test_dir + "/expected/" + test_name + "_o1_initial.lir";
-    testLirInitial(input_path, expected_path, initializeO1().get());
+        test_dir + "/expected/" + test_name + "_o1_regalloc.lir";
+    testLirRegalloc(input_path, expected_path, initializeO1().get());
 }
 
-TEST_P(RegressionTest, LIRInitialWithSelectPasses) {
+TEST_P(RegressionTest, LIRRegallocWithSelectPasses) {
     auto expected_path =
-        test_dir + "/expected/" + test_name + "_select_initial.lir";
-    testLirInitial(input_path, expected_path,
-                   buildPassManager(passes_path).get());
+        test_dir + "/expected/" + test_name + "_s_regalloc.lir";
+    testLirRegalloc(input_path, expected_path,
+                    buildPassManager(passes_path).get());
 }
 
-TEST_P(RegressionTest, LIR) {
-    auto expected_path = test_dir + "/expected/" + test_name + "_o0.lir";
-    testLir(input_path, expected_path, initializeO0().get());
-}
-
-TEST_P(RegressionTest, LIRWithO1) {
-    auto expected_path = test_dir + "/expected/" + test_name + "_o1.lir";
-    testLir(input_path, expected_path, initializeO1().get());
-}
-
-TEST_P(RegressionTest, LIRWithSelectPasses) {
-    auto expected_path = test_dir + "/expected/" + test_name + "_select.lir";
-    testLir(input_path, expected_path, buildPassManager(passes_path).get());
-}
+TEST_P(RegressionTest, ASM) { GTEST_SKIP(); }
 
 std::vector<std::string> discoverTests(std::string input_dir) {
     std::vector<std::string> res;

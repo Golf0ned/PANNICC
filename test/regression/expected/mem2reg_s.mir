@@ -1,0 +1,57 @@
+define i32 @fun_call() {
+entry:
+  br label 0
+
+0:
+  ret i32 42
+}
+
+define i32 @mem2reg_basic() {
+entry:
+  br label 0
+
+0:
+  ret i32 5
+}
+
+define i32 @mem2reg_branching(i32 %0) {
+entry:
+  %1 = sub i32 %0, i32 42
+  br i32 %1, label 2, label 3
+
+2:
+  br label 5
+
+3:
+  %4 = add i32 %0, i32 2
+  br label 5
+
+5:
+  %6 = phi i32 [ 1, %2 ], [ %4, %3 ]
+  br label 7
+
+7:
+  ret i32 %6
+}
+
+define i32 @mem2reg_while() {
+entry:
+  br label 0
+
+0:
+  %1 = phi i32 [ %6, %4 ], [ 0, %entry ]
+  %2 = phi i32 [ %5, %4 ], [ 0, %entry ]
+  %3 = sub i32 %1, i32 10
+  br i32 %3, label 4, label 7
+
+4:
+  %5 = add i32 %2, i32 %1
+  %6 = add i32 %1, i32 1
+  br label 0
+
+7:
+  br label 8
+
+8:
+  ret i32 %2
+}

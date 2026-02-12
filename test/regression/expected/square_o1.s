@@ -1,0 +1,7 @@
+square: # 1 params, 0 stack bytes
+        movl    %edi, %r11d
+.square_entry:
+        movl    %r11d, %r10d
+        imull   %r11d, %r10d
+        movl    %r10d, %eax
+        ret

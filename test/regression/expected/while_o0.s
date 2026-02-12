@@ -1,0 +1,136 @@
+while_basic: # 0 params, 28 stack bytes
+.while_basic_entry:
+        movl    $0, $4(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    %r10d, (%rsp)
+.while_basic_8:
+        movl    $1, $8(%rsp)
+        movl    $8(%rsp), %r10d
+        cmpl    %r10d, $0
+        jne     .while_basic_17
+.while_basic_10:
+.while_basic_11:
+        movl    (%rsp), %r10d
+        movl    %r10d, $12(%rsp)
+        movl    $2, $16(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    $16(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, $12(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    %r10d, (%rsp)
+        jmp     .while_basic_8
+.while_basic_17:
+.while_basic_18:
+        movl    (%rsp), %r10d
+        movl    %r10d, $20(%rsp)
+        movl    $20(%rsp), %r10d
+        movl    %r10d, $24(%rsp)
+.while_basic_21:
+        movl    $24(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+
+while_complex: # 0 params, 44 stack bytes
+.while_complex_entry:
+        movl    $0, $4(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    %r10d, (%rsp)
+        movl    $100, $12(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    %r10d, $8(%rsp)
+.while_complex_13:
+        movl    $8(%rsp), %r10d
+        movl    %r10d, $16(%rsp)
+        movl    $16(%rsp), %r10d
+        cmpl    %r10d, $0
+        jne     .while_complex_28
+.while_complex_16:
+.while_complex_17:
+        movl    (%rsp), %r10d
+        movl    %r10d, $20(%rsp)
+        movl    $5, $24(%rsp)
+        movl    $20(%rsp), %r10d
+        movl    $24(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, $20(%rsp)
+        movl    $20(%rsp), %r10d
+        movl    %r10d, (%rsp)
+        movl    $8(%rsp), %r10d
+        movl    %r10d, $28(%rsp)
+        movl    $1, $32(%rsp)
+        movl    $28(%rsp), %r10d
+        movl    $32(%rsp), %edi
+        movl    %r10d, %r11d
+        subl    %edi, %r11d
+        movl    %r11d, $28(%rsp)
+        movl    $28(%rsp), %r10d
+        movl    %r10d, $8(%rsp)
+        jmp     .while_complex_13
+.while_complex_28:
+.while_complex_29:
+        movl    (%rsp), %r10d
+        movl    %r10d, $36(%rsp)
+        movl    $36(%rsp), %r10d
+        movl    %r10d, $40(%rsp)
+.while_complex_32:
+        movl    $40(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+
+while_empty: # 0 params, 12 stack bytes
+.while_empty_entry:
+.while_empty_3:
+        movl    $0, (%rsp)
+        movl    (%rsp), %r10d
+        cmpl    %r10d, $0
+        jne     .while_empty_7
+.while_empty_5:
+.while_empty_6:
+        jmp     .while_empty_3
+.while_empty_7:
+.while_empty_8:
+        movl    $0, $4(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    %r10d, $8(%rsp)
+.while_empty_10:
+        movl    $8(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+
+while_if: # 0 params, 28 stack bytes
+.while_if_entry:
+        movl    $200, $4(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    %r10d, (%rsp)
+.while_if_8:
+        movl    $1, $8(%rsp)
+        movl    $8(%rsp), %r10d
+        cmpl    %r10d, $0
+        jne     .while_if_20
+.while_if_10:
+.while_if_11:
+        movl    (%rsp), %r10d
+        movl    %r10d, $12(%rsp)
+        movl    $12(%rsp), %r10d
+        cmpl    %r10d, $0
+        jne     .while_if_16
+.while_if_14:
+.while_if_15:
+.while_if_19:
+        jmp     .while_if_8
+.while_if_20:
+.while_if_21:
+        movl    $0, $20(%rsp)
+        movl    $20(%rsp), %r10d
+        movl    %r10d, $24(%rsp)
+.while_if_23:
+        movl    $24(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+.while_if_16:
+.while_if_17:
+        movl    $500, $16(%rsp)
+        movl    $16(%rsp), %r10d
+        movl    %r10d, $24(%rsp)
+        jmp     .while_if_23

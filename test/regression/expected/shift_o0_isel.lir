@@ -1,0 +1,67 @@
+lshift: # 0 params, 40 stack bytes
+.lshift_entry:
+        movl    $1, $4(%rsp)
+        movl    $4(%rsp), %10
+        movl    %10, (%rsp)
+        movl    $4, $12(%rsp)
+        movl    $12(%rsp), %11
+        movl    %11, $8(%rsp)
+        movl    (%rsp), %12
+        movl    %12, $20(%rsp)
+        movl    $8, $24(%rsp)
+        movl    $20(%rsp), %13
+        movl    $24(%rsp), %14
+        movl    %13, %15
+        shll    %14, [%15 -> %ecx]
+        movl    %15, $20(%rsp)
+        movl    $20(%rsp), %16
+        movl    %16, $16(%rsp)
+        movl    (%rsp), %17
+        movl    %17, $28(%rsp)
+        movl    $8(%rsp), %18
+        movl    %18, $32(%rsp)
+        movl    $28(%rsp), %19
+        movl    $32(%rsp), %20
+        movl    %19, %21
+        shll    %20, [%21 -> %ecx]
+        movl    %21, $28(%rsp)
+        movl    $28(%rsp), %22
+        movl    %22, $36(%rsp)
+.lshift_23:
+        movl    $36(%rsp), %24
+        movl    %24, %eax
+        ret
+
+rshift: # 0 params, 40 stack bytes
+.rshift_entry:
+        movl    $16, $4(%rsp)
+        movl    $4(%rsp), %10
+        movl    %10, (%rsp)
+        movl    $3, $12(%rsp)
+        movl    $12(%rsp), %11
+        movl    %11, $8(%rsp)
+        movl    (%rsp), %12
+        movl    %12, $20(%rsp)
+        movl    $8, $24(%rsp)
+        movl    $20(%rsp), %13
+        movl    $24(%rsp), %14
+        movl    %13, %15
+        sarl    %14, [%15 -> %ecx]
+        movl    %15, $20(%rsp)
+        movl    $20(%rsp), %16
+        movl    %16, $16(%rsp)
+        movl    (%rsp), %17
+        movl    %17, $28(%rsp)
+        movl    $8(%rsp), %18
+        movl    %18, $32(%rsp)
+        movl    $28(%rsp), %19
+        movl    $32(%rsp), %20
+        movl    %19, %21
+        sarl    %20, [%21 -> %ecx]
+        movl    %21, $28(%rsp)
+        movl    $28(%rsp), %22
+        movl    %22, $36(%rsp)
+.rshift_23:
+        movl    $36(%rsp), %24
+        movl    %24, %eax
+        ret
