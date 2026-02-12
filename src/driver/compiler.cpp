@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "backend/codegen.h"
 #include "backend/mir_to_lir.h"
 #include "backend/regalloc.h"
 #include "frontend/ast_to_hir.h"
@@ -166,8 +167,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    // TODO: do validation + preamble gen
-    std::string assembly = lir.toString();
+    std::string assembly = backend::generateCode(lir);
     output(assembly, output_file);
 
     return 0;
