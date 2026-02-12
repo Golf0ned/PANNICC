@@ -1,0 +1,108 @@
+leaBI: # 2 params, 0 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+.leaBI_entry:
+        leal    (%0,%1), %2
+        movl    $0, %eax
+        ret
+
+leaIS: # 1 params, 0 stack bytes
+        movl    %edi, %0
+.leaIS_entry:
+        movl    %0, %1
+        leal    (,%0,2), %2
+        leal    (,%0,4), %3
+        leal    (,%0,8), %4
+        movl    %0, %5
+        leal    (,%0,2), %6
+        leal    (,%0,4), %7
+        leal    (,%0,8), %8
+        movl    $0, %eax
+        ret
+
+leaBIS: # 2 params, 0 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+.leaBIS_entry:
+        leal    (%0,%1,2), %3
+        leal    (%0,%1,2), %5
+        leal    (%0,%1,2), %7
+        leal    (%0,%1,2), %9
+        movl    $0, %eax
+        ret
+
+leaBID: # 2 params, 0 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+.leaBID_entry:
+        leal    $13(%0,%1), %3
+        leal    $13(%0,%1), %5
+        leal    $13(%0,%1), %7
+        leal    $13(%1,%0), %9
+        leal    $13(%1,%0), %11
+        leal    $13(%0,%1), %13
+        movl    $0, %eax
+        ret
+
+leaIIS: # 1 params, 0 stack bytes
+        movl    %edi, %0
+.leaIIS_entry:
+        leal    (%0,%0,2), %1
+        leal    (%0,%0,4), %2
+        leal    (%0,%0,8), %3
+        leal    (%0,%0,2), %4
+        leal    (%0,%0,4), %5
+        leal    (%0,%0,8), %6
+        movl    $0, %eax
+        ret
+
+leaISD: # 1 params, 0 stack bytes
+        movl    %edi, %0
+.leaISD_entry:
+        leal    $60(,%0,4), %2
+        leal    $60(,%0,4), %4
+        leal    $60(,%0,4), %6
+        leal    $60(,%0,4), %8
+        movl    $0, %eax
+        ret
+
+leaIISD: # 1 params, 0 stack bytes
+        movl    %edi, %0
+.leaIISD_entry:
+        leal    $60(%0,%0,2), %2
+        leal    $60(%0,%0,4), %4
+        leal    $60(%0,%0,8), %6
+        leal    $60(%0,%0,2), %8
+        movl    $0, %eax
+        ret
+
+leaBISD: # 2 params, 0 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+.leaBISD_entry:
+        leal    $40(%0,%1,8), %4
+        leal    $40(%0,%1,8), %7
+        leal    $40(%0,%1,8), %10
+        leal    $40(%0,%1,8), %13
+        leal    $40(%0,%1,8), %16
+        leal    $40(%0,%1,8), %19
+        leal    $40(%0,%1,8), %22
+        leal    $40(%0,%1,8), %25
+        leal    $40(%0,%1,8), %28
+        leal    $40(%0,%1,8), %31
+        leal    $40(%0,%1,8), %34
+        leal    $40(%0,%1,8), %37
+        leal    $40(%0,%1,8), %40
+        leal    $40(%0,%1,8), %43
+        leal    $40(%0,%1,8), %46
+        leal    $40(%0,%1,8), %49
+        leal    $40(%0,%1,8), %52
+        leal    $40(%0,%1,8), %55
+        leal    $40(%0,%1,8), %58
+        leal    $40(%0,%1,8), %61
+        leal    $40(%0,%1,8), %64
+        leal    $40(%0,%1,8), %67
+        leal    $40(%0,%1,8), %70
+        leal    $40(%0,%1,8), %73
+        movl    $0, %eax
+        ret

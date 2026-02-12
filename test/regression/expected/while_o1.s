@@ -1,0 +1,69 @@
+while_basic: # 0 params, 0 stack bytes
+.while_basic_entry:
+        movl    $0, %r10d
+.while_basic_0:
+        cmpl    $1, $0
+        jne     .while_basic_5
+.while_basic_2:
+.while_basic_3:
+        movl    %r10d, %r11d
+        addl    $2, %r11d
+        movl    %r11d, %r10d
+        jmp     .while_basic_0
+.while_basic_5:
+.while_basic_6:
+        movl    %r10d, %eax
+        ret
+
+while_complex: # 0 params, 0 stack bytes
+.while_complex_entry:
+        movl    $0, %r11d
+        movl    $100, %r10d
+.while_complex_0:
+        cmpl    %r10d, $0
+        jne     .while_complex_7
+.while_complex_3:
+.while_complex_4:
+        movl    %r11d, %edi
+        addl    $5, %edi
+        movl    %r10d, %esi
+        subl    $1, %esi
+        movl    %edi, %r11d
+        movl    %esi, %r10d
+        jmp     .while_complex_0
+.while_complex_7:
+.while_complex_8:
+        movl    %r11d, %eax
+        ret
+
+while_empty: # 0 params, 0 stack bytes
+.while_empty_entry:
+        cmpl    $0, $0
+        jne     .while_empty_1
+.while_empty_0:
+        jmp     .while_empty_entry
+.while_empty_1:
+.while_empty_2:
+        movl    $0, %eax
+        ret
+
+while_if: # 0 params, 0 stack bytes
+.while_if_entry:
+        cmpl    $1, $0
+        jne     .while_if_5
+.while_if_0:
+.while_if_1:
+        cmpl    $200, $0
+        je      .while_if_4
+.while_if_2:
+.while_if_3:
+        movl    $500, %r10d
+.while_if_7:
+        movl    %r10d, %eax
+        ret
+.while_if_5:
+.while_if_6:
+        movl    $0, %r10d
+        jmp     .while_if_7
+.while_if_4:
+        jmp     .while_if_entry

@@ -1,0 +1,42 @@
+lost_copy_problem: # 1 params, 0 stack bytes
+        movl    %edi, %0
+.lost_copy_problem_entry:
+        movl    %0, %2
+.lost_copy_problem_1:
+        movl    %2, %3
+        subl    $10, %3
+        cmpl    %3, $0
+        jne     .lost_copy_problem_7
+.lost_copy_problem_4:
+.lost_copy_problem_5:
+        movl    %2, %6
+        addl    $1, %6
+        movl    %6, %2
+        jmp     .lost_copy_problem_1
+.lost_copy_problem_7:
+.lost_copy_problem_8:
+        movl    %2, %9
+        addl    $3, %9
+        movl    %9, %eax
+        ret
+
+swap_problem: # 2 params, 0 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+.swap_problem_entry:
+        movl    %0, %4
+        movl    %1, %3
+.swap_problem_2:
+        cmpl    $1, $0
+        jne     .swap_problem_7
+.swap_problem_5:
+.swap_problem_6:
+        movl    %3, %tmp4
+        movl    %4, %3
+        movl    %tmp4, %4
+        jmp     .swap_problem_2
+.swap_problem_7:
+.swap_problem_8:
+        leal    (%4,%3), %9
+        movl    %9, %eax
+        ret

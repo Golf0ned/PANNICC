@@ -1,0 +1,267 @@
+fun1: # 1 params, 16 stack bytes
+        movl    %edi, %r10d
+.fun1_entry:
+        movl    %r10d, $12(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    %r10d, (%rsp)
+        movl    $12(%rsp), %r10d
+        movl    %r10d, $4(%rsp)
+        movl    (%rsp), %r10d
+        movl    $4(%rsp), %edi
+        movl    %r10d, %r11d
+        imull   %edi, %r11d
+        movl    %r11d, (%rsp)
+        movl    (%rsp), %r10d
+        movl    %r10d, $8(%rsp)
+.fun1_11:
+        movl    $8(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+
+fun2: # 2 params, 40 stack bytes
+        movl    %edi, %r11d
+        movl    %esi, %r10d
+.fun2_entry:
+        movl    %r11d, $32(%rsp)
+        movl    %r10d, $36(%rsp)
+        movl    $32(%rsp), %r10d
+        movl    %r10d, $4(%rsp)
+        movl    $4(%rsp), %r10d
+        call    fun1(%r10d)
+        movl    %eax, %r10d
+        movl    %r10d, $8(%rsp)
+        movl    $2, $12(%rsp)
+        movl    $32(%rsp), %r10d
+        movl    %r10d, $12(%rsp)
+        movl    $12(%rsp), %r11d
+        movl    $12(%rsp), %edi
+        movl    %r11d, %r10d
+        imull   %edi, %r10d
+        movl    %r10d, $12(%rsp)
+        movl    $36(%rsp), %r10d
+        movl    %r10d, $16(%rsp)
+        movl    $12(%rsp), %r11d
+        movl    $16(%rsp), %edi
+        movl    %r11d, %r10d
+        imull   %edi, %r10d
+        movl    %r10d, $12(%rsp)
+        movl    $8(%rsp), %r10d
+        movl    $12(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, $8(%rsp)
+        movl    $36(%rsp), %r10d
+        movl    %r10d, $20(%rsp)
+        movl    $20(%rsp), %r10d
+        call    fun1(%r10d)
+        movl    %eax, %r10d
+        movl    %r10d, $24(%rsp)
+        movl    $8(%rsp), %r10d
+        movl    $24(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, $8(%rsp)
+        movl    $8(%rsp), %r10d
+        movl    %r10d, $28(%rsp)
+.fun2_33:
+        movl    $28(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+
+fun3: # 4 params, 44 stack bytes
+        movl    %edi, %r11d
+        movl    %esi, %esi
+        movl    %edx, %edi
+        movl    %ecx, %r10d
+.fun3_entry:
+        movl    %r11d, $36(%rsp)
+        movl    %esi, $32(%rsp)
+        movl    %edi, $36(%rsp)
+        movl    %r10d, $40(%rsp)
+        movl    $36(%rsp), %r10d
+        movl    %r10d, $12(%rsp)
+        movl    $40(%rsp), %r10d
+        movl    %r10d, $12(%rsp)
+        movl    $12(%rsp), %r10d
+        call    fun1(%r10d)
+        movl    %eax, %r10d
+        movl    %r10d, $16(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    $16(%rsp), %edi
+        movl    %r10d, %r11d
+        imull   %edi, %r11d
+        movl    %r11d, $12(%rsp)
+        movl    $32(%rsp), %r10d
+        movl    %r10d, $20(%rsp)
+        movl    $40(%rsp), %r10d
+        movl    %r10d, $24(%rsp)
+        movl    $20(%rsp), %r10d
+        movl    $24(%rsp), %edi
+        movl    %r10d, %r11d
+        imull   %edi, %r11d
+        movl    %r11d, $20(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    $20(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, $12(%rsp)
+        movl    $36(%rsp), %r10d
+        movl    %r10d, $28(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    $28(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, $12(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    %r10d, $32(%rsp)
+.fun3_35:
+        movl    $32(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+
+call1: # 0 params, 12 stack bytes
+.call1_entry:
+        movl    $5, (%rsp)
+        movl    (%rsp), %r10d
+        call    fun1(%r10d)
+        movl    %eax, %r10d
+        movl    %r10d, (%rsp)
+        movl    (%rsp), %r10d
+        movl    %r10d, $4(%rsp)
+.call1_6:
+        movl    $4(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+
+call2: # 2 params, 24 stack bytes
+        movl    %edi, %r10d
+        movl    %esi, %r11d
+.call2_entry:
+        movl    %r10d, $16(%rsp)
+        movl    %r11d, $20(%rsp)
+        movl    $16(%rsp), %r10d
+        movl    %r10d, $4(%rsp)
+        movl    $20(%rsp), %r10d
+        movl    %r10d, $8(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    $8(%rsp), %r11d
+        call    fun2(%r10d, %r11d)
+        movl    %eax, %r10d
+        movl    %r10d, $12(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    %r10d, $12(%rsp)
+.call2_14:
+        movl    $12(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+
+call3: # 2 params, 32 stack bytes
+        movl    %edi, %r10d
+        movl    %esi, %r11d
+.call3_entry:
+        movl    %r10d, $24(%rsp)
+        movl    %r11d, $28(%rsp)
+        movl    $24(%rsp), %r10d
+        movl    %r10d, $4(%rsp)
+        movl    $28(%rsp), %r10d
+        movl    %r10d, $8(%rsp)
+        movl    $1, $12(%rsp)
+        movl    $0, $12(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    $8(%rsp), %r11d
+        movl    $12(%rsp), %edi
+        movl    $12(%rsp), %esi
+        call    fun3(%r10d, %r11d, %edi, %esi)
+        movl    %eax, %r10d
+        movl    %r10d, $16(%rsp)
+        movl    $16(%rsp), %r10d
+        movl    %r10d, $20(%rsp)
+.call3_18:
+        movl    $20(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+
+call4: # 0 params, 16 stack bytes
+.call4_entry:
+        movl    $10, (%rsp)
+        movl    (%rsp), %r10d
+        call    fun1(%r10d)
+        movl    %eax, %r10d
+        movl    %r10d, (%rsp)
+        movl    $100, $4(%rsp)
+        movl    (%rsp), %r10d
+        movl    $4(%rsp), %edi
+        movl    %r10d, %r11d
+        subl    %edi, %r11d
+        movl    %r11d, (%rsp)
+        movl    (%rsp), %r10d
+        movl    %r10d, $8(%rsp)
+.call4_10:
+        movl    $8(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+
+super_fun: # 8 params, 68 stack bytes
+        movl    %edi, %esi
+        movl    %esi, %edx
+        movl    %edx, %ecx
+        movl    %ecx, %r8d
+        movl    %r8d, %r9d
+        movl    %r9d, %edi
+        movl    (stack 0), %r11d
+        movl    (stack 1), %r10d
+.super_fun_entry:
+        movl    %esi, $36(%rsp)
+        movl    %edx, $40(%rsp)
+        movl    %ecx, $44(%rsp)
+        movl    %r8d, $48(%rsp)
+        movl    %r9d, $52(%rsp)
+        movl    %edi, $56(%rsp)
+        movl    %r11d, $60(%rsp)
+        movl    %r10d, $64(%rsp)
+        movl    $36(%rsp), %r10d
+        movl    %r10d, $24(%rsp)
+        movl    $40(%rsp), %r10d
+        movl    %r10d, $28(%rsp)
+        movl    $24(%rsp), %r11d
+        movl    $28(%rsp), %r10d
+        leal    (%r11d,%r10d), %edi
+        movl    %edi, $24(%rsp)
+        movl    $44(%rsp), %r10d
+        movl    %r10d, $32(%rsp)
+        movl    $24(%rsp), %r10d
+        movl    $32(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, $24(%rsp)
+        movl    $48(%rsp), %r10d
+        movl    %r10d, $36(%rsp)
+        movl    $24(%rsp), %r11d
+        movl    $36(%rsp), %r10d
+        leal    (%r11d,%r10d), %edi
+        movl    %edi, $24(%rsp)
+        movl    $52(%rsp), %r10d
+        movl    %r10d, $32(%rsp)
+        movl    $24(%rsp), %r10d
+        movl    $32(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, $24(%rsp)
+        movl    $56(%rsp), %r10d
+        movl    %r10d, $36(%rsp)
+        movl    $24(%rsp), %r10d
+        movl    $36(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, $24(%rsp)
+        movl    $60(%rsp), %r10d
+        movl    %r10d, $40(%rsp)
+        movl    $24(%rsp), %r10d
+        movl    $40(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, $24(%rsp)
+        movl    $64(%rsp), %r10d
+        movl    %r10d, $28(%rsp)
+        movl    $24(%rsp), %r10d
+        movl    $28(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, $24(%rsp)
+        movl    $24(%rsp), %r10d
+        movl    %r10d, $32(%rsp)
+.super_fun_55:
+        movl    $32(%rsp), %r10d
+        movl    %r10d, %eax
+        ret

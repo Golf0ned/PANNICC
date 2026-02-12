@@ -1,0 +1,55 @@
+fun_call: # 0 params, 0 stack bytes
+.fun_call_entry:
+.fun_call_0:
+        movl    $42, %eax
+        ret
+
+mem2reg_basic: # 0 params, 0 stack bytes
+.mem2reg_basic_entry:
+.mem2reg_basic_0:
+        movl    $5, %eax
+        ret
+
+mem2reg_branching: # 1 params, 0 stack bytes
+        movl    %edi, %0
+.mem2reg_branching_entry:
+        movl    %0, %1
+        subl    $42, %1
+        cmpl    %1, $0
+        jne     .mem2reg_branching_4
+.mem2reg_branching_2:
+.mem2reg_branching_3:
+        movl    $1, %8
+.mem2reg_branching_7:
+.mem2reg_branching_9:
+        movl    %8, %eax
+        ret
+.mem2reg_branching_4:
+.mem2reg_branching_5:
+        movl    %0, %6
+        addl    $2, %6
+        movl    %6, %8
+        jmp     .mem2reg_branching_7
+
+mem2reg_while: # 0 params, 0 stack bytes
+.mem2reg_while_entry:
+        movl    $0, %2
+        movl    $0, %1
+.mem2reg_while_0:
+        movl    %1, %3
+        subl    $10, %3
+        cmpl    %3, $0
+        jne     .mem2reg_while_8
+.mem2reg_while_4:
+.mem2reg_while_5:
+        leal    (%2,%1), %6
+        movl    %1, %7
+        addl    $1, %7
+        movl    %6, %2
+        movl    %7, %1
+        jmp     .mem2reg_while_0
+.mem2reg_while_8:
+.mem2reg_while_9:
+.mem2reg_while_10:
+        movl    %2, %eax
+        ret
