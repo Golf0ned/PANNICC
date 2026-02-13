@@ -160,17 +160,7 @@ namespace backend::lir {
 
     void ToStringVisitor::visit(InstructionCall *i) {
         result += "\n        ";
-        result += "call    " + i->getLabel();
-    }
-
-    void ToStringVisitor::visit(InstructionRet *i) {
-        result += "\n        ";
-        result += "ret";
-    }
-
-    void ToStringVisitor::visit(InstructionVirtualCall *i) {
-        result += "\n        ";
-        result += "call    " + i->getLabel() + "(";
+        result += "call    " + i->getLabel() + " # (";
 
         auto &args = i->getArgs();
         for (auto arg = args.begin(); arg != args.end(); arg++) {
@@ -180,6 +170,11 @@ namespace backend::lir {
         }
 
         result += ')';
+    }
+
+    void ToStringVisitor::visit(InstructionRet *i) {
+        result += "\n        ";
+        result += "ret";
     }
 
     void ToStringVisitor::visit(InstructionUnknown *i) {
