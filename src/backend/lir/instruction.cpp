@@ -188,29 +188,21 @@ namespace backend::lir {
 
     void InstructionCJmp::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionCall::InstructionCall(std::string label) : label(label) {}
+    InstructionCall::InstructionCall(std::string label,
+                                     std::vector<Operand *> args)
+        : label(label), args(args) {}
 
     std::string InstructionCall::getLabel() { return label; }
+
+    const std::vector<Operand *> &InstructionCall::getArgs() { return args; }
+
+    void InstructionCall::setArgs(std::vector<Operand *> new_args) {
+        args = new_args;
+    }
 
     void InstructionCall::accept(InstructionVisitor *v) { v->visit(this); }
 
     void InstructionRet::accept(InstructionVisitor *v) { v->visit(this); }
-
-    InstructionVirtualCall::InstructionVirtualCall(std::string label,
-                                                   std::vector<Operand *> args)
-        : InstructionCall(label), args(args) {}
-
-    const std::vector<Operand *> &InstructionVirtualCall::getArgs() {
-        return args;
-    }
-
-    void InstructionVirtualCall::setArgs(std::vector<Operand *> new_args) {
-        args = new_args;
-    }
-
-    void InstructionVirtualCall::accept(InstructionVisitor *v) {
-        v->visit(this);
-    }
 
     void InstructionUnknown::accept(InstructionVisitor *v) { v->visit(this); }
 } // namespace backend::lir

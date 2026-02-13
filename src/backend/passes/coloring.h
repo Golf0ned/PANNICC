@@ -30,7 +30,6 @@ namespace backend {
         void visit(lir::InstructionCJmp *i);
         void visit(lir::InstructionCall *i);
         void visit(lir::InstructionRet *i);
-        void visit(lir::InstructionVirtualCall *i);
         void visit(lir::InstructionUnknown *i);
 
     private:
@@ -60,7 +59,6 @@ namespace backend {
         void visit(lir::InstructionCJmp *i);
         void visit(lir::InstructionCall *i);
         void visit(lir::InstructionRet *i);
-        void visit(lir::InstructionVirtualCall *i);
         void visit(lir::InstructionUnknown *i);
 
     private:
