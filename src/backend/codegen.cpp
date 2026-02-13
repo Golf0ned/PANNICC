@@ -1,46 +1,34 @@
 #include "backend/codegen.h"
 
 namespace backend {
-    void CodeGenVisitor::visit(lir::Instruction *i) {}
+    void CodeGenVisitor::generateFunctionLabel(lir::Function *f) {
+        std::string label = f->getName() + ":";
+        result += result.empty() ? label : "\n" + label;
+    }
 
-    void CodeGenVisitor::visit(lir::Label *l) {}
+    void CodeGenVisitor::generatePreamble(lir::Function *f) {}
 
-    void CodeGenVisitor::visit(lir::InstructionMov *i) {}
+    void CodeGenVisitor::generatePostamble(lir::Function *f) {}
 
-    void CodeGenVisitor::visit(lir::InstructionPush *i) {}
-
-    void CodeGenVisitor::visit(lir::InstructionPop *i) {}
-
-    void CodeGenVisitor::visit(lir::InstructionConvert *i) {}
-
-    void CodeGenVisitor::visit(lir::InstructionBinaryOp *i) {}
-
-    void CodeGenVisitor::visit(lir::InstructionSpecialOp *i) {}
-
-    void CodeGenVisitor::visit(lir::InstructionLea *i) {}
-
-    void CodeGenVisitor::visit(lir::InstructionCmp *i) {}
-
-    void CodeGenVisitor::visit(lir::InstructionJmp *i) {}
-
-    void CodeGenVisitor::visit(lir::InstructionCJmp *i) {}
-
-    void CodeGenVisitor::visit(lir::InstructionCall *i) {}
-
-    void CodeGenVisitor::visit(lir::InstructionRet *i) {}
-
-    void CodeGenVisitor::visit(lir::InstructionUnknown *i) {}
+    void CodeGenVisitor::visit(lir::InstructionCall *i) {
+        result += "\n        ";
+        result += "call    " + i->getLabel();
+    }
 
     std::string generateCode(lir::Program &lir) {
+        // TODO: validation?
+
         CodeGenVisitor cgv;
         for (auto &f : lir.getFunctions()) {
-            // TODO: generate preamble and postamble
+            cgv.generateFunctionLabel(f.get());
+            cgv.generatePreamble(f.get());
+
+            for (auto &i : f->getInstructions())
+                i->accept(&cgv);
+
+            cgv.generatePostamble(f.get());
         }
 
-        // TODO: validation
-        // if (!validate(lir))
-        //     return "invalid lir";
-
-        return lir.toString();
+        return cgv.getResult();
     }
 } // namespace backend

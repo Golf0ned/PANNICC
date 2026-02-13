@@ -57,7 +57,7 @@ namespace backend::lir {
         void visit(InstructionRet *i) override;
         void visit(InstructionUnknown *i) override;
 
-    private:
+    protected:
         std::string result;
     };
 } // namespace backend::lir
