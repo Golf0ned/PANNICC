@@ -1,12 +1,11 @@
-main:  # 0 params, 4 stack bytes
+main:
 .main_entry:
         movl    $0, (%rsp)
 .main_1:
         movl    (%rsp), %r10d
         movl    %r10d, %eax
         ret
-
-compound:  # 0 params, 76 stack bytes
+compound:
 .compound_entry:
         movl    $9, $4(%rsp)
         movl    $123, $8(%rsp)
@@ -93,8 +92,7 @@ compound:  # 0 params, 76 stack bytes
         movl    $72(%rsp), %r10d
         movl    %r10d, %eax
         ret
-
-parens:  # 0 params, 20 stack bytes
+parens:
 .parens_entry:
         movl    $4, (%rsp)
         movl    $3, $4(%rsp)

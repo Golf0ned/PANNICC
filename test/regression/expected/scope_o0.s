@@ -1,4 +1,4 @@
-scope:  # 0 params, 76 stack bytes
+scope:
 .scope_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -44,8 +44,7 @@ scope:  # 0 params, 76 stack bytes
         movl    $72(%rsp), %r10d
         movl    %r10d, %eax
         ret
-
-scope_reassign_variable:  # 0 params, 48 stack bytes
+scope_reassign_variable:
 .scope_reassign_variable_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -88,8 +87,7 @@ scope_reassign_variable:  # 0 params, 48 stack bytes
         movl    $44(%rsp), %r10d
         movl    %r10d, %eax
         ret
-
-scope_reassign_in_parallel_scopes:  # 0 params, 32 stack bytes
+scope_reassign_in_parallel_scopes:
 .scope_reassign_in_parallel_scopes_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d

@@ -1,4 +1,4 @@
-simplify_cfg_delete_orphaned:  # 0 params, 16 stack bytes
+simplify_cfg_delete_orphaned:
 .simplify_cfg_delete_orphaned_entry:
         movl    $1, (%rsp)
         movl    (%rsp), %r10d
@@ -19,8 +19,7 @@ simplify_cfg_delete_orphaned:  # 0 params, 16 stack bytes
         movl    $8(%rsp), %r10d
         movl    %r10d, $12(%rsp)
         jmp     .simplify_cfg_delete_orphaned_11
-
-simplify_cfg_merge_straight_line:  # 0 params, 40 stack bytes
+simplify_cfg_merge_straight_line:
 .simplify_cfg_merge_straight_line_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -66,8 +65,7 @@ simplify_cfg_merge_straight_line:  # 0 params, 40 stack bytes
         movl    $32(%rsp), %r10d
         movl    %r10d, $36(%rsp)
         jmp     .simplify_cfg_merge_straight_line_30
-
-simplify_cfg_delete_empty:  # 0 params, 20 stack bytes
+simplify_cfg_delete_empty:
 .simplify_cfg_delete_empty_entry:
         movl    $1, (%rsp)
         movl    (%rsp), %r10d
@@ -93,8 +91,7 @@ simplify_cfg_delete_empty:  # 0 params, 20 stack bytes
         cmpl    %r10d, $0
         je      .simplify_cfg_delete_empty_12
         jmp     .simplify_cfg_delete_empty_12
-
-simplify_cfg_empty_loop:  # 0 params, 12 stack bytes
+simplify_cfg_empty_loop:
 .simplify_cfg_empty_loop_entry:
 .simplify_cfg_empty_loop_4:
         movl    $0, (%rsp)

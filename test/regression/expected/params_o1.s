@@ -1,34 +1,32 @@
-fun1:  # 1 params, 0 stack bytes
+fun1:
         movl    %edi, %r11d
 .fun1_entry:
         movl    %r11d, %r10d
         imull   %r11d, %r10d
         movl    %r10d, %eax
         ret
-
-fun2:  # 2 params, 0 stack bytes
+fun2:
         movl    %edi, %r10d
         movl    %esi, %r11d
 .fun2_entry:
-        call    fun1  # (%r10d)
+        call    fun1
         movl    %eax, %edi
         leal    (,%r10d,2), %esi
         movl    %esi, %r10d
         imull   %r11d, %r10d
         leal    (%edi,%r10d), %esi
-        call    fun1  # (%r11d)
+        call    fun1
         movl    %eax, %r10d
         leal    (%esi,%r10d), %r11d
         movl    %r11d, %eax
         ret
-
-fun3:  # 4 params, 0 stack bytes
+fun3:
         movl    %edi, %esi
         movl    %esi, %edx
         movl    %edx, %ecx
         movl    %ecx, %edi
 .fun3_entry:
-        call    fun1  # (%edi)
+        call    fun1
         movl    %eax, %r10d
         movl    %esi, %r11d
         imull   %r10d, %r11d
@@ -38,42 +36,37 @@ fun3:  # 4 params, 0 stack bytes
         leal    (%edi,%ecx), %r10d
         movl    %r10d, %eax
         ret
-
-call1:  # 0 params, 0 stack bytes
+call1:
 .call1_entry:
-        call    fun1  # ($5)
+        call    fun1
         movl    %eax, %r10d
         movl    %r10d, %eax
         ret
-
-call2:  # 2 params, 0 stack bytes
+call2:
         movl    %edi, %r11d
         movl    %esi, %r10d
 .call2_entry:
-        call    fun2  # (%r11d, %r10d)
+        call    fun2
         movl    %eax, %r10d
         movl    %r10d, %eax
         ret
-
-call3:  # 2 params, 0 stack bytes
+call3:
         movl    %edi, %r11d
         movl    %esi, %r10d
 .call3_entry:
-        call    fun3  # (%r11d, %r10d, $1, $0)
+        call    fun3
         movl    %eax, %r10d
         movl    %r10d, %eax
         ret
-
-call4:  # 0 params, 0 stack bytes
+call4:
 .call4_entry:
-        call    fun1  # ($10)
+        call    fun1
         movl    %eax, %r11d
         movl    %r11d, %r10d
         subl    $100, %r10d
         movl    %r10d, %eax
         ret
-
-super_fun:  # 8 params, 0 stack bytes
+super_fun:
         movl    %edi, %r10d
         movl    %esi, %r11d
         movl    %edx, %edi
