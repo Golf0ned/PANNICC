@@ -5,6 +5,7 @@
 
 #include "gtest/gtest.h"
 
+#include "backend/codegen.h"
 #include "backend/mir_to_lir.h"
 #include "backend/regalloc.h"
 #include "frontend/ast_to_hir.h"
@@ -97,6 +98,20 @@ void testLirRegalloc(std::string input_path, std::string expected_path,
     compareIfFileExists(lir.toString(), expected_path);
 }
 
+void testAsm(std::string input_path, std::string expected_path,
+             PassManager *pm) {
+    auto ast = parse(input_path);
+    auto hir = astToHir(ast);
+    auto mir = hirToMir(hir);
+    if (!pm)
+        GTEST_SKIP();
+    pm->runPasses(mir);
+    auto lir = mirToLir(mir);
+    allocateRegisters(lir);
+    auto assembly = generateCode(lir);
+    compareIfFileExists(assembly, expected_path);
+}
+
 std::string test_dir = fs::path(REGRESSION_TEST_DIR);
 
 class RegressionTest : public ::testing::TestWithParam<std::string> {
@@ -171,7 +186,20 @@ TEST_P(RegressionTest, LIRRegallocWithSelectPasses) {
                     buildPassManager(passes_path).get());
 }
 
-TEST_P(RegressionTest, ASM) { GTEST_SKIP(); }
+TEST_P(RegressionTest, ASM) {
+    auto expected_path = test_dir + "/expected/" + test_name + "_o0.s";
+    testAsm(input_path, expected_path, initializeO0().get());
+}
+
+TEST_P(RegressionTest, ASMWithO1) {
+    auto expected_path = test_dir + "/expected/" + test_name + "_o1.s";
+    testAsm(input_path, expected_path, initializeO1().get());
+}
+
+TEST_P(RegressionTest, ASMWithSelectPasses) {
+    auto expected_path = test_dir + "/expected/" + test_name + "_s.s";
+    testAsm(input_path, expected_path, buildPassManager(passes_path).get());
+}
 
 std::vector<std::string> discoverTests(std::string input_dir) {
     std::vector<std::string> res;
