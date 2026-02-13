@@ -1,4 +1,4 @@
-first: # 0 params, 8 stack bytes
+first:  # 0 params, 8 stack bytes
 .first_entry:
         movl    $1, (%rsp)
         movl    (%rsp), %r10d
@@ -8,9 +8,9 @@ first: # 0 params, 8 stack bytes
         movl    %r10d, %eax
         ret
 
-second: # 0 params, 12 stack bytes
+second:  # 0 params, 12 stack bytes
 .second_entry:
-        call    first()
+        call    first  # ()
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
         movl    $1, $4(%rsp)
@@ -25,9 +25,9 @@ second: # 0 params, 12 stack bytes
         movl    %r10d, %eax
         ret
 
-third: # 0 params, 12 stack bytes
+third:  # 0 params, 12 stack bytes
 .third_entry:
-        call    second()
+        call    second  # ()
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
         movl    $2, $4(%rsp)
@@ -42,9 +42,9 @@ third: # 0 params, 12 stack bytes
         movl    %r10d, %eax
         ret
 
-fourth: # 0 params, 12 stack bytes
+fourth:  # 0 params, 12 stack bytes
 .fourth_entry:
-        call    third()
+        call    third  # ()
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
         movl    $3, $4(%rsp)
@@ -59,9 +59,9 @@ fourth: # 0 params, 12 stack bytes
         movl    %r10d, %eax
         ret
 
-fifth: # 0 params, 12 stack bytes
+fifth:  # 0 params, 12 stack bytes
 .fifth_entry:
-        call    fourth()
+        call    fourth  # ()
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
         movl    $4, $4(%rsp)
@@ -76,9 +76,9 @@ fifth: # 0 params, 12 stack bytes
         movl    %r10d, %eax
         ret
 
-sixth: # 0 params, 12 stack bytes
+sixth:  # 0 params, 12 stack bytes
 .sixth_entry:
-        call    fifth()
+        call    fifth  # ()
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
         movl    $5, $4(%rsp)
@@ -93,9 +93,9 @@ sixth: # 0 params, 12 stack bytes
         movl    %r10d, %eax
         ret
 
-main: # 0 params, 96 stack bytes
+main:  # 0 params, 96 stack bytes
 .main_entry:
-        call    sixth()
+        call    sixth  # ()
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
         movl    $0, $8(%rsp)
@@ -103,7 +103,7 @@ main: # 0 params, 96 stack bytes
         movl    %r10d, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, $12(%rsp)
-        call    first()
+        call    first  # ()
         movl    %eax, %r10d
         movl    %r10d, $16(%rsp)
         movl    $12(%rsp), %r11d
@@ -114,7 +114,7 @@ main: # 0 params, 96 stack bytes
         movl    %r10d, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, $20(%rsp)
-        call    second()
+        call    second  # ()
         movl    %eax, %r10d
         movl    %r10d, $24(%rsp)
         movl    $20(%rsp), %r10d
@@ -125,7 +125,7 @@ main: # 0 params, 96 stack bytes
         movl    %r10d, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, $28(%rsp)
-        call    third()
+        call    third  # ()
         movl    %eax, %r10d
         movl    %r10d, $32(%rsp)
         movl    $28(%rsp), %r10d
@@ -136,7 +136,7 @@ main: # 0 params, 96 stack bytes
         movl    %r10d, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, $36(%rsp)
-        call    fourth()
+        call    fourth  # ()
         movl    %eax, %r10d
         movl    %r10d, $40(%rsp)
         movl    $36(%rsp), %r10d
@@ -147,7 +147,7 @@ main: # 0 params, 96 stack bytes
         movl    %r10d, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, $44(%rsp)
-        call    fifth()
+        call    fifth  # ()
         movl    %eax, %r10d
         movl    %r10d, $48(%rsp)
         movl    $44(%rsp), %r10d
@@ -158,7 +158,7 @@ main: # 0 params, 96 stack bytes
         movl    %r10d, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, $52(%rsp)
-        call    sixth()
+        call    sixth  # ()
         movl    %eax, %r10d
         movl    %r10d, $56(%rsp)
         movl    $52(%rsp), %r10d
@@ -169,42 +169,42 @@ main: # 0 params, 96 stack bytes
         movl    %r10d, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, $60(%rsp)
-        call    first()
+        call    first  # ()
         movl    %eax, %r10d
         movl    %r10d, $64(%rsp)
         movl    $60(%rsp), %r10d
         movl    $64(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, $60(%rsp)
-        call    second()
+        call    second  # ()
         movl    %eax, %r10d
         movl    %r10d, $68(%rsp)
         movl    $60(%rsp), %r10d
         movl    $68(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, $60(%rsp)
-        call    third()
+        call    third  # ()
         movl    %eax, %r10d
         movl    %r10d, $72(%rsp)
         movl    $60(%rsp), %r10d
         movl    $72(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, $60(%rsp)
-        call    fourth()
+        call    fourth  # ()
         movl    %eax, %r10d
         movl    %r10d, $76(%rsp)
         movl    $60(%rsp), %r10d
         movl    $76(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, $60(%rsp)
-        call    fifth()
+        call    fifth  # ()
         movl    %eax, %r10d
         movl    %r10d, $80(%rsp)
         movl    $60(%rsp), %r10d
         movl    $80(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, $60(%rsp)
-        call    sixth()
+        call    sixth  # ()
         movl    %eax, %r10d
         movl    %r10d, $84(%rsp)
         movl    $60(%rsp), %r10d

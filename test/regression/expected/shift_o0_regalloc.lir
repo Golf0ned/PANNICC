@@ -1,4 +1,4 @@
-lshift: # 0 params, 40 stack bytes
+lshift:  # 0 params, 40 stack bytes
 .lshift_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -32,7 +32,7 @@ lshift: # 0 params, 40 stack bytes
         movl    %r10d, %eax
         ret
 
-rshift: # 0 params, 40 stack bytes
+rshift:  # 0 params, 40 stack bytes
 .rshift_entry:
         movl    $16, $4(%rsp)
         movl    $4(%rsp), %r10d

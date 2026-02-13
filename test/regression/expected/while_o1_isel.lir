@@ -1,4 +1,4 @@
-while_basic: # 0 params, 0 stack bytes
+while_basic:  # 0 params, 0 stack bytes
 .while_basic_entry:
         movl    $0, %1
 .while_basic_0:
@@ -15,7 +15,7 @@ while_basic: # 0 params, 0 stack bytes
         movl    %1, %eax
         ret
 
-while_complex: # 0 params, 0 stack bytes
+while_complex:  # 0 params, 0 stack bytes
 .while_complex_entry:
         movl    $0, %2
         movl    $100, %1
@@ -36,7 +36,7 @@ while_complex: # 0 params, 0 stack bytes
         movl    %2, %eax
         ret
 
-while_empty: # 0 params, 0 stack bytes
+while_empty:  # 0 params, 0 stack bytes
 .while_empty_entry:
         cmpl    $0, $0
         jne     .while_empty_1
@@ -47,7 +47,7 @@ while_empty: # 0 params, 0 stack bytes
         movl    $0, %eax
         ret
 
-while_if: # 0 params, 0 stack bytes
+while_if:  # 0 params, 0 stack bytes
 .while_if_entry:
         cmpl    $1, $0
         jne     .while_if_5

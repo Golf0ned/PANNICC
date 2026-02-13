@@ -1,4 +1,4 @@
-square: # 1 params, 16 stack bytes
+square:  # 1 params, 16 stack bytes
         movl    %edi, %r10d
 .square_entry:
         movl    %r10d, $12(%rsp)

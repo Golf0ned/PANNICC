@@ -1,4 +1,4 @@
-main: # 0 params, 0 stack bytes
+main:  # 0 params, 0 stack bytes
 .main_entry:
         movl    $0, %esi
         addl    $1, %esi
