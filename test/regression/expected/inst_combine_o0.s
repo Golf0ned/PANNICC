@@ -1,4 +1,4 @@
-constant_fold:  # 0 params, 72 stack bytes
+constant_fold:
 .constant_fold_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -62,8 +62,7 @@ constant_fold:  # 0 params, 72 stack bytes
         movl    $68(%rsp), %r10d
         movl    %r10d, %eax
         ret
-
-constant_fold_overflow:  # 0 params, 20 stack bytes
+constant_fold_overflow:
 .constant_fold_overflow_entry:
         movl    $2147483647, $4(%rsp)
         movl    $1, $8(%rsp)
@@ -81,8 +80,7 @@ constant_fold_overflow:  # 0 params, 20 stack bytes
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
         ret
-
-constant_fold_underflow:  # 0 params, 20 stack bytes
+constant_fold_underflow:
 .constant_fold_underflow_entry:
         movl    $18446744071562067968, $4(%rsp)
         movl    $1, $8(%rsp)

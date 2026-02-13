@@ -1,4 +1,4 @@
-fun1:  # 1 params, 16 stack bytes
+fun1:
         movl    %edi, %r10d
 .fun1_entry:
         movl    %r10d, $12(%rsp)
@@ -17,8 +17,7 @@ fun1:  # 1 params, 16 stack bytes
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
         ret
-
-fun2:  # 2 params, 40 stack bytes
+fun2:
         movl    %edi, %r11d
         movl    %esi, %r10d
 .fun2_entry:
@@ -27,7 +26,7 @@ fun2:  # 2 params, 40 stack bytes
         movl    $32(%rsp), %r10d
         movl    %r10d, $4(%rsp)
         movl    $4(%rsp), %r10d
-        call    fun1  # (%r10d)
+        call    fun1
         movl    %eax, %r10d
         movl    %r10d, $8(%rsp)
         movl    $2, $12(%rsp)
@@ -52,7 +51,7 @@ fun2:  # 2 params, 40 stack bytes
         movl    $36(%rsp), %r10d
         movl    %r10d, $20(%rsp)
         movl    $20(%rsp), %r10d
-        call    fun1  # (%r10d)
+        call    fun1
         movl    %eax, %r10d
         movl    %r10d, $24(%rsp)
         movl    $8(%rsp), %r10d
@@ -65,8 +64,7 @@ fun2:  # 2 params, 40 stack bytes
         movl    $28(%rsp), %r10d
         movl    %r10d, %eax
         ret
-
-fun3:  # 4 params, 44 stack bytes
+fun3:
         movl    %edi, %r11d
         movl    %esi, %esi
         movl    %edx, %edi
@@ -81,7 +79,7 @@ fun3:  # 4 params, 44 stack bytes
         movl    $40(%rsp), %r10d
         movl    %r10d, $12(%rsp)
         movl    $12(%rsp), %r10d
-        call    fun1  # (%r10d)
+        call    fun1
         movl    %eax, %r10d
         movl    %r10d, $16(%rsp)
         movl    $12(%rsp), %r10d
@@ -114,12 +112,11 @@ fun3:  # 4 params, 44 stack bytes
         movl    $32(%rsp), %r10d
         movl    %r10d, %eax
         ret
-
-call1:  # 0 params, 12 stack bytes
+call1:
 .call1_entry:
         movl    $5, (%rsp)
         movl    (%rsp), %r10d
-        call    fun1  # (%r10d)
+        call    fun1
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
         movl    (%rsp), %r10d
@@ -128,8 +125,7 @@ call1:  # 0 params, 12 stack bytes
         movl    $4(%rsp), %r10d
         movl    %r10d, %eax
         ret
-
-call2:  # 2 params, 24 stack bytes
+call2:
         movl    %edi, %r10d
         movl    %esi, %r11d
 .call2_entry:
@@ -141,7 +137,7 @@ call2:  # 2 params, 24 stack bytes
         movl    %r10d, $8(%rsp)
         movl    $4(%rsp), %r10d
         movl    $8(%rsp), %r11d
-        call    fun2  # (%r10d, %r11d)
+        call    fun2
         movl    %eax, %r10d
         movl    %r10d, $12(%rsp)
         movl    $12(%rsp), %r10d
@@ -150,8 +146,7 @@ call2:  # 2 params, 24 stack bytes
         movl    $12(%rsp), %r10d
         movl    %r10d, %eax
         ret
-
-call3:  # 2 params, 32 stack bytes
+call3:
         movl    %edi, %r10d
         movl    %esi, %r11d
 .call3_entry:
@@ -167,7 +162,7 @@ call3:  # 2 params, 32 stack bytes
         movl    $8(%rsp), %r11d
         movl    $12(%rsp), %edi
         movl    $12(%rsp), %esi
-        call    fun3  # (%r10d, %r11d, %edi, %esi)
+        call    fun3
         movl    %eax, %r10d
         movl    %r10d, $16(%rsp)
         movl    $16(%rsp), %r10d
@@ -176,12 +171,11 @@ call3:  # 2 params, 32 stack bytes
         movl    $20(%rsp), %r10d
         movl    %r10d, %eax
         ret
-
-call4:  # 0 params, 16 stack bytes
+call4:
 .call4_entry:
         movl    $10, (%rsp)
         movl    (%rsp), %r10d
-        call    fun1  # (%r10d)
+        call    fun1
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
         movl    $100, $4(%rsp)
@@ -196,8 +190,7 @@ call4:  # 0 params, 16 stack bytes
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
         ret
-
-super_fun:  # 8 params, 68 stack bytes
+super_fun:
         movl    %edi, %esi
         movl    %esi, %edx
         movl    %edx, %ecx

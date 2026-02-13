@@ -1,92 +1,86 @@
-first:  # 0 params, 0 stack bytes
+first:
 .first_entry:
         movl    $1, %eax
         ret
-
-second:  # 0 params, 0 stack bytes
+second:
 .second_entry:
-        call    first  # ()
+        call    first
         movl    %eax, %r11d
         movl    %r11d, %r10d
         addl    $1, %r10d
         movl    %r10d, %eax
         ret
-
-third:  # 0 params, 0 stack bytes
+third:
 .third_entry:
-        call    second  # ()
+        call    second
         movl    %eax, %r11d
         movl    %r11d, %r10d
         addl    $2, %r10d
         movl    %r10d, %eax
         ret
-
-fourth:  # 0 params, 0 stack bytes
+fourth:
 .fourth_entry:
-        call    third  # ()
+        call    third
         movl    %eax, %r11d
         movl    %r11d, %r10d
         addl    $3, %r10d
         movl    %r10d, %eax
         ret
-
-fifth:  # 0 params, 0 stack bytes
+fifth:
 .fifth_entry:
-        call    fourth  # ()
+        call    fourth
         movl    %eax, %r11d
         movl    %r11d, %r10d
         addl    $4, %r10d
         movl    %r10d, %eax
         ret
-
-sixth:  # 0 params, 0 stack bytes
+sixth:
 .sixth_entry:
-        call    fifth  # ()
+        call    fifth
         movl    %eax, %r11d
         movl    %r11d, %r10d
         addl    $5, %r10d
         movl    %r10d, %eax
         ret
-
-main:  # 0 params, 0 stack bytes
+main:
 .main_entry:
-        call    sixth  # ()
+        call    sixth
         movl    %eax, %r10d
-        call    first  # ()
+        call    first
         movl    %eax, %r10d
         movl    $0, %r11d
         addl    %r10d, %r11d
-        call    second  # ()
+        call    second
         movl    %eax, %r10d
         leal    (%r11d,%r10d), %edi
-        call    third  # ()
+        call    third
         movl    %eax, %r10d
         leal    (%edi,%r10d), %r11d
-        call    fourth  # ()
+        call    fourth
         movl    %eax, %r10d
         leal    (%r11d,%r10d), %edi
-        call    fifth  # ()
+        call    fifth
         movl    %eax, %r10d
         leal    (%edi,%r10d), %r11d
-        call    sixth  # ()
+        call    sixth
         movl    %eax, %r10d
         leal    (%r11d,%r10d), %edi
-        call    first  # ()
+        call    first
         movl    %eax, %r10d
         leal    (%edi,%r10d), %r11d
-        call    second  # ()
+        call    second
         movl    %eax, %r10d
         leal    (%r11d,%r10d), %edi
-        call    third  # ()
+        call    third
         movl    %eax, %r10d
         leal    (%edi,%r10d), %r11d
-        call    fourth  # ()
+        call    fourth
         movl    %eax, %r10d
         leal    (%r11d,%r10d), %edi
-        call    fifth  # ()
+        call    fifth
         movl    %eax, %r10d
         leal    (%edi,%r10d), %esi
-        call    sixth  # ()
+        call    sixth
         movl    %eax, %r11d
         leal    (%esi,%r11d), %r10d
         movl    %r10d, %eax

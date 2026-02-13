@@ -1,4 +1,4 @@
-main:  # 0 params, 620 stack bytes
+main:
 .main_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %r10d

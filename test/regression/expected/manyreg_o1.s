@@ -1,4 +1,4 @@
-main:  # 0 params, 0 stack bytes
+main:
 .main_entry:
         movl    $16384, %eax
         ret
