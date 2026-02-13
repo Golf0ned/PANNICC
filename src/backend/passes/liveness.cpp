@@ -96,15 +96,13 @@ namespace backend {
 
     void GenSetVisitor::visit(lir::InstructionCJmp *i) { gen.clear(); }
 
-    void GenSetVisitor::visit(lir::InstructionCall *i) { gen.clear(); }
-
-    void GenSetVisitor::visit(lir::InstructionRet *i) { gen.clear(); }
-
-    void GenSetVisitor::visit(lir::InstructionVirtualCall *i) {
+    void GenSetVisitor::visit(lir::InstructionCall *i) {
         gen.clear();
         for (auto arg : i->getArgs())
             checkOperand(arg);
     }
+
+    void GenSetVisitor::visit(lir::InstructionRet *i) { gen.clear(); }
 
     void GenSetVisitor::visit(lir::InstructionUnknown *i) {}
 
@@ -182,15 +180,13 @@ namespace backend {
     void KillSetVisitor::visit(lir::InstructionCJmp *i) { kill.clear(); }
 
     // TODO: is this correct?
-    void KillSetVisitor::visit(lir::InstructionCall *i) { kill.clear(); }
-
-    void KillSetVisitor::visit(lir::InstructionRet *i) { kill.clear(); }
-
-    void KillSetVisitor::visit(lir::InstructionVirtualCall *i) {
+    void KillSetVisitor::visit(lir::InstructionCall *i) {
         kill.clear();
         for (auto reg : lir::getCallerSavedRegisters())
             addRegister(reg);
     }
+
+    void KillSetVisitor::visit(lir::InstructionRet *i) { kill.clear(); }
 
     void KillSetVisitor::visit(lir::InstructionUnknown *i) {}
 
@@ -272,11 +268,6 @@ namespace backend {
     }
 
     void SuccessorVisitor::visit(lir::InstructionRet *i) { successors.clear(); }
-
-    void SuccessorVisitor::visit(lir::InstructionVirtualCall *i) {
-        successors.clear();
-        successors.push_back(next_index[i]);
-    }
 
     void SuccessorVisitor::visit(lir::InstructionUnknown *i) {
         successors.clear();

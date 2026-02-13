@@ -56,8 +56,6 @@ namespace backend {
 
     void PrecoloringVisitor::visit(lir::InstructionRet *i) {}
 
-    void PrecoloringVisitor::visit(lir::InstructionVirtualCall *i) {}
-
     void PrecoloringVisitor::visit(lir::InstructionUnknown *i) {}
 
     AssignmentVisitor::AssignmentVisitor(const RegisterColoring &coloring,
@@ -160,11 +158,7 @@ namespace backend {
 
     void AssignmentVisitor::visit(lir::InstructionCJmp *i) {}
 
-    void AssignmentVisitor::visit(lir::InstructionCall *i) {}
-
-    void AssignmentVisitor::visit(lir::InstructionRet *i) {}
-
-    void AssignmentVisitor::visit(lir::InstructionVirtualCall *i) {
+    void AssignmentVisitor::visit(lir::InstructionCall *i) {
         auto args = i->getArgs();
 
         for (auto &arg : args) {
@@ -175,6 +169,8 @@ namespace backend {
 
         i->setArgs(args);
     }
+
+    void AssignmentVisitor::visit(lir::InstructionRet *i) {}
 
     void AssignmentVisitor::visit(lir::InstructionUnknown *i) {}
 

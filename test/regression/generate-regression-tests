@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# TODO: unhardcode PANNICC_DIR
 PANNICC_DIR="${HOME}/code/projects/PANNICC"
 
 PANNICC="${PANNICC_DIR}/build/bin/pannicc"
@@ -7,28 +8,32 @@ INPUT_DIR="${PANNICC_DIR}/test/regression/input"
 OUTPUT_DIR="${PANNICC_DIR}/test/regression/expected"
 
 for test in ${INPUT_DIR}/*.c; do
-    BASE_NAME=$(basename ${test})
-    echo "Updating output for ${BASE_NAME}..."
+    base_name=$(basename ${test})
+    echo "Updating output for ${base_name}..."
 
-    INPUT="${BASE_NAME%.c}"
+    input="${base_name%.c}"
 
-    $(${PANNICC} --dump-ast ${test} > ${OUTPUT_DIR}/${INPUT}.ast)
-    $(${PANNICC} --dump-hir ${test} > ${OUTPUT_DIR}/${INPUT}.hir)
+    ${PANNICC} -O0 --emit-ast ${test} -o ${OUTPUT_DIR}/${input}.ast
+    ${PANNICC} -O0 --emit-hir ${test} -o ${OUTPUT_DIR}/${input}.hir
 
-    $(${PANNICC} --dump-mir -O0 ${test} > ${OUTPUT_DIR}/${INPUT}_o0.mir)
-    $(${PANNICC} --dump-mir -O1 ${test} > ${OUTPUT_DIR}/${INPUT}_o1.mir)
+    for opt in "-O0" "-O1"; do
+        output_base=${OUTPUT_DIR}/${input}_o${opt:2}
+        ${PANNICC} ${opt} --emit-mir ${test} -o ${output_base}.mir
+        ${PANNICC} ${opt} --emit-lir-isel ${test} -o ${output_base}_isel.lir
+        ${PANNICC} ${opt} --emit-lir-regalloc ${test} -o ${output_base}_regalloc.lir
+        ${PANNICC} ${opt} ${test} -o ${output_base}.s
+    done
 
-    $(${PANNICC} --dump-lir-initial -O0 ${test} > ${OUTPUT_DIR}/${INPUT}_o0_initial.lir)
-    $(${PANNICC} --dump-lir-initial -O1 ${test} > ${OUTPUT_DIR}/${INPUT}_o1_initial.lir)
-    $(${PANNICC} --dump-lir -O0 ${test} > ${OUTPUT_DIR}/${INPUT}_o0.lir)
-    $(${PANNICC} --dump-lir -O1 ${test} > ${OUTPUT_DIR}/${INPUT}_o1.lir)
+    passes=${INPUT_DIR}/${input}.passes
+    if [ -e ${passes} ]; then
+        params=$(paste -sd, ${passes})
+        opt="-O0 --passes=${params}"
 
-    PASSES=${INPUT_DIR}/${INPUT}.passes
-    if [ -e ${PASSES} ]; then
-        PARAMS=$(paste -sd, ${PASSES})
-        $(${PANNICC} --dump-mir -O0 --passes=${PARAMS} ${test} > ${OUTPUT_DIR}/${INPUT}_select.mir)
-        $(${PANNICC} --dump-lir-initial -O0 --passes=${PARAMS} ${test} > ${OUTPUT_DIR}/${INPUT}_select_initial.lir)
-        $(${PANNICC} --dump-lir -O0 --passes=${PARAMS} ${test} > ${OUTPUT_DIR}/${INPUT}_select.lir)
+        output_base=${OUTPUT_DIR}/${input}_s
+        ${PANNICC} ${opt} --emit-mir ${test} -o ${output_base}.mir
+        ${PANNICC} ${opt} --emit-lir-isel ${test} -o ${output_base}_isel.lir
+        ${PANNICC} ${opt} --emit-lir-regalloc ${test} -o ${output_base}_regalloc.lir
+        ${PANNICC} ${opt} ${test} -o ${output_base}.s
     fi
 done
 

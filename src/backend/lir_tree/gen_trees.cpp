@@ -145,8 +145,7 @@ namespace backend::lir_tree {
         // Call the function
         //
         auto function_name = i->getCallee()->getName();
-        auto call =
-            std::make_unique<lir::InstructionVirtualCall>(function_name, args);
+        auto call = std::make_unique<lir::InstructionCall>(function_name, args);
         instructions.push_back(std::move(call));
 
         //

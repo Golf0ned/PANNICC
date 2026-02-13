@@ -55,11 +55,9 @@ namespace backend::lir {
         void visit(InstructionCJmp *i) override;
         void visit(InstructionCall *i) override;
         void visit(InstructionRet *i) override;
-
-        void visit(InstructionVirtualCall *i) override;
         void visit(InstructionUnknown *i) override;
 
-    private:
+    protected:
         std::string result;
     };
 } // namespace backend::lir

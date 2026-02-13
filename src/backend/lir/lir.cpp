@@ -23,7 +23,7 @@ namespace backend::lir {
 
     std::string Function::toString() {
         std::string label = name + ":";
-        std::string annotation = " # " + std::to_string(num_params) +
+        std::string annotation = "  # " + std::to_string(num_params) +
                                  " params, " + std::to_string(stack_bytes) +
                                  " stack bytes";
 
@@ -161,16 +161,7 @@ namespace backend::lir {
     void ToStringVisitor::visit(InstructionCall *i) {
         result += "\n        ";
         result += "call    " + i->getLabel();
-    }
-
-    void ToStringVisitor::visit(InstructionRet *i) {
-        result += "\n        ";
-        result += "ret";
-    }
-
-    void ToStringVisitor::visit(InstructionVirtualCall *i) {
-        result += "\n        ";
-        result += "call    " + i->getLabel() + "(";
+        result += "  # (";
 
         auto &args = i->getArgs();
         for (auto arg = args.begin(); arg != args.end(); arg++) {
@@ -180,6 +171,11 @@ namespace backend::lir {
         }
 
         result += ')';
+    }
+
+    void ToStringVisitor::visit(InstructionRet *i) {
+        result += "\n        ";
+        result += "ret";
     }
 
     void ToStringVisitor::visit(InstructionUnknown *i) {
