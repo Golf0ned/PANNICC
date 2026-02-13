@@ -1,4 +1,4 @@
-lost_copy_problem: # 1 params, 0 stack bytes
+lost_copy_problem:  # 1 params, 0 stack bytes
         movl    %edi, %r10d
 .lost_copy_problem_entry:
         movl    %r10d, %r11d
@@ -20,7 +20,7 @@ lost_copy_problem: # 1 params, 0 stack bytes
         movl    %r10d, %eax
         ret
 
-swap_problem: # 2 params, 0 stack bytes
+swap_problem:  # 2 params, 0 stack bytes
         movl    %edi, %r10d
         movl    %esi, %edi
 .swap_problem_entry:

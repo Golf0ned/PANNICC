@@ -1,4 +1,4 @@
-lost_copy_problem: # 1 params, 36 stack bytes
+lost_copy_problem:  # 1 params, 36 stack bytes
         movl    %edi, %r10d
 .lost_copy_problem_entry:
         movl    %r10d, $32(%rsp)
@@ -42,7 +42,7 @@ lost_copy_problem: # 1 params, 36 stack bytes
         movl    %r10d, %eax
         ret
 
-swap_problem: # 2 params, 40 stack bytes
+swap_problem:  # 2 params, 40 stack bytes
         movl    %edi, %r11d
         movl    %esi, %r10d
 .swap_problem_entry:

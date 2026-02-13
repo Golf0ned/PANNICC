@@ -1,4 +1,4 @@
-fun_call: # 0 params, 8 stack bytes
+fun_call:  # 0 params, 8 stack bytes
 .fun_call_entry:
         movl    $42, (%rsp)
         movl    (%rsp), %r10d
@@ -8,7 +8,7 @@ fun_call: # 0 params, 8 stack bytes
         movl    %r10d, %eax
         ret
 
-mem2reg_basic: # 0 params, 28 stack bytes
+mem2reg_basic:  # 0 params, 28 stack bytes
 .mem2reg_basic_entry:
         movl    $0, $8(%rsp)
         movl    $8(%rsp), %r10d
@@ -29,7 +29,7 @@ mem2reg_basic: # 0 params, 28 stack bytes
         movl    %r10d, %eax
         ret
 
-mem2reg_branching: # 1 params, 36 stack bytes
+mem2reg_branching:  # 1 params, 36 stack bytes
         movl    %edi, %r10d
 .mem2reg_branching_entry:
         movl    %r10d, $32(%rsp)
@@ -71,7 +71,7 @@ mem2reg_branching: # 1 params, 36 stack bytes
         movl    %r10d, $4(%rsp)
         jmp     .mem2reg_branching_25
 
-mem2reg_while: # 0 params, 48 stack bytes
+mem2reg_while:  # 0 params, 48 stack bytes
 .mem2reg_while_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %r10d

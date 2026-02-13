@@ -1,92 +1,92 @@
-first: # 0 params, 0 stack bytes
+first:  # 0 params, 0 stack bytes
 .first_entry:
         movl    $1, %eax
         ret
 
-second: # 0 params, 0 stack bytes
+second:  # 0 params, 0 stack bytes
 .second_entry:
-        call    first()
+        call    first  # ()
         movl    %eax, %0
         movl    %0, %1
         addl    $1, %1
         movl    %1, %eax
         ret
 
-third: # 0 params, 0 stack bytes
+third:  # 0 params, 0 stack bytes
 .third_entry:
-        call    second()
+        call    second  # ()
         movl    %eax, %0
         movl    %0, %1
         addl    $2, %1
         movl    %1, %eax
         ret
 
-fourth: # 0 params, 0 stack bytes
+fourth:  # 0 params, 0 stack bytes
 .fourth_entry:
-        call    third()
+        call    third  # ()
         movl    %eax, %0
         movl    %0, %1
         addl    $3, %1
         movl    %1, %eax
         ret
 
-fifth: # 0 params, 0 stack bytes
+fifth:  # 0 params, 0 stack bytes
 .fifth_entry:
-        call    fourth()
+        call    fourth  # ()
         movl    %eax, %0
         movl    %0, %1
         addl    $4, %1
         movl    %1, %eax
         ret
 
-sixth: # 0 params, 0 stack bytes
+sixth:  # 0 params, 0 stack bytes
 .sixth_entry:
-        call    fifth()
+        call    fifth  # ()
         movl    %eax, %0
         movl    %0, %1
         addl    $5, %1
         movl    %1, %eax
         ret
 
-main: # 0 params, 0 stack bytes
+main:  # 0 params, 0 stack bytes
 .main_entry:
-        call    sixth()
+        call    sixth  # ()
         movl    %eax, %0
-        call    first()
+        call    first  # ()
         movl    %eax, %1
         movl    $0, %2
         addl    %1, %2
-        call    second()
+        call    second  # ()
         movl    %eax, %3
         leal    (%2,%3), %4
-        call    third()
+        call    third  # ()
         movl    %eax, %5
         leal    (%4,%5), %6
-        call    fourth()
+        call    fourth  # ()
         movl    %eax, %7
         leal    (%6,%7), %8
-        call    fifth()
+        call    fifth  # ()
         movl    %eax, %9
         leal    (%8,%9), %10
-        call    sixth()
+        call    sixth  # ()
         movl    %eax, %11
         leal    (%10,%11), %12
-        call    first()
+        call    first  # ()
         movl    %eax, %13
         leal    (%12,%13), %14
-        call    second()
+        call    second  # ()
         movl    %eax, %15
         leal    (%14,%15), %16
-        call    third()
+        call    third  # ()
         movl    %eax, %17
         leal    (%16,%17), %18
-        call    fourth()
+        call    fourth  # ()
         movl    %eax, %19
         leal    (%18,%19), %20
-        call    fifth()
+        call    fifth  # ()
         movl    %eax, %21
         leal    (%20,%21), %22
-        call    sixth()
+        call    sixth  # ()
         movl    %eax, %23
         leal    (%22,%23), %24
         movl    %24, %eax
