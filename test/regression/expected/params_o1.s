@@ -85,3 +85,11 @@ super_fun:
         leal    (%r11d,%r9d), %r10d
         movl    %r10d, %eax
         ret
+call_super_fun:
+        movl    %edi, %r11d
+        movl    %esi, %r10d
+.call_super_fun_entry:
+        call    super_fun
+        movl    %eax, %r10d
+        movl    %r10d, %eax
+        ret

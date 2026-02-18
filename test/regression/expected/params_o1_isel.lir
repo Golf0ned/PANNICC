@@ -92,3 +92,12 @@ super_fun:  # 8 params, 0 stack bytes
         leal    (%13,%7), %14
         movl    %14, %eax
         ret
+
+call_super_fun:  # 2 params, 0 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+.call_super_fun_entry:
+        call    super_fun  # ($1, $2, $3, $4, $5, $6, %0, %1)
+        movl    %eax, %2
+        movl    %2, %eax
+        ret

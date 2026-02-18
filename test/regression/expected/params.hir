@@ -126,3 +126,26 @@ int super_fun(int a_0, int b_0, int c_0, int d_0, int e_0, int f_0, int g_0, int
     __v = __v + __v7;
     return __v;
 }
+
+int call_super_fun(int seventh_0, int eighth_0) {
+    __entry:
+    int __v;
+    __v = 1;
+    int __v1;
+    __v1 = 2;
+    int __v2;
+    __v2 = 3;
+    int __v3;
+    __v3 = 4;
+    int __v4;
+    __v4 = 5;
+    int __v5;
+    __v5 = 6;
+    int __v6;
+    __v6 = seventh_0;
+    int __v7;
+    __v7 = eighth_0;
+    int __v8;
+    __v8 = super_fun(__v, __v1, __v2, __v3, __v4, __v5, __v6, __v7);
+    return __v8;
+}
