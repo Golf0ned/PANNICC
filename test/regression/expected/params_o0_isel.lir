@@ -265,3 +265,37 @@ super_fun:  # 8 params, 68 stack bytes
         movl    $32(%rsp), %56
         movl    %56, %eax
         ret
+
+call_super_fun:  # 2 params, 48 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+.call_super_fun_entry:
+        movl    %0, $32(%rsp)
+        movl    %1, $36(%rsp)
+        movl    $1, $4(%rsp)
+        movl    $2, $8(%rsp)
+        movl    $3, $12(%rsp)
+        movl    $4, $12(%rsp)
+        movl    $5, $16(%rsp)
+        movl    $6, $20(%rsp)
+        movl    $32(%rsp), %14
+        movl    %14, $24(%rsp)
+        movl    $36(%rsp), %15
+        movl    %15, $28(%rsp)
+        movl    $4(%rsp), %16
+        movl    $8(%rsp), %17
+        movl    $12(%rsp), %18
+        movl    $12(%rsp), %19
+        movl    $16(%rsp), %20
+        movl    $20(%rsp), %21
+        movl    $24(%rsp), %22
+        movl    $28(%rsp), %23
+        call    super_fun  # (%16, %17, %18, %19, %20, %21, %22, %23)
+        movl    %eax, %24
+        movl    %24, $32(%rsp)
+        movl    $32(%rsp), %25
+        movl    %25, $36(%rsp)
+.call_super_fun_26:
+        movl    $36(%rsp), %27
+        movl    %27, %eax
+        ret

@@ -274,3 +274,38 @@ super_fun:
         movl    %r10d, %eax
         addq    $68, %rsp
         ret
+call_super_fun:
+        subq    $48, %rsp
+        movl    %edi, %r10d
+        movl    %esi, %r11d
+.call_super_fun_entry:
+        movl    %r10d, $32(%rsp)
+        movl    %r11d, $36(%rsp)
+        movl    $1, $4(%rsp)
+        movl    $2, $8(%rsp)
+        movl    $3, $12(%rsp)
+        movl    $4, $12(%rsp)
+        movl    $5, $16(%rsp)
+        movl    $6, $20(%rsp)
+        movl    $32(%rsp), %r10d
+        movl    %r10d, $24(%rsp)
+        movl    $36(%rsp), %r10d
+        movl    %r10d, $28(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    $8(%rsp), %r11d
+        movl    $12(%rsp), %edi
+        movl    $12(%rsp), %esi
+        movl    $16(%rsp), %edx
+        movl    $20(%rsp), %ecx
+        movl    $24(%rsp), %r8d
+        movl    $28(%rsp), %r9d
+        call    super_fun
+        movl    %eax, %r10d
+        movl    %r10d, $32(%rsp)
+        movl    $32(%rsp), %r10d
+        movl    %r10d, $36(%rsp)
+.call_super_fun_26:
+        movl    $36(%rsp), %r10d
+        movl    %r10d, %eax
+        addq    $48, %rsp
+        ret
