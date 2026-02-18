@@ -1,4 +1,5 @@
 lost_copy_problem:
+        subq    $36, %rsp
         movl    %edi, %r10d
 .lost_copy_problem_entry:
         movl    %r10d, $32(%rsp)
@@ -40,8 +41,10 @@ lost_copy_problem:
 .lost_copy_problem_30:
         movl    $28(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $36, %rsp
         ret
 swap_problem:
+        subq    $40, %rsp
         movl    %edi, %r11d
         movl    %esi, %r10d
 .swap_problem_entry:
@@ -82,4 +85,5 @@ swap_problem:
 .swap_problem_30:
         movl    $32(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $40, %rsp
         ret

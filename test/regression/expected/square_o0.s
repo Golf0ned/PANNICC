@@ -1,4 +1,5 @@
 square:
+        subq    $16, %rsp
         movl    %edi, %r10d
 .square_entry:
         movl    %r10d, $12(%rsp)
@@ -16,4 +17,5 @@ square:
 .square_11:
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $16, %rsp
         ret

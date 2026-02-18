@@ -1,4 +1,5 @@
 simplify_cfg_delete_orphaned:
+        subq    $16, %rsp
 .simplify_cfg_delete_orphaned_entry:
         movl    $1, (%rsp)
         movl    (%rsp), %r10d
@@ -18,8 +19,10 @@ simplify_cfg_delete_orphaned:
         movl    $3, $8(%rsp)
         movl    $8(%rsp), %r10d
         movl    %r10d, $12(%rsp)
+        addq    $16, %rsp
         jmp     .simplify_cfg_delete_orphaned_12
 simplify_cfg_merge_straight_line:
+        subq    $40, %rsp
 .simplify_cfg_merge_straight_line_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -65,8 +68,10 @@ simplify_cfg_merge_straight_line:
         movl    %r10d, $32(%rsp)
         movl    $32(%rsp), %r10d
         movl    %r10d, $36(%rsp)
+        addq    $40, %rsp
         jmp     .simplify_cfg_merge_straight_line_31
 simplify_cfg_delete_empty:
+        subq    $20, %rsp
 .simplify_cfg_delete_empty_entry:
         movl    $1, (%rsp)
         movl    (%rsp), %r10d
@@ -104,8 +109,10 @@ simplify_cfg_delete_empty:
         jmp     .simplify_cfg_delete_empty_13
 .simplify_cfg_delete_empty_19:
 .simplify_cfg_delete_empty_20:
+        addq    $20, %rsp
         jmp     .simplify_cfg_delete_empty_21
 simplify_cfg_empty_loop:
+        subq    $12, %rsp
 .simplify_cfg_empty_loop_entry:
 .simplify_cfg_empty_loop_3:
         movl    $0, (%rsp)
@@ -123,4 +130,5 @@ simplify_cfg_empty_loop:
 .simplify_cfg_empty_loop_10:
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $12, %rsp
         ret

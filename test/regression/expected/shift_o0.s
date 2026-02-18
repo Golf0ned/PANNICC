@@ -1,4 +1,5 @@
 lshift:
+        subq    $40, %rsp
 .lshift_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -30,8 +31,10 @@ lshift:
 .lshift_23:
         movl    $36(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $40, %rsp
         ret
 rshift:
+        subq    $40, %rsp
 .rshift_entry:
         movl    $16, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -63,4 +66,5 @@ rshift:
 .rshift_23:
         movl    $36(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $40, %rsp
         ret
