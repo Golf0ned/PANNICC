@@ -1,4 +1,5 @@
 scope:
+        subq    $76, %rsp
 .scope_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -43,8 +44,10 @@ scope:
 .scope_37:
         movl    $72(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $76, %rsp
         ret
 scope_reassign_variable:
+        subq    $48, %rsp
 .scope_reassign_variable_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -86,8 +89,10 @@ scope_reassign_variable:
 .scope_reassign_variable_31:
         movl    $44(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $48, %rsp
         ret
 scope_reassign_in_parallel_scopes:
+        subq    $32, %rsp
 .scope_reassign_in_parallel_scopes_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -105,4 +110,5 @@ scope_reassign_in_parallel_scopes:
 .scope_reassign_in_parallel_scopes_13:
         movl    $28(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $32, %rsp
         ret

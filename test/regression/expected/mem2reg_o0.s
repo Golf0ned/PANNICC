@@ -1,4 +1,5 @@
 fun_call:
+        subq    $8, %rsp
 .fun_call_entry:
         movl    $42, (%rsp)
         movl    (%rsp), %r10d
@@ -6,8 +7,10 @@ fun_call:
 .fun_call_3:
         movl    $4(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $8, %rsp
         ret
 mem2reg_basic:
+        subq    $28, %rsp
 .mem2reg_basic_entry:
         movl    $0, $8(%rsp)
         movl    $8(%rsp), %r10d
@@ -26,8 +29,10 @@ mem2reg_basic:
 .mem2reg_basic_13:
         movl    $24(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $28, %rsp
         ret
 mem2reg_branching:
+        subq    $36, %rsp
         movl    %edi, %r10d
 .mem2reg_branching_entry:
         movl    %r10d, $32(%rsp)
@@ -67,8 +72,10 @@ mem2reg_branching:
         movl    %edi, $20(%rsp)
         movl    $20(%rsp), %r10d
         movl    %r10d, $4(%rsp)
+        addq    $36, %rsp
         jmp     .mem2reg_branching_25
 mem2reg_while:
+        subq    $48, %rsp
 .mem2reg_while_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -119,4 +126,5 @@ mem2reg_while:
 .mem2reg_while_37:
         movl    $44(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $48, %rsp
         ret

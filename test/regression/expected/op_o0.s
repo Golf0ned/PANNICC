@@ -1,4 +1,5 @@
 add:
+        subq    $28, %rsp
 .add_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -19,8 +20,10 @@ add:
 .add_15:
         movl    $24(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $28, %rsp
         ret
 sub:
+        subq    $28, %rsp
 .sub_entry:
         movl    $10, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -42,8 +45,10 @@ sub:
 .sub_15:
         movl    $24(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $28, %rsp
         ret
 mul:
+        subq    $28, %rsp
 .mul_entry:
         movl    $3, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -65,8 +70,10 @@ mul:
 .mul_15:
         movl    $24(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $28, %rsp
         ret
 div:
+        subq    $28, %rsp
 .div_entry:
         movl    $24, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -90,8 +97,10 @@ div:
 .div_15:
         movl    $24(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $28, %rsp
         ret
 lshift:
+        subq    $28, %rsp
 .lshift_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -113,8 +122,10 @@ lshift:
 .lshift_15:
         movl    $24(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $28, %rsp
         ret
 rshift:
+        subq    $28, %rsp
 .rshift_entry:
         movl    $16, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -136,8 +147,10 @@ rshift:
 .rshift_15:
         movl    $24(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $28, %rsp
         ret
 bit_and:
+        subq    $28, %rsp
 .bit_and_entry:
         movl    $31, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -159,8 +172,10 @@ bit_and:
 .bit_and_15:
         movl    $24(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $28, %rsp
         ret
 bit_or:
+        subq    $28, %rsp
 .bit_or_entry:
         movl    $12, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -182,8 +197,10 @@ bit_or:
 .bit_or_15:
         movl    $24(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $28, %rsp
         ret
 bit_xor:
+        subq    $28, %rsp
 .bit_xor_entry:
         movl    $15, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -205,8 +222,10 @@ bit_xor:
 .bit_xor_15:
         movl    $24(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $28, %rsp
         ret
 unary_plus:
+        subq    $16, %rsp
 .unary_plus_entry:
         movl    $42, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -220,8 +239,10 @@ unary_plus:
 .unary_plus_8:
         movl    $12(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $16, %rsp
         ret
 unary_minus:
+        subq    $16, %rsp
 .unary_minus_entry:
         movl    $42, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -237,8 +258,10 @@ unary_minus:
 .unary_minus_9:
         movl    $12(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $16, %rsp
         ret
 unary_bitwise_not:
+        subq    $16, %rsp
 .unary_bitwise_not_entry:
         movl    $42, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -254,8 +277,10 @@ unary_bitwise_not:
 .unary_bitwise_not_9:
         movl    $12(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $16, %rsp
         ret
 add_equals:
+        subq    $20, %rsp
 .add_equals_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -272,8 +297,10 @@ add_equals:
 .add_equals_11:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $20, %rsp
         ret
 sub_equals:
+        subq    $20, %rsp
 .sub_equals_entry:
         movl    $10, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -291,8 +318,10 @@ sub_equals:
 .sub_equals_11:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $20, %rsp
         ret
 mul_equals:
+        subq    $20, %rsp
 .mul_equals_entry:
         movl    $3, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -310,8 +339,10 @@ mul_equals:
 .mul_equals_11:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $20, %rsp
         ret
 div_equals:
+        subq    $20, %rsp
 .div_equals_entry:
         movl    $24, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -331,8 +362,10 @@ div_equals:
 .div_equals_11:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $20, %rsp
         ret
 lshift_equals:
+        subq    $20, %rsp
 .lshift_equals_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -350,8 +383,10 @@ lshift_equals:
 .lshift_equals_11:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $20, %rsp
         ret
 rshift_equals:
+        subq    $20, %rsp
 .rshift_equals_entry:
         movl    $16, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -369,8 +404,10 @@ rshift_equals:
 .rshift_equals_11:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $20, %rsp
         ret
 bit_and_equals:
+        subq    $20, %rsp
 .bit_and_equals_entry:
         movl    $31, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -388,8 +425,10 @@ bit_and_equals:
 .bit_and_equals_11:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $20, %rsp
         ret
 bit_or_equals:
+        subq    $20, %rsp
 .bit_or_equals_entry:
         movl    $12, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -407,8 +446,10 @@ bit_or_equals:
 .bit_or_equals_11:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $20, %rsp
         ret
 bit_xor_equals:
+        subq    $20, %rsp
 .bit_xor_equals_entry:
         movl    $15, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -426,4 +467,5 @@ bit_xor_equals:
 .bit_xor_equals_11:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $20, %rsp
         ret

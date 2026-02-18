@@ -1,4 +1,5 @@
 constant_fold:
+        subq    $72, %rsp
 .constant_fold_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -61,8 +62,10 @@ constant_fold:
 .constant_fold_50:
         movl    $68(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $72, %rsp
         ret
 constant_fold_overflow:
+        subq    $20, %rsp
 .constant_fold_overflow_entry:
         movl    $2147483647, $4(%rsp)
         movl    $1, $8(%rsp)
@@ -79,8 +82,10 @@ constant_fold_overflow:
 .constant_fold_overflow_11:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $20, %rsp
         ret
 constant_fold_underflow:
+        subq    $20, %rsp
 .constant_fold_underflow_entry:
         movl    $18446744071562067968, $4(%rsp)
         movl    $1, $8(%rsp)
@@ -98,4 +103,5 @@ constant_fold_underflow:
 .constant_fold_underflow_11:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $20, %rsp
         ret

@@ -1,11 +1,14 @@
 main:
+        subq    $4, %rsp
 .main_entry:
         movl    $0, (%rsp)
 .main_1:
         movl    (%rsp), %r10d
         movl    %r10d, %eax
+        addq    $4, %rsp
         ret
 compound:
+        subq    $76, %rsp
 .compound_entry:
         movl    $9, $4(%rsp)
         movl    $123, $8(%rsp)
@@ -91,8 +94,10 @@ compound:
 .compound_63:
         movl    $72(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $76, %rsp
         ret
 parens:
+        subq    $20, %rsp
 .parens_entry:
         movl    $4, (%rsp)
         movl    $3, $4(%rsp)
@@ -118,4 +123,5 @@ parens:
 .parens_15:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
+        addq    $20, %rsp
         ret
