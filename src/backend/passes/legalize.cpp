@@ -8,6 +8,105 @@ namespace backend {
     // TODO: unhardcode
     constexpr auto reg_size = lir::DataSize::QUADWORD;
 
+    ReplaceStackArgVisitor::ReplaceStackArgVisitor(uint64_t stack_bytes,
+                                                   lir::OperandManager *om)
+        : stack_bytes(stack_bytes), om(om) {}
+
+    lir::Operand *ReplaceStackArgVisitor::tryReplace(lir::Operand *operand) {
+        auto stack_arg = dynamic_cast<lir::StackArg *>(operand);
+        if (!stack_arg)
+            return nullptr;
+
+        auto stack_addr = stack_bytes + stack_arg->getArgNum() * 8;
+        auto displacement = om->getImmediate(stack_addr);
+        auto rsp = om->getRegister(lir::RegisterNum::RSP);
+        return om->getAddress(rsp, nullptr, nullptr, displacement);
+    }
+
+    void ReplaceStackArgVisitor::visit(lir::Instruction *i) {}
+
+    void ReplaceStackArgVisitor::visit(lir::Label *l) {}
+
+    void ReplaceStackArgVisitor::visit(lir::InstructionMov *i) {
+        auto src = tryReplace(i->getSrc());
+        if (src)
+            i->setSrc(src);
+
+        auto dst = tryReplace(i->getDst());
+        if (dst)
+            i->setDst(dst);
+    }
+
+    void ReplaceStackArgVisitor::visit(lir::InstructionPush *i) {
+        auto src = tryReplace(i->getSrc());
+        if (src)
+            i->setSrc(src);
+    }
+
+    void ReplaceStackArgVisitor::visit(lir::InstructionPop *i) {
+        auto dst = tryReplace(i->getDst());
+        if (dst)
+            i->setDst(dst);
+    }
+
+    void ReplaceStackArgVisitor::visit(lir::InstructionConvert *i) {}
+
+    void ReplaceStackArgVisitor::visit(lir::InstructionBinaryOp *i) {
+        auto src = tryReplace(i->getSrc());
+        if (src)
+            i->setSrc(src);
+
+        auto dst = tryReplace(i->getDst());
+        if (dst)
+            i->setDst(dst);
+    }
+
+    void ReplaceStackArgVisitor::visit(lir::InstructionSpecialOp *i) {
+        auto src = tryReplace(i->getSrc());
+        if (src)
+            i->setSrc(src);
+    }
+
+    void ReplaceStackArgVisitor::visit(lir::InstructionLea *i) {
+        auto src = tryReplace(i->getSrc());
+        if (src)
+            i->setSrc(static_cast<lir::Address *>(src));
+
+        auto dst = tryReplace(i->getDst());
+        if (dst)
+            i->setDst(dst);
+    }
+
+    void ReplaceStackArgVisitor::visit(lir::InstructionCmp *i) {
+        auto src1 = tryReplace(i->getSrc1());
+        if (src1)
+            i->setSrc1(src1);
+
+        auto src2 = tryReplace(i->getSrc2());
+        if (src2)
+            i->setSrc2(src2);
+    }
+
+    void ReplaceStackArgVisitor::visit(lir::InstructionJmp *i) {}
+
+    void ReplaceStackArgVisitor::visit(lir::InstructionCJmp *i) {}
+
+    void ReplaceStackArgVisitor::visit(lir::InstructionCall *i) {
+        auto args = i->getArgs();
+
+        for (auto &arg : args) {
+            auto stack_arg = tryReplace(arg);
+            if (stack_arg)
+                arg = stack_arg;
+        }
+
+        i->setArgs(args);
+    }
+
+    void ReplaceStackArgVisitor::visit(lir::InstructionRet *i) {}
+
+    void ReplaceStackArgVisitor::visit(lir::InstructionUnknown *i) {}
+
     std::vector<lir::RegisterNum> getUsedRegisters(Liveness &l) {
         auto &gen = l[0], &kill = l[1];
 
@@ -45,10 +144,18 @@ namespace backend {
 
             auto rsp = om->getRegister(lir::RegisterNum::RSP);
 
-            // TODO: save/restore caller-saved registers around function calls
+            // TODO: generate calling convention for calls
+            // - allocate space for caller-saved registers, params 7+,
+            //   and 16 byte padding
+            // - save caller-saved registers
+            // - store params in correct registers
+            //   (use mapping from caller-saved registers to stack space)
+            // - [call]
+            // - restore caller-saved registers
+            // - deallocate space
 
             //
-            // Save callee-preserved registers
+            // Save callee-saved registers
             //
             auto callee_saved_vector = lir::getCalleeSavedRegisters();
             auto callee_saved = std::unordered_set(callee_saved_vector.begin(),
@@ -77,10 +184,16 @@ namespace backend {
             }
 
             //
-            // Replace stack arg operands
+            // Pad bytes to 16 byte alignment if containing call
             // TODO
             //
-            // TODO: pad total bytes to 16 byte alignment if containing call
+
+            //
+            // Replace stack arg operands
+            //
+            ReplaceStackArgVisitor rsav(total_stack_bytes, om);
+            for (auto &i : instructions)
+                i->accept(&rsav);
 
             //
             // Manage stack space
