@@ -202,7 +202,7 @@ namespace backend {
             // Manage stack space
             //
             if (!total_stack_bytes)
-                return;
+                continue;
 
             auto stack_bytes = om->getImmediate(total_stack_bytes);
 
