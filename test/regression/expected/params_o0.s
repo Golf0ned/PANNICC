@@ -212,8 +212,8 @@ super_fun:
         movl    %ecx, %r8d
         movl    %r8d, %r9d
         movl    %r9d, %edi
-        movl    (stack 0), %r11d
-        movl    (stack 1), %r10d
+        movl    $68(%rsp), %r11d
+        movl    $76(%rsp), %r10d
 .super_fun_entry:
         movl    %esi, $36(%rsp)
         movl    %edx, $40(%rsp)
