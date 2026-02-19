@@ -153,6 +153,8 @@ namespace backend {
             // - [call]
             // - restore caller-saved registers
             // - deallocate space
+            // TODO: track if function has call
+            auto has_call = true;
 
             //
             // Save callee-saved registers
@@ -185,8 +187,9 @@ namespace backend {
 
             //
             // Pad bytes to 16 byte alignment if containing call
-            // TODO
             //
+            if (has_call && total_stack_bytes % 16 != 0)
+                total_stack_bytes = (total_stack_bytes + 15) & -16;
 
             //
             // Replace stack arg operands

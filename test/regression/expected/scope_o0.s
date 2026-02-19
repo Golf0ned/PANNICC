@@ -1,5 +1,5 @@
 scope:
-        subq    $76, %rsp
+        subq    $80, %rsp
 .scope_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -44,7 +44,7 @@ scope:
 .scope_37:
         movl    $72(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $76, %rsp
+        addq    $80, %rsp
         ret
 scope_reassign_variable:
         subq    $48, %rsp

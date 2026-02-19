@@ -1,5 +1,5 @@
 if_basic:
-        subq    $28, %rsp
+        subq    $32, %rsp
 .if_basic_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -30,10 +30,10 @@ if_basic:
         movl    %r10d, %eax
         ret
 .if_basic_17:
-        addq    $28, %rsp
+        addq    $32, %rsp
         jmp     .if_basic_18
 if_basic_else:
-        subq    $36, %rsp
+        subq    $48, %rsp
 .if_basic_else_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -74,10 +74,10 @@ if_basic_else:
         movl    %edi, $20(%rsp)
         movl    $20(%rsp), %r10d
         movl    %r10d, (%rsp)
-        addq    $36, %rsp
+        addq    $48, %rsp
         jmp     .if_basic_else_26
 if_no_braces:
-        subq    $24, %rsp
+        subq    $32, %rsp
 .if_no_braces_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -103,10 +103,10 @@ if_no_braces:
         movl    %r10d, $16(%rsp)
         movl    $16(%rsp), %r10d
         movl    %r10d, $20(%rsp)
-        addq    $24, %rsp
+        addq    $32, %rsp
         jmp     .if_no_braces_18
 if_chain:
-        subq    $36, %rsp
+        subq    $48, %rsp
 .if_chain_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -143,10 +143,10 @@ if_chain:
         jmp     .if_chain_25
 .if_chain_20:
 .if_chain_21:
-        addq    $36, %rsp
+        addq    $48, %rsp
         jmp     .if_chain_23
 if_chain_many:
-        subq    $52, %rsp
+        subq    $64, %rsp
 .if_chain_many_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -199,10 +199,10 @@ if_chain_many:
         movl    $3, $40(%rsp)
         movl    $40(%rsp), %r10d
         movl    %r10d, $48(%rsp)
-        addq    $52, %rsp
+        addq    $64, %rsp
         jmp     .if_chain_many_38
 if_else_if:
-        subq    $24, %rsp
+        subq    $32, %rsp
 .if_else_if_entry:
         movl    $1, (%rsp)
         movl    (%rsp), %r10d
@@ -234,5 +234,5 @@ if_else_if:
         movl    $5, $16(%rsp)
         movl    $16(%rsp), %r10d
         movl    %r10d, $20(%rsp)
-        addq    $24, %rsp
+        addq    $32, %rsp
         jmp     .if_else_if_21

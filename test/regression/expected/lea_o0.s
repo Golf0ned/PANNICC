@@ -1,5 +1,5 @@
 leaBI:
-        subq    $28, %rsp
+        subq    $32, %rsp
         movl    %edi, %r11d
         movl    %esi, %r10d
 .leaBI_entry:
@@ -21,10 +21,10 @@ leaBI:
 .leaBI_16:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $28, %rsp
+        addq    $32, %rsp
         ret
 leaIS:
-        subq    $108, %rsp
+        subq    $112, %rsp
         movl    %edi, %r10d
 .leaIS_entry:
         movl    %r10d, $104(%rsp)
@@ -114,10 +114,10 @@ leaIS:
 .leaIS_69:
         movl    $100(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $108, %rsp
+        addq    $112, %rsp
         ret
 leaBIS:
-        subq    $88, %rsp
+        subq    $96, %rsp
         movl    %edi, %r11d
         movl    %esi, %r10d
 .leaBIS_entry:
@@ -200,10 +200,10 @@ leaBIS:
 .leaBIS_66:
         movl    $80(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $88, %rsp
+        addq    $96, %rsp
         ret
 leaBID:
-        subq    $120, %rsp
+        subq    $128, %rsp
         movl    %edi, %r11d
         movl    %esi, %r10d
 .leaBID_entry:
@@ -314,10 +314,10 @@ leaBID:
 .leaBID_94:
         movl    $108(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $120, %rsp
+        addq    $128, %rsp
         ret
 leaIIS:
-        subq    $84, %rsp
+        subq    $96, %rsp
         movl    %edi, %r10d
 .leaIIS_entry:
         movl    %r10d, $80(%rsp)
@@ -387,10 +387,10 @@ leaIIS:
 .leaIIS_53:
         movl    $76(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $84, %rsp
+        addq    $96, %rsp
         ret
 leaISD:
-        subq    $92, %rsp
+        subq    $96, %rsp
         movl    %edi, %r10d
 .leaISD_entry:
         movl    %r10d, $88(%rsp)
@@ -474,10 +474,10 @@ leaISD:
 .leaISD_67:
         movl    $84(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $92, %rsp
+        addq    $96, %rsp
         ret
 leaIISD:
-        subq    $84, %rsp
+        subq    $96, %rsp
         movl    %edi, %r10d
 .leaIISD_entry:
         movl    %r10d, $80(%rsp)
@@ -554,7 +554,7 @@ leaIISD:
 .leaIISD_60:
         movl    $76(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $84, %rsp
+        addq    $96, %rsp
         ret
 leaBISD:
         subq    $512, %rsp

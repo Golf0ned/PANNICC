@@ -20,7 +20,7 @@ fun1:
         addq    $16, %rsp
         ret
 fun2:
-        subq    $40, %rsp
+        subq    $48, %rsp
         movl    %edi, %r11d
         movl    %esi, %r10d
 .fun2_entry:
@@ -66,10 +66,10 @@ fun2:
 .fun2_33:
         movl    $28(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $40, %rsp
+        addq    $48, %rsp
         ret
 fun3:
-        subq    $44, %rsp
+        subq    $48, %rsp
         movl    %edi, %r11d
         movl    %esi, %esi
         movl    %edx, %edi
@@ -116,10 +116,10 @@ fun3:
 .fun3_35:
         movl    $32(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $44, %rsp
+        addq    $48, %rsp
         ret
 call1:
-        subq    $12, %rsp
+        subq    $16, %rsp
 .call1_entry:
         movl    $5, (%rsp)
         movl    (%rsp), %r10d
@@ -131,10 +131,10 @@ call1:
 .call1_6:
         movl    $4(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $12, %rsp
+        addq    $16, %rsp
         ret
 call2:
-        subq    $24, %rsp
+        subq    $32, %rsp
         movl    %edi, %r10d
         movl    %esi, %r11d
 .call2_entry:
@@ -154,7 +154,7 @@ call2:
 .call2_14:
         movl    $12(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $24, %rsp
+        addq    $32, %rsp
         ret
 call3:
         subq    $32, %rsp
@@ -205,15 +205,15 @@ call4:
         addq    $16, %rsp
         ret
 super_fun:
-        subq    $68, %rsp
+        subq    $80, %rsp
         movl    %edi, %esi
         movl    %esi, %edx
         movl    %edx, %ecx
         movl    %ecx, %r8d
         movl    %r8d, %r9d
         movl    %r9d, %edi
-        movl    $68(%rsp), %r11d
-        movl    $76(%rsp), %r10d
+        movl    $80(%rsp), %r11d
+        movl    $88(%rsp), %r10d
 .super_fun_entry:
         movl    %esi, $36(%rsp)
         movl    %edx, $40(%rsp)
@@ -272,7 +272,7 @@ super_fun:
 .super_fun_55:
         movl    $32(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $68, %rsp
+        addq    $80, %rsp
         ret
 call_super_fun:
         subq    $48, %rsp
