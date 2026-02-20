@@ -179,11 +179,11 @@ namespace backend {
 
     void KillSetVisitor::visit(lir::InstructionCJmp *i) { kill.clear(); }
 
-    // TODO: is this correct?
     void KillSetVisitor::visit(lir::InstructionCall *i) {
         kill.clear();
-        for (auto reg : lir::getCallerSavedRegisters())
-            addRegister(reg);
+        // Caller-saved registers are not included
+        // Implcitly saved through calling convention later
+        addRegister(lir::RegisterNum::RAX);
     }
 
     void KillSetVisitor::visit(lir::InstructionRet *i) { kill.clear(); }
