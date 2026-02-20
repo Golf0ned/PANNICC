@@ -205,15 +205,15 @@ call4:
         addq    $16, %rsp
         ret
 super_fun:
-        subq    $80, %rsp
+        subq    $68, %rsp
         movl    %edi, %esi
         movl    %esi, %edx
         movl    %edx, %ecx
         movl    %ecx, %r8d
         movl    %r8d, %r9d
         movl    %r9d, %edi
-        movl    $80(%rsp), %r11d
-        movl    $88(%rsp), %r10d
+        movl    $68(%rsp), %r11d
+        movl    $76(%rsp), %r10d
 .super_fun_entry:
         movl    %esi, $36(%rsp)
         movl    %edx, $40(%rsp)
@@ -272,7 +272,7 @@ super_fun:
 .super_fun_55:
         movl    $32(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $80, %rsp
+        addq    $68, %rsp
         ret
 call_super_fun:
         subq    $48, %rsp
@@ -308,4 +308,61 @@ call_super_fun:
         movl    $36(%rsp), %r10d
         movl    %r10d, %eax
         addq    $48, %rsp
+        ret
+call_many:
+        subq    $80, %rsp
+        movl    %edi, %r10d
+        movl    %esi, %r11d
+.call_many_entry:
+        movl    %r10d, $36(%rsp)
+        movl    %r11d, $40(%rsp)
+        movl    $5, $8(%rsp)
+        movl    $8(%rsp), %r10d
+        call    fun1
+        movl    %eax, %r10d
+        movl    %r10d, $12(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    %r10d, $4(%rsp)
+        movl    $40(%rsp), %r10d
+        movl    %r10d, $16(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    %r10d, $20(%rsp)
+        movl    $16(%rsp), %r10d
+        movl    $20(%rsp), %r11d
+        call    call_super_fun
+        movl    %eax, %r10d
+        movl    %r10d, $24(%rsp)
+        movl    $24(%rsp), %r10d
+        movl    %r10d, $12(%rsp)
+        movl    $36(%rsp), %r10d
+        movl    %r10d, $32(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    %r10d, $36(%rsp)
+        movl    $32(%rsp), %r10d
+        movl    $36(%rsp), %r11d
+        call    call2
+        movl    %eax, %r10d
+        movl    %r10d, $32(%rsp)
+        movl    $32(%rsp), %r10d
+        movl    %r10d, $28(%rsp)
+        movl    $4(%rsp), %r10d
+        movl    %r10d, $36(%rsp)
+        movl    $12(%rsp), %r10d
+        movl    %r10d, $40(%rsp)
+        movl    $36(%rsp), %r10d
+        movl    $40(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, $36(%rsp)
+        movl    $28(%rsp), %r10d
+        movl    %r10d, $28(%rsp)
+        movl    $36(%rsp), %r10d
+        movl    $28(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, $36(%rsp)
+        movl    $36(%rsp), %r10d
+        movl    %r10d, $32(%rsp)
+.call_many_44:
+        movl    $32(%rsp), %r10d
+        movl    %r10d, %eax
+        addq    $80, %rsp
         ret
