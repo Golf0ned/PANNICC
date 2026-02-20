@@ -101,3 +101,18 @@ call_super_fun:  # 2 params, 0 stack bytes
         movl    %eax, %r10d
         movl    %r10d, %eax
         ret
+
+call_many:  # 2 params, 0 stack bytes
+        movl    %edi, %edi
+        movl    %esi, %r10d
+.call_many_entry:
+        call    fun1  # ($5)
+        movl    %eax, %r11d
+        call    call_super_fun  # (%r10d, %r11d)
+        movl    %eax, %r10d
+        call    call2  # (%edi, %r11d)
+        movl    %eax, %edi
+        leal    (%r11d,%r10d), %esi
+        leal    (%esi,%edi), %r10d
+        movl    %r10d, %eax
+        ret

@@ -357,3 +357,73 @@ entry:
   %27 = load ptr %11
   ret i32 %27
 }
+
+define i32 @call_many(i32 %0, i32 %1) {
+entry:
+  %2 = alloca i32
+  %3 = alloca i32
+  %4 = alloca i32
+  %5 = alloca i32
+  %6 = alloca i32
+  %7 = alloca i32
+  %8 = alloca i32
+  %9 = alloca i32
+  %10 = alloca i32
+  %11 = alloca i32
+  %12 = alloca i32
+  %13 = alloca i32
+  %14 = alloca i32
+  %15 = alloca i32
+  %16 = alloca i32
+  %17 = alloca i32
+  store i32 %0, ptr %17
+  %18 = alloca i32
+  store i32 %1, ptr %18
+  store i32 5, ptr %3
+  %19 = load ptr %3
+  %20 = call i32 @fun1(i32 %19)
+  store i32 %20, ptr %4
+  %21 = load ptr %4
+  store i32 %21, ptr %2
+  %22 = load ptr %18
+  store i32 %22, ptr %6
+  %23 = load ptr %2
+  store i32 %23, ptr %7
+  %24 = load ptr %6
+  %25 = load ptr %7
+  %26 = call i32 @call_super_fun(i32 %24, i32 %25)
+  store i32 %26, ptr %8
+  %27 = load ptr %8
+  store i32 %27, ptr %5
+  %28 = load ptr %17
+  store i32 %28, ptr %10
+  %29 = load ptr %2
+  store i32 %29, ptr %11
+  %30 = load ptr %10
+  %31 = load ptr %11
+  %32 = call i32 @call2(i32 %30, i32 %31)
+  store i32 %32, ptr %12
+  %33 = load ptr %12
+  store i32 %33, ptr %9
+  %34 = load ptr %2
+  store i32 %34, ptr %13
+  %35 = load ptr %5
+  store i32 %35, ptr %14
+  %36 = load ptr %13
+  %37 = load ptr %14
+  %38 = add i32 %36, i32 %37
+  store i32 %38, ptr %13
+  %39 = load ptr %9
+  store i32 %39, ptr %15
+  %40 = load ptr %13
+  %41 = load ptr %15
+  %42 = add i32 %40, i32 %41
+  store i32 %42, ptr %13
+  %43 = load ptr %13
+  store i32 %43, ptr %16
+  br label 44
+
+44:
+  %45 = load ptr %16
+  ret i32 %45
+}

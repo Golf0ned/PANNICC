@@ -1,5 +1,5 @@
 first:
-        subq    $16, %rsp
+        subq    $8, %rsp
 .first_entry:
         movl    $1, (%rsp)
         movl    (%rsp), %r10d
@@ -7,7 +7,7 @@ first:
 .first_3:
         movl    $4(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $16, %rsp
+        addq    $8, %rsp
         ret
 second:
         subq    $16, %rsp

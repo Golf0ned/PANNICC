@@ -1,5 +1,5 @@
 main:
-        subq    $624, %rsp
+        subq    $620, %rsp
 .main_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -796,5 +796,5 @@ main:
 .main_671:
         movl    $616(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $624, %rsp
+        addq    $620, %rsp
         ret

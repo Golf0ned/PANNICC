@@ -1,5 +1,5 @@
 while_basic:
-        subq    $32, %rsp
+        subq    $28, %rsp
 .while_basic_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -30,10 +30,10 @@ while_basic:
 .while_basic_21:
         movl    $24(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $32, %rsp
+        addq    $28, %rsp
         ret
 while_complex:
-        subq    $48, %rsp
+        subq    $44, %rsp
 .while_complex_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -78,10 +78,10 @@ while_complex:
 .while_complex_32:
         movl    $40(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $48, %rsp
+        addq    $44, %rsp
         ret
 while_empty:
-        subq    $16, %rsp
+        subq    $12, %rsp
 .while_empty_entry:
 .while_empty_3:
         movl    $0, (%rsp)
@@ -99,10 +99,10 @@ while_empty:
 .while_empty_10:
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $16, %rsp
+        addq    $12, %rsp
         ret
 while_if:
-        subq    $32, %rsp
+        subq    $28, %rsp
 .while_if_entry:
         movl    $200, $4(%rsp)
         movl    $4(%rsp), %r10d
@@ -137,5 +137,5 @@ while_if:
         movl    $500, $16(%rsp)
         movl    $16(%rsp), %r10d
         movl    %r10d, $24(%rsp)
-        addq    $32, %rsp
+        addq    $28, %rsp
         jmp     .while_if_23

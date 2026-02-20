@@ -73,8 +73,8 @@ super_fun:
         movl    %ecx, %esi
         movl    %r8d, %edx
         movl    %r9d, %ecx
-        movl    (stack 0), %r8d
-        movl    (stack 1), %r9d
+        movl    (%rsp), %r8d
+        movl    $8(%rsp), %r9d
 .super_fun_entry:
         leal    (%r10d,%r11d), %eax
         leal    (%eax,%edi), %r11d
@@ -91,5 +91,19 @@ call_super_fun:
 .call_super_fun_entry:
         call    super_fun
         movl    %eax, %r10d
+        movl    %r10d, %eax
+        ret
+call_many:
+        movl    %edi, %edi
+        movl    %esi, %r10d
+.call_many_entry:
+        call    fun1
+        movl    %eax, %r11d
+        call    call_super_fun
+        movl    %eax, %r10d
+        call    call2
+        movl    %eax, %edi
+        leal    (%r11d,%r10d), %esi
+        leal    (%esi,%edi), %r10d
         movl    %r10d, %eax
         ret

@@ -299,3 +299,59 @@ call_super_fun:  # 2 params, 48 stack bytes
         movl    $36(%rsp), %27
         movl    %27, %eax
         ret
+
+call_many:  # 2 params, 68 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+.call_many_entry:
+        movl    %0, $36(%rsp)
+        movl    %1, $40(%rsp)
+        movl    $5, $8(%rsp)
+        movl    $8(%rsp), %19
+        call    fun1  # (%19)
+        movl    %eax, %20
+        movl    %20, $12(%rsp)
+        movl    $12(%rsp), %21
+        movl    %21, $4(%rsp)
+        movl    $40(%rsp), %22
+        movl    %22, $16(%rsp)
+        movl    $4(%rsp), %23
+        movl    %23, $20(%rsp)
+        movl    $16(%rsp), %24
+        movl    $20(%rsp), %25
+        call    call_super_fun  # (%24, %25)
+        movl    %eax, %26
+        movl    %26, $24(%rsp)
+        movl    $24(%rsp), %27
+        movl    %27, $12(%rsp)
+        movl    $36(%rsp), %28
+        movl    %28, $32(%rsp)
+        movl    $4(%rsp), %29
+        movl    %29, $36(%rsp)
+        movl    $32(%rsp), %30
+        movl    $36(%rsp), %31
+        call    call2  # (%30, %31)
+        movl    %eax, %32
+        movl    %32, $32(%rsp)
+        movl    $32(%rsp), %33
+        movl    %33, $28(%rsp)
+        movl    $4(%rsp), %34
+        movl    %34, $36(%rsp)
+        movl    $12(%rsp), %35
+        movl    %35, $40(%rsp)
+        movl    $36(%rsp), %36
+        movl    $40(%rsp), %37
+        leal    (%36,%37), %38
+        movl    %38, $36(%rsp)
+        movl    $28(%rsp), %39
+        movl    %39, $28(%rsp)
+        movl    $36(%rsp), %40
+        movl    $28(%rsp), %41
+        leal    (%40,%41), %42
+        movl    %42, $36(%rsp)
+        movl    $36(%rsp), %43
+        movl    %43, $32(%rsp)
+.call_many_44:
+        movl    $32(%rsp), %45
+        movl    %45, %eax
+        ret

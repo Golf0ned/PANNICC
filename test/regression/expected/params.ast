@@ -33,3 +33,10 @@ int super_fun(int a, int b, int c, int d, int e, int f, int g, int h) {
 int call_super_fun(int seventh, int eighth) {
     return super_fun(1, 2, 3, 4, 5, 6, seventh, eighth);
 }
+
+int call_many(int first, int second) {
+    int i = fun1(5);
+    int j = call_super_fun(second, i);
+    int k = call2(first, i);
+    return i + j + k;
+}
