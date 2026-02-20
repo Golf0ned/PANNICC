@@ -34,9 +34,19 @@ int call_super_fun(int seventh, int eighth) {
     return super_fun(1, 2, 3, 4, 5, 6, seventh, eighth);
 }
 
-int call_many(int first, int second) {
-    int i = fun1(5);
-    int j = call_super_fun(second, i);
-    int k = call2(first, i);
-    return i + j + k;
+int caller_saved(int first, int second) {
+    int pressure_1 = 1;
+    int pressure_2 = pressure_1 + 1;
+    int pressure_3 = pressure_1 + 1;
+    int pressure_4 = pressure_1 + 1;
+    int pressure_5 = pressure_1 + 1;
+    int pressure_6 = pressure_1 + 1;
+    int pressure_7 = pressure_1 + 1;
+    int pressure_8 = pressure_1 + 1;
+    int pressure_9 = pressure_1 + 1;
+    int pressure_10 = pressure_1 + 1;
+    int pressure_11 = pressure_1 + 1;
+    int pressure_12 = pressure_1 + 1;
+    int superfun = super_fun(pressure_1, pressure_2, pressure_3, pressure_4, pressure_5, pressure_6, pressure_7, first);
+    return pressure_1 + pressure_2 + pressure_3 + pressure_4 + pressure_5 + pressure_6 + pressure_7 + pressure_8 + pressure_9 + pressure_10 + pressure_11 + pressure_12 + superfun;
 }

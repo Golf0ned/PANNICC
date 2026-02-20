@@ -102,17 +102,13 @@ call_super_fun:  # 2 params, 0 stack bytes
         movl    %2, %eax
         ret
 
-call_many:  # 2 params, 0 stack bytes
+caller_saved:  # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.call_many_entry:
-        call    fun1  # ($5)
+.caller_saved_entry:
+        call    super_fun  # ($1, $2, $2, $2, $2, $2, $2, %0)
         movl    %eax, %2
-        call    call_super_fun  # (%1, %2)
-        movl    %eax, %3
-        call    call2  # (%0, %2)
-        movl    %eax, %4
-        leal    (%2,%3), %5
-        leal    (%5,%4), %6
-        movl    %6, %eax
+        movl    $23, %3
+        addl    %2, %3
+        movl    %3, %eax
         ret
