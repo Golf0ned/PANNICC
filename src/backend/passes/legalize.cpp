@@ -160,11 +160,14 @@ namespace backend {
 
                 has_call = true;
 
+                auto next_iter = i_iter;
+
                 // TODO: do we need to save from in at all? we currently save it
                 // for potential arg collision issues
                 auto &in_i = in[i_index];
                 auto &out_i = out[i_index];
-                std::vector<lir::Register *> save, restore;
+                std::vector<lir::Register *> save;
+                std::unordered_set<lir::Register *> restore;
                 for (auto reg_num : lir::getCallerSavedRegisters()) {
                     // TODO: use 64 bit once liveness is rewritten
                     auto sized_reg_num =
@@ -177,7 +180,7 @@ namespace backend {
                         save.push_back(reg);
                     }
                     if (out_i.contains(reg))
-                        restore.push_back(reg);
+                        restore.insert(reg);
                 }
 
                 // Allocate/deallocate stack space
@@ -196,23 +199,39 @@ namespace backend {
                     auto deallocate =
                         std::make_unique<lir::InstructionBinaryOp>(
                             lir::BinaryOp::ADD, reg_size, stack_bytes, rsp);
-                    i_iter = instructions.insert(std::next(i_iter),
-                                                 std::move(deallocate));
+                    next_iter = instructions.insert(std::next(i_iter),
+                                                    std::move(deallocate));
                 }
 
                 // Save/restore registers
-                // TODO
+                for (auto reg : save) {
+                    call_stack_bytes -= 8;
+
+                    auto stack_slot =
+                        om->getAddress(rsp, nullptr, nullptr,
+                                       om->getImmediate(call_stack_bytes));
+                    auto push = std::make_unique<lir::InstructionMov>(
+                        lir::Extend::NONE, reg_size, reg_size, reg, stack_slot);
+                    instructions.insert(i_iter, std::move(push));
+
+                    if (!restore.contains(reg))
+                        continue;
+
+                    auto pop = std::make_unique<lir::InstructionMov>(
+                        lir::Extend::NONE, reg_size, reg_size, stack_slot, reg);
+                    next_iter =
+                        instructions.insert(std::next(i_iter), std::move(pop));
+                }
 
                 // Store params
                 // TODO
 
                 // TODO: generate calling convention for calls
-                // - save caller-saved registers
                 // - store params in correct registers
                 //   (use mapping from caller-saved registers to stack space)
                 // - [call]
-                // - restore caller-saved registers
 
+                i_iter = next_iter;
                 i_index++;
             }
 
