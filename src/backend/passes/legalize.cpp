@@ -177,7 +177,7 @@ namespace backend {
                 }
 
                 // Allocate/deallocate stack space
-                auto num_params = f->getNumParams();
+                auto num_params = call->getArgs().size();
                 auto call_stack_bytes =
                     (save.size() + num_params > 6 ? num_params - 6 : 0) * 8;
                 if (call_stack_bytes) {
