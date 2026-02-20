@@ -166,12 +166,16 @@ namespace backend {
                 auto &out_i = out[i_index];
                 std::vector<lir::Register *> save, restore;
                 for (auto reg_num : lir::getCallerSavedRegisters()) {
-                    if (reg_num == lir::RegisterNum::RAX)
+                    // TODO: use 64 bit once liveness is rewritten
+                    auto sized_reg_num =
+                        lir::toSized(reg_num, lir::DataSize::DOUBLEWORD);
+                    if (sized_reg_num == lir::RegisterNum::EAX)
                         continue;
 
-                    auto reg = om->getRegister(reg_num);
-                    if (in_i.contains(reg))
+                    auto reg = om->getRegister(sized_reg_num);
+                    if (in_i.contains(reg)) {
                         save.push_back(reg);
+                    }
                     if (out_i.contains(reg))
                         restore.push_back(reg);
                 }
@@ -179,7 +183,7 @@ namespace backend {
                 // Allocate/deallocate stack space
                 auto num_params = call->getArgs().size();
                 auto call_stack_bytes =
-                    (save.size() + num_params > 6 ? num_params - 6 : 0) * 8;
+                    (save.size() + (num_params > 6 ? num_params - 6 : 0)) * 8;
                 if (call_stack_bytes) {
                     call_stack_bytes = (call_stack_bytes + 15) & -16;
 
@@ -273,3 +277,4 @@ namespace backend {
         }
     }
 } // namespace backend
+;
