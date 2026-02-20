@@ -51,56 +51,78 @@ main:
         movl    $0, %r11d
         addl    %r10d, %r11d
         subq    $16, %rsp
+        movq    %r11d, $8(%rsp)
         call    second
+        movq    $8(%rsp), %r11d
         addq    $16, %rsp
         movl    %eax, %r10d
         leal    (%r11d,%r10d), %edi
         subq    $16, %rsp
+        movq    %edi, $8(%rsp)
         call    third
+        movq    $8(%rsp), %edi
         addq    $16, %rsp
         movl    %eax, %r10d
         leal    (%edi,%r10d), %r11d
         subq    $16, %rsp
+        movq    %r10d, $8(%rsp)
+        movq    %r11d, (%rsp)
         call    fourth
         addq    $16, %rsp
         movl    %eax, %r10d
         leal    (%r11d,%r10d), %edi
         subq    $16, %rsp
+        movq    %edi, $8(%rsp)
+        movq    %r10d, (%rsp)
         call    fifth
         addq    $16, %rsp
         movl    %eax, %r10d
         leal    (%edi,%r10d), %r11d
         subq    $16, %rsp
+        movq    %r10d, $8(%rsp)
+        movq    %r11d, (%rsp)
         call    sixth
         addq    $16, %rsp
         movl    %eax, %r10d
         leal    (%r11d,%r10d), %edi
         subq    $16, %rsp
+        movq    %edi, $8(%rsp)
+        movq    %r10d, (%rsp)
         call    first
         addq    $16, %rsp
         movl    %eax, %r10d
         leal    (%edi,%r10d), %r11d
         subq    $16, %rsp
+        movq    %r10d, $8(%rsp)
+        movq    %r11d, (%rsp)
         call    second
         addq    $16, %rsp
         movl    %eax, %r10d
         leal    (%r11d,%r10d), %edi
         subq    $16, %rsp
+        movq    %edi, $8(%rsp)
+        movq    %r10d, (%rsp)
         call    third
         addq    $16, %rsp
         movl    %eax, %r10d
         leal    (%edi,%r10d), %r11d
         subq    $16, %rsp
+        movq    %r10d, $8(%rsp)
+        movq    %r11d, (%rsp)
         call    fourth
         addq    $16, %rsp
         movl    %eax, %r10d
         leal    (%r11d,%r10d), %edi
         subq    $16, %rsp
+        movq    %edi, $8(%rsp)
+        movq    %r10d, (%rsp)
         call    fifth
         addq    $16, %rsp
         movl    %eax, %r10d
         leal    (%edi,%r10d), %esi
         subq    $16, %rsp
+        movq    %esi, $8(%rsp)
+        movq    %r11d, (%rsp)
         call    sixth
         addq    $16, %rsp
         movl    %eax, %r11d
