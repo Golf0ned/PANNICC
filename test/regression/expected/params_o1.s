@@ -89,21 +89,21 @@ call_super_fun:
         movl    %edi, %r11d
         movl    %esi, %r10d
 .call_super_fun_entry:
+        subq    $16, %rsp
         call    super_fun
+        addq    $16, %rsp
         movl    %eax, %r10d
         movl    %r10d, %eax
         ret
-call_many:
-        movl    %edi, %edi
+caller_saved:
+        movl    %edi, %r10d
         movl    %esi, %r10d
-.call_many_entry:
-        call    fun1
+.caller_saved_entry:
+        subq    $16, %rsp
+        call    super_fun
+        addq    $16, %rsp
         movl    %eax, %r11d
-        call    call_super_fun
-        movl    %eax, %r10d
-        call    call2
-        movl    %eax, %edi
-        leal    (%r11d,%r10d), %esi
-        leal    (%esi,%edi), %r10d
+        movl    $23, %r10d
+        addl    %r11d, %r10d
         movl    %r10d, %eax
         ret

@@ -111,18 +111,45 @@ call_super_fun:  # 2 params, 0 stack bytes
         movl    %r10d, %eax
         ret
 
-call_many:  # 2 params, 0 stack bytes
-        movl    %edi, %edi
+caller_saved:  # 2 params, 0 stack bytes
+        movl    %edi, %r12d
         movl    %esi, %r10d
-.call_many_entry:
-        call    fun1  # ($5)
-        movl    %eax, %r11d
-        call    call_super_fun  # (%r10d, %r11d)
-        movl    %eax, %r10d
-        call    call2  # (%edi, %r11d)
-        movl    %eax, %edi
-        leal    (%r11d,%r10d), %esi
-        leal    (%esi,%edi), %r10d
-.call_many_7:
+.caller_saved_entry:
+        movl    $1, %ecx
+        addl    $1, %ecx
+        movl    $1, %edx
+        addl    $1, %edx
+        movl    $1, %edi
+        addl    $1, %edi
+        movl    $1, %r11d
+        addl    $1, %r11d
+        movl    $1, %r10d
+        addl    $1, %r10d
+        movl    $1, %esi
+        addl    $1, %esi
+        movl    $1, %r8d
+        addl    $1, %r8d
+        movl    $1, %r9d
+        addl    $1, %r9d
+        movl    $1, %eax
+        addl    $1, %eax
+        movl    $1, %ebx
+        addl    $1, %ebx
+        movl    $1, %r13d
+        addl    $1, %r13d
+        call    super_fun  # ($1, %ecx, %edx, %edi, %r11d, %r10d, %esi, %r12d)
+        movl    %eax, %r14d
+        leal    $1(%ecx,%edx), %r12d
+        leal    (%r12d,%edi), %edx
+        leal    (%edx,%r11d), %edi
+        leal    (%edi,%r10d), %r11d
+        leal    (%r11d,%esi), %edi
+        leal    (%edi,%r8d), %r10d
+        leal    (%r10d,%r9d), %r11d
+        leal    (%r11d,%eax), %edi
+        leal    (%edi,%ebx), %r10d
+        leal    (%r10d,%r13d), %r11d
+        leal    (%r11d,%r14d), %r10d
+.caller_saved_26:
         movl    %r10d, %eax
         ret

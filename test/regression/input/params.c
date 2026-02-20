@@ -4,21 +4,13 @@ int fun2(int a, int b) { return fun1(a) + 2 * a * b + fun1(b); }
 
 int fun3(int a, int b, int c, int x) { return a * fun1(x) + b * x + c; }
 
-int call1() {
-    return fun1(5);
-}
+int call1() { return fun1(5); }
 
-int call2(int foo, int bar) {
-    return fun2(foo, bar);
-}
+int call2(int foo, int bar) { return fun2(foo, bar); }
 
-int call3(int foo, int bar) {
-    return fun3(foo, bar, 1, 0);
-}
+int call3(int foo, int bar) { return fun3(foo, bar, 1, 0); }
 
-int call4() {
-    return fun1(10) - 100;
-}
+int call4() { return fun1(10) - 100; }
 
 int super_fun(int a, int b, int c, int d, int e, int f, int g, int h) {
     return a + b + c + d + e + f + g + h;
@@ -28,10 +20,24 @@ int call_super_fun(int seventh, int eighth) {
     return super_fun(1, 2, 3, 4, 5, 6, seventh, eighth);
 }
 
-int call_many(int first, int second) {
-    int i = fun1(5);
-    int j = call_super_fun(second, i);
-    int k = call2(first, i);
+int caller_saved(int first, int second) {
+    int pressure_1 = 1;
+    int pressure_2 = pressure_1 + 1;
+    int pressure_3 = pressure_1 + 1;
+    int pressure_4 = pressure_1 + 1;
+    int pressure_5 = pressure_1 + 1;
+    int pressure_6 = pressure_1 + 1;
+    int pressure_7 = pressure_1 + 1;
+    int pressure_8 = pressure_1 + 1;
+    int pressure_9 = pressure_1 + 1;
+    int pressure_10 = pressure_1 + 1;
+    int pressure_11 = pressure_1 + 1;
+    int pressure_12 = pressure_1 + 1;
 
-    return i + j + k;
+    int superfun = super_fun(pressure_1, pressure_2, pressure_3, pressure_4,
+                             pressure_5, pressure_6, pressure_7, first);
+
+    return pressure_1 + pressure_2 + pressure_3 + pressure_4 + pressure_5 +
+           pressure_6 + pressure_7 + pressure_8 + pressure_9 + pressure_10 +
+           pressure_11 + pressure_12 + superfun;
 }

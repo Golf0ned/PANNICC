@@ -97,23 +97,64 @@ call_super_fun:
         movl    %edi, %r11d
         movl    %esi, %r10d
 .call_super_fun_entry:
+        subq    $16, %rsp
         call    super_fun
+        addq    $16, %rsp
         movl    %eax, %r10d
 .call_super_fun_3:
         movl    %r10d, %eax
         ret
-call_many:
-        movl    %edi, %edi
+caller_saved:
+        subq    $32, %rsp
+        movq    %r14, $24(%rsp)
+        movq    %r13, $16(%rsp)
+        movq    %r12, $8(%rsp)
+        movq    %rbx, (%rsp)
+        movl    %edi, %r12d
         movl    %esi, %r10d
-.call_many_entry:
-        call    fun1
-        movl    %eax, %r11d
-        call    call_super_fun
-        movl    %eax, %r10d
-        call    call2
-        movl    %eax, %edi
-        leal    (%r11d,%r10d), %esi
-        leal    (%esi,%edi), %r10d
-.call_many_7:
+.caller_saved_entry:
+        movl    $1, %ecx
+        addl    $1, %ecx
+        movl    $1, %edx
+        addl    $1, %edx
+        movl    $1, %edi
+        addl    $1, %edi
+        movl    $1, %r11d
+        addl    $1, %r11d
+        movl    $1, %r10d
+        addl    $1, %r10d
+        movl    $1, %esi
+        addl    $1, %esi
+        movl    $1, %r8d
+        addl    $1, %r8d
+        movl    $1, %r9d
+        addl    $1, %r9d
+        movl    $1, %eax
+        addl    $1, %eax
+        movl    $1, %ebx
+        addl    $1, %ebx
+        movl    $1, %r13d
+        addl    $1, %r13d
+        subq    $16, %rsp
+        call    super_fun
+        addq    $16, %rsp
+        movl    %eax, %r14d
+        leal    $1(%ecx,%edx), %r12d
+        leal    (%r12d,%edi), %edx
+        leal    (%edx,%r11d), %edi
+        leal    (%edi,%r10d), %r11d
+        leal    (%r11d,%esi), %edi
+        leal    (%edi,%r8d), %r10d
+        leal    (%r10d,%r9d), %r11d
+        leal    (%r11d,%eax), %edi
+        leal    (%edi,%ebx), %r10d
+        leal    (%r10d,%r13d), %r11d
+        leal    (%r11d,%r14d), %r10d
+.caller_saved_26:
         movl    %r10d, %eax
+        movq    (%rsp), %rbx
+        movq    $8(%rsp), %r12
+        movq    $16(%rsp), %r13
+        movq    $24(%rsp), %r14
+        addq    $32, %rsp
         ret

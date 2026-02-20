@@ -111,18 +111,45 @@ call_super_fun:  # 2 params, 0 stack bytes
         movl    %2, %eax
         ret
 
-call_many:  # 2 params, 0 stack bytes
+caller_saved:  # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.call_many_entry:
-        call    fun1  # ($5)
-        movl    %eax, %2
-        call    call_super_fun  # (%1, %2)
-        movl    %eax, %3
-        call    call2  # (%0, %2)
-        movl    %eax, %4
-        leal    (%2,%3), %5
-        leal    (%5,%4), %6
-.call_many_7:
-        movl    %6, %eax
+.caller_saved_entry:
+        movl    $1, %2
+        addl    $1, %2
+        movl    $1, %3
+        addl    $1, %3
+        movl    $1, %4
+        addl    $1, %4
+        movl    $1, %5
+        addl    $1, %5
+        movl    $1, %6
+        addl    $1, %6
+        movl    $1, %7
+        addl    $1, %7
+        movl    $1, %8
+        addl    $1, %8
+        movl    $1, %9
+        addl    $1, %9
+        movl    $1, %10
+        addl    $1, %10
+        movl    $1, %11
+        addl    $1, %11
+        movl    $1, %12
+        addl    $1, %12
+        call    super_fun  # ($1, %2, %3, %4, %5, %6, %7, %0)
+        movl    %eax, %13
+        leal    $1(%2,%3), %15
+        leal    (%15,%4), %16
+        leal    (%16,%5), %17
+        leal    (%17,%6), %18
+        leal    (%18,%7), %19
+        leal    (%19,%8), %20
+        leal    (%20,%9), %21
+        leal    (%21,%10), %22
+        leal    (%22,%11), %23
+        leal    (%23,%12), %24
+        leal    (%24,%13), %25
+.caller_saved_26:
+        movl    %25, %eax
         ret
