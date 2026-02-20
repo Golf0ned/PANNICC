@@ -115,41 +115,42 @@ caller_saved:  # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
 .caller_saved_entry:
-        movl    $1, %2
+        movl    %0, %2
         addl    $1, %2
-        movl    $1, %3
-        addl    $1, %3
-        movl    $1, %4
-        addl    $1, %4
-        movl    $1, %5
-        addl    $1, %5
-        movl    $1, %6
-        addl    $1, %6
-        movl    $1, %7
-        addl    $1, %7
-        movl    $1, %8
-        addl    $1, %8
-        movl    $1, %9
-        addl    $1, %9
-        movl    $1, %10
-        addl    $1, %10
-        movl    $1, %11
-        addl    $1, %11
-        movl    $1, %12
-        addl    $1, %12
-        call    super_fun  # ($1, %2, %3, %4, %5, %6, %7, %0)
+        movl    %0, %3
+        addl    $2, %3
+        movl    %0, %4
+        addl    $3, %4
+        movl    %0, %5
+        addl    $4, %5
+        movl    %0, %6
+        addl    $5, %6
+        movl    %0, %7
+        addl    $6, %7
+        movl    %0, %8
+        addl    $7, %8
+        movl    %0, %9
+        addl    $8, %9
+        movl    %0, %10
+        addl    $9, %10
+        movl    %0, %11
+        addl    $10, %11
+        movl    %0, %12
+        addl    $11, %12
+        call    super_fun  # (%2, %3, %4, %5, %6, %7, %8, %9)
         movl    %eax, %13
-        leal    $1(%2,%3), %15
-        leal    (%15,%4), %16
-        leal    (%16,%5), %17
-        leal    (%17,%6), %18
-        leal    (%18,%7), %19
-        leal    (%19,%8), %20
-        leal    (%20,%9), %21
-        leal    (%21,%10), %22
-        leal    (%22,%11), %23
-        leal    (%23,%12), %24
-        leal    (%24,%13), %25
+        leal    (%2,%3), %14
+        leal    (%14,%4), %15
+        leal    (%15,%5), %16
+        leal    (%16,%6), %17
+        leal    (%17,%7), %18
+        leal    (%18,%8), %19
+        leal    (%19,%9), %20
+        leal    (%20,%10), %21
+        leal    (%21,%11), %22
+        leal    (%22,%12), %23
+        leal    (%23,%13), %24
+        leal    (%24,%1), %25
 .caller_saved_26:
         movl    %25, %eax
         ret
