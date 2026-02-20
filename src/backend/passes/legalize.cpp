@@ -1,6 +1,5 @@
 #include <algorithm>
 
-#include "backend/lir/register_num.h"
 #include "backend/passes/legalize.h"
 #include "backend/passes/liveness.h"
 
@@ -136,28 +135,85 @@ namespace backend {
 
         for (auto &f : lir.getFunctions()) {
             auto liveness = computeLiveness(f.get(), om);
+            auto &in = liveness[2], &out = liveness[3];
             auto registers_used = getUsedRegisters(liveness);
-            auto total_stack_bytes = f->getStackBytes();
+            auto function_stack_bytes = f->getStackBytes();
 
             auto &instructions = f->getInstructions();
             auto ret_iter = std::prev(instructions.end());
 
             auto rsp = om->getRegister(lir::RegisterNum::RSP);
 
-            // TODO: generate calling convention for calls
-            // - allocate space for caller-saved registers, params 7+,
-            //   and 16 byte padding
-            // - save caller-saved registers
-            // - store params in correct registers
-            //   (use mapping from caller-saved registers to stack space)
-            // - [call]
-            // - restore caller-saved registers
-            // - deallocate space
-            // TODO: track if function has call
-            auto has_call = true;
+            //
+            // Preserve caller-saved registers, manage function args, and
+            // allocate space around calls
+            //
+            auto has_call = false;
+            size_t i_index = 0;
+            for (auto i_iter = instructions.begin();
+                 i_iter != instructions.end(); i_iter++) {
+                auto call = dynamic_cast<lir::InstructionCall *>(i_iter->get());
+                if (!call) {
+                    i_index++;
+                    continue;
+                }
+
+                has_call = true;
+
+                // TODO: do we need to save from in at all? we currently save it
+                // for potential arg collision issues
+                auto &in_i = in[i_index];
+                auto &out_i = out[i_index];
+                std::vector<lir::Register *> save, restore;
+                for (auto reg_num : lir::getCallerSavedRegisters()) {
+                    if (reg_num == lir::RegisterNum::RAX)
+                        continue;
+
+                    auto reg = om->getRegister(reg_num);
+                    if (in_i.contains(reg))
+                        save.push_back(reg);
+                    if (out_i.contains(reg))
+                        restore.push_back(reg);
+                }
+
+                // Allocate/deallocate stack space
+                auto num_params = f->getNumParams();
+                auto call_stack_bytes =
+                    (save.size() + num_params > 6 ? num_params - 6 : 0) * 8;
+                if (call_stack_bytes) {
+                    call_stack_bytes = (call_stack_bytes + 15) & -16;
+
+                    auto stack_bytes = om->getImmediate(call_stack_bytes);
+
+                    auto allocate = std::make_unique<lir::InstructionBinaryOp>(
+                        lir::BinaryOp::SUB, reg_size, stack_bytes, rsp);
+                    instructions.insert(i_iter, std::move(allocate));
+
+                    auto deallocate =
+                        std::make_unique<lir::InstructionBinaryOp>(
+                            lir::BinaryOp::ADD, reg_size, stack_bytes, rsp);
+                    i_iter = instructions.insert(std::next(i_iter),
+                                                 std::move(deallocate));
+                }
+
+                // Save/restore registers
+                // TODO
+
+                // Store params
+                // TODO
+
+                // TODO: generate calling convention for calls
+                // - save caller-saved registers
+                // - store params in correct registers
+                //   (use mapping from caller-saved registers to stack space)
+                // - [call]
+                // - restore caller-saved registers
+
+                i_index++;
+            }
 
             //
-            // Save callee-saved registers
+            // Preserve callee-saved registers
             //
             auto callee_saved_vector = lir::getCalleeSavedRegisters();
             auto callee_saved = std::unordered_set(callee_saved_vector.begin(),
@@ -169,8 +225,9 @@ namespace backend {
                     continue;
 
                 auto reg_to_save = om->getRegister(reg_num);
-                auto stack_slot = om->getAddress(
-                    rsp, nullptr, nullptr, om->getImmediate(total_stack_bytes));
+                auto stack_slot =
+                    om->getAddress(rsp, nullptr, nullptr,
+                                   om->getImmediate(function_stack_bytes));
 
                 auto push = std::make_unique<lir::InstructionMov>(
                     lir::Extend::NONE, reg_size, reg_size, reg_to_save,
@@ -182,29 +239,29 @@ namespace backend {
                     reg_to_save);
                 instructions.insert(ret_iter, std::move(pop));
 
-                total_stack_bytes += 8;
+                function_stack_bytes += 8;
             }
 
             //
             // Pad bytes to 16 byte alignment if containing call
             //
-            if (has_call && total_stack_bytes % 16 != 0)
-                total_stack_bytes = (total_stack_bytes + 15) & -16;
+            if (has_call)
+                function_stack_bytes = (function_stack_bytes + 15) & -16;
 
             //
             // Replace stack arg operands
             //
-            ReplaceStackArgVisitor rsav(total_stack_bytes, om);
+            ReplaceStackArgVisitor rsav(function_stack_bytes, om);
             for (auto &i : instructions)
                 i->accept(&rsav);
 
             //
             // Manage stack space
             //
-            if (!total_stack_bytes)
+            if (!function_stack_bytes)
                 continue;
 
-            auto stack_bytes = om->getImmediate(total_stack_bytes);
+            auto stack_bytes = om->getImmediate(function_stack_bytes);
 
             auto allocate = std::make_unique<lir::InstructionBinaryOp>(
                 lir::BinaryOp::SUB, reg_size, stack_bytes, rsp);
