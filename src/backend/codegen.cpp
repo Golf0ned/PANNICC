@@ -5,8 +5,10 @@ namespace backend {
     void CodeGenVisitor::generateFilePreamble() { result += "    .text"; }
 
     void CodeGenVisitor::generateFilePostamble() {
-        result += "    .section    .note.GNU-stack,\"\",@progbits";
-        result += "    .ident  PANNICC (https://github.com/Golf0ned/PANNICC)";
+        result += '\n';
+        result += "    .section    .note.GNU-stack,\"\",@progbits\n";
+        result +=
+            "    .ident  \"PANNICC (https://github.com/Golf0ned/PANNICC)\"";
     }
 
     void CodeGenVisitor::generateFunctionPreamble(lir::Function *f) {
@@ -16,7 +18,10 @@ namespace backend {
         result += f->getName() + ":";
     }
 
-    void CodeGenVisitor::generateFunctionPostamble(lir::Function *f) {}
+    void CodeGenVisitor::generateFunctionPostamble(lir::Function *f) {
+        result += '\n';
+        result += ".L" + f->getName() + "_end:";
+    }
 
     void CodeGenVisitor::visit(lir::InstructionCall *i) {
         result += "\n        ";
