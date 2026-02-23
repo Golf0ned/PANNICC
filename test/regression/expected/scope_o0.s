@@ -1,6 +1,6 @@
 scope:
         subq    $76, %rsp
-.scope_entry:
+.Lscope_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -41,14 +41,14 @@ scope:
         movl    $0, $68(%rsp)
         movl    $68(%rsp), %r10d
         movl    %r10d, $72(%rsp)
-.scope_37:
+.Lscope_37:
         movl    $72(%rsp), %r10d
         movl    %r10d, %eax
         addq    $76, %rsp
         ret
 scope_reassign_variable:
         subq    $48, %rsp
-.scope_reassign_variable_entry:
+.Lscope_reassign_variable_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -86,14 +86,14 @@ scope_reassign_variable:
         movl    %r10d, $40(%rsp)
         movl    $40(%rsp), %r10d
         movl    %r10d, $44(%rsp)
-.scope_reassign_variable_31:
+.Lscope_reassign_variable_31:
         movl    $44(%rsp), %r10d
         movl    %r10d, %eax
         addq    $48, %rsp
         ret
 scope_reassign_in_parallel_scopes:
         subq    $32, %rsp
-.scope_reassign_in_parallel_scopes_entry:
+.Lscope_reassign_in_parallel_scopes_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -107,7 +107,7 @@ scope_reassign_in_parallel_scopes:
         movl    %r10d, $24(%rsp)
         movl    $24(%rsp), %r10d
         movl    %r10d, $28(%rsp)
-.scope_reassign_in_parallel_scopes_13:
+.Lscope_reassign_in_parallel_scopes_13:
         movl    $28(%rsp), %r10d
         movl    %r10d, %eax
         addq    $32, %rsp

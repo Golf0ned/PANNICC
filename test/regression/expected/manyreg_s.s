@@ -6,7 +6,7 @@ main:
         movq    %r12, $16(%rsp)
         movq    %rbp, $8(%rsp)
         movq    %rbx, (%rsp)
-.main_entry:
+.Lmain_entry:
         movl    $0, %esi
         addl    $1, %esi
         movl    %esi, %edx
@@ -116,7 +116,7 @@ main:
         leal    (%r11d,%ecx), %r10d
         leal    (%r10d,%edx), %r11d
         leal    (%r11d,%esi), %r10d
-.main_121:
+.Lmain_121:
         movl    %r10d, %eax
         movq    (%rsp), %rbx
         movq    $8(%rsp), %rbp

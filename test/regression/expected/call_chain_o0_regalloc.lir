@@ -1,15 +1,15 @@
 first:  # 0 params, 8 stack bytes
-.first_entry:
+.Lfirst_entry:
         movl    $1, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $4(%rsp)
-.first_3:
+.Lfirst_3:
         movl    $4(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 second:  # 0 params, 12 stack bytes
-.second_entry:
+.Lsecond_entry:
         call    first  # ()
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
@@ -20,13 +20,13 @@ second:  # 0 params, 12 stack bytes
         movl    %edi, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $8(%rsp)
-.second_8:
+.Lsecond_8:
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 third:  # 0 params, 12 stack bytes
-.third_entry:
+.Lthird_entry:
         call    second  # ()
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
@@ -37,13 +37,13 @@ third:  # 0 params, 12 stack bytes
         movl    %edi, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $8(%rsp)
-.third_8:
+.Lthird_8:
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 fourth:  # 0 params, 12 stack bytes
-.fourth_entry:
+.Lfourth_entry:
         call    third  # ()
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
@@ -54,13 +54,13 @@ fourth:  # 0 params, 12 stack bytes
         movl    %edi, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $8(%rsp)
-.fourth_8:
+.Lfourth_8:
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 fifth:  # 0 params, 12 stack bytes
-.fifth_entry:
+.Lfifth_entry:
         call    fourth  # ()
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
@@ -71,13 +71,13 @@ fifth:  # 0 params, 12 stack bytes
         movl    %edi, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $8(%rsp)
-.fifth_8:
+.Lfifth_8:
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 sixth:  # 0 params, 12 stack bytes
-.sixth_entry:
+.Lsixth_entry:
         call    fifth  # ()
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
@@ -88,13 +88,13 @@ sixth:  # 0 params, 12 stack bytes
         movl    %edi, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $8(%rsp)
-.sixth_8:
+.Lsixth_8:
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 main:  # 0 params, 96 stack bytes
-.main_entry:
+.Lmain_entry:
         call    sixth  # ()
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
@@ -217,7 +217,7 @@ main:  # 0 params, 96 stack bytes
         movl    %r10d, $88(%rsp)
         movl    $88(%rsp), %r10d
         movl    %r10d, $92(%rsp)
-.main_90:
+.Lmain_90:
         movl    $92(%rsp), %r10d
         movl    %r10d, %eax
         ret

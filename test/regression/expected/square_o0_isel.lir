@@ -1,6 +1,6 @@
 square:  # 1 params, 16 stack bytes
         movl    %edi, %0
-.square_entry:
+.Lsquare_entry:
         movl    %0, $12(%rsp)
         movl    $12(%rsp), %5
         movl    %5, (%rsp)
@@ -13,7 +13,7 @@ square:  # 1 params, 16 stack bytes
         movl    %9, (%rsp)
         movl    (%rsp), %10
         movl    %10, $8(%rsp)
-.square_11:
+.Lsquare_11:
         movl    $8(%rsp), %12
         movl    %12, %eax
         ret

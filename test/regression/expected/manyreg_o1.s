@@ -1,4 +1,4 @@
 main:
-.main_entry:
+.Lmain_entry:
         movl    $16384, %eax
         ret

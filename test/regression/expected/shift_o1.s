@@ -1,8 +1,8 @@
 lshift:
-.lshift_entry:
+.Llshift_entry:
         movl    $16, %eax
         ret
 rshift:
-.rshift_entry:
+.Lrshift_entry:
         movl    $2, %eax
         ret

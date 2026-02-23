@@ -1,5 +1,5 @@
 scope:  # 0 params, 76 stack bytes
-.scope_entry:
+.Lscope_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -40,13 +40,13 @@ scope:  # 0 params, 76 stack bytes
         movl    $0, $68(%rsp)
         movl    $68(%rsp), %r10d
         movl    %r10d, $72(%rsp)
-.scope_37:
+.Lscope_37:
         movl    $72(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 scope_reassign_variable:  # 0 params, 48 stack bytes
-.scope_reassign_variable_entry:
+.Lscope_reassign_variable_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -84,13 +84,13 @@ scope_reassign_variable:  # 0 params, 48 stack bytes
         movl    %r10d, $40(%rsp)
         movl    $40(%rsp), %r10d
         movl    %r10d, $44(%rsp)
-.scope_reassign_variable_31:
+.Lscope_reassign_variable_31:
         movl    $44(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 scope_reassign_in_parallel_scopes:  # 0 params, 32 stack bytes
-.scope_reassign_in_parallel_scopes_entry:
+.Lscope_reassign_in_parallel_scopes_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -104,7 +104,7 @@ scope_reassign_in_parallel_scopes:  # 0 params, 32 stack bytes
         movl    %r10d, $24(%rsp)
         movl    $24(%rsp), %r10d
         movl    %r10d, $28(%rsp)
-.scope_reassign_in_parallel_scopes_13:
+.Lscope_reassign_in_parallel_scopes_13:
         movl    $28(%rsp), %r10d
         movl    %r10d, %eax
         ret

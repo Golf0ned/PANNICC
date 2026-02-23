@@ -1,5 +1,5 @@
 main:  # 0 params, 0 stack bytes
-.main_entry:
+.Lmain_entry:
         movl    $0, %0
         addl    $1, %0
         movl    %0, %1
@@ -109,6 +109,6 @@ main:  # 0 params, 0 stack bytes
         leal    (%116,%3), %117
         leal    (%117,%1), %118
         leal    (%118,%0), %120
-.main_121:
+.Lmain_121:
         movl    %120, %eax
         ret

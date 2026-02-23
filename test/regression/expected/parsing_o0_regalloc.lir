@@ -1,13 +1,13 @@
 main:  # 0 params, 4 stack bytes
-.main_entry:
+.Lmain_entry:
         movl    $0, (%rsp)
-.main_1:
+.Lmain_1:
         movl    (%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 compound:  # 0 params, 76 stack bytes
-.compound_entry:
+.Lcompound_entry:
         movl    $9, $4(%rsp)
         movl    $123, $8(%rsp)
         movl    $4(%rsp), %r11d
@@ -89,13 +89,13 @@ compound:  # 0 params, 76 stack bytes
         movl    %edi, $44(%rsp)
         movl    $44(%rsp), %r10d
         movl    %r10d, $72(%rsp)
-.compound_63:
+.Lcompound_63:
         movl    $72(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 parens:  # 0 params, 20 stack bytes
-.parens_entry:
+.Lparens_entry:
         movl    $4, (%rsp)
         movl    $3, $4(%rsp)
         movl    $2, $8(%rsp)
@@ -117,7 +117,7 @@ parens:  # 0 params, 20 stack bytes
         movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $16(%rsp)
-.parens_15:
+.Lparens_15:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
         ret

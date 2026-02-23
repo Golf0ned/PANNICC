@@ -1,12 +1,12 @@
 main:
-.main_entry:
+.Lmain_entry:
         movl    $0, %eax
         ret
 compound:
-.compound_entry:
+.Lcompound_entry:
         movl    $23, %eax
         ret
 parens:
-.parens_entry:
+.Lparens_entry:
         movl    $8, %eax
         ret

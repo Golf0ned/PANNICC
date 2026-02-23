@@ -1,13 +1,13 @@
 leaBI:
         movl    %edi, %r11d
         movl    %esi, %r10d
-.leaBI_entry:
+.LleaBI_entry:
         leal    (%r11d,%r10d), %r10d
         movl    $0, %eax
         ret
 leaIS:
         movl    %edi, %r10d
-.leaIS_entry:
+.LleaIS_entry:
         movl    %r10d, %r10d
         leal    (,%r10d,2), %r10d
         leal    (,%r10d,4), %r10d
@@ -21,7 +21,7 @@ leaIS:
 leaBIS:
         movl    %edi, %r11d
         movl    %esi, %r10d
-.leaBIS_entry:
+.LleaBIS_entry:
         leal    (%r11d,%r10d,2), %r10d
         leal    (%r11d,%r10d,2), %r10d
         leal    (%r11d,%r10d,2), %r10d
@@ -31,7 +31,7 @@ leaBIS:
 leaBID:
         movl    %edi, %r10d
         movl    %esi, %r11d
-.leaBID_entry:
+.LleaBID_entry:
         leal    $13(%r10d,%r11d), %r10d
         leal    $13(%r10d,%r11d), %r10d
         leal    $13(%r10d,%r11d), %r10d
@@ -42,7 +42,7 @@ leaBID:
         ret
 leaIIS:
         movl    %edi, %r10d
-.leaIIS_entry:
+.LleaIIS_entry:
         leal    (%r10d,%r10d,2), %r10d
         leal    (%r10d,%r10d,4), %r10d
         leal    (%r10d,%r10d,8), %r10d
@@ -53,7 +53,7 @@ leaIIS:
         ret
 leaISD:
         movl    %edi, %r10d
-.leaISD_entry:
+.LleaISD_entry:
         leal    $60(,%r10d,4), %r10d
         leal    $60(,%r10d,4), %r10d
         leal    $60(,%r10d,4), %r10d
@@ -62,7 +62,7 @@ leaISD:
         ret
 leaIISD:
         movl    %edi, %r10d
-.leaIISD_entry:
+.LleaIISD_entry:
         leal    $60(%r10d,%r10d,2), %r10d
         leal    $60(%r10d,%r10d,4), %r10d
         leal    $60(%r10d,%r10d,8), %r10d
@@ -72,7 +72,7 @@ leaIISD:
 leaBISD:
         movl    %edi, %r11d
         movl    %esi, %r10d
-.leaBISD_entry:
+.LleaBISD_entry:
         leal    $40(%r11d,%r10d,8), %r10d
         leal    $40(%r11d,%r10d,8), %r10d
         leal    $40(%r11d,%r10d,8), %r10d

@@ -1,5 +1,5 @@
 main:  # 0 params, 620 stack bytes
-.main_entry:
+.Lmain_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %155
         movl    %155, (%rsp)
@@ -792,7 +792,7 @@ main:  # 0 params, 620 stack bytes
         movl    %669, $552(%rsp)
         movl    $552(%rsp), %670
         movl    %670, $616(%rsp)
-.main_671:
+.Lmain_671:
         movl    $616(%rsp), %672
         movl    %672, %eax
         ret
