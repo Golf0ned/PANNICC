@@ -77,7 +77,7 @@ namespace backend::lir_tree {
 
     std::string TreeGenVisitor::resolveLabel(middleend::mir::BasicBlock *bb) {
         auto bb_num = nir.getNumber(bb);
-        return "." + function_info->getName() + '_' +
+        return ".L" + function_info->getName() + '_' +
                (bb_num == -1 ? "entry" : std::to_string(bb_num));
     }
 
