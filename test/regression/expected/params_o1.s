@@ -1,6 +1,6 @@
 fun1:
         movl    %edi, %r11d
-.fun1_entry:
+.Lfun1_entry:
         movl    %r11d, %r10d
         imull   %r11d, %r10d
         movl    %r10d, %eax
@@ -8,10 +8,11 @@ fun1:
 fun2:
         movl    %edi, %r10d
         movl    %esi, %r11d
-.fun2_entry:
+.Lfun2_entry:
         subq    $16, %rsp
         movq    %r10d, $8(%rsp)
         movq    %r11d, (%rsp)
+        movq    $8(%rsp), %rdi
         call    fun1
         movq    (%rsp), %r11d
         movq    $8(%rsp), %r10d
@@ -24,6 +25,7 @@ fun2:
         subq    $16, %rsp
         movq    %esi, $8(%rsp)
         movq    %r10d, (%rsp)
+        movq    %r11d, %rdi
         call    fun1
         addq    $16, %rsp
         movl    %eax, %r10d
@@ -35,12 +37,13 @@ fun3:
         movl    %esi, %edx
         movl    %edx, %ecx
         movl    %ecx, %edi
-.fun3_entry:
+.Lfun3_entry:
         subq    $32, %rsp
         movq    %edi, $24(%rsp)
         movq    %esi, $16(%rsp)
         movq    %edx, $8(%rsp)
         movq    %ecx, (%rsp)
+        movq    $24(%rsp), %rdi
         call    fun1
         movq    (%rsp), %ecx
         movq    $8(%rsp), %edx
@@ -57,7 +60,8 @@ fun3:
         movl    %r10d, %eax
         ret
 call1:
-.call1_entry:
+.Lcall1_entry:
+        movq    $5, %rdi
         call    fun1
         movl    %eax, %r10d
         movl    %r10d, %eax
@@ -65,10 +69,12 @@ call1:
 call2:
         movl    %edi, %r11d
         movl    %esi, %r10d
-.call2_entry:
+.Lcall2_entry:
         subq    $16, %rsp
         movq    %r10d, $8(%rsp)
         movq    %r11d, (%rsp)
+        movq    (%rsp), %rdi
+        movq    $8(%rsp), %rsi
         call    fun2
         addq    $16, %rsp
         movl    %eax, %r10d
@@ -77,17 +83,22 @@ call2:
 call3:
         movl    %edi, %r11d
         movl    %esi, %r10d
-.call3_entry:
+.Lcall3_entry:
         subq    $16, %rsp
         movq    %r10d, $8(%rsp)
         movq    %r11d, (%rsp)
+        movq    (%rsp), %rdi
+        movq    $8(%rsp), %rsi
+        movq    $1, %rdx
+        movq    $0, %rcx
         call    fun3
         addq    $16, %rsp
         movl    %eax, %r10d
         movl    %r10d, %eax
         ret
 call4:
-.call4_entry:
+.Lcall4_entry:
+        movq    $10, %rdi
         call    fun1
         movl    %eax, %r11d
         movl    %r11d, %r10d
@@ -103,7 +114,7 @@ super_fun:
         movl    %r9d, %ecx
         movl    (%rsp), %r8d
         movl    $8(%rsp), %r9d
-.super_fun_entry:
+.Lsuper_fun_entry:
         leal    (%r10d,%r11d), %eax
         leal    (%eax,%edi), %r11d
         leal    (%r11d,%esi), %r10d
@@ -116,10 +127,18 @@ super_fun:
 call_super_fun:
         movl    %edi, %r11d
         movl    %esi, %r10d
-.call_super_fun_entry:
+.Lcall_super_fun_entry:
         subq    $32, %rsp
         movq    %r10d, $24(%rsp)
         movq    %r11d, $16(%rsp)
+        movq    $1, %rdi
+        movq    $2, %rsi
+        movq    $3, %rdx
+        movq    $4, %rcx
+        movq    $5, %r8
+        movq    $6, %r9
+        movq    $16(%rsp), (%rsp)
+        movq    $24(%rsp), $8(%rsp)
         call    super_fun
         addq    $32, %rsp
         movl    %eax, %r10d
@@ -134,7 +153,7 @@ caller_saved:
         movq    %rbx, (%rsp)
         movl    %edi, %ecx
         movl    %esi, %r14d
-.caller_saved_entry:
+.Lcaller_saved_entry:
         movl    %ecx, %edx
         addl    $1, %edx
         movl    %ecx, %esi
@@ -165,6 +184,14 @@ caller_saved:
         movq    %r9d, $40(%rsp)
         movq    %r10d, $32(%rsp)
         movq    %r11d, $24(%rsp)
+        movq    $56(%rsp), %rdi
+        movq    $64(%rsp), %rsi
+        movq    $72(%rsp), %rdx
+        movq    $24(%rsp), %rcx
+        movq    $32(%rsp), %r8
+        movq    $48(%rsp), %r9
+        movq    $40(%rsp), (%rsp)
+        movq    %eax, $8(%rsp)
         call    super_fun
         movq    $24(%rsp), %r11d
         movq    $32(%rsp), %r10d

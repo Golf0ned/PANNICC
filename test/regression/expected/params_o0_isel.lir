@@ -1,6 +1,6 @@
 fun1:  # 1 params, 16 stack bytes
         movl    %edi, %0
-.fun1_entry:
+.Lfun1_entry:
         movl    %0, $12(%rsp)
         movl    $12(%rsp), %5
         movl    %5, (%rsp)
@@ -13,7 +13,7 @@ fun1:  # 1 params, 16 stack bytes
         movl    %9, (%rsp)
         movl    (%rsp), %10
         movl    %10, $8(%rsp)
-.fun1_11:
+.Lfun1_11:
         movl    $8(%rsp), %12
         movl    %12, %eax
         ret
@@ -21,7 +21,7 @@ fun1:  # 1 params, 16 stack bytes
 fun2:  # 2 params, 40 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.fun2_entry:
+.Lfun2_entry:
         movl    %0, $32(%rsp)
         movl    %1, $36(%rsp)
         movl    $32(%rsp), %12
@@ -61,7 +61,7 @@ fun2:  # 2 params, 40 stack bytes
         movl    %31, $8(%rsp)
         movl    $8(%rsp), %32
         movl    %32, $28(%rsp)
-.fun2_33:
+.Lfun2_33:
         movl    $28(%rsp), %34
         movl    %34, %eax
         ret
@@ -71,7 +71,7 @@ fun3:  # 4 params, 44 stack bytes
         movl    %esi, %1
         movl    %edx, %2
         movl    %ecx, %3
-.fun3_entry:
+.Lfun3_entry:
         movl    %0, $36(%rsp)
         movl    %1, $32(%rsp)
         movl    %2, $36(%rsp)
@@ -110,13 +110,13 @@ fun3:  # 4 params, 44 stack bytes
         movl    %33, $12(%rsp)
         movl    $12(%rsp), %34
         movl    %34, $32(%rsp)
-.fun3_35:
+.Lfun3_35:
         movl    $32(%rsp), %36
         movl    %36, %eax
         ret
 
 call1:  # 0 params, 12 stack bytes
-.call1_entry:
+.Lcall1_entry:
         movl    $5, (%rsp)
         movl    (%rsp), %3
         call    fun1  # (%3)
@@ -124,7 +124,7 @@ call1:  # 0 params, 12 stack bytes
         movl    %4, (%rsp)
         movl    (%rsp), %5
         movl    %5, $4(%rsp)
-.call1_6:
+.Lcall1_6:
         movl    $4(%rsp), %7
         movl    %7, %eax
         ret
@@ -132,7 +132,7 @@ call1:  # 0 params, 12 stack bytes
 call2:  # 2 params, 24 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.call2_entry:
+.Lcall2_entry:
         movl    %0, $16(%rsp)
         movl    %1, $20(%rsp)
         movl    $16(%rsp), %8
@@ -146,7 +146,7 @@ call2:  # 2 params, 24 stack bytes
         movl    %12, $12(%rsp)
         movl    $12(%rsp), %13
         movl    %13, $12(%rsp)
-.call2_14:
+.Lcall2_14:
         movl    $12(%rsp), %15
         movl    %15, %eax
         ret
@@ -154,7 +154,7 @@ call2:  # 2 params, 24 stack bytes
 call3:  # 2 params, 32 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.call3_entry:
+.Lcall3_entry:
         movl    %0, $24(%rsp)
         movl    %1, $28(%rsp)
         movl    $24(%rsp), %10
@@ -172,13 +172,13 @@ call3:  # 2 params, 32 stack bytes
         movl    %16, $16(%rsp)
         movl    $16(%rsp), %17
         movl    %17, $20(%rsp)
-.call3_18:
+.Lcall3_18:
         movl    $20(%rsp), %19
         movl    %19, %eax
         ret
 
 call4:  # 0 params, 16 stack bytes
-.call4_entry:
+.Lcall4_entry:
         movl    $10, (%rsp)
         movl    (%rsp), %4
         call    fun1  # (%4)
@@ -192,7 +192,7 @@ call4:  # 0 params, 16 stack bytes
         movl    %8, (%rsp)
         movl    (%rsp), %9
         movl    %9, $8(%rsp)
-.call4_10:
+.Lcall4_10:
         movl    $8(%rsp), %11
         movl    %11, %eax
         ret
@@ -206,7 +206,7 @@ super_fun:  # 8 params, 68 stack bytes
         movl    %r9d, %5
         movl    (stack 0), %6
         movl    (stack 1), %7
-.super_fun_entry:
+.Lsuper_fun_entry:
         movl    %0, $36(%rsp)
         movl    %1, $40(%rsp)
         movl    %2, $44(%rsp)
@@ -261,7 +261,7 @@ super_fun:  # 8 params, 68 stack bytes
         movl    %53, $24(%rsp)
         movl    $24(%rsp), %54
         movl    %54, $32(%rsp)
-.super_fun_55:
+.Lsuper_fun_55:
         movl    $32(%rsp), %56
         movl    %56, %eax
         ret
@@ -269,7 +269,7 @@ super_fun:  # 8 params, 68 stack bytes
 call_super_fun:  # 2 params, 48 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.call_super_fun_entry:
+.Lcall_super_fun_entry:
         movl    %0, $32(%rsp)
         movl    %1, $36(%rsp)
         movl    $1, $4(%rsp)
@@ -295,7 +295,7 @@ call_super_fun:  # 2 params, 48 stack bytes
         movl    %24, $32(%rsp)
         movl    $32(%rsp), %25
         movl    %25, $36(%rsp)
-.call_super_fun_26:
+.Lcall_super_fun_26:
         movl    $36(%rsp), %27
         movl    %27, %eax
         ret
@@ -303,7 +303,7 @@ call_super_fun:  # 2 params, 48 stack bytes
 caller_saved:  # 2 params, 236 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.caller_saved_entry:
+.Lcaller_saved_entry:
         movl    %0, $228(%rsp)
         movl    %1, $232(%rsp)
         movl    $228(%rsp), %61
@@ -510,7 +510,7 @@ caller_saved:  # 2 params, 236 stack bytes
         movl    %182, $172(%rsp)
         movl    $172(%rsp), %183
         movl    %183, $224(%rsp)
-.caller_saved_184:
+.Lcaller_saved_184:
         movl    $224(%rsp), %185
         movl    %185, %eax
         ret

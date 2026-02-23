@@ -1,7 +1,7 @@
 leaBI:  # 2 params, 28 stack bytes
         movl    %edi, %r11d
         movl    %esi, %r10d
-.leaBI_entry:
+.LleaBI_entry:
         movl    %r11d, $20(%rsp)
         movl    %r10d, $24(%rsp)
         movl    $20(%rsp), %r10d
@@ -17,14 +17,14 @@ leaBI:  # 2 params, 28 stack bytes
         movl    $0, $12(%rsp)
         movl    $12(%rsp), %r10d
         movl    %r10d, $16(%rsp)
-.leaBI_16:
+.LleaBI_16:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 leaIS:  # 1 params, 108 stack bytes
         movl    %edi, %r10d
-.leaIS_entry:
+.LleaIS_entry:
         movl    %r10d, $104(%rsp)
         movl    $104(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -109,7 +109,7 @@ leaIS:  # 1 params, 108 stack bytes
         movl    $0, $96(%rsp)
         movl    $96(%rsp), %r10d
         movl    %r10d, $100(%rsp)
-.leaIS_69:
+.LleaIS_69:
         movl    $100(%rsp), %r10d
         movl    %r10d, %eax
         ret
@@ -117,7 +117,7 @@ leaIS:  # 1 params, 108 stack bytes
 leaBIS:  # 2 params, 88 stack bytes
         movl    %edi, %r11d
         movl    %esi, %r10d
-.leaBIS_entry:
+.LleaBIS_entry:
         movl    %r11d, $84(%rsp)
         movl    %r10d, $88(%rsp)
         movl    $2, $4(%rsp)
@@ -194,7 +194,7 @@ leaBIS:  # 2 params, 88 stack bytes
         movl    $0, $76(%rsp)
         movl    $76(%rsp), %r10d
         movl    %r10d, $80(%rsp)
-.leaBIS_66:
+.LleaBIS_66:
         movl    $80(%rsp), %r10d
         movl    %r10d, %eax
         ret
@@ -202,7 +202,7 @@ leaBIS:  # 2 params, 88 stack bytes
 leaBID:  # 2 params, 120 stack bytes
         movl    %edi, %r11d
         movl    %esi, %r10d
-.leaBID_entry:
+.LleaBID_entry:
         movl    %r11d, $112(%rsp)
         movl    %r10d, $116(%rsp)
         movl    $13, $4(%rsp)
@@ -307,14 +307,14 @@ leaBID:  # 2 params, 120 stack bytes
         movl    $0, $104(%rsp)
         movl    $104(%rsp), %r10d
         movl    %r10d, $108(%rsp)
-.leaBID_94:
+.LleaBID_94:
         movl    $108(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 leaIIS:  # 1 params, 84 stack bytes
         movl    %edi, %r10d
-.leaIIS_entry:
+.LleaIIS_entry:
         movl    %r10d, $80(%rsp)
         movl    $80(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -379,14 +379,14 @@ leaIIS:  # 1 params, 84 stack bytes
         movl    $0, $72(%rsp)
         movl    $72(%rsp), %r10d
         movl    %r10d, $76(%rsp)
-.leaIIS_53:
+.LleaIIS_53:
         movl    $76(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 leaISD:  # 1 params, 92 stack bytes
         movl    %edi, %r10d
-.leaISD_entry:
+.LleaISD_entry:
         movl    %r10d, $88(%rsp)
         movl    $4, (%rsp)
         movl    (%rsp), %r10d
@@ -465,14 +465,14 @@ leaISD:  # 1 params, 92 stack bytes
         movl    $0, $80(%rsp)
         movl    $80(%rsp), %r10d
         movl    %r10d, $84(%rsp)
-.leaISD_67:
+.LleaISD_67:
         movl    $84(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 leaIISD:  # 1 params, 84 stack bytes
         movl    %edi, %r10d
-.leaIISD_entry:
+.LleaIISD_entry:
         movl    %r10d, $80(%rsp)
         movl    $60, (%rsp)
         movl    (%rsp), %r10d
@@ -544,7 +544,7 @@ leaIISD:  # 1 params, 84 stack bytes
         movl    $0, $72(%rsp)
         movl    $72(%rsp), %r10d
         movl    %r10d, $76(%rsp)
-.leaIISD_60:
+.LleaIISD_60:
         movl    $76(%rsp), %r10d
         movl    %r10d, %eax
         ret
@@ -552,7 +552,7 @@ leaIISD:  # 1 params, 84 stack bytes
 leaBISD:  # 2 params, 512 stack bytes
         movl    %edi, %r11d
         movl    %esi, %r10d
-.leaBISD_entry:
+.LleaBISD_entry:
         movl    %r11d, $504(%rsp)
         movl    %r10d, $508(%rsp)
         movl    $8, $4(%rsp)
@@ -1116,7 +1116,7 @@ leaBISD:  # 2 params, 512 stack bytes
         movl    $0, $496(%rsp)
         movl    $496(%rsp), %r10d
         movl    %r10d, $500(%rsp)
-.leaBISD_469:
+.LleaBISD_469:
         movl    $500(%rsp), %r10d
         movl    %r10d, %eax
         ret

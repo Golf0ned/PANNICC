@@ -1,14 +1,14 @@
 leaBI:  # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.leaBI_entry:
+.LleaBI_entry:
         leal    (%0,%1), %2
         movl    $0, %eax
         ret
 
 leaIS:  # 1 params, 0 stack bytes
         movl    %edi, %0
-.leaIS_entry:
+.LleaIS_entry:
         movl    %0, %1
         leal    (,%0,2), %2
         leal    (,%0,4), %3
@@ -23,7 +23,7 @@ leaIS:  # 1 params, 0 stack bytes
 leaBIS:  # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.leaBIS_entry:
+.LleaBIS_entry:
         leal    (%0,%1,2), %3
         leal    (%0,%1,2), %5
         leal    (%0,%1,2), %7
@@ -34,7 +34,7 @@ leaBIS:  # 2 params, 0 stack bytes
 leaBID:  # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.leaBID_entry:
+.LleaBID_entry:
         leal    $13(%0,%1), %3
         leal    $13(%0,%1), %5
         leal    $13(%0,%1), %7
@@ -46,7 +46,7 @@ leaBID:  # 2 params, 0 stack bytes
 
 leaIIS:  # 1 params, 0 stack bytes
         movl    %edi, %0
-.leaIIS_entry:
+.LleaIIS_entry:
         leal    (%0,%0,2), %1
         leal    (%0,%0,4), %2
         leal    (%0,%0,8), %3
@@ -58,7 +58,7 @@ leaIIS:  # 1 params, 0 stack bytes
 
 leaISD:  # 1 params, 0 stack bytes
         movl    %edi, %0
-.leaISD_entry:
+.LleaISD_entry:
         leal    $60(,%0,4), %2
         leal    $60(,%0,4), %4
         leal    $60(,%0,4), %6
@@ -68,7 +68,7 @@ leaISD:  # 1 params, 0 stack bytes
 
 leaIISD:  # 1 params, 0 stack bytes
         movl    %edi, %0
-.leaIISD_entry:
+.LleaIISD_entry:
         leal    $60(%0,%0,2), %2
         leal    $60(%0,%0,4), %4
         leal    $60(%0,%0,8), %6
@@ -79,7 +79,7 @@ leaIISD:  # 1 params, 0 stack bytes
 leaBISD:  # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.leaBISD_entry:
+.LleaBISD_entry:
         leal    $40(%0,%1,8), %4
         leal    $40(%0,%1,8), %7
         leal    $40(%0,%1,8), %10

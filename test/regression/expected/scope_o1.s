@@ -1,12 +1,12 @@
 scope:
-.scope_entry:
+.Lscope_entry:
         movl    $0, %eax
         ret
 scope_reassign_variable:
-.scope_reassign_variable_entry:
+.Lscope_reassign_variable_entry:
         movl    $7, %eax
         ret
 scope_reassign_in_parallel_scopes:
-.scope_reassign_in_parallel_scopes_entry:
+.Lscope_reassign_in_parallel_scopes_entry:
         movl    $1, %eax
         ret

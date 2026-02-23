@@ -1,6 +1,6 @@
 if_basic:
         subq    $28, %rsp
-.if_basic_entry:
+.Lif_basic_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -8,9 +8,9 @@ if_basic:
         movl    %r10d, $8(%rsp)
         movl    $8(%rsp), %r10d
         cmpl    %r10d, $0
-        jne     .if_basic_17
-.if_basic_10:
-.if_basic_11:
+        jne     .Lif_basic_17
+.Lif_basic_10:
+.Lif_basic_11:
         movl    (%rsp), %r10d
         movl    %r10d, $12(%rsp)
         movl    $100, $16(%rsp)
@@ -20,21 +20,21 @@ if_basic:
         movl    %edi, $12(%rsp)
         movl    $12(%rsp), %r10d
         movl    %r10d, (%rsp)
-.if_basic_18:
+.Lif_basic_18:
         movl    (%rsp), %r10d
         movl    %r10d, $20(%rsp)
         movl    $20(%rsp), %r10d
         movl    %r10d, $24(%rsp)
-.if_basic_21:
+.Lif_basic_21:
         movl    $24(%rsp), %r10d
         movl    %r10d, %eax
         ret
-.if_basic_17:
+.Lif_basic_17:
         addq    $28, %rsp
-        jmp     .if_basic_18
+        jmp     .Lif_basic_18
 if_basic_else:
         subq    $36, %rsp
-.if_basic_else_entry:
+.Lif_basic_else_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -42,9 +42,9 @@ if_basic_else:
         movl    %r10d, $8(%rsp)
         movl    $8(%rsp), %r10d
         cmpl    %r10d, $0
-        jne     .if_basic_else_19
-.if_basic_else_12:
-.if_basic_else_13:
+        jne     .Lif_basic_else_19
+.Lif_basic_else_12:
+.Lif_basic_else_13:
         movl    (%rsp), %r10d
         movl    %r10d, $12(%rsp)
         movl    $3, $16(%rsp)
@@ -54,17 +54,17 @@ if_basic_else:
         movl    %edi, $12(%rsp)
         movl    $12(%rsp), %r10d
         movl    %r10d, (%rsp)
-.if_basic_else_26:
+.Lif_basic_else_26:
         movl    (%rsp), %r10d
         movl    %r10d, $28(%rsp)
         movl    $28(%rsp), %r10d
         movl    %r10d, $32(%rsp)
-.if_basic_else_29:
+.Lif_basic_else_29:
         movl    $32(%rsp), %r10d
         movl    %r10d, %eax
         ret
-.if_basic_else_19:
-.if_basic_else_20:
+.Lif_basic_else_19:
+.Lif_basic_else_20:
         movl    (%rsp), %r10d
         movl    %r10d, $20(%rsp)
         movl    $100, $24(%rsp)
@@ -75,10 +75,10 @@ if_basic_else:
         movl    $20(%rsp), %r10d
         movl    %r10d, (%rsp)
         addq    $36, %rsp
-        jmp     .if_basic_else_26
+        jmp     .Lif_basic_else_26
 if_no_braces:
         subq    $24, %rsp
-.if_no_braces_entry:
+.Lif_no_braces_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -86,28 +86,28 @@ if_no_braces:
         movl    %r10d, $8(%rsp)
         movl    $8(%rsp), %r10d
         cmpl    %r10d, $0
-        jne     .if_no_braces_13
-.if_no_braces_9:
-.if_no_braces_10:
+        jne     .Lif_no_braces_13
+.Lif_no_braces_9:
+.Lif_no_braces_10:
         movl    (%rsp), %r10d
         movl    %r10d, $12(%rsp)
         movl    $12(%rsp), %r10d
         movl    %r10d, $20(%rsp)
-.if_no_braces_18:
+.Lif_no_braces_18:
         movl    $20(%rsp), %r10d
         movl    %r10d, %eax
         ret
-.if_no_braces_13:
-.if_no_braces_14:
+.Lif_no_braces_13:
+.Lif_no_braces_14:
         movl    (%rsp), %r10d
         movl    %r10d, $16(%rsp)
         movl    $16(%rsp), %r10d
         movl    %r10d, $20(%rsp)
         addq    $24, %rsp
-        jmp     .if_no_braces_18
+        jmp     .Lif_no_braces_18
 if_chain:
         subq    $36, %rsp
-.if_chain_entry:
+.Lif_chain_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -118,36 +118,36 @@ if_chain:
         movl    %r10d, $16(%rsp)
         movl    $16(%rsp), %r10d
         cmpl    %r10d, $0
-        jne     .if_chain_22
-.if_chain_13:
-.if_chain_14:
+        jne     .Lif_chain_22
+.Lif_chain_13:
+.Lif_chain_14:
         movl    $8(%rsp), %r10d
         movl    %r10d, $20(%rsp)
         movl    $20(%rsp), %r10d
         cmpl    %r10d, $0
-        jne     .if_chain_20
-.if_chain_17:
-.if_chain_18:
+        jne     .Lif_chain_20
+.Lif_chain_17:
+.Lif_chain_18:
         movl    $0, $24(%rsp)
         movl    $24(%rsp), %r10d
         movl    %r10d, $32(%rsp)
-.if_chain_25:
+.Lif_chain_25:
         movl    $32(%rsp), %r10d
         movl    %r10d, %eax
         ret
-.if_chain_22:
-.if_chain_23:
+.Lif_chain_22:
+.Lif_chain_23:
         movl    $1, $28(%rsp)
         movl    $28(%rsp), %r10d
         movl    %r10d, $32(%rsp)
-        jmp     .if_chain_25
-.if_chain_20:
-.if_chain_21:
+        jmp     .Lif_chain_25
+.Lif_chain_20:
+.Lif_chain_21:
         addq    $36, %rsp
-        jmp     .if_chain_23
+        jmp     .Lif_chain_23
 if_chain_many:
         subq    $52, %rsp
-.if_chain_many_entry:
+.Lif_chain_many_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -161,78 +161,78 @@ if_chain_many:
         movl    %r10d, $24(%rsp)
         movl    $24(%rsp), %r10d
         cmpl    %r10d, $0
-        jne     .if_chain_many_35
-.if_chain_many_18:
-.if_chain_many_19:
+        jne     .Lif_chain_many_35
+.Lif_chain_many_18:
+.Lif_chain_many_19:
         movl    $8(%rsp), %r10d
         movl    %r10d, $28(%rsp)
         movl    $28(%rsp), %r10d
         cmpl    %r10d, $0
-        jne     .if_chain_many_33
-.if_chain_many_22:
-.if_chain_many_23:
+        jne     .Lif_chain_many_33
+.Lif_chain_many_22:
+.Lif_chain_many_23:
         movl    $16(%rsp), %r10d
         movl    %r10d, $32(%rsp)
         movl    $32(%rsp), %r10d
         cmpl    %r10d, $0
-        jne     .if_chain_many_29
-.if_chain_many_26:
-.if_chain_many_27:
+        jne     .Lif_chain_many_29
+.Lif_chain_many_26:
+.Lif_chain_many_27:
         movl    $0, $36(%rsp)
         movl    $36(%rsp), %r10d
         movl    %r10d, $48(%rsp)
-.if_chain_many_38:
+.Lif_chain_many_38:
         movl    $48(%rsp), %r10d
         movl    %r10d, %eax
         ret
-.if_chain_many_35:
-.if_chain_many_36:
+.Lif_chain_many_35:
+.Lif_chain_many_36:
         movl    $1, $44(%rsp)
         movl    $44(%rsp), %r10d
         movl    %r10d, $48(%rsp)
-        jmp     .if_chain_many_38
-.if_chain_many_33:
-.if_chain_many_34:
-        jmp     .if_chain_many_36
-.if_chain_many_29:
-.if_chain_many_30:
+        jmp     .Lif_chain_many_38
+.Lif_chain_many_33:
+.Lif_chain_many_34:
+        jmp     .Lif_chain_many_36
+.Lif_chain_many_29:
+.Lif_chain_many_30:
         movl    $3, $40(%rsp)
         movl    $40(%rsp), %r10d
         movl    %r10d, $48(%rsp)
         addq    $52, %rsp
-        jmp     .if_chain_many_38
+        jmp     .Lif_chain_many_38
 if_else_if:
         subq    $24, %rsp
-.if_else_if_entry:
+.Lif_else_if_entry:
         movl    $1, (%rsp)
         movl    (%rsp), %r10d
         cmpl    %r10d, $0
-        jne     .if_else_if_10
-.if_else_if_7:
-.if_else_if_8:
+        jne     .Lif_else_if_10
+.Lif_else_if_7:
+.Lif_else_if_8:
         movl    $2, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, $20(%rsp)
-.if_else_if_21:
+.Lif_else_if_21:
         movl    $20(%rsp), %r10d
         movl    %r10d, %eax
         ret
-.if_else_if_10:
-.if_else_if_11:
+.Lif_else_if_10:
+.Lif_else_if_11:
         movl    $3, $8(%rsp)
         movl    $8(%rsp), %r10d
         cmpl    %r10d, $0
-        jne     .if_else_if_16
-.if_else_if_13:
-.if_else_if_14:
+        jne     .Lif_else_if_16
+.Lif_else_if_13:
+.Lif_else_if_14:
         movl    $4, $12(%rsp)
         movl    $12(%rsp), %r10d
         movl    %r10d, $20(%rsp)
-        jmp     .if_else_if_21
-.if_else_if_16:
-.if_else_if_17:
+        jmp     .Lif_else_if_21
+.Lif_else_if_16:
+.Lif_else_if_17:
         movl    $5, $16(%rsp)
         movl    $16(%rsp), %r10d
         movl    %r10d, $20(%rsp)
         addq    $24, %rsp
-        jmp     .if_else_if_21
+        jmp     .Lif_else_if_21

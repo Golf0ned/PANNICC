@@ -1,9 +1,9 @@
 first:
-.first_entry:
+.Lfirst_entry:
         movl    $1, %eax
         ret
 second:
-.second_entry:
+.Lsecond_entry:
         call    first
         movl    %eax, %r11d
         movl    %r11d, %r10d
@@ -11,7 +11,7 @@ second:
         movl    %r10d, %eax
         ret
 third:
-.third_entry:
+.Lthird_entry:
         call    second
         movl    %eax, %r11d
         movl    %r11d, %r10d
@@ -19,7 +19,7 @@ third:
         movl    %r10d, %eax
         ret
 fourth:
-.fourth_entry:
+.Lfourth_entry:
         call    third
         movl    %eax, %r11d
         movl    %r11d, %r10d
@@ -27,7 +27,7 @@ fourth:
         movl    %r10d, %eax
         ret
 fifth:
-.fifth_entry:
+.Lfifth_entry:
         call    fourth
         movl    %eax, %r11d
         movl    %r11d, %r10d
@@ -35,7 +35,7 @@ fifth:
         movl    %r10d, %eax
         ret
 sixth:
-.sixth_entry:
+.Lsixth_entry:
         call    fifth
         movl    %eax, %r11d
         movl    %r11d, %r10d
@@ -43,7 +43,7 @@ sixth:
         movl    %r10d, %eax
         ret
 main:
-.main_entry:
+.Lmain_entry:
         call    sixth
         movl    %eax, %r10d
         call    first

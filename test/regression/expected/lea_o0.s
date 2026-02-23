@@ -2,7 +2,7 @@ leaBI:
         subq    $28, %rsp
         movl    %edi, %r11d
         movl    %esi, %r10d
-.leaBI_entry:
+.LleaBI_entry:
         movl    %r11d, $20(%rsp)
         movl    %r10d, $24(%rsp)
         movl    $20(%rsp), %r10d
@@ -18,7 +18,7 @@ leaBI:
         movl    $0, $12(%rsp)
         movl    $12(%rsp), %r10d
         movl    %r10d, $16(%rsp)
-.leaBI_16:
+.LleaBI_16:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
         addq    $28, %rsp
@@ -26,7 +26,7 @@ leaBI:
 leaIS:
         subq    $108, %rsp
         movl    %edi, %r10d
-.leaIS_entry:
+.LleaIS_entry:
         movl    %r10d, $104(%rsp)
         movl    $104(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -111,7 +111,7 @@ leaIS:
         movl    $0, $96(%rsp)
         movl    $96(%rsp), %r10d
         movl    %r10d, $100(%rsp)
-.leaIS_69:
+.LleaIS_69:
         movl    $100(%rsp), %r10d
         movl    %r10d, %eax
         addq    $108, %rsp
@@ -120,7 +120,7 @@ leaBIS:
         subq    $88, %rsp
         movl    %edi, %r11d
         movl    %esi, %r10d
-.leaBIS_entry:
+.LleaBIS_entry:
         movl    %r11d, $84(%rsp)
         movl    %r10d, $88(%rsp)
         movl    $2, $4(%rsp)
@@ -197,7 +197,7 @@ leaBIS:
         movl    $0, $76(%rsp)
         movl    $76(%rsp), %r10d
         movl    %r10d, $80(%rsp)
-.leaBIS_66:
+.LleaBIS_66:
         movl    $80(%rsp), %r10d
         movl    %r10d, %eax
         addq    $88, %rsp
@@ -206,7 +206,7 @@ leaBID:
         subq    $120, %rsp
         movl    %edi, %r11d
         movl    %esi, %r10d
-.leaBID_entry:
+.LleaBID_entry:
         movl    %r11d, $112(%rsp)
         movl    %r10d, $116(%rsp)
         movl    $13, $4(%rsp)
@@ -311,7 +311,7 @@ leaBID:
         movl    $0, $104(%rsp)
         movl    $104(%rsp), %r10d
         movl    %r10d, $108(%rsp)
-.leaBID_94:
+.LleaBID_94:
         movl    $108(%rsp), %r10d
         movl    %r10d, %eax
         addq    $120, %rsp
@@ -319,7 +319,7 @@ leaBID:
 leaIIS:
         subq    $84, %rsp
         movl    %edi, %r10d
-.leaIIS_entry:
+.LleaIIS_entry:
         movl    %r10d, $80(%rsp)
         movl    $80(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -384,7 +384,7 @@ leaIIS:
         movl    $0, $72(%rsp)
         movl    $72(%rsp), %r10d
         movl    %r10d, $76(%rsp)
-.leaIIS_53:
+.LleaIIS_53:
         movl    $76(%rsp), %r10d
         movl    %r10d, %eax
         addq    $84, %rsp
@@ -392,7 +392,7 @@ leaIIS:
 leaISD:
         subq    $92, %rsp
         movl    %edi, %r10d
-.leaISD_entry:
+.LleaISD_entry:
         movl    %r10d, $88(%rsp)
         movl    $4, (%rsp)
         movl    (%rsp), %r10d
@@ -471,7 +471,7 @@ leaISD:
         movl    $0, $80(%rsp)
         movl    $80(%rsp), %r10d
         movl    %r10d, $84(%rsp)
-.leaISD_67:
+.LleaISD_67:
         movl    $84(%rsp), %r10d
         movl    %r10d, %eax
         addq    $92, %rsp
@@ -479,7 +479,7 @@ leaISD:
 leaIISD:
         subq    $84, %rsp
         movl    %edi, %r10d
-.leaIISD_entry:
+.LleaIISD_entry:
         movl    %r10d, $80(%rsp)
         movl    $60, (%rsp)
         movl    (%rsp), %r10d
@@ -551,7 +551,7 @@ leaIISD:
         movl    $0, $72(%rsp)
         movl    $72(%rsp), %r10d
         movl    %r10d, $76(%rsp)
-.leaIISD_60:
+.LleaIISD_60:
         movl    $76(%rsp), %r10d
         movl    %r10d, %eax
         addq    $84, %rsp
@@ -560,7 +560,7 @@ leaBISD:
         subq    $512, %rsp
         movl    %edi, %r11d
         movl    %esi, %r10d
-.leaBISD_entry:
+.LleaBISD_entry:
         movl    %r11d, $504(%rsp)
         movl    %r10d, $508(%rsp)
         movl    $8, $4(%rsp)
@@ -1124,7 +1124,7 @@ leaBISD:
         movl    $0, $496(%rsp)
         movl    $496(%rsp), %r10d
         movl    %r10d, $500(%rsp)
-.leaBISD_469:
+.LleaBISD_469:
         movl    $500(%rsp), %r10d
         movl    %r10d, %eax
         addq    $512, %rsp

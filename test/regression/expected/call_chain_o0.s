@@ -1,17 +1,17 @@
 first:
         subq    $8, %rsp
-.first_entry:
+.Lfirst_entry:
         movl    $1, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $4(%rsp)
-.first_3:
+.Lfirst_3:
         movl    $4(%rsp), %r10d
         movl    %r10d, %eax
         addq    $8, %rsp
         ret
 second:
         subq    $16, %rsp
-.second_entry:
+.Lsecond_entry:
         call    first
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
@@ -22,14 +22,14 @@ second:
         movl    %edi, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $8(%rsp)
-.second_8:
+.Lsecond_8:
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $16, %rsp
         ret
 third:
         subq    $16, %rsp
-.third_entry:
+.Lthird_entry:
         call    second
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
@@ -40,14 +40,14 @@ third:
         movl    %edi, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $8(%rsp)
-.third_8:
+.Lthird_8:
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $16, %rsp
         ret
 fourth:
         subq    $16, %rsp
-.fourth_entry:
+.Lfourth_entry:
         call    third
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
@@ -58,14 +58,14 @@ fourth:
         movl    %edi, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $8(%rsp)
-.fourth_8:
+.Lfourth_8:
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $16, %rsp
         ret
 fifth:
         subq    $16, %rsp
-.fifth_entry:
+.Lfifth_entry:
         call    fourth
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
@@ -76,14 +76,14 @@ fifth:
         movl    %edi, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $8(%rsp)
-.fifth_8:
+.Lfifth_8:
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $16, %rsp
         ret
 sixth:
         subq    $16, %rsp
-.sixth_entry:
+.Lsixth_entry:
         call    fifth
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
@@ -94,14 +94,14 @@ sixth:
         movl    %edi, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $8(%rsp)
-.sixth_8:
+.Lsixth_8:
         movl    $8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $16, %rsp
         ret
 main:
         subq    $96, %rsp
-.main_entry:
+.Lmain_entry:
         call    sixth
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
@@ -224,7 +224,7 @@ main:
         movl    %r10d, $88(%rsp)
         movl    $88(%rsp), %r10d
         movl    %r10d, $92(%rsp)
-.main_90:
+.Lmain_90:
         movl    $92(%rsp), %r10d
         movl    %r10d, %eax
         addq    $96, %rsp

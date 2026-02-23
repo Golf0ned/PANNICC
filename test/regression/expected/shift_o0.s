@@ -1,6 +1,6 @@
 lshift:
         subq    $40, %rsp
-.lshift_entry:
+.Llshift_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -28,14 +28,14 @@ lshift:
         movl    %ecx, $28(%rsp)
         movl    $28(%rsp), %r10d
         movl    %r10d, $36(%rsp)
-.lshift_23:
+.Llshift_23:
         movl    $36(%rsp), %r10d
         movl    %r10d, %eax
         addq    $40, %rsp
         ret
 rshift:
         subq    $40, %rsp
-.rshift_entry:
+.Lrshift_entry:
         movl    $16, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -63,7 +63,7 @@ rshift:
         movl    %ecx, $28(%rsp)
         movl    $28(%rsp), %r10d
         movl    %r10d, $36(%rsp)
-.rshift_23:
+.Lrshift_23:
         movl    $36(%rsp), %r10d
         movl    %r10d, %eax
         addq    $40, %rsp

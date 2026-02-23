@@ -1,6 +1,6 @@
 main:
         subq    $620, %rsp
-.main_entry:
+.Lmain_entry:
         movl    $0, $4(%rsp)
         movl    $4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -793,7 +793,7 @@ main:
         movl    %edi, $552(%rsp)
         movl    $552(%rsp), %r10d
         movl    %r10d, $616(%rsp)
-.main_671:
+.Lmain_671:
         movl    $616(%rsp), %r10d
         movl    %r10d, %eax
         addq    $620, %rsp

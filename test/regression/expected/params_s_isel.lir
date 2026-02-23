@@ -1,16 +1,16 @@
 fun1:  # 1 params, 0 stack bytes
         movl    %edi, %0
-.fun1_entry:
+.Lfun1_entry:
         movl    %0, %1
         imull   %0, %1
-.fun1_2:
+.Lfun1_2:
         movl    %1, %eax
         ret
 
 fun2:  # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.fun2_entry:
+.Lfun2_entry:
         call    fun1  # (%0)
         movl    %eax, %2
         leal    (,%0,2), %3
@@ -20,7 +20,7 @@ fun2:  # 2 params, 0 stack bytes
         call    fun1  # (%1)
         movl    %eax, %6
         leal    (%5,%6), %7
-.fun2_8:
+.Lfun2_8:
         movl    %7, %eax
         ret
 
@@ -29,7 +29,7 @@ fun3:  # 4 params, 0 stack bytes
         movl    %esi, %1
         movl    %edx, %2
         movl    %ecx, %3
-.fun3_entry:
+.Lfun3_entry:
         call    fun1  # (%3)
         movl    %eax, %4
         movl    %0, %5
@@ -38,45 +38,45 @@ fun3:  # 4 params, 0 stack bytes
         imull   %3, %6
         leal    (%5,%6), %7
         leal    (%7,%2), %8
-.fun3_9:
+.Lfun3_9:
         movl    %8, %eax
         ret
 
 call1:  # 0 params, 0 stack bytes
-.call1_entry:
+.Lcall1_entry:
         call    fun1  # ($5)
         movl    %eax, %0
-.call1_1:
+.Lcall1_1:
         movl    %0, %eax
         ret
 
 call2:  # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.call2_entry:
+.Lcall2_entry:
         call    fun2  # (%0, %1)
         movl    %eax, %2
-.call2_3:
+.Lcall2_3:
         movl    %2, %eax
         ret
 
 call3:  # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.call3_entry:
+.Lcall3_entry:
         call    fun3  # (%0, %1, $1, $0)
         movl    %eax, %2
-.call3_3:
+.Lcall3_3:
         movl    %2, %eax
         ret
 
 call4:  # 0 params, 0 stack bytes
-.call4_entry:
+.Lcall4_entry:
         call    fun1  # ($10)
         movl    %eax, %0
         movl    %0, %1
         subl    $100, %1
-.call4_2:
+.Lcall4_2:
         movl    %1, %eax
         ret
 
@@ -89,7 +89,7 @@ super_fun:  # 8 params, 0 stack bytes
         movl    %r9d, %5
         movl    (stack 0), %6
         movl    (stack 1), %7
-.super_fun_entry:
+.Lsuper_fun_entry:
         leal    (%0,%1), %8
         leal    (%8,%2), %9
         leal    (%9,%3), %10
@@ -97,24 +97,24 @@ super_fun:  # 8 params, 0 stack bytes
         leal    (%11,%5), %12
         leal    (%12,%6), %13
         leal    (%13,%7), %14
-.super_fun_15:
+.Lsuper_fun_15:
         movl    %14, %eax
         ret
 
 call_super_fun:  # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.call_super_fun_entry:
+.Lcall_super_fun_entry:
         call    super_fun  # ($1, $2, $3, $4, $5, $6, %0, %1)
         movl    %eax, %2
-.call_super_fun_3:
+.Lcall_super_fun_3:
         movl    %2, %eax
         ret
 
 caller_saved:  # 2 params, 0 stack bytes
         movl    %edi, %0
         movl    %esi, %1
-.caller_saved_entry:
+.Lcaller_saved_entry:
         movl    %0, %2
         addl    $1, %2
         movl    %0, %3
@@ -151,6 +151,6 @@ caller_saved:  # 2 params, 0 stack bytes
         leal    (%22,%12), %23
         leal    (%23,%13), %24
         leal    (%24,%1), %25
-.caller_saved_26:
+.Lcaller_saved_26:
         movl    %25, %eax
         ret

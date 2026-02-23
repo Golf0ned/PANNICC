@@ -1,5 +1,5 @@
 add:  # 0 params, 28 stack bytes
-.add_entry:
+.Ladd_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %7
         movl    %7, (%rsp)
@@ -16,13 +16,13 @@ add:  # 0 params, 28 stack bytes
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
         movl    %14, $24(%rsp)
-.add_15:
+.Ladd_15:
         movl    $24(%rsp), %16
         movl    %16, %eax
         ret
 
 sub:  # 0 params, 28 stack bytes
-.sub_entry:
+.Lsub_entry:
         movl    $10, $4(%rsp)
         movl    $4(%rsp), %7
         movl    %7, (%rsp)
@@ -40,13 +40,13 @@ sub:  # 0 params, 28 stack bytes
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
         movl    %14, $24(%rsp)
-.sub_15:
+.Lsub_15:
         movl    $24(%rsp), %16
         movl    %16, %eax
         ret
 
 mul:  # 0 params, 28 stack bytes
-.mul_entry:
+.Lmul_entry:
         movl    $3, $4(%rsp)
         movl    $4(%rsp), %7
         movl    %7, (%rsp)
@@ -64,13 +64,13 @@ mul:  # 0 params, 28 stack bytes
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
         movl    %14, $24(%rsp)
-.mul_15:
+.Lmul_15:
         movl    $24(%rsp), %16
         movl    %16, %eax
         ret
 
 div:  # 0 params, 28 stack bytes
-.div_entry:
+.Ldiv_entry:
         movl    $24, $4(%rsp)
         movl    $4(%rsp), %7
         movl    %7, (%rsp)
@@ -90,13 +90,13 @@ div:  # 0 params, 28 stack bytes
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
         movl    %14, $24(%rsp)
-.div_15:
+.Ldiv_15:
         movl    $24(%rsp), %16
         movl    %16, %eax
         ret
 
 lshift:  # 0 params, 28 stack bytes
-.lshift_entry:
+.Llshift_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %7
         movl    %7, (%rsp)
@@ -114,13 +114,13 @@ lshift:  # 0 params, 28 stack bytes
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
         movl    %14, $24(%rsp)
-.lshift_15:
+.Llshift_15:
         movl    $24(%rsp), %16
         movl    %16, %eax
         ret
 
 rshift:  # 0 params, 28 stack bytes
-.rshift_entry:
+.Lrshift_entry:
         movl    $16, $4(%rsp)
         movl    $4(%rsp), %7
         movl    %7, (%rsp)
@@ -138,13 +138,13 @@ rshift:  # 0 params, 28 stack bytes
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
         movl    %14, $24(%rsp)
-.rshift_15:
+.Lrshift_15:
         movl    $24(%rsp), %16
         movl    %16, %eax
         ret
 
 bit_and:  # 0 params, 28 stack bytes
-.bit_and_entry:
+.Lbit_and_entry:
         movl    $31, $4(%rsp)
         movl    $4(%rsp), %7
         movl    %7, (%rsp)
@@ -162,13 +162,13 @@ bit_and:  # 0 params, 28 stack bytes
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
         movl    %14, $24(%rsp)
-.bit_and_15:
+.Lbit_and_15:
         movl    $24(%rsp), %16
         movl    %16, %eax
         ret
 
 bit_or:  # 0 params, 28 stack bytes
-.bit_or_entry:
+.Lbit_or_entry:
         movl    $12, $4(%rsp)
         movl    $4(%rsp), %7
         movl    %7, (%rsp)
@@ -186,13 +186,13 @@ bit_or:  # 0 params, 28 stack bytes
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
         movl    %14, $24(%rsp)
-.bit_or_15:
+.Lbit_or_15:
         movl    $24(%rsp), %16
         movl    %16, %eax
         ret
 
 bit_xor:  # 0 params, 28 stack bytes
-.bit_xor_entry:
+.Lbit_xor_entry:
         movl    $15, $4(%rsp)
         movl    $4(%rsp), %7
         movl    %7, (%rsp)
@@ -210,13 +210,13 @@ bit_xor:  # 0 params, 28 stack bytes
         movl    %13, $16(%rsp)
         movl    $16(%rsp), %14
         movl    %14, $24(%rsp)
-.bit_xor_15:
+.Lbit_xor_15:
         movl    $24(%rsp), %16
         movl    %16, %eax
         ret
 
 unary_plus:  # 0 params, 16 stack bytes
-.unary_plus_entry:
+.Lunary_plus_entry:
         movl    $42, $4(%rsp)
         movl    $4(%rsp), %4
         movl    %4, (%rsp)
@@ -226,13 +226,13 @@ unary_plus:  # 0 params, 16 stack bytes
         movl    %6, $8(%rsp)
         movl    $8(%rsp), %7
         movl    %7, $12(%rsp)
-.unary_plus_8:
+.Lunary_plus_8:
         movl    $12(%rsp), %9
         movl    %9, %eax
         ret
 
 unary_minus:  # 0 params, 16 stack bytes
-.unary_minus_entry:
+.Lunary_minus_entry:
         movl    $42, $4(%rsp)
         movl    $4(%rsp), %4
         movl    %4, (%rsp)
@@ -244,13 +244,13 @@ unary_minus:  # 0 params, 16 stack bytes
         movl    %7, $8(%rsp)
         movl    $8(%rsp), %8
         movl    %8, $12(%rsp)
-.unary_minus_9:
+.Lunary_minus_9:
         movl    $12(%rsp), %10
         movl    %10, %eax
         ret
 
 unary_bitwise_not:  # 0 params, 16 stack bytes
-.unary_bitwise_not_entry:
+.Lunary_bitwise_not_entry:
         movl    $42, $4(%rsp)
         movl    $4(%rsp), %4
         movl    %4, (%rsp)
@@ -262,13 +262,13 @@ unary_bitwise_not:  # 0 params, 16 stack bytes
         movl    %7, $8(%rsp)
         movl    $8(%rsp), %8
         movl    %8, $12(%rsp)
-.unary_bitwise_not_9:
+.Lunary_bitwise_not_9:
         movl    $12(%rsp), %10
         movl    %10, %eax
         ret
 
 add_equals:  # 0 params, 20 stack bytes
-.add_equals_entry:
+.Ladd_equals_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %5
         movl    %5, (%rsp)
@@ -281,13 +281,13 @@ add_equals:  # 0 params, 20 stack bytes
         movl    %9, $12(%rsp)
         movl    $12(%rsp), %10
         movl    %10, $16(%rsp)
-.add_equals_11:
+.Ladd_equals_11:
         movl    $16(%rsp), %12
         movl    %12, %eax
         ret
 
 sub_equals:  # 0 params, 20 stack bytes
-.sub_equals_entry:
+.Lsub_equals_entry:
         movl    $10, $4(%rsp)
         movl    $4(%rsp), %5
         movl    %5, (%rsp)
@@ -301,13 +301,13 @@ sub_equals:  # 0 params, 20 stack bytes
         movl    %9, $12(%rsp)
         movl    $12(%rsp), %10
         movl    %10, $16(%rsp)
-.sub_equals_11:
+.Lsub_equals_11:
         movl    $16(%rsp), %12
         movl    %12, %eax
         ret
 
 mul_equals:  # 0 params, 20 stack bytes
-.mul_equals_entry:
+.Lmul_equals_entry:
         movl    $3, $4(%rsp)
         movl    $4(%rsp), %5
         movl    %5, (%rsp)
@@ -321,13 +321,13 @@ mul_equals:  # 0 params, 20 stack bytes
         movl    %9, $12(%rsp)
         movl    $12(%rsp), %10
         movl    %10, $16(%rsp)
-.mul_equals_11:
+.Lmul_equals_11:
         movl    $16(%rsp), %12
         movl    %12, %eax
         ret
 
 div_equals:  # 0 params, 20 stack bytes
-.div_equals_entry:
+.Ldiv_equals_entry:
         movl    $24, $4(%rsp)
         movl    $4(%rsp), %5
         movl    %5, (%rsp)
@@ -343,13 +343,13 @@ div_equals:  # 0 params, 20 stack bytes
         movl    %9, $12(%rsp)
         movl    $12(%rsp), %10
         movl    %10, $16(%rsp)
-.div_equals_11:
+.Ldiv_equals_11:
         movl    $16(%rsp), %12
         movl    %12, %eax
         ret
 
 lshift_equals:  # 0 params, 20 stack bytes
-.lshift_equals_entry:
+.Llshift_equals_entry:
         movl    $1, $4(%rsp)
         movl    $4(%rsp), %5
         movl    %5, (%rsp)
@@ -363,13 +363,13 @@ lshift_equals:  # 0 params, 20 stack bytes
         movl    %9, $12(%rsp)
         movl    $12(%rsp), %10
         movl    %10, $16(%rsp)
-.lshift_equals_11:
+.Llshift_equals_11:
         movl    $16(%rsp), %12
         movl    %12, %eax
         ret
 
 rshift_equals:  # 0 params, 20 stack bytes
-.rshift_equals_entry:
+.Lrshift_equals_entry:
         movl    $16, $4(%rsp)
         movl    $4(%rsp), %5
         movl    %5, (%rsp)
@@ -383,13 +383,13 @@ rshift_equals:  # 0 params, 20 stack bytes
         movl    %9, $12(%rsp)
         movl    $12(%rsp), %10
         movl    %10, $16(%rsp)
-.rshift_equals_11:
+.Lrshift_equals_11:
         movl    $16(%rsp), %12
         movl    %12, %eax
         ret
 
 bit_and_equals:  # 0 params, 20 stack bytes
-.bit_and_equals_entry:
+.Lbit_and_equals_entry:
         movl    $31, $4(%rsp)
         movl    $4(%rsp), %5
         movl    %5, (%rsp)
@@ -403,13 +403,13 @@ bit_and_equals:  # 0 params, 20 stack bytes
         movl    %9, $12(%rsp)
         movl    $12(%rsp), %10
         movl    %10, $16(%rsp)
-.bit_and_equals_11:
+.Lbit_and_equals_11:
         movl    $16(%rsp), %12
         movl    %12, %eax
         ret
 
 bit_or_equals:  # 0 params, 20 stack bytes
-.bit_or_equals_entry:
+.Lbit_or_equals_entry:
         movl    $12, $4(%rsp)
         movl    $4(%rsp), %5
         movl    %5, (%rsp)
@@ -423,13 +423,13 @@ bit_or_equals:  # 0 params, 20 stack bytes
         movl    %9, $12(%rsp)
         movl    $12(%rsp), %10
         movl    %10, $16(%rsp)
-.bit_or_equals_11:
+.Lbit_or_equals_11:
         movl    $16(%rsp), %12
         movl    %12, %eax
         ret
 
 bit_xor_equals:  # 0 params, 20 stack bytes
-.bit_xor_equals_entry:
+.Lbit_xor_equals_entry:
         movl    $15, $4(%rsp)
         movl    $4(%rsp), %5
         movl    %5, (%rsp)
@@ -443,7 +443,7 @@ bit_xor_equals:  # 0 params, 20 stack bytes
         movl    %9, $12(%rsp)
         movl    $12(%rsp), %10
         movl    %10, $16(%rsp)
-.bit_xor_equals_11:
+.Lbit_xor_equals_11:
         movl    $16(%rsp), %12
         movl    %12, %eax
         ret

@@ -1,15 +1,15 @@
 main:
         subq    $4, %rsp
-.main_entry:
+.Lmain_entry:
         movl    $0, (%rsp)
-.main_1:
+.Lmain_1:
         movl    (%rsp), %r10d
         movl    %r10d, %eax
         addq    $4, %rsp
         ret
 compound:
         subq    $76, %rsp
-.compound_entry:
+.Lcompound_entry:
         movl    $9, $4(%rsp)
         movl    $123, $8(%rsp)
         movl    $4(%rsp), %r11d
@@ -91,14 +91,14 @@ compound:
         movl    %edi, $44(%rsp)
         movl    $44(%rsp), %r10d
         movl    %r10d, $72(%rsp)
-.compound_63:
+.Lcompound_63:
         movl    $72(%rsp), %r10d
         movl    %r10d, %eax
         addq    $76, %rsp
         ret
 parens:
         subq    $20, %rsp
-.parens_entry:
+.Lparens_entry:
         movl    $4, (%rsp)
         movl    $3, $4(%rsp)
         movl    $2, $8(%rsp)
@@ -120,7 +120,7 @@ parens:
         movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, $16(%rsp)
-.parens_15:
+.Lparens_15:
         movl    $16(%rsp), %r10d
         movl    %r10d, %eax
         addq    $20, %rsp
