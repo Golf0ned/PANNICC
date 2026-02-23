@@ -1,5 +1,6 @@
 #include <algorithm>
 
+#include "backend/lir/register_num.h"
 #include "backend/passes/legalize.h"
 #include "backend/passes/liveness.h"
 
@@ -204,6 +205,8 @@ namespace backend {
                 }
 
                 // Save/restore registers
+                std::unordered_map<lir::Register *, lir::Address *>
+                    saved_values;
                 for (auto reg : save) {
                     call_stack_bytes -= 8;
 
@@ -214,6 +217,8 @@ namespace backend {
                         lir::Extend::NONE, reg_size, reg_size, reg, stack_slot);
                     instructions.insert(i_iter, std::move(push));
 
+                    saved_values[reg] = stack_slot;
+
                     if (!restore.contains(reg))
                         continue;
 
@@ -223,13 +228,25 @@ namespace backend {
                         instructions.insert(std::next(i_iter), std::move(pop));
                 }
 
-                // Store params
-                // TODO
+                // Store args
+                auto &arg_regs = lir::getArgRegisters();
+                auto &arg_vals = call->getArgs();
+                for (size_t idx = 0; idx < num_params; idx++) {
+                    auto param =
+                        idx < 6 ? om->getRegister(arg_regs[idx])
+                                : static_cast<lir::Operand *>(om->getAddress(
+                                      rsp, nullptr, nullptr,
+                                      om->getImmediate((idx - 6) * 8)));
 
-                // TODO: generate calling convention for calls
-                // - store params in correct registers
-                //   (use mapping from caller-saved registers to stack space)
-                // - [call]
+                    auto val = arg_vals[idx];
+                    auto val_reg = dynamic_cast<lir::Register *>(val);
+                    if (val_reg && saved_values.contains(val_reg))
+                        val = saved_values[val_reg];
+
+                    auto mov = std::make_unique<lir::InstructionMov>(
+                        lir::Extend::NONE, reg_size, reg_size, val, param);
+                    instructions.insert(i_iter, std::move(mov));
+                }
 
                 i_iter = next_iter;
                 i_index++;
@@ -238,7 +255,7 @@ namespace backend {
             //
             // Preserve callee-saved registers
             //
-            auto callee_saved_vector = lir::getCalleeSavedRegisters();
+            auto &callee_saved_vector = lir::getCalleeSavedRegisters();
             auto callee_saved = std::unordered_set(callee_saved_vector.begin(),
                                                    callee_saved_vector.end());
 
