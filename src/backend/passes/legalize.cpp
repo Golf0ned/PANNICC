@@ -232,8 +232,11 @@ namespace backend {
                 auto &arg_regs = lir::getArgRegisters();
                 auto &arg_vals = call->getArgs();
                 for (size_t idx = 0; idx < num_params; idx++) {
+                    // TODO: unhardcode size
+                    constexpr auto size_32 = lir::DataSize::DOUBLEWORD;
                     auto param =
-                        idx < 6 ? om->getRegister(arg_regs[idx])
+                        idx < 6 ? om->getRegister(
+                                      lir::toSized(arg_regs[idx], size_32))
                                 : static_cast<lir::Operand *>(om->getAddress(
                                       rsp, nullptr, nullptr,
                                       om->getImmediate((idx - 6) * 8)));
@@ -244,7 +247,7 @@ namespace backend {
                         val = saved_values[val_reg];
 
                     auto mov = std::make_unique<lir::InstructionMov>(
-                        lir::Extend::NONE, reg_size, reg_size, val, param);
+                        lir::Extend::NONE, size_32, size_32, val, param);
                     instructions.insert(i_iter, std::move(mov));
                 }
 
