@@ -310,10 +310,23 @@ namespace backend::lir_tree {
     void TreeGenVisitor::visit(middleend::mir::TerminatorCondBranch *t) {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
+        // TODO: what the hell are we doing with size
+        auto size = lir::DataSize::DOUBLEWORD;
+
         // TODO: replace with test cond, cond
         auto cond = resolveOperand(t->getCond());
+        auto cond_imm = dynamic_cast<lir::Immediate *>(cond);
+        if (cond_imm) {
+            size = lir::DataSize::QUADWORD;
+            auto cond_tmp = om->getRegister("cond", size);
+            auto mov_cond = std::make_unique<lir::InstructionMov>(
+                lir::Extend::NONE, size, size, cond, cond_tmp);
+            instructions.push_back(std::move(mov_cond));
+            cond = static_cast<lir::Operand *>(cond_tmp);
+        }
+
         auto cmp = std::make_unique<lir::InstructionCmp>(
-            lir::DataSize::DOUBLEWORD, cond, om->getImmediate(0));
+            size, om->getImmediate(0), cond);
         instructions.push_back(std::move(cmp));
 
         auto t_succ = t->getTSuccessor(), f_succ = t->getFSuccessor();
