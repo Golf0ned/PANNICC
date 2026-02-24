@@ -1,20 +1,20 @@
 fun1:  # 1 params, 16 stack bytes
         movl    %edi, %0
 .Lfun1_entry:
-        movl    %0, $12(%rsp)
-        movl    $12(%rsp), %5
+        movl    %0, 12(%rsp)
+        movl    12(%rsp), %5
         movl    %5, (%rsp)
-        movl    $12(%rsp), %6
-        movl    %6, $4(%rsp)
+        movl    12(%rsp), %6
+        movl    %6, 4(%rsp)
         movl    (%rsp), %7
-        movl    $4(%rsp), %8
+        movl    4(%rsp), %8
         movl    %7, %9
         imull   %8, %9
         movl    %9, (%rsp)
         movl    (%rsp), %10
-        movl    %10, $8(%rsp)
+        movl    %10, 8(%rsp)
 .Lfun1_11:
-        movl    $8(%rsp), %12
+        movl    8(%rsp), %12
         movl    %12, %eax
         ret
 
@@ -22,47 +22,47 @@ fun2:  # 2 params, 40 stack bytes
         movl    %edi, %0
         movl    %esi, %1
 .Lfun2_entry:
-        movl    %0, $32(%rsp)
-        movl    %1, $36(%rsp)
-        movl    $32(%rsp), %12
-        movl    %12, $4(%rsp)
-        movl    $4(%rsp), %13
+        movl    %0, 32(%rsp)
+        movl    %1, 36(%rsp)
+        movl    32(%rsp), %12
+        movl    %12, 4(%rsp)
+        movl    4(%rsp), %13
         call    fun1  # (%13)
         movl    %eax, %14
-        movl    %14, $8(%rsp)
-        movl    $2, $12(%rsp)
-        movl    $32(%rsp), %15
-        movl    %15, $12(%rsp)
-        movl    $12(%rsp), %16
-        movl    $12(%rsp), %17
+        movl    %14, 8(%rsp)
+        movl    $2, 12(%rsp)
+        movl    32(%rsp), %15
+        movl    %15, 12(%rsp)
+        movl    12(%rsp), %16
+        movl    12(%rsp), %17
         movl    %16, %18
         imull   %17, %18
-        movl    %18, $12(%rsp)
-        movl    $36(%rsp), %19
-        movl    %19, $16(%rsp)
-        movl    $12(%rsp), %20
-        movl    $16(%rsp), %21
+        movl    %18, 12(%rsp)
+        movl    36(%rsp), %19
+        movl    %19, 16(%rsp)
+        movl    12(%rsp), %20
+        movl    16(%rsp), %21
         movl    %20, %22
         imull   %21, %22
-        movl    %22, $12(%rsp)
-        movl    $8(%rsp), %23
-        movl    $12(%rsp), %24
+        movl    %22, 12(%rsp)
+        movl    8(%rsp), %23
+        movl    12(%rsp), %24
         leal    (%23,%24), %25
-        movl    %25, $8(%rsp)
-        movl    $36(%rsp), %26
-        movl    %26, $20(%rsp)
-        movl    $20(%rsp), %27
+        movl    %25, 8(%rsp)
+        movl    36(%rsp), %26
+        movl    %26, 20(%rsp)
+        movl    20(%rsp), %27
         call    fun1  # (%27)
         movl    %eax, %28
-        movl    %28, $24(%rsp)
-        movl    $8(%rsp), %29
-        movl    $24(%rsp), %30
+        movl    %28, 24(%rsp)
+        movl    8(%rsp), %29
+        movl    24(%rsp), %30
         leal    (%29,%30), %31
-        movl    %31, $8(%rsp)
-        movl    $8(%rsp), %32
-        movl    %32, $28(%rsp)
+        movl    %31, 8(%rsp)
+        movl    8(%rsp), %32
+        movl    %32, 28(%rsp)
 .Lfun2_33:
-        movl    $28(%rsp), %34
+        movl    28(%rsp), %34
         movl    %34, %eax
         ret
 
@@ -72,46 +72,46 @@ fun3:  # 4 params, 44 stack bytes
         movl    %edx, %2
         movl    %ecx, %3
 .Lfun3_entry:
-        movl    %0, $36(%rsp)
-        movl    %1, $32(%rsp)
-        movl    %2, $36(%rsp)
-        movl    %3, $40(%rsp)
-        movl    $36(%rsp), %15
-        movl    %15, $12(%rsp)
-        movl    $40(%rsp), %16
-        movl    %16, $12(%rsp)
-        movl    $12(%rsp), %17
+        movl    %0, 36(%rsp)
+        movl    %1, 32(%rsp)
+        movl    %2, 36(%rsp)
+        movl    %3, 40(%rsp)
+        movl    36(%rsp), %15
+        movl    %15, 12(%rsp)
+        movl    40(%rsp), %16
+        movl    %16, 12(%rsp)
+        movl    12(%rsp), %17
         call    fun1  # (%17)
         movl    %eax, %18
-        movl    %18, $16(%rsp)
-        movl    $12(%rsp), %19
-        movl    $16(%rsp), %20
+        movl    %18, 16(%rsp)
+        movl    12(%rsp), %19
+        movl    16(%rsp), %20
         movl    %19, %21
         imull   %20, %21
-        movl    %21, $12(%rsp)
-        movl    $32(%rsp), %22
-        movl    %22, $20(%rsp)
-        movl    $40(%rsp), %23
-        movl    %23, $24(%rsp)
-        movl    $20(%rsp), %24
-        movl    $24(%rsp), %25
+        movl    %21, 12(%rsp)
+        movl    32(%rsp), %22
+        movl    %22, 20(%rsp)
+        movl    40(%rsp), %23
+        movl    %23, 24(%rsp)
+        movl    20(%rsp), %24
+        movl    24(%rsp), %25
         movl    %24, %26
         imull   %25, %26
-        movl    %26, $20(%rsp)
-        movl    $12(%rsp), %27
-        movl    $20(%rsp), %28
+        movl    %26, 20(%rsp)
+        movl    12(%rsp), %27
+        movl    20(%rsp), %28
         leal    (%27,%28), %29
-        movl    %29, $12(%rsp)
-        movl    $36(%rsp), %30
-        movl    %30, $28(%rsp)
-        movl    $12(%rsp), %31
-        movl    $28(%rsp), %32
+        movl    %29, 12(%rsp)
+        movl    36(%rsp), %30
+        movl    %30, 28(%rsp)
+        movl    12(%rsp), %31
+        movl    28(%rsp), %32
         leal    (%31,%32), %33
-        movl    %33, $12(%rsp)
-        movl    $12(%rsp), %34
-        movl    %34, $32(%rsp)
+        movl    %33, 12(%rsp)
+        movl    12(%rsp), %34
+        movl    %34, 32(%rsp)
 .Lfun3_35:
-        movl    $32(%rsp), %36
+        movl    32(%rsp), %36
         movl    %36, %eax
         ret
 
@@ -123,9 +123,9 @@ call1:  # 0 params, 12 stack bytes
         movl    %eax, %4
         movl    %4, (%rsp)
         movl    (%rsp), %5
-        movl    %5, $4(%rsp)
+        movl    %5, 4(%rsp)
 .Lcall1_6:
-        movl    $4(%rsp), %7
+        movl    4(%rsp), %7
         movl    %7, %eax
         ret
 
@@ -133,21 +133,21 @@ call2:  # 2 params, 24 stack bytes
         movl    %edi, %0
         movl    %esi, %1
 .Lcall2_entry:
-        movl    %0, $16(%rsp)
-        movl    %1, $20(%rsp)
-        movl    $16(%rsp), %8
-        movl    %8, $4(%rsp)
-        movl    $20(%rsp), %9
-        movl    %9, $8(%rsp)
-        movl    $4(%rsp), %10
-        movl    $8(%rsp), %11
+        movl    %0, 16(%rsp)
+        movl    %1, 20(%rsp)
+        movl    16(%rsp), %8
+        movl    %8, 4(%rsp)
+        movl    20(%rsp), %9
+        movl    %9, 8(%rsp)
+        movl    4(%rsp), %10
+        movl    8(%rsp), %11
         call    fun2  # (%10, %11)
         movl    %eax, %12
-        movl    %12, $12(%rsp)
-        movl    $12(%rsp), %13
-        movl    %13, $12(%rsp)
+        movl    %12, 12(%rsp)
+        movl    12(%rsp), %13
+        movl    %13, 12(%rsp)
 .Lcall2_14:
-        movl    $12(%rsp), %15
+        movl    12(%rsp), %15
         movl    %15, %eax
         ret
 
@@ -155,25 +155,25 @@ call3:  # 2 params, 32 stack bytes
         movl    %edi, %0
         movl    %esi, %1
 .Lcall3_entry:
-        movl    %0, $24(%rsp)
-        movl    %1, $28(%rsp)
-        movl    $24(%rsp), %10
-        movl    %10, $4(%rsp)
-        movl    $28(%rsp), %11
-        movl    %11, $8(%rsp)
-        movl    $1, $12(%rsp)
-        movl    $0, $12(%rsp)
-        movl    $4(%rsp), %12
-        movl    $8(%rsp), %13
-        movl    $12(%rsp), %14
-        movl    $12(%rsp), %15
+        movl    %0, 24(%rsp)
+        movl    %1, 28(%rsp)
+        movl    24(%rsp), %10
+        movl    %10, 4(%rsp)
+        movl    28(%rsp), %11
+        movl    %11, 8(%rsp)
+        movl    $1, 12(%rsp)
+        movl    $0, 12(%rsp)
+        movl    4(%rsp), %12
+        movl    8(%rsp), %13
+        movl    12(%rsp), %14
+        movl    12(%rsp), %15
         call    fun3  # (%12, %13, %14, %15)
         movl    %eax, %16
-        movl    %16, $16(%rsp)
-        movl    $16(%rsp), %17
-        movl    %17, $20(%rsp)
+        movl    %16, 16(%rsp)
+        movl    16(%rsp), %17
+        movl    %17, 20(%rsp)
 .Lcall3_18:
-        movl    $20(%rsp), %19
+        movl    20(%rsp), %19
         movl    %19, %eax
         ret
 
@@ -184,16 +184,16 @@ call4:  # 0 params, 16 stack bytes
         call    fun1  # (%4)
         movl    %eax, %5
         movl    %5, (%rsp)
-        movl    $100, $4(%rsp)
+        movl    $100, 4(%rsp)
         movl    (%rsp), %6
-        movl    $4(%rsp), %7
+        movl    4(%rsp), %7
         movl    %6, %8
         subl    %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
-        movl    %9, $8(%rsp)
+        movl    %9, 8(%rsp)
 .Lcall4_10:
-        movl    $8(%rsp), %11
+        movl    8(%rsp), %11
         movl    %11, %eax
         ret
 
@@ -207,62 +207,62 @@ super_fun:  # 8 params, 68 stack bytes
         movl    (stack 0), %6
         movl    (stack 1), %7
 .Lsuper_fun_entry:
-        movl    %0, $36(%rsp)
-        movl    %1, $40(%rsp)
-        movl    %2, $44(%rsp)
-        movl    %3, $48(%rsp)
-        movl    %4, $52(%rsp)
-        movl    %5, $56(%rsp)
-        movl    %6, $60(%rsp)
-        movl    %7, $64(%rsp)
-        movl    $36(%rsp), %25
-        movl    %25, $24(%rsp)
-        movl    $40(%rsp), %26
-        movl    %26, $28(%rsp)
-        movl    $24(%rsp), %27
-        movl    $28(%rsp), %28
+        movl    %0, 36(%rsp)
+        movl    %1, 40(%rsp)
+        movl    %2, 44(%rsp)
+        movl    %3, 48(%rsp)
+        movl    %4, 52(%rsp)
+        movl    %5, 56(%rsp)
+        movl    %6, 60(%rsp)
+        movl    %7, 64(%rsp)
+        movl    36(%rsp), %25
+        movl    %25, 24(%rsp)
+        movl    40(%rsp), %26
+        movl    %26, 28(%rsp)
+        movl    24(%rsp), %27
+        movl    28(%rsp), %28
         leal    (%27,%28), %29
-        movl    %29, $24(%rsp)
-        movl    $44(%rsp), %30
-        movl    %30, $32(%rsp)
-        movl    $24(%rsp), %31
-        movl    $32(%rsp), %32
+        movl    %29, 24(%rsp)
+        movl    44(%rsp), %30
+        movl    %30, 32(%rsp)
+        movl    24(%rsp), %31
+        movl    32(%rsp), %32
         leal    (%31,%32), %33
-        movl    %33, $24(%rsp)
-        movl    $48(%rsp), %34
-        movl    %34, $36(%rsp)
-        movl    $24(%rsp), %35
-        movl    $36(%rsp), %36
+        movl    %33, 24(%rsp)
+        movl    48(%rsp), %34
+        movl    %34, 36(%rsp)
+        movl    24(%rsp), %35
+        movl    36(%rsp), %36
         leal    (%35,%36), %37
-        movl    %37, $24(%rsp)
-        movl    $52(%rsp), %38
-        movl    %38, $32(%rsp)
-        movl    $24(%rsp), %39
-        movl    $32(%rsp), %40
+        movl    %37, 24(%rsp)
+        movl    52(%rsp), %38
+        movl    %38, 32(%rsp)
+        movl    24(%rsp), %39
+        movl    32(%rsp), %40
         leal    (%39,%40), %41
-        movl    %41, $24(%rsp)
-        movl    $56(%rsp), %42
-        movl    %42, $36(%rsp)
-        movl    $24(%rsp), %43
-        movl    $36(%rsp), %44
+        movl    %41, 24(%rsp)
+        movl    56(%rsp), %42
+        movl    %42, 36(%rsp)
+        movl    24(%rsp), %43
+        movl    36(%rsp), %44
         leal    (%43,%44), %45
-        movl    %45, $24(%rsp)
-        movl    $60(%rsp), %46
-        movl    %46, $40(%rsp)
-        movl    $24(%rsp), %47
-        movl    $40(%rsp), %48
+        movl    %45, 24(%rsp)
+        movl    60(%rsp), %46
+        movl    %46, 40(%rsp)
+        movl    24(%rsp), %47
+        movl    40(%rsp), %48
         leal    (%47,%48), %49
-        movl    %49, $24(%rsp)
-        movl    $64(%rsp), %50
-        movl    %50, $28(%rsp)
-        movl    $24(%rsp), %51
-        movl    $28(%rsp), %52
+        movl    %49, 24(%rsp)
+        movl    64(%rsp), %50
+        movl    %50, 28(%rsp)
+        movl    24(%rsp), %51
+        movl    28(%rsp), %52
         leal    (%51,%52), %53
-        movl    %53, $24(%rsp)
-        movl    $24(%rsp), %54
-        movl    %54, $32(%rsp)
+        movl    %53, 24(%rsp)
+        movl    24(%rsp), %54
+        movl    %54, 32(%rsp)
 .Lsuper_fun_55:
-        movl    $32(%rsp), %56
+        movl    32(%rsp), %56
         movl    %56, %eax
         ret
 
@@ -270,33 +270,33 @@ call_super_fun:  # 2 params, 48 stack bytes
         movl    %edi, %0
         movl    %esi, %1
 .Lcall_super_fun_entry:
-        movl    %0, $32(%rsp)
-        movl    %1, $36(%rsp)
-        movl    $1, $4(%rsp)
-        movl    $2, $8(%rsp)
-        movl    $3, $12(%rsp)
-        movl    $4, $12(%rsp)
-        movl    $5, $16(%rsp)
-        movl    $6, $20(%rsp)
-        movl    $32(%rsp), %14
-        movl    %14, $24(%rsp)
-        movl    $36(%rsp), %15
-        movl    %15, $28(%rsp)
-        movl    $4(%rsp), %16
-        movl    $8(%rsp), %17
-        movl    $12(%rsp), %18
-        movl    $12(%rsp), %19
-        movl    $16(%rsp), %20
-        movl    $20(%rsp), %21
-        movl    $24(%rsp), %22
-        movl    $28(%rsp), %23
+        movl    %0, 32(%rsp)
+        movl    %1, 36(%rsp)
+        movl    $1, 4(%rsp)
+        movl    $2, 8(%rsp)
+        movl    $3, 12(%rsp)
+        movl    $4, 12(%rsp)
+        movl    $5, 16(%rsp)
+        movl    $6, 20(%rsp)
+        movl    32(%rsp), %14
+        movl    %14, 24(%rsp)
+        movl    36(%rsp), %15
+        movl    %15, 28(%rsp)
+        movl    4(%rsp), %16
+        movl    8(%rsp), %17
+        movl    12(%rsp), %18
+        movl    12(%rsp), %19
+        movl    16(%rsp), %20
+        movl    20(%rsp), %21
+        movl    24(%rsp), %22
+        movl    28(%rsp), %23
         call    super_fun  # (%16, %17, %18, %19, %20, %21, %22, %23)
         movl    %eax, %24
-        movl    %24, $32(%rsp)
-        movl    $32(%rsp), %25
-        movl    %25, $36(%rsp)
+        movl    %24, 32(%rsp)
+        movl    32(%rsp), %25
+        movl    %25, 36(%rsp)
 .Lcall_super_fun_26:
-        movl    $36(%rsp), %27
+        movl    36(%rsp), %27
         movl    %27, %eax
         ret
 
@@ -304,213 +304,213 @@ caller_saved:  # 2 params, 236 stack bytes
         movl    %edi, %0
         movl    %esi, %1
 .Lcaller_saved_entry:
-        movl    %0, $228(%rsp)
-        movl    %1, $232(%rsp)
-        movl    $228(%rsp), %61
-        movl    %61, $8(%rsp)
-        movl    $1, $12(%rsp)
-        movl    $8(%rsp), %62
-        movl    $12(%rsp), %63
+        movl    %0, 228(%rsp)
+        movl    %1, 232(%rsp)
+        movl    228(%rsp), %61
+        movl    %61, 8(%rsp)
+        movl    $1, 12(%rsp)
+        movl    8(%rsp), %62
+        movl    12(%rsp), %63
         leal    (%62,%63), %64
-        movl    %64, $8(%rsp)
-        movl    $8(%rsp), %65
-        movl    %65, $4(%rsp)
-        movl    $228(%rsp), %66
-        movl    %66, $16(%rsp)
-        movl    $2, $20(%rsp)
-        movl    $16(%rsp), %67
-        movl    $20(%rsp), %68
+        movl    %64, 8(%rsp)
+        movl    8(%rsp), %65
+        movl    %65, 4(%rsp)
+        movl    228(%rsp), %66
+        movl    %66, 16(%rsp)
+        movl    $2, 20(%rsp)
+        movl    16(%rsp), %67
+        movl    20(%rsp), %68
         leal    (%67,%68), %69
-        movl    %69, $16(%rsp)
-        movl    $16(%rsp), %70
-        movl    %70, $12(%rsp)
-        movl    $228(%rsp), %71
-        movl    %71, $28(%rsp)
-        movl    $3, $32(%rsp)
-        movl    $28(%rsp), %72
-        movl    $32(%rsp), %73
+        movl    %69, 16(%rsp)
+        movl    16(%rsp), %70
+        movl    %70, 12(%rsp)
+        movl    228(%rsp), %71
+        movl    %71, 28(%rsp)
+        movl    $3, 32(%rsp)
+        movl    28(%rsp), %72
+        movl    32(%rsp), %73
         leal    (%72,%73), %74
-        movl    %74, $28(%rsp)
-        movl    $28(%rsp), %75
-        movl    %75, $24(%rsp)
-        movl    $228(%rsp), %76
-        movl    %76, $32(%rsp)
-        movl    $4, $36(%rsp)
-        movl    $32(%rsp), %77
-        movl    $36(%rsp), %78
+        movl    %74, 28(%rsp)
+        movl    28(%rsp), %75
+        movl    %75, 24(%rsp)
+        movl    228(%rsp), %76
+        movl    %76, 32(%rsp)
+        movl    $4, 36(%rsp)
+        movl    32(%rsp), %77
+        movl    36(%rsp), %78
         leal    (%77,%78), %79
-        movl    %79, $32(%rsp)
-        movl    $32(%rsp), %80
-        movl    %80, $36(%rsp)
-        movl    $228(%rsp), %81
-        movl    %81, $28(%rsp)
-        movl    $5, $32(%rsp)
-        movl    $28(%rsp), %82
-        movl    $32(%rsp), %83
+        movl    %79, 32(%rsp)
+        movl    32(%rsp), %80
+        movl    %80, 36(%rsp)
+        movl    228(%rsp), %81
+        movl    %81, 28(%rsp)
+        movl    $5, 32(%rsp)
+        movl    28(%rsp), %82
+        movl    32(%rsp), %83
         leal    (%82,%83), %84
-        movl    %84, $28(%rsp)
-        movl    $28(%rsp), %85
-        movl    %85, $40(%rsp)
-        movl    $228(%rsp), %86
-        movl    %86, $40(%rsp)
-        movl    $6, $44(%rsp)
-        movl    $40(%rsp), %87
-        movl    $44(%rsp), %88
+        movl    %84, 28(%rsp)
+        movl    28(%rsp), %85
+        movl    %85, 40(%rsp)
+        movl    228(%rsp), %86
+        movl    %86, 40(%rsp)
+        movl    $6, 44(%rsp)
+        movl    40(%rsp), %87
+        movl    44(%rsp), %88
         leal    (%87,%88), %89
-        movl    %89, $40(%rsp)
-        movl    $40(%rsp), %90
-        movl    %90, $36(%rsp)
-        movl    $228(%rsp), %91
-        movl    %91, $52(%rsp)
-        movl    $7, $56(%rsp)
-        movl    $52(%rsp), %92
-        movl    $56(%rsp), %93
+        movl    %89, 40(%rsp)
+        movl    40(%rsp), %90
+        movl    %90, 36(%rsp)
+        movl    228(%rsp), %91
+        movl    %91, 52(%rsp)
+        movl    $7, 56(%rsp)
+        movl    52(%rsp), %92
+        movl    56(%rsp), %93
         leal    (%92,%93), %94
-        movl    %94, $52(%rsp)
-        movl    $52(%rsp), %95
-        movl    %95, $48(%rsp)
-        movl    $228(%rsp), %96
-        movl    %96, $64(%rsp)
-        movl    $8, $92(%rsp)
-        movl    $64(%rsp), %97
-        movl    $92(%rsp), %98
+        movl    %94, 52(%rsp)
+        movl    52(%rsp), %95
+        movl    %95, 48(%rsp)
+        movl    228(%rsp), %96
+        movl    %96, 64(%rsp)
+        movl    $8, 92(%rsp)
+        movl    64(%rsp), %97
+        movl    92(%rsp), %98
         leal    (%97,%98), %99
-        movl    %99, $64(%rsp)
-        movl    $64(%rsp), %100
-        movl    %100, $60(%rsp)
-        movl    $228(%rsp), %101
-        movl    %101, $100(%rsp)
-        movl    $9, $104(%rsp)
-        movl    $100(%rsp), %102
-        movl    $104(%rsp), %103
+        movl    %99, 64(%rsp)
+        movl    64(%rsp), %100
+        movl    %100, 60(%rsp)
+        movl    228(%rsp), %101
+        movl    %101, 100(%rsp)
+        movl    $9, 104(%rsp)
+        movl    100(%rsp), %102
+        movl    104(%rsp), %103
         leal    (%102,%103), %104
-        movl    %104, $100(%rsp)
-        movl    $100(%rsp), %105
-        movl    %105, $96(%rsp)
-        movl    $228(%rsp), %106
-        movl    %106, $112(%rsp)
-        movl    $10, $116(%rsp)
-        movl    $112(%rsp), %107
-        movl    $116(%rsp), %108
+        movl    %104, 100(%rsp)
+        movl    100(%rsp), %105
+        movl    %105, 96(%rsp)
+        movl    228(%rsp), %106
+        movl    %106, 112(%rsp)
+        movl    $10, 116(%rsp)
+        movl    112(%rsp), %107
+        movl    116(%rsp), %108
         leal    (%107,%108), %109
-        movl    %109, $112(%rsp)
-        movl    $112(%rsp), %110
-        movl    %110, $108(%rsp)
-        movl    $228(%rsp), %111
-        movl    %111, $124(%rsp)
-        movl    $11, $128(%rsp)
-        movl    $124(%rsp), %112
-        movl    $128(%rsp), %113
+        movl    %109, 112(%rsp)
+        movl    112(%rsp), %110
+        movl    %110, 108(%rsp)
+        movl    228(%rsp), %111
+        movl    %111, 124(%rsp)
+        movl    $11, 128(%rsp)
+        movl    124(%rsp), %112
+        movl    128(%rsp), %113
         leal    (%112,%113), %114
-        movl    %114, $124(%rsp)
-        movl    $124(%rsp), %115
-        movl    %115, $120(%rsp)
-        movl    $4(%rsp), %116
-        movl    %116, $136(%rsp)
-        movl    $12(%rsp), %117
-        movl    %117, $140(%rsp)
-        movl    $24(%rsp), %118
-        movl    %118, $144(%rsp)
-        movl    $36(%rsp), %119
-        movl    %119, $148(%rsp)
-        movl    $40(%rsp), %120
-        movl    %120, $152(%rsp)
-        movl    $36(%rsp), %121
-        movl    %121, $156(%rsp)
-        movl    $48(%rsp), %122
-        movl    %122, $160(%rsp)
-        movl    $60(%rsp), %123
-        movl    %123, $164(%rsp)
-        movl    $136(%rsp), %124
-        movl    $140(%rsp), %125
-        movl    $144(%rsp), %126
-        movl    $148(%rsp), %127
-        movl    $152(%rsp), %128
-        movl    $156(%rsp), %129
-        movl    $160(%rsp), %130
-        movl    $164(%rsp), %131
+        movl    %114, 124(%rsp)
+        movl    124(%rsp), %115
+        movl    %115, 120(%rsp)
+        movl    4(%rsp), %116
+        movl    %116, 136(%rsp)
+        movl    12(%rsp), %117
+        movl    %117, 140(%rsp)
+        movl    24(%rsp), %118
+        movl    %118, 144(%rsp)
+        movl    36(%rsp), %119
+        movl    %119, 148(%rsp)
+        movl    40(%rsp), %120
+        movl    %120, 152(%rsp)
+        movl    36(%rsp), %121
+        movl    %121, 156(%rsp)
+        movl    48(%rsp), %122
+        movl    %122, 160(%rsp)
+        movl    60(%rsp), %123
+        movl    %123, 164(%rsp)
+        movl    136(%rsp), %124
+        movl    140(%rsp), %125
+        movl    144(%rsp), %126
+        movl    148(%rsp), %127
+        movl    152(%rsp), %128
+        movl    156(%rsp), %129
+        movl    160(%rsp), %130
+        movl    164(%rsp), %131
         call    super_fun  # (%124, %125, %126, %127, %128, %129, %130, %131)
         movl    %eax, %132
-        movl    %132, $168(%rsp)
-        movl    $168(%rsp), %133
-        movl    %133, $132(%rsp)
-        movl    $4(%rsp), %134
-        movl    %134, $172(%rsp)
-        movl    $12(%rsp), %135
-        movl    %135, $176(%rsp)
-        movl    $172(%rsp), %136
-        movl    $176(%rsp), %137
+        movl    %132, 168(%rsp)
+        movl    168(%rsp), %133
+        movl    %133, 132(%rsp)
+        movl    4(%rsp), %134
+        movl    %134, 172(%rsp)
+        movl    12(%rsp), %135
+        movl    %135, 176(%rsp)
+        movl    172(%rsp), %136
+        movl    176(%rsp), %137
         leal    (%136,%137), %138
-        movl    %138, $172(%rsp)
-        movl    $24(%rsp), %139
-        movl    %139, $180(%rsp)
-        movl    $172(%rsp), %140
-        movl    $180(%rsp), %141
+        movl    %138, 172(%rsp)
+        movl    24(%rsp), %139
+        movl    %139, 180(%rsp)
+        movl    172(%rsp), %140
+        movl    180(%rsp), %141
         leal    (%140,%141), %142
-        movl    %142, $172(%rsp)
-        movl    $36(%rsp), %143
-        movl    %143, $184(%rsp)
-        movl    $172(%rsp), %144
-        movl    $184(%rsp), %145
+        movl    %142, 172(%rsp)
+        movl    36(%rsp), %143
+        movl    %143, 184(%rsp)
+        movl    172(%rsp), %144
+        movl    184(%rsp), %145
         leal    (%144,%145), %146
-        movl    %146, $172(%rsp)
-        movl    $40(%rsp), %147
-        movl    %147, $188(%rsp)
-        movl    $172(%rsp), %148
-        movl    $188(%rsp), %149
+        movl    %146, 172(%rsp)
+        movl    40(%rsp), %147
+        movl    %147, 188(%rsp)
+        movl    172(%rsp), %148
+        movl    188(%rsp), %149
         leal    (%148,%149), %150
-        movl    %150, $172(%rsp)
-        movl    $36(%rsp), %151
-        movl    %151, $192(%rsp)
-        movl    $172(%rsp), %152
-        movl    $192(%rsp), %153
+        movl    %150, 172(%rsp)
+        movl    36(%rsp), %151
+        movl    %151, 192(%rsp)
+        movl    172(%rsp), %152
+        movl    192(%rsp), %153
         leal    (%152,%153), %154
-        movl    %154, $172(%rsp)
-        movl    $48(%rsp), %155
-        movl    %155, $196(%rsp)
-        movl    $172(%rsp), %156
-        movl    $196(%rsp), %157
+        movl    %154, 172(%rsp)
+        movl    48(%rsp), %155
+        movl    %155, 196(%rsp)
+        movl    172(%rsp), %156
+        movl    196(%rsp), %157
         leal    (%156,%157), %158
-        movl    %158, $172(%rsp)
-        movl    $60(%rsp), %159
-        movl    %159, $200(%rsp)
-        movl    $172(%rsp), %160
-        movl    $200(%rsp), %161
+        movl    %158, 172(%rsp)
+        movl    60(%rsp), %159
+        movl    %159, 200(%rsp)
+        movl    172(%rsp), %160
+        movl    200(%rsp), %161
         leal    (%160,%161), %162
-        movl    %162, $172(%rsp)
-        movl    $96(%rsp), %163
-        movl    %163, $204(%rsp)
-        movl    $172(%rsp), %164
-        movl    $204(%rsp), %165
+        movl    %162, 172(%rsp)
+        movl    96(%rsp), %163
+        movl    %163, 204(%rsp)
+        movl    172(%rsp), %164
+        movl    204(%rsp), %165
         leal    (%164,%165), %166
-        movl    %166, $172(%rsp)
-        movl    $108(%rsp), %167
-        movl    %167, $208(%rsp)
-        movl    $172(%rsp), %168
-        movl    $208(%rsp), %169
+        movl    %166, 172(%rsp)
+        movl    108(%rsp), %167
+        movl    %167, 208(%rsp)
+        movl    172(%rsp), %168
+        movl    208(%rsp), %169
         leal    (%168,%169), %170
-        movl    %170, $172(%rsp)
-        movl    $120(%rsp), %171
-        movl    %171, $212(%rsp)
-        movl    $172(%rsp), %172
-        movl    $212(%rsp), %173
+        movl    %170, 172(%rsp)
+        movl    120(%rsp), %171
+        movl    %171, 212(%rsp)
+        movl    172(%rsp), %172
+        movl    212(%rsp), %173
         leal    (%172,%173), %174
-        movl    %174, $172(%rsp)
-        movl    $132(%rsp), %175
-        movl    %175, $216(%rsp)
-        movl    $172(%rsp), %176
-        movl    $216(%rsp), %177
+        movl    %174, 172(%rsp)
+        movl    132(%rsp), %175
+        movl    %175, 216(%rsp)
+        movl    172(%rsp), %176
+        movl    216(%rsp), %177
         leal    (%176,%177), %178
-        movl    %178, $172(%rsp)
-        movl    $232(%rsp), %179
-        movl    %179, $220(%rsp)
-        movl    $172(%rsp), %180
-        movl    $220(%rsp), %181
+        movl    %178, 172(%rsp)
+        movl    232(%rsp), %179
+        movl    %179, 220(%rsp)
+        movl    172(%rsp), %180
+        movl    220(%rsp), %181
         leal    (%180,%181), %182
-        movl    %182, $172(%rsp)
-        movl    $172(%rsp), %183
-        movl    %183, $224(%rsp)
+        movl    %182, 172(%rsp)
+        movl    172(%rsp), %183
+        movl    %183, 224(%rsp)
 .Lcaller_saved_184:
-        movl    $224(%rsp), %185
+        movl    224(%rsp), %185
         movl    %185, %eax
         ret

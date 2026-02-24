@@ -1,10 +1,13 @@
+    .text
+    .globl  main
+    .type   main, @function
 main:
         subq    $48, %rsp
-        movq    %r15, $40(%rsp)
-        movq    %r14, $32(%rsp)
-        movq    %r13, $24(%rsp)
-        movq    %r12, $16(%rsp)
-        movq    %rbp, $8(%rsp)
+        movq    %r15, 40(%rsp)
+        movq    %r14, 32(%rsp)
+        movq    %r13, 24(%rsp)
+        movq    %r12, 16(%rsp)
+        movq    %rbp, 8(%rsp)
         movq    %rbx, (%rsp)
 .Lmain_entry:
         movl    $0, %esi
@@ -119,10 +122,13 @@ main:
 .Lmain_121:
         movl    %r10d, %eax
         movq    (%rsp), %rbx
-        movq    $8(%rsp), %rbp
-        movq    $16(%rsp), %r12
-        movq    $24(%rsp), %r13
-        movq    $32(%rsp), %r14
-        movq    $40(%rsp), %r15
+        movq    8(%rsp), %rbp
+        movq    16(%rsp), %r12
+        movq    24(%rsp), %r13
+        movq    32(%rsp), %r14
+        movq    40(%rsp), %r15
         addq    $48, %rsp
         ret
+.Lmain_end:
+    .section    .note.GNU-stack,"",@progbits
+    .ident  "PANNICC (https://github.com/Golf0ned/PANNICC)"

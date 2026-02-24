@@ -5,7 +5,7 @@ lost_copy_problem:  # 1 params, 0 stack bytes
 .Llost_copy_problem_1:
         movl    %r11d, %r10d
         subl    $10, %r10d
-        cmpl    %r10d, $0
+        cmpl    $0, %r10d
         jne     .Llost_copy_problem_7
 .Llost_copy_problem_4:
 .Llost_copy_problem_5:
@@ -27,7 +27,8 @@ swap_problem:  # 2 params, 0 stack bytes
         movl    %r10d, %r11d
         movl    %edi, %r10d
 .Lswap_problem_2:
-        cmpl    $1, $0
+        movq    $1, %rdi
+        cmpq    $0, %rdi
         jne     .Lswap_problem_7
 .Lswap_problem_5:
 .Lswap_problem_6:

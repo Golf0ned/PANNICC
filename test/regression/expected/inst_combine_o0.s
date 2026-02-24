@@ -1,107 +1,119 @@
+    .text
+    .globl  constant_fold
+    .type   constant_fold, @function
 constant_fold:
         subq    $72, %rsp
 .Lconstant_fold_entry:
-        movl    $1, $4(%rsp)
-        movl    $4(%rsp), %r10d
+        movl    $1, 4(%rsp)
+        movl    4(%rsp), %r10d
         movl    %r10d, (%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $12(%rsp)
-        movl    $13, $16(%rsp)
-        movl    $12(%rsp), %r10d
-        movl    $16(%rsp), %r11d
+        movl    %r10d, 12(%rsp)
+        movl    $13, 16(%rsp)
+        movl    12(%rsp), %r10d
+        movl    16(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $12(%rsp)
-        movl    $12(%rsp), %r10d
-        movl    %r10d, $8(%rsp)
+        movl    %edi, 12(%rsp)
+        movl    12(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $24(%rsp)
+        movl    %r10d, 24(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $28(%rsp)
-        movl    $24(%rsp), %r10d
-        movl    $28(%rsp), %r11d
+        movl    %r10d, 28(%rsp)
+        movl    24(%rsp), %r10d
+        movl    28(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $24(%rsp)
-        movl    $24(%rsp), %r10d
-        movl    %r10d, $20(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $36(%rsp)
-        movl    $20(%rsp), %r10d
-        movl    %r10d, $40(%rsp)
-        movl    $36(%rsp), %r10d
-        movl    $40(%rsp), %edi
+        movl    %edi, 24(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, 20(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 36(%rsp)
+        movl    20(%rsp), %r10d
+        movl    %r10d, 40(%rsp)
+        movl    36(%rsp), %r10d
+        movl    40(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $36(%rsp)
-        movl    $36(%rsp), %r10d
-        movl    %r10d, $32(%rsp)
-        movl    $32(%rsp), %r10d
-        movl    %r10d, $44(%rsp)
-        movl    $32(%rsp), %r10d
-        movl    %r10d, $48(%rsp)
-        movl    $44(%rsp), %r10d
-        movl    $48(%rsp), %r11d
+        movl    %r11d, 36(%rsp)
+        movl    36(%rsp), %r10d
+        movl    %r10d, 32(%rsp)
+        movl    32(%rsp), %r10d
+        movl    %r10d, 44(%rsp)
+        movl    32(%rsp), %r10d
+        movl    %r10d, 48(%rsp)
+        movl    44(%rsp), %r10d
+        movl    48(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $44(%rsp)
-        movl    $44(%rsp), %r10d
-        movl    %r10d, $32(%rsp)
-        movl    $32(%rsp), %r10d
-        movl    %r10d, $56(%rsp)
+        movl    %edi, 44(%rsp)
+        movl    44(%rsp), %r10d
+        movl    %r10d, 32(%rsp)
+        movl    32(%rsp), %r10d
+        movl    %r10d, 56(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $60(%rsp)
-        movl    $56(%rsp), %r10d
-        movl    $60(%rsp), %edi
+        movl    %r10d, 60(%rsp)
+        movl    56(%rsp), %r10d
+        movl    60(%rsp), %edi
         movl    %r10d, %r11d
         subl    %edi, %r11d
-        movl    %r11d, $56(%rsp)
-        movl    $56(%rsp), %r10d
-        movl    %r10d, $52(%rsp)
-        movl    $52(%rsp), %r10d
-        movl    %r10d, $64(%rsp)
-        movl    $64(%rsp), %r10d
-        movl    %r10d, $68(%rsp)
+        movl    %r11d, 56(%rsp)
+        movl    56(%rsp), %r10d
+        movl    %r10d, 52(%rsp)
+        movl    52(%rsp), %r10d
+        movl    %r10d, 64(%rsp)
+        movl    64(%rsp), %r10d
+        movl    %r10d, 68(%rsp)
 .Lconstant_fold_50:
-        movl    $68(%rsp), %r10d
+        movl    68(%rsp), %r10d
         movl    %r10d, %eax
         addq    $72, %rsp
         ret
+.Lconstant_fold_end:
+    .globl  constant_fold_overflow
+    .type   constant_fold_overflow, @function
 constant_fold_overflow:
         subq    $20, %rsp
 .Lconstant_fold_overflow_entry:
-        movl    $2147483647, $4(%rsp)
-        movl    $1, $8(%rsp)
-        movl    $4(%rsp), %r10d
-        movl    $8(%rsp), %r11d
+        movl    $2147483647, 4(%rsp)
+        movl    $1, 8(%rsp)
+        movl    4(%rsp), %r10d
+        movl    8(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $4(%rsp)
-        movl    $4(%rsp), %r10d
+        movl    %edi, 4(%rsp)
+        movl    4(%rsp), %r10d
         movl    %r10d, (%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $12(%rsp)
-        movl    $12(%rsp), %r10d
-        movl    %r10d, $16(%rsp)
+        movl    %r10d, 12(%rsp)
+        movl    12(%rsp), %r10d
+        movl    %r10d, 16(%rsp)
 .Lconstant_fold_overflow_11:
-        movl    $16(%rsp), %r10d
+        movl    16(%rsp), %r10d
         movl    %r10d, %eax
         addq    $20, %rsp
         ret
+.Lconstant_fold_overflow_end:
+    .globl  constant_fold_underflow
+    .type   constant_fold_underflow, @function
 constant_fold_underflow:
         subq    $20, %rsp
 .Lconstant_fold_underflow_entry:
-        movl    $18446744071562067968, $4(%rsp)
-        movl    $1, $8(%rsp)
-        movl    $4(%rsp), %r10d
-        movl    $8(%rsp), %edi
+        movl    $18446744071562067968, 4(%rsp)
+        movl    $1, 8(%rsp)
+        movl    4(%rsp), %r10d
+        movl    8(%rsp), %edi
         movl    %r10d, %r11d
         subl    %edi, %r11d
-        movl    %r11d, $4(%rsp)
-        movl    $4(%rsp), %r10d
+        movl    %r11d, 4(%rsp)
+        movl    4(%rsp), %r10d
         movl    %r10d, (%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $12(%rsp)
-        movl    $12(%rsp), %r10d
-        movl    %r10d, $16(%rsp)
+        movl    %r10d, 12(%rsp)
+        movl    12(%rsp), %r10d
+        movl    %r10d, 16(%rsp)
 .Lconstant_fold_underflow_11:
-        movl    $16(%rsp), %r10d
+        movl    16(%rsp), %r10d
         movl    %r10d, %eax
         addq    $20, %rsp
         ret
+.Lconstant_fold_underflow_end:
+    .section    .note.GNU-stack,"",@progbits
+    .ident  "PANNICC (https://github.com/Golf0ned/PANNICC)"
