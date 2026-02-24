@@ -72,6 +72,7 @@ namespace backend {
         for (size_t i = 0; i < gen.size(); i++) {
             auto &gen_i = gen[i], &kill_i = kill[i], &out_i = out[i];
             for (auto gen_reg : gen_i) {
+                ib.addReg(gen_reg);
                 for (auto prev_gen_reg : gen_i)
                     ib.interfere(prev_gen_reg, gen_reg);
                 for (auto out_reg : out_i)
