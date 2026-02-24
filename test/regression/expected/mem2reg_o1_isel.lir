@@ -13,7 +13,7 @@ mem2reg_branching:  # 1 params, 0 stack bytes
 .Lmem2reg_branching_entry:
         movl    %0, %1
         subl    $42, %1
-        cmpl    %1, $0
+        cmpl    $0, %1
         jne     .Lmem2reg_branching_4
 .Lmem2reg_branching_2:
 .Lmem2reg_branching_3:
@@ -35,7 +35,7 @@ mem2reg_while:  # 0 params, 0 stack bytes
 .Lmem2reg_while_0:
         movl    %1, %3
         subl    $10, %3
-        cmpl    %3, $0
+        cmpl    $0, %3
         jne     .Lmem2reg_while_8
 .Lmem2reg_while_4:
 .Lmem2reg_while_5:

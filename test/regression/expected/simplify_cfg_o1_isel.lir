@@ -1,6 +1,7 @@
 simplify_cfg_delete_orphaned:  # 0 params, 0 stack bytes
 .Lsimplify_cfg_delete_orphaned_entry:
-        cmpl    $1, $0
+        movq    $1, %cond
+        cmpq    $0, %cond
         jne     .Lsimplify_cfg_delete_orphaned_2
 .Lsimplify_cfg_delete_orphaned_0:
 .Lsimplify_cfg_delete_orphaned_1:
@@ -15,11 +16,13 @@ simplify_cfg_delete_orphaned:  # 0 params, 0 stack bytes
 
 simplify_cfg_merge_straight_line:  # 0 params, 0 stack bytes
 .Lsimplify_cfg_merge_straight_line_entry:
-        cmpl    $1, $0
+        movq    $1, %cond
+        cmpq    $0, %cond
         jne     .Lsimplify_cfg_merge_straight_line_4
 .Lsimplify_cfg_merge_straight_line_0:
 .Lsimplify_cfg_merge_straight_line_1:
-        cmpl    $2, $0
+        movq    $2, %cond
+        cmpq    $0, %cond
         jne     .Lsimplify_cfg_merge_straight_line_6
 .Lsimplify_cfg_merge_straight_line_2:
 .Lsimplify_cfg_merge_straight_line_3:
@@ -38,24 +41,28 @@ simplify_cfg_merge_straight_line:  # 0 params, 0 stack bytes
 
 simplify_cfg_delete_empty:  # 0 params, 0 stack bytes
 .Lsimplify_cfg_delete_empty_entry:
-        cmpl    $1, $0
+        movq    $1, %cond
+        cmpq    $0, %cond
         jne     .Lsimplify_cfg_delete_empty_2
 .Lsimplify_cfg_delete_empty_0:
 .Lsimplify_cfg_delete_empty_1:
-        cmpl    $2, $0
+        movq    $2, %cond
+        cmpq    $0, %cond
         jne     .Lsimplify_cfg_delete_empty_4
 .Lsimplify_cfg_delete_empty_4:
         movl    $4, %eax
         ret
 .Lsimplify_cfg_delete_empty_2:
 .Lsimplify_cfg_delete_empty_3:
-        cmpl    $3, $0
+        movq    $3, %cond
+        cmpq    $0, %cond
         je      .Lsimplify_cfg_delete_empty_4
         jmp     .Lsimplify_cfg_delete_empty_4
 
 simplify_cfg_empty_loop:  # 0 params, 0 stack bytes
 .Lsimplify_cfg_empty_loop_entry:
-        cmpl    $0, $0
+        movq    $0, %cond
+        cmpq    $0, %cond
         jne     .Lsimplify_cfg_empty_loop_1
 .Lsimplify_cfg_empty_loop_0:
         jmp     .Lsimplify_cfg_empty_loop_entry

@@ -2,7 +2,8 @@ while_basic:  # 0 params, 0 stack bytes
 .Lwhile_basic_entry:
         movl    $0, %r10d
 .Lwhile_basic_0:
-        cmpl    $1, $0
+        movq    $1, %r11
+        cmpq    $0, %r11
         jne     .Lwhile_basic_5
 .Lwhile_basic_2:
 .Lwhile_basic_3:
@@ -20,7 +21,7 @@ while_complex:  # 0 params, 0 stack bytes
         movl    $0, %r11d
         movl    $100, %r10d
 .Lwhile_complex_0:
-        cmpl    %r10d, $0
+        cmpl    $0, %r10d
         jne     .Lwhile_complex_7
 .Lwhile_complex_3:
 .Lwhile_complex_4:
@@ -38,7 +39,8 @@ while_complex:  # 0 params, 0 stack bytes
 
 while_empty:  # 0 params, 0 stack bytes
 .Lwhile_empty_entry:
-        cmpl    $0, $0
+        movq    $0, %r10
+        cmpq    $0, %r10
         jne     .Lwhile_empty_1
 .Lwhile_empty_0:
         jmp     .Lwhile_empty_entry
@@ -49,11 +51,13 @@ while_empty:  # 0 params, 0 stack bytes
 
 while_if:  # 0 params, 0 stack bytes
 .Lwhile_if_entry:
-        cmpl    $1, $0
+        movq    $1, %r10
+        cmpq    $0, %r10
         jne     .Lwhile_if_5
 .Lwhile_if_0:
 .Lwhile_if_1:
-        cmpl    $200, $0
+        movq    $200, %r10
+        cmpq    $0, %r10
         je      .Lwhile_if_4
 .Lwhile_if_2:
 .Lwhile_if_3:

@@ -1,449 +1,449 @@
 add:  # 0 params, 28 stack bytes
 .Ladd_entry:
-        movl    $1, $4(%rsp)
-        movl    $4(%rsp), %7
+        movl    $1, 4(%rsp)
+        movl    4(%rsp), %7
         movl    %7, (%rsp)
-        movl    $2, $12(%rsp)
-        movl    $12(%rsp), %8
-        movl    %8, $8(%rsp)
+        movl    $2, 12(%rsp)
+        movl    12(%rsp), %8
+        movl    %8, 8(%rsp)
         movl    (%rsp), %9
-        movl    %9, $16(%rsp)
-        movl    $8(%rsp), %10
-        movl    %10, $20(%rsp)
-        movl    $16(%rsp), %11
-        movl    $20(%rsp), %12
+        movl    %9, 16(%rsp)
+        movl    8(%rsp), %10
+        movl    %10, 20(%rsp)
+        movl    16(%rsp), %11
+        movl    20(%rsp), %12
         leal    (%11,%12), %13
-        movl    %13, $16(%rsp)
-        movl    $16(%rsp), %14
-        movl    %14, $24(%rsp)
+        movl    %13, 16(%rsp)
+        movl    16(%rsp), %14
+        movl    %14, 24(%rsp)
 .Ladd_15:
-        movl    $24(%rsp), %16
+        movl    24(%rsp), %16
         movl    %16, %eax
         ret
 
 sub:  # 0 params, 28 stack bytes
 .Lsub_entry:
-        movl    $10, $4(%rsp)
-        movl    $4(%rsp), %7
+        movl    $10, 4(%rsp)
+        movl    4(%rsp), %7
         movl    %7, (%rsp)
-        movl    $1, $12(%rsp)
-        movl    $12(%rsp), %8
-        movl    %8, $8(%rsp)
+        movl    $1, 12(%rsp)
+        movl    12(%rsp), %8
+        movl    %8, 8(%rsp)
         movl    (%rsp), %9
-        movl    %9, $16(%rsp)
-        movl    $8(%rsp), %10
-        movl    %10, $20(%rsp)
-        movl    $16(%rsp), %11
-        movl    $20(%rsp), %12
+        movl    %9, 16(%rsp)
+        movl    8(%rsp), %10
+        movl    %10, 20(%rsp)
+        movl    16(%rsp), %11
+        movl    20(%rsp), %12
         movl    %11, %13
         subl    %12, %13
-        movl    %13, $16(%rsp)
-        movl    $16(%rsp), %14
-        movl    %14, $24(%rsp)
+        movl    %13, 16(%rsp)
+        movl    16(%rsp), %14
+        movl    %14, 24(%rsp)
 .Lsub_15:
-        movl    $24(%rsp), %16
+        movl    24(%rsp), %16
         movl    %16, %eax
         ret
 
 mul:  # 0 params, 28 stack bytes
 .Lmul_entry:
-        movl    $3, $4(%rsp)
-        movl    $4(%rsp), %7
+        movl    $3, 4(%rsp)
+        movl    4(%rsp), %7
         movl    %7, (%rsp)
-        movl    $4, $12(%rsp)
-        movl    $12(%rsp), %8
-        movl    %8, $8(%rsp)
+        movl    $4, 12(%rsp)
+        movl    12(%rsp), %8
+        movl    %8, 8(%rsp)
         movl    (%rsp), %9
-        movl    %9, $16(%rsp)
-        movl    $8(%rsp), %10
-        movl    %10, $20(%rsp)
-        movl    $16(%rsp), %11
-        movl    $20(%rsp), %12
+        movl    %9, 16(%rsp)
+        movl    8(%rsp), %10
+        movl    %10, 20(%rsp)
+        movl    16(%rsp), %11
+        movl    20(%rsp), %12
         movl    %11, %13
         imull   %12, %13
-        movl    %13, $16(%rsp)
-        movl    $16(%rsp), %14
-        movl    %14, $24(%rsp)
+        movl    %13, 16(%rsp)
+        movl    16(%rsp), %14
+        movl    %14, 24(%rsp)
 .Lmul_15:
-        movl    $24(%rsp), %16
+        movl    24(%rsp), %16
         movl    %16, %eax
         ret
 
 div:  # 0 params, 28 stack bytes
 .Ldiv_entry:
-        movl    $24, $4(%rsp)
-        movl    $4(%rsp), %7
+        movl    $24, 4(%rsp)
+        movl    4(%rsp), %7
         movl    %7, (%rsp)
-        movl    $6, $12(%rsp)
-        movl    $12(%rsp), %8
-        movl    %8, $8(%rsp)
+        movl    $6, 12(%rsp)
+        movl    12(%rsp), %8
+        movl    %8, 8(%rsp)
         movl    (%rsp), %9
-        movl    %9, $16(%rsp)
-        movl    $8(%rsp), %10
-        movl    %10, $20(%rsp)
-        movl    $16(%rsp), %11
-        movl    $20(%rsp), %12
+        movl    %9, 16(%rsp)
+        movl    8(%rsp), %10
+        movl    %10, 20(%rsp)
+        movl    16(%rsp), %11
+        movl    20(%rsp), %12
         movl    %11, %eax
         cltd
         idivl   %12
         movl    %eax, %13
-        movl    %13, $16(%rsp)
-        movl    $16(%rsp), %14
-        movl    %14, $24(%rsp)
+        movl    %13, 16(%rsp)
+        movl    16(%rsp), %14
+        movl    %14, 24(%rsp)
 .Ldiv_15:
-        movl    $24(%rsp), %16
+        movl    24(%rsp), %16
         movl    %16, %eax
         ret
 
 lshift:  # 0 params, 28 stack bytes
 .Llshift_entry:
-        movl    $1, $4(%rsp)
-        movl    $4(%rsp), %7
+        movl    $1, 4(%rsp)
+        movl    4(%rsp), %7
         movl    %7, (%rsp)
-        movl    $4, $12(%rsp)
-        movl    $12(%rsp), %8
-        movl    %8, $8(%rsp)
+        movl    $4, 12(%rsp)
+        movl    12(%rsp), %8
+        movl    %8, 8(%rsp)
         movl    (%rsp), %9
-        movl    %9, $16(%rsp)
-        movl    $8(%rsp), %10
-        movl    %10, $20(%rsp)
-        movl    $16(%rsp), %11
-        movl    $20(%rsp), %12
+        movl    %9, 16(%rsp)
+        movl    8(%rsp), %10
+        movl    %10, 20(%rsp)
+        movl    16(%rsp), %11
+        movl    20(%rsp), %12
         movl    %11, %13
         shll    %12, [%13 -> %ecx]
-        movl    %13, $16(%rsp)
-        movl    $16(%rsp), %14
-        movl    %14, $24(%rsp)
+        movl    %13, 16(%rsp)
+        movl    16(%rsp), %14
+        movl    %14, 24(%rsp)
 .Llshift_15:
-        movl    $24(%rsp), %16
+        movl    24(%rsp), %16
         movl    %16, %eax
         ret
 
 rshift:  # 0 params, 28 stack bytes
 .Lrshift_entry:
-        movl    $16, $4(%rsp)
-        movl    $4(%rsp), %7
+        movl    $16, 4(%rsp)
+        movl    4(%rsp), %7
         movl    %7, (%rsp)
-        movl    $3, $12(%rsp)
-        movl    $12(%rsp), %8
-        movl    %8, $8(%rsp)
+        movl    $3, 12(%rsp)
+        movl    12(%rsp), %8
+        movl    %8, 8(%rsp)
         movl    (%rsp), %9
-        movl    %9, $16(%rsp)
-        movl    $8(%rsp), %10
-        movl    %10, $20(%rsp)
-        movl    $16(%rsp), %11
-        movl    $20(%rsp), %12
+        movl    %9, 16(%rsp)
+        movl    8(%rsp), %10
+        movl    %10, 20(%rsp)
+        movl    16(%rsp), %11
+        movl    20(%rsp), %12
         movl    %11, %13
         sarl    %12, [%13 -> %ecx]
-        movl    %13, $16(%rsp)
-        movl    $16(%rsp), %14
-        movl    %14, $24(%rsp)
+        movl    %13, 16(%rsp)
+        movl    16(%rsp), %14
+        movl    %14, 24(%rsp)
 .Lrshift_15:
-        movl    $24(%rsp), %16
+        movl    24(%rsp), %16
         movl    %16, %eax
         ret
 
 bit_and:  # 0 params, 28 stack bytes
 .Lbit_and_entry:
-        movl    $31, $4(%rsp)
-        movl    $4(%rsp), %7
+        movl    $31, 4(%rsp)
+        movl    4(%rsp), %7
         movl    %7, (%rsp)
-        movl    $4, $12(%rsp)
-        movl    $12(%rsp), %8
-        movl    %8, $8(%rsp)
+        movl    $4, 12(%rsp)
+        movl    12(%rsp), %8
+        movl    %8, 8(%rsp)
         movl    (%rsp), %9
-        movl    %9, $16(%rsp)
-        movl    $8(%rsp), %10
-        movl    %10, $20(%rsp)
-        movl    $16(%rsp), %11
-        movl    $20(%rsp), %12
+        movl    %9, 16(%rsp)
+        movl    8(%rsp), %10
+        movl    %10, 20(%rsp)
+        movl    16(%rsp), %11
+        movl    20(%rsp), %12
         movl    %11, %13
         andl    %12, %13
-        movl    %13, $16(%rsp)
-        movl    $16(%rsp), %14
-        movl    %14, $24(%rsp)
+        movl    %13, 16(%rsp)
+        movl    16(%rsp), %14
+        movl    %14, 24(%rsp)
 .Lbit_and_15:
-        movl    $24(%rsp), %16
+        movl    24(%rsp), %16
         movl    %16, %eax
         ret
 
 bit_or:  # 0 params, 28 stack bytes
 .Lbit_or_entry:
-        movl    $12, $4(%rsp)
-        movl    $4(%rsp), %7
+        movl    $12, 4(%rsp)
+        movl    4(%rsp), %7
         movl    %7, (%rsp)
-        movl    $3, $12(%rsp)
-        movl    $12(%rsp), %8
-        movl    %8, $8(%rsp)
+        movl    $3, 12(%rsp)
+        movl    12(%rsp), %8
+        movl    %8, 8(%rsp)
         movl    (%rsp), %9
-        movl    %9, $16(%rsp)
-        movl    $8(%rsp), %10
-        movl    %10, $20(%rsp)
-        movl    $16(%rsp), %11
-        movl    $20(%rsp), %12
+        movl    %9, 16(%rsp)
+        movl    8(%rsp), %10
+        movl    %10, 20(%rsp)
+        movl    16(%rsp), %11
+        movl    20(%rsp), %12
         movl    %11, %13
         orl     %12, %13
-        movl    %13, $16(%rsp)
-        movl    $16(%rsp), %14
-        movl    %14, $24(%rsp)
+        movl    %13, 16(%rsp)
+        movl    16(%rsp), %14
+        movl    %14, 24(%rsp)
 .Lbit_or_15:
-        movl    $24(%rsp), %16
+        movl    24(%rsp), %16
         movl    %16, %eax
         ret
 
 bit_xor:  # 0 params, 28 stack bytes
 .Lbit_xor_entry:
-        movl    $15, $4(%rsp)
-        movl    $4(%rsp), %7
+        movl    $15, 4(%rsp)
+        movl    4(%rsp), %7
         movl    %7, (%rsp)
-        movl    $4, $12(%rsp)
-        movl    $12(%rsp), %8
-        movl    %8, $8(%rsp)
+        movl    $4, 12(%rsp)
+        movl    12(%rsp), %8
+        movl    %8, 8(%rsp)
         movl    (%rsp), %9
-        movl    %9, $16(%rsp)
-        movl    $8(%rsp), %10
-        movl    %10, $20(%rsp)
-        movl    $16(%rsp), %11
-        movl    $20(%rsp), %12
+        movl    %9, 16(%rsp)
+        movl    8(%rsp), %10
+        movl    %10, 20(%rsp)
+        movl    16(%rsp), %11
+        movl    20(%rsp), %12
         movl    %11, %13
         xorl    %12, %13
-        movl    %13, $16(%rsp)
-        movl    $16(%rsp), %14
-        movl    %14, $24(%rsp)
+        movl    %13, 16(%rsp)
+        movl    16(%rsp), %14
+        movl    %14, 24(%rsp)
 .Lbit_xor_15:
-        movl    $24(%rsp), %16
+        movl    24(%rsp), %16
         movl    %16, %eax
         ret
 
 unary_plus:  # 0 params, 16 stack bytes
 .Lunary_plus_entry:
-        movl    $42, $4(%rsp)
-        movl    $4(%rsp), %4
+        movl    $42, 4(%rsp)
+        movl    4(%rsp), %4
         movl    %4, (%rsp)
         movl    (%rsp), %5
-        movl    %5, $8(%rsp)
-        movl    $8(%rsp), %6
-        movl    %6, $8(%rsp)
-        movl    $8(%rsp), %7
-        movl    %7, $12(%rsp)
+        movl    %5, 8(%rsp)
+        movl    8(%rsp), %6
+        movl    %6, 8(%rsp)
+        movl    8(%rsp), %7
+        movl    %7, 12(%rsp)
 .Lunary_plus_8:
-        movl    $12(%rsp), %9
+        movl    12(%rsp), %9
         movl    %9, %eax
         ret
 
 unary_minus:  # 0 params, 16 stack bytes
 .Lunary_minus_entry:
-        movl    $42, $4(%rsp)
-        movl    $4(%rsp), %4
+        movl    $42, 4(%rsp)
+        movl    4(%rsp), %4
         movl    %4, (%rsp)
         movl    (%rsp), %5
-        movl    %5, $8(%rsp)
-        movl    $8(%rsp), %6
+        movl    %5, 8(%rsp)
+        movl    8(%rsp), %6
         movl    $0, %7
         subl    %6, %7
-        movl    %7, $8(%rsp)
-        movl    $8(%rsp), %8
-        movl    %8, $12(%rsp)
+        movl    %7, 8(%rsp)
+        movl    8(%rsp), %8
+        movl    %8, 12(%rsp)
 .Lunary_minus_9:
-        movl    $12(%rsp), %10
+        movl    12(%rsp), %10
         movl    %10, %eax
         ret
 
 unary_bitwise_not:  # 0 params, 16 stack bytes
 .Lunary_bitwise_not_entry:
-        movl    $42, $4(%rsp)
-        movl    $4(%rsp), %4
+        movl    $42, 4(%rsp)
+        movl    4(%rsp), %4
         movl    %4, (%rsp)
         movl    (%rsp), %5
-        movl    %5, $8(%rsp)
-        movl    $8(%rsp), %6
+        movl    %5, 8(%rsp)
+        movl    8(%rsp), %6
         movl    %6, %7
         xorl    $18446744073709551615, %7
-        movl    %7, $8(%rsp)
-        movl    $8(%rsp), %8
-        movl    %8, $12(%rsp)
+        movl    %7, 8(%rsp)
+        movl    8(%rsp), %8
+        movl    %8, 12(%rsp)
 .Lunary_bitwise_not_9:
-        movl    $12(%rsp), %10
+        movl    12(%rsp), %10
         movl    %10, %eax
         ret
 
 add_equals:  # 0 params, 20 stack bytes
 .Ladd_equals_entry:
-        movl    $1, $4(%rsp)
-        movl    $4(%rsp), %5
+        movl    $1, 4(%rsp)
+        movl    4(%rsp), %5
         movl    %5, (%rsp)
-        movl    $2, $8(%rsp)
+        movl    $2, 8(%rsp)
         movl    (%rsp), %6
-        movl    $8(%rsp), %7
+        movl    8(%rsp), %7
         leal    (%6,%7), %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
-        movl    %9, $12(%rsp)
-        movl    $12(%rsp), %10
-        movl    %10, $16(%rsp)
+        movl    %9, 12(%rsp)
+        movl    12(%rsp), %10
+        movl    %10, 16(%rsp)
 .Ladd_equals_11:
-        movl    $16(%rsp), %12
+        movl    16(%rsp), %12
         movl    %12, %eax
         ret
 
 sub_equals:  # 0 params, 20 stack bytes
 .Lsub_equals_entry:
-        movl    $10, $4(%rsp)
-        movl    $4(%rsp), %5
+        movl    $10, 4(%rsp)
+        movl    4(%rsp), %5
         movl    %5, (%rsp)
-        movl    $2, $8(%rsp)
+        movl    $2, 8(%rsp)
         movl    (%rsp), %6
-        movl    $8(%rsp), %7
+        movl    8(%rsp), %7
         movl    %6, %8
         subl    %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
-        movl    %9, $12(%rsp)
-        movl    $12(%rsp), %10
-        movl    %10, $16(%rsp)
+        movl    %9, 12(%rsp)
+        movl    12(%rsp), %10
+        movl    %10, 16(%rsp)
 .Lsub_equals_11:
-        movl    $16(%rsp), %12
+        movl    16(%rsp), %12
         movl    %12, %eax
         ret
 
 mul_equals:  # 0 params, 20 stack bytes
 .Lmul_equals_entry:
-        movl    $3, $4(%rsp)
-        movl    $4(%rsp), %5
+        movl    $3, 4(%rsp)
+        movl    4(%rsp), %5
         movl    %5, (%rsp)
-        movl    $4, $8(%rsp)
+        movl    $4, 8(%rsp)
         movl    (%rsp), %6
-        movl    $8(%rsp), %7
+        movl    8(%rsp), %7
         movl    %6, %8
         imull   %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
-        movl    %9, $12(%rsp)
-        movl    $12(%rsp), %10
-        movl    %10, $16(%rsp)
+        movl    %9, 12(%rsp)
+        movl    12(%rsp), %10
+        movl    %10, 16(%rsp)
 .Lmul_equals_11:
-        movl    $16(%rsp), %12
+        movl    16(%rsp), %12
         movl    %12, %eax
         ret
 
 div_equals:  # 0 params, 20 stack bytes
 .Ldiv_equals_entry:
-        movl    $24, $4(%rsp)
-        movl    $4(%rsp), %5
+        movl    $24, 4(%rsp)
+        movl    4(%rsp), %5
         movl    %5, (%rsp)
-        movl    $6, $8(%rsp)
+        movl    $6, 8(%rsp)
         movl    (%rsp), %6
-        movl    $8(%rsp), %7
+        movl    8(%rsp), %7
         movl    %6, %eax
         cltd
         idivl   %7
         movl    %eax, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
-        movl    %9, $12(%rsp)
-        movl    $12(%rsp), %10
-        movl    %10, $16(%rsp)
+        movl    %9, 12(%rsp)
+        movl    12(%rsp), %10
+        movl    %10, 16(%rsp)
 .Ldiv_equals_11:
-        movl    $16(%rsp), %12
+        movl    16(%rsp), %12
         movl    %12, %eax
         ret
 
 lshift_equals:  # 0 params, 20 stack bytes
 .Llshift_equals_entry:
-        movl    $1, $4(%rsp)
-        movl    $4(%rsp), %5
+        movl    $1, 4(%rsp)
+        movl    4(%rsp), %5
         movl    %5, (%rsp)
-        movl    $4, $8(%rsp)
+        movl    $4, 8(%rsp)
         movl    (%rsp), %6
-        movl    $8(%rsp), %7
+        movl    8(%rsp), %7
         movl    %6, %8
         shll    %7, [%8 -> %ecx]
         movl    %8, (%rsp)
         movl    (%rsp), %9
-        movl    %9, $12(%rsp)
-        movl    $12(%rsp), %10
-        movl    %10, $16(%rsp)
+        movl    %9, 12(%rsp)
+        movl    12(%rsp), %10
+        movl    %10, 16(%rsp)
 .Llshift_equals_11:
-        movl    $16(%rsp), %12
+        movl    16(%rsp), %12
         movl    %12, %eax
         ret
 
 rshift_equals:  # 0 params, 20 stack bytes
 .Lrshift_equals_entry:
-        movl    $16, $4(%rsp)
-        movl    $4(%rsp), %5
+        movl    $16, 4(%rsp)
+        movl    4(%rsp), %5
         movl    %5, (%rsp)
-        movl    $3, $8(%rsp)
+        movl    $3, 8(%rsp)
         movl    (%rsp), %6
-        movl    $8(%rsp), %7
+        movl    8(%rsp), %7
         movl    %6, %8
         sarl    %7, [%8 -> %ecx]
         movl    %8, (%rsp)
         movl    (%rsp), %9
-        movl    %9, $12(%rsp)
-        movl    $12(%rsp), %10
-        movl    %10, $16(%rsp)
+        movl    %9, 12(%rsp)
+        movl    12(%rsp), %10
+        movl    %10, 16(%rsp)
 .Lrshift_equals_11:
-        movl    $16(%rsp), %12
+        movl    16(%rsp), %12
         movl    %12, %eax
         ret
 
 bit_and_equals:  # 0 params, 20 stack bytes
 .Lbit_and_equals_entry:
-        movl    $31, $4(%rsp)
-        movl    $4(%rsp), %5
+        movl    $31, 4(%rsp)
+        movl    4(%rsp), %5
         movl    %5, (%rsp)
-        movl    $4, $8(%rsp)
+        movl    $4, 8(%rsp)
         movl    (%rsp), %6
-        movl    $8(%rsp), %7
+        movl    8(%rsp), %7
         movl    %6, %8
         andl    %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
-        movl    %9, $12(%rsp)
-        movl    $12(%rsp), %10
-        movl    %10, $16(%rsp)
+        movl    %9, 12(%rsp)
+        movl    12(%rsp), %10
+        movl    %10, 16(%rsp)
 .Lbit_and_equals_11:
-        movl    $16(%rsp), %12
+        movl    16(%rsp), %12
         movl    %12, %eax
         ret
 
 bit_or_equals:  # 0 params, 20 stack bytes
 .Lbit_or_equals_entry:
-        movl    $12, $4(%rsp)
-        movl    $4(%rsp), %5
+        movl    $12, 4(%rsp)
+        movl    4(%rsp), %5
         movl    %5, (%rsp)
-        movl    $3, $8(%rsp)
+        movl    $3, 8(%rsp)
         movl    (%rsp), %6
-        movl    $8(%rsp), %7
+        movl    8(%rsp), %7
         movl    %6, %8
         orl     %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
-        movl    %9, $12(%rsp)
-        movl    $12(%rsp), %10
-        movl    %10, $16(%rsp)
+        movl    %9, 12(%rsp)
+        movl    12(%rsp), %10
+        movl    %10, 16(%rsp)
 .Lbit_or_equals_11:
-        movl    $16(%rsp), %12
+        movl    16(%rsp), %12
         movl    %12, %eax
         ret
 
 bit_xor_equals:  # 0 params, 20 stack bytes
 .Lbit_xor_equals_entry:
-        movl    $15, $4(%rsp)
-        movl    $4(%rsp), %5
+        movl    $15, 4(%rsp)
+        movl    4(%rsp), %5
         movl    %5, (%rsp)
-        movl    $4, $8(%rsp)
+        movl    $4, 8(%rsp)
         movl    (%rsp), %6
-        movl    $8(%rsp), %7
+        movl    8(%rsp), %7
         movl    %6, %8
         xorl    %7, %8
         movl    %8, (%rsp)
         movl    (%rsp), %9
-        movl    %9, $12(%rsp)
-        movl    $12(%rsp), %10
-        movl    %10, $16(%rsp)
+        movl    %9, 12(%rsp)
+        movl    12(%rsp), %10
+        movl    %10, 16(%rsp)
 .Lbit_xor_equals_11:
-        movl    $16(%rsp), %12
+        movl    16(%rsp), %12
         movl    %12, %eax
         ret

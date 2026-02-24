@@ -1,80 +1,80 @@
 while_basic:  # 0 params, 28 stack bytes
 .Lwhile_basic_entry:
-        movl    $0, $4(%rsp)
-        movl    $4(%rsp), %7
+        movl    $0, 4(%rsp)
+        movl    4(%rsp), %7
         movl    %7, (%rsp)
 .Lwhile_basic_8:
-        movl    $1, $8(%rsp)
-        movl    $8(%rsp), %9
-        cmpl    %9, $0
+        movl    $1, 8(%rsp)
+        movl    8(%rsp), %9
+        cmpl    $0, %9
         jne     .Lwhile_basic_17
 .Lwhile_basic_10:
 .Lwhile_basic_11:
         movl    (%rsp), %12
-        movl    %12, $12(%rsp)
-        movl    $2, $16(%rsp)
-        movl    $12(%rsp), %13
-        movl    $16(%rsp), %14
+        movl    %12, 12(%rsp)
+        movl    $2, 16(%rsp)
+        movl    12(%rsp), %13
+        movl    16(%rsp), %14
         leal    (%13,%14), %15
-        movl    %15, $12(%rsp)
-        movl    $12(%rsp), %16
+        movl    %15, 12(%rsp)
+        movl    12(%rsp), %16
         movl    %16, (%rsp)
         jmp     .Lwhile_basic_8
 .Lwhile_basic_17:
 .Lwhile_basic_18:
         movl    (%rsp), %19
-        movl    %19, $20(%rsp)
-        movl    $20(%rsp), %20
-        movl    %20, $24(%rsp)
+        movl    %19, 20(%rsp)
+        movl    20(%rsp), %20
+        movl    %20, 24(%rsp)
 .Lwhile_basic_21:
-        movl    $24(%rsp), %22
+        movl    24(%rsp), %22
         movl    %22, %eax
         ret
 
 while_complex:  # 0 params, 44 stack bytes
 .Lwhile_complex_entry:
-        movl    $0, $4(%rsp)
-        movl    $4(%rsp), %11
+        movl    $0, 4(%rsp)
+        movl    4(%rsp), %11
         movl    %11, (%rsp)
-        movl    $100, $12(%rsp)
-        movl    $12(%rsp), %12
-        movl    %12, $8(%rsp)
+        movl    $100, 12(%rsp)
+        movl    12(%rsp), %12
+        movl    %12, 8(%rsp)
 .Lwhile_complex_13:
-        movl    $8(%rsp), %14
-        movl    %14, $16(%rsp)
-        movl    $16(%rsp), %15
-        cmpl    %15, $0
+        movl    8(%rsp), %14
+        movl    %14, 16(%rsp)
+        movl    16(%rsp), %15
+        cmpl    $0, %15
         jne     .Lwhile_complex_28
 .Lwhile_complex_16:
 .Lwhile_complex_17:
         movl    (%rsp), %18
-        movl    %18, $20(%rsp)
-        movl    $5, $24(%rsp)
-        movl    $20(%rsp), %19
-        movl    $24(%rsp), %20
+        movl    %18, 20(%rsp)
+        movl    $5, 24(%rsp)
+        movl    20(%rsp), %19
+        movl    24(%rsp), %20
         leal    (%19,%20), %21
-        movl    %21, $20(%rsp)
-        movl    $20(%rsp), %22
+        movl    %21, 20(%rsp)
+        movl    20(%rsp), %22
         movl    %22, (%rsp)
-        movl    $8(%rsp), %23
-        movl    %23, $28(%rsp)
-        movl    $1, $32(%rsp)
-        movl    $28(%rsp), %24
-        movl    $32(%rsp), %25
+        movl    8(%rsp), %23
+        movl    %23, 28(%rsp)
+        movl    $1, 32(%rsp)
+        movl    28(%rsp), %24
+        movl    32(%rsp), %25
         movl    %24, %26
         subl    %25, %26
-        movl    %26, $28(%rsp)
-        movl    $28(%rsp), %27
-        movl    %27, $8(%rsp)
+        movl    %26, 28(%rsp)
+        movl    28(%rsp), %27
+        movl    %27, 8(%rsp)
         jmp     .Lwhile_complex_13
 .Lwhile_complex_28:
 .Lwhile_complex_29:
         movl    (%rsp), %30
-        movl    %30, $36(%rsp)
-        movl    $36(%rsp), %31
-        movl    %31, $40(%rsp)
+        movl    %30, 36(%rsp)
+        movl    36(%rsp), %31
+        movl    %31, 40(%rsp)
 .Lwhile_complex_32:
-        movl    $40(%rsp), %33
+        movl    40(%rsp), %33
         movl    %33, %eax
         ret
 
@@ -83,37 +83,37 @@ while_empty:  # 0 params, 12 stack bytes
 .Lwhile_empty_3:
         movl    $0, (%rsp)
         movl    (%rsp), %4
-        cmpl    %4, $0
+        cmpl    $0, %4
         jne     .Lwhile_empty_7
 .Lwhile_empty_5:
 .Lwhile_empty_6:
         jmp     .Lwhile_empty_3
 .Lwhile_empty_7:
 .Lwhile_empty_8:
-        movl    $0, $4(%rsp)
-        movl    $4(%rsp), %9
-        movl    %9, $8(%rsp)
+        movl    $0, 4(%rsp)
+        movl    4(%rsp), %9
+        movl    %9, 8(%rsp)
 .Lwhile_empty_10:
-        movl    $8(%rsp), %11
+        movl    8(%rsp), %11
         movl    %11, %eax
         ret
 
 while_if:  # 0 params, 28 stack bytes
 .Lwhile_if_entry:
-        movl    $200, $4(%rsp)
-        movl    $4(%rsp), %7
+        movl    $200, 4(%rsp)
+        movl    4(%rsp), %7
         movl    %7, (%rsp)
 .Lwhile_if_8:
-        movl    $1, $8(%rsp)
-        movl    $8(%rsp), %9
-        cmpl    %9, $0
+        movl    $1, 8(%rsp)
+        movl    8(%rsp), %9
+        cmpl    $0, %9
         jne     .Lwhile_if_20
 .Lwhile_if_10:
 .Lwhile_if_11:
         movl    (%rsp), %12
-        movl    %12, $12(%rsp)
-        movl    $12(%rsp), %13
-        cmpl    %13, $0
+        movl    %12, 12(%rsp)
+        movl    12(%rsp), %13
+        cmpl    $0, %13
         jne     .Lwhile_if_16
 .Lwhile_if_14:
 .Lwhile_if_15:
@@ -121,16 +121,16 @@ while_if:  # 0 params, 28 stack bytes
         jmp     .Lwhile_if_8
 .Lwhile_if_20:
 .Lwhile_if_21:
-        movl    $0, $20(%rsp)
-        movl    $20(%rsp), %22
-        movl    %22, $24(%rsp)
+        movl    $0, 20(%rsp)
+        movl    20(%rsp), %22
+        movl    %22, 24(%rsp)
 .Lwhile_if_23:
-        movl    $24(%rsp), %24
+        movl    24(%rsp), %24
         movl    %24, %eax
         ret
 .Lwhile_if_16:
 .Lwhile_if_17:
-        movl    $500, $16(%rsp)
-        movl    $16(%rsp), %18
-        movl    %18, $24(%rsp)
+        movl    $500, 16(%rsp)
+        movl    16(%rsp), %18
+        movl    %18, 24(%rsp)
         jmp     .Lwhile_if_23

@@ -2,115 +2,115 @@ leaBI:  # 2 params, 28 stack bytes
         movl    %edi, %r11d
         movl    %esi, %r10d
 .LleaBI_entry:
-        movl    %r11d, $20(%rsp)
-        movl    %r10d, $24(%rsp)
-        movl    $20(%rsp), %r10d
-        movl    %r10d, $4(%rsp)
-        movl    $24(%rsp), %r10d
-        movl    %r10d, $8(%rsp)
-        movl    $4(%rsp), %r10d
-        movl    $8(%rsp), %r11d
+        movl    %r11d, 20(%rsp)
+        movl    %r10d, 24(%rsp)
+        movl    20(%rsp), %r10d
+        movl    %r10d, 4(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+        movl    4(%rsp), %r10d
+        movl    8(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $4(%rsp)
-        movl    $4(%rsp), %r10d
+        movl    %edi, 4(%rsp)
+        movl    4(%rsp), %r10d
         movl    %r10d, (%rsp)
-        movl    $0, $12(%rsp)
-        movl    $12(%rsp), %r10d
-        movl    %r10d, $16(%rsp)
+        movl    $0, 12(%rsp)
+        movl    12(%rsp), %r10d
+        movl    %r10d, 16(%rsp)
 .LleaBI_16:
-        movl    $16(%rsp), %r10d
+        movl    16(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 leaIS:  # 1 params, 108 stack bytes
         movl    %edi, %r10d
 .LleaIS_entry:
-        movl    %r10d, $104(%rsp)
-        movl    $104(%rsp), %r10d
+        movl    %r10d, 104(%rsp)
+        movl    104(%rsp), %r10d
         movl    %r10d, (%rsp)
-        movl    $1, $4(%rsp)
+        movl    $1, 4(%rsp)
         movl    (%rsp), %r10d
-        movl    $4(%rsp), %edi
+        movl    4(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
         movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, (%rsp)
-        movl    $104(%rsp), %r10d
-        movl    %r10d, $12(%rsp)
-        movl    $2, $16(%rsp)
-        movl    $12(%rsp), %r10d
-        movl    $16(%rsp), %edi
+        movl    104(%rsp), %r10d
+        movl    %r10d, 12(%rsp)
+        movl    $2, 16(%rsp)
+        movl    12(%rsp), %r10d
+        movl    16(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $12(%rsp)
-        movl    $12(%rsp), %r10d
-        movl    %r10d, $8(%rsp)
-        movl    $104(%rsp), %r10d
-        movl    %r10d, $24(%rsp)
-        movl    $4, $32(%rsp)
-        movl    $24(%rsp), %r10d
-        movl    $32(%rsp), %edi
+        movl    %r11d, 12(%rsp)
+        movl    12(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+        movl    104(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    $4, 32(%rsp)
+        movl    24(%rsp), %r10d
+        movl    32(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $24(%rsp)
-        movl    $24(%rsp), %r10d
-        movl    %r10d, $20(%rsp)
-        movl    $104(%rsp), %r10d
-        movl    %r10d, $40(%rsp)
-        movl    $8, $44(%rsp)
-        movl    $40(%rsp), %r10d
-        movl    $44(%rsp), %edi
+        movl    %r11d, 24(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, 20(%rsp)
+        movl    104(%rsp), %r10d
+        movl    %r10d, 40(%rsp)
+        movl    $8, 44(%rsp)
+        movl    40(%rsp), %r10d
+        movl    44(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $40(%rsp)
-        movl    $40(%rsp), %r10d
-        movl    %r10d, $36(%rsp)
-        movl    $1, $52(%rsp)
-        movl    $104(%rsp), %r10d
-        movl    %r10d, $56(%rsp)
-        movl    $52(%rsp), %r10d
-        movl    $56(%rsp), %edi
+        movl    %r11d, 40(%rsp)
+        movl    40(%rsp), %r10d
+        movl    %r10d, 36(%rsp)
+        movl    $1, 52(%rsp)
+        movl    104(%rsp), %r10d
+        movl    %r10d, 56(%rsp)
+        movl    52(%rsp), %r10d
+        movl    56(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $52(%rsp)
-        movl    $52(%rsp), %r10d
-        movl    %r10d, $48(%rsp)
-        movl    $2, $64(%rsp)
-        movl    $104(%rsp), %r10d
-        movl    %r10d, $68(%rsp)
-        movl    $64(%rsp), %r10d
-        movl    $68(%rsp), %edi
+        movl    %r11d, 52(%rsp)
+        movl    52(%rsp), %r10d
+        movl    %r10d, 48(%rsp)
+        movl    $2, 64(%rsp)
+        movl    104(%rsp), %r10d
+        movl    %r10d, 68(%rsp)
+        movl    64(%rsp), %r10d
+        movl    68(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $64(%rsp)
-        movl    $64(%rsp), %r10d
-        movl    %r10d, $60(%rsp)
-        movl    $4, $76(%rsp)
-        movl    $104(%rsp), %r10d
-        movl    %r10d, $80(%rsp)
-        movl    $76(%rsp), %r10d
-        movl    $80(%rsp), %edi
+        movl    %r11d, 64(%rsp)
+        movl    64(%rsp), %r10d
+        movl    %r10d, 60(%rsp)
+        movl    $4, 76(%rsp)
+        movl    104(%rsp), %r10d
+        movl    %r10d, 80(%rsp)
+        movl    76(%rsp), %r10d
+        movl    80(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $76(%rsp)
-        movl    $76(%rsp), %r10d
-        movl    %r10d, $72(%rsp)
-        movl    $8, $88(%rsp)
-        movl    $104(%rsp), %r10d
-        movl    %r10d, $92(%rsp)
-        movl    $88(%rsp), %r10d
-        movl    $92(%rsp), %edi
+        movl    %r11d, 76(%rsp)
+        movl    76(%rsp), %r10d
+        movl    %r10d, 72(%rsp)
+        movl    $8, 88(%rsp)
+        movl    104(%rsp), %r10d
+        movl    %r10d, 92(%rsp)
+        movl    88(%rsp), %r10d
+        movl    92(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $88(%rsp)
-        movl    $88(%rsp), %r10d
-        movl    %r10d, $84(%rsp)
-        movl    $0, $96(%rsp)
-        movl    $96(%rsp), %r10d
-        movl    %r10d, $100(%rsp)
+        movl    %r11d, 88(%rsp)
+        movl    88(%rsp), %r10d
+        movl    %r10d, 84(%rsp)
+        movl    $0, 96(%rsp)
+        movl    96(%rsp), %r10d
+        movl    %r10d, 100(%rsp)
 .LleaIS_69:
-        movl    $100(%rsp), %r10d
+        movl    100(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
@@ -118,84 +118,84 @@ leaBIS:  # 2 params, 88 stack bytes
         movl    %edi, %r11d
         movl    %esi, %r10d
 .LleaBIS_entry:
-        movl    %r11d, $84(%rsp)
-        movl    %r10d, $88(%rsp)
-        movl    $2, $4(%rsp)
-        movl    $4(%rsp), %r10d
+        movl    %r11d, 84(%rsp)
+        movl    %r10d, 88(%rsp)
+        movl    $2, 4(%rsp)
+        movl    4(%rsp), %r10d
         movl    %r10d, (%rsp)
-        movl    $84(%rsp), %r10d
-        movl    %r10d, $12(%rsp)
-        movl    $88(%rsp), %r10d
-        movl    %r10d, $16(%rsp)
+        movl    84(%rsp), %r10d
+        movl    %r10d, 12(%rsp)
+        movl    88(%rsp), %r10d
+        movl    %r10d, 16(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $20(%rsp)
-        movl    $16(%rsp), %r11d
-        movl    $20(%rsp), %edi
+        movl    %r10d, 20(%rsp)
+        movl    16(%rsp), %r11d
+        movl    20(%rsp), %edi
         movl    %r11d, %r10d
         imull   %edi, %r10d
-        movl    %r10d, $16(%rsp)
-        movl    $12(%rsp), %r10d
-        movl    $16(%rsp), %r11d
+        movl    %r10d, 16(%rsp)
+        movl    12(%rsp), %r10d
+        movl    16(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $12(%rsp)
-        movl    $12(%rsp), %r10d
-        movl    %r10d, $8(%rsp)
-        movl    $84(%rsp), %r10d
-        movl    %r10d, $32(%rsp)
+        movl    %edi, 12(%rsp)
+        movl    12(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+        movl    84(%rsp), %r10d
+        movl    %r10d, 32(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $36(%rsp)
-        movl    $88(%rsp), %r10d
-        movl    %r10d, $40(%rsp)
-        movl    $36(%rsp), %r10d
-        movl    $40(%rsp), %edi
+        movl    %r10d, 36(%rsp)
+        movl    88(%rsp), %r10d
+        movl    %r10d, 40(%rsp)
+        movl    36(%rsp), %r10d
+        movl    40(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $36(%rsp)
-        movl    $32(%rsp), %r10d
-        movl    $36(%rsp), %r11d
+        movl    %r11d, 36(%rsp)
+        movl    32(%rsp), %r10d
+        movl    36(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $32(%rsp)
-        movl    $32(%rsp), %r10d
-        movl    %r10d, $24(%rsp)
-        movl    $88(%rsp), %r10d
-        movl    %r10d, $48(%rsp)
+        movl    %edi, 32(%rsp)
+        movl    32(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    88(%rsp), %r10d
+        movl    %r10d, 48(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $52(%rsp)
-        movl    $48(%rsp), %r10d
-        movl    $52(%rsp), %edi
+        movl    %r10d, 52(%rsp)
+        movl    48(%rsp), %r10d
+        movl    52(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $48(%rsp)
-        movl    $84(%rsp), %r10d
-        movl    %r10d, $56(%rsp)
-        movl    $48(%rsp), %r10d
-        movl    $56(%rsp), %r11d
+        movl    %r11d, 48(%rsp)
+        movl    84(%rsp), %r10d
+        movl    %r10d, 56(%rsp)
+        movl    48(%rsp), %r10d
+        movl    56(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $48(%rsp)
-        movl    $48(%rsp), %r10d
-        movl    %r10d, $44(%rsp)
+        movl    %edi, 48(%rsp)
+        movl    48(%rsp), %r10d
+        movl    %r10d, 44(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $64(%rsp)
-        movl    $88(%rsp), %r10d
-        movl    %r10d, $68(%rsp)
-        movl    $64(%rsp), %r10d
-        movl    $68(%rsp), %edi
+        movl    %r10d, 64(%rsp)
+        movl    88(%rsp), %r10d
+        movl    %r10d, 68(%rsp)
+        movl    64(%rsp), %r10d
+        movl    68(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $64(%rsp)
-        movl    $84(%rsp), %r10d
-        movl    %r10d, $72(%rsp)
-        movl    $64(%rsp), %r10d
-        movl    $72(%rsp), %r11d
+        movl    %r11d, 64(%rsp)
+        movl    84(%rsp), %r10d
+        movl    %r10d, 72(%rsp)
+        movl    64(%rsp), %r10d
+        movl    72(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $64(%rsp)
-        movl    $64(%rsp), %r10d
-        movl    %r10d, $60(%rsp)
-        movl    $0, $76(%rsp)
-        movl    $76(%rsp), %r10d
-        movl    %r10d, $80(%rsp)
+        movl    %edi, 64(%rsp)
+        movl    64(%rsp), %r10d
+        movl    %r10d, 60(%rsp)
+        movl    $0, 76(%rsp)
+        movl    76(%rsp), %r10d
+        movl    %r10d, 80(%rsp)
 .LleaBIS_66:
-        movl    $80(%rsp), %r10d
+        movl    80(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
@@ -203,349 +203,349 @@ leaBID:  # 2 params, 120 stack bytes
         movl    %edi, %r11d
         movl    %esi, %r10d
 .LleaBID_entry:
-        movl    %r11d, $112(%rsp)
-        movl    %r10d, $116(%rsp)
-        movl    $13, $4(%rsp)
-        movl    $4(%rsp), %r10d
+        movl    %r11d, 112(%rsp)
+        movl    %r10d, 116(%rsp)
+        movl    $13, 4(%rsp)
+        movl    4(%rsp), %r10d
         movl    %r10d, (%rsp)
-        movl    $112(%rsp), %r10d
-        movl    %r10d, $12(%rsp)
-        movl    $116(%rsp), %r10d
-        movl    %r10d, $16(%rsp)
-        movl    $12(%rsp), %r11d
-        movl    $16(%rsp), %r10d
+        movl    112(%rsp), %r10d
+        movl    %r10d, 12(%rsp)
+        movl    116(%rsp), %r10d
+        movl    %r10d, 16(%rsp)
+        movl    12(%rsp), %r11d
+        movl    16(%rsp), %r10d
         leal    (%r11d,%r10d), %edi
-        movl    %edi, $12(%rsp)
+        movl    %edi, 12(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $20(%rsp)
-        movl    $12(%rsp), %r11d
-        movl    $20(%rsp), %r10d
+        movl    %r10d, 20(%rsp)
+        movl    12(%rsp), %r11d
+        movl    20(%rsp), %r10d
         leal    (%r11d,%r10d), %edi
-        movl    %edi, $12(%rsp)
-        movl    $12(%rsp), %r10d
-        movl    %r10d, $8(%rsp)
-        movl    $112(%rsp), %r10d
-        movl    %r10d, $32(%rsp)
+        movl    %edi, 12(%rsp)
+        movl    12(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+        movl    112(%rsp), %r10d
+        movl    %r10d, 32(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $36(%rsp)
-        movl    $32(%rsp), %r10d
-        movl    $36(%rsp), %r11d
+        movl    %r10d, 36(%rsp)
+        movl    32(%rsp), %r10d
+        movl    36(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $32(%rsp)
-        movl    $116(%rsp), %r10d
-        movl    %r10d, $40(%rsp)
-        movl    $32(%rsp), %r10d
-        movl    $40(%rsp), %r11d
+        movl    %edi, 32(%rsp)
+        movl    116(%rsp), %r10d
+        movl    %r10d, 40(%rsp)
+        movl    32(%rsp), %r10d
+        movl    40(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $32(%rsp)
-        movl    $32(%rsp), %r10d
-        movl    %r10d, $24(%rsp)
+        movl    %edi, 32(%rsp)
+        movl    32(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $48(%rsp)
-        movl    $112(%rsp), %r10d
-        movl    %r10d, $52(%rsp)
-        movl    $48(%rsp), %r10d
-        movl    $52(%rsp), %r11d
+        movl    %r10d, 48(%rsp)
+        movl    112(%rsp), %r10d
+        movl    %r10d, 52(%rsp)
+        movl    48(%rsp), %r10d
+        movl    52(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $48(%rsp)
-        movl    $116(%rsp), %r10d
-        movl    %r10d, $56(%rsp)
-        movl    $48(%rsp), %r10d
-        movl    $56(%rsp), %r11d
+        movl    %edi, 48(%rsp)
+        movl    116(%rsp), %r10d
+        movl    %r10d, 56(%rsp)
+        movl    48(%rsp), %r10d
+        movl    56(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $48(%rsp)
-        movl    $48(%rsp), %r10d
-        movl    %r10d, $44(%rsp)
-        movl    $112(%rsp), %r10d
-        movl    %r10d, $64(%rsp)
-        movl    $116(%rsp), %r10d
-        movl    %r10d, $68(%rsp)
+        movl    %edi, 48(%rsp)
+        movl    48(%rsp), %r10d
+        movl    %r10d, 44(%rsp)
+        movl    112(%rsp), %r10d
+        movl    %r10d, 64(%rsp)
+        movl    116(%rsp), %r10d
+        movl    %r10d, 68(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $72(%rsp)
-        movl    $68(%rsp), %r10d
-        movl    $72(%rsp), %r11d
+        movl    %r10d, 72(%rsp)
+        movl    68(%rsp), %r10d
+        movl    72(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $68(%rsp)
-        movl    $64(%rsp), %r11d
-        movl    $68(%rsp), %r10d
+        movl    %edi, 68(%rsp)
+        movl    64(%rsp), %r11d
+        movl    68(%rsp), %r10d
         leal    (%r11d,%r10d), %edi
-        movl    %edi, $64(%rsp)
-        movl    $64(%rsp), %r10d
-        movl    %r10d, $60(%rsp)
-        movl    $112(%rsp), %r10d
-        movl    %r10d, $80(%rsp)
+        movl    %edi, 64(%rsp)
+        movl    64(%rsp), %r10d
+        movl    %r10d, 60(%rsp)
+        movl    112(%rsp), %r10d
+        movl    %r10d, 80(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $84(%rsp)
-        movl    $116(%rsp), %r10d
-        movl    %r10d, $88(%rsp)
-        movl    $84(%rsp), %r10d
-        movl    $88(%rsp), %r11d
+        movl    %r10d, 84(%rsp)
+        movl    116(%rsp), %r10d
+        movl    %r10d, 88(%rsp)
+        movl    84(%rsp), %r10d
+        movl    88(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $84(%rsp)
-        movl    $80(%rsp), %r10d
-        movl    $84(%rsp), %r11d
+        movl    %edi, 84(%rsp)
+        movl    80(%rsp), %r10d
+        movl    84(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $80(%rsp)
-        movl    $80(%rsp), %r10d
-        movl    %r10d, $76(%rsp)
+        movl    %edi, 80(%rsp)
+        movl    80(%rsp), %r10d
+        movl    %r10d, 76(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $96(%rsp)
-        movl    $112(%rsp), %r10d
-        movl    %r10d, $100(%rsp)
-        movl    $116(%rsp), %r10d
-        movl    %r10d, $104(%rsp)
-        movl    $100(%rsp), %r10d
-        movl    $104(%rsp), %r11d
+        movl    %r10d, 96(%rsp)
+        movl    112(%rsp), %r10d
+        movl    %r10d, 100(%rsp)
+        movl    116(%rsp), %r10d
+        movl    %r10d, 104(%rsp)
+        movl    100(%rsp), %r10d
+        movl    104(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $100(%rsp)
-        movl    $96(%rsp), %r10d
-        movl    $100(%rsp), %r11d
+        movl    %edi, 100(%rsp)
+        movl    96(%rsp), %r10d
+        movl    100(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $96(%rsp)
-        movl    $96(%rsp), %r10d
-        movl    %r10d, $92(%rsp)
-        movl    $0, $104(%rsp)
-        movl    $104(%rsp), %r10d
-        movl    %r10d, $108(%rsp)
+        movl    %edi, 96(%rsp)
+        movl    96(%rsp), %r10d
+        movl    %r10d, 92(%rsp)
+        movl    $0, 104(%rsp)
+        movl    104(%rsp), %r10d
+        movl    %r10d, 108(%rsp)
 .LleaBID_94:
-        movl    $108(%rsp), %r10d
+        movl    108(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 leaIIS:  # 1 params, 84 stack bytes
         movl    %edi, %r10d
 .LleaIIS_entry:
-        movl    %r10d, $80(%rsp)
-        movl    $80(%rsp), %r10d
+        movl    %r10d, 80(%rsp)
+        movl    80(%rsp), %r10d
         movl    %r10d, (%rsp)
-        movl    $3, $4(%rsp)
+        movl    $3, 4(%rsp)
         movl    (%rsp), %r10d
-        movl    $4(%rsp), %edi
+        movl    4(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
         movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, (%rsp)
-        movl    $80(%rsp), %r10d
-        movl    %r10d, $12(%rsp)
-        movl    $5, $16(%rsp)
-        movl    $12(%rsp), %r10d
-        movl    $16(%rsp), %edi
+        movl    80(%rsp), %r10d
+        movl    %r10d, 12(%rsp)
+        movl    $5, 16(%rsp)
+        movl    12(%rsp), %r10d
+        movl    16(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $12(%rsp)
-        movl    $12(%rsp), %r10d
-        movl    %r10d, $8(%rsp)
-        movl    $80(%rsp), %r10d
-        movl    %r10d, $24(%rsp)
-        movl    $9, $32(%rsp)
-        movl    $24(%rsp), %r10d
-        movl    $32(%rsp), %edi
+        movl    %r11d, 12(%rsp)
+        movl    12(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+        movl    80(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    $9, 32(%rsp)
+        movl    24(%rsp), %r10d
+        movl    32(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $24(%rsp)
-        movl    $24(%rsp), %r10d
-        movl    %r10d, $20(%rsp)
-        movl    $3, $40(%rsp)
-        movl    $80(%rsp), %r10d
-        movl    %r10d, $44(%rsp)
-        movl    $40(%rsp), %r10d
-        movl    $44(%rsp), %edi
+        movl    %r11d, 24(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, 20(%rsp)
+        movl    $3, 40(%rsp)
+        movl    80(%rsp), %r10d
+        movl    %r10d, 44(%rsp)
+        movl    40(%rsp), %r10d
+        movl    44(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $40(%rsp)
-        movl    $40(%rsp), %r10d
-        movl    %r10d, $36(%rsp)
-        movl    $5, $52(%rsp)
-        movl    $80(%rsp), %r10d
-        movl    %r10d, $56(%rsp)
-        movl    $52(%rsp), %r10d
-        movl    $56(%rsp), %edi
+        movl    %r11d, 40(%rsp)
+        movl    40(%rsp), %r10d
+        movl    %r10d, 36(%rsp)
+        movl    $5, 52(%rsp)
+        movl    80(%rsp), %r10d
+        movl    %r10d, 56(%rsp)
+        movl    52(%rsp), %r10d
+        movl    56(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $52(%rsp)
-        movl    $52(%rsp), %r10d
-        movl    %r10d, $48(%rsp)
-        movl    $9, $64(%rsp)
-        movl    $80(%rsp), %r10d
-        movl    %r10d, $68(%rsp)
-        movl    $64(%rsp), %r10d
-        movl    $68(%rsp), %edi
+        movl    %r11d, 52(%rsp)
+        movl    52(%rsp), %r10d
+        movl    %r10d, 48(%rsp)
+        movl    $9, 64(%rsp)
+        movl    80(%rsp), %r10d
+        movl    %r10d, 68(%rsp)
+        movl    64(%rsp), %r10d
+        movl    68(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $64(%rsp)
-        movl    $64(%rsp), %r10d
-        movl    %r10d, $60(%rsp)
-        movl    $0, $72(%rsp)
-        movl    $72(%rsp), %r10d
-        movl    %r10d, $76(%rsp)
+        movl    %r11d, 64(%rsp)
+        movl    64(%rsp), %r10d
+        movl    %r10d, 60(%rsp)
+        movl    $0, 72(%rsp)
+        movl    72(%rsp), %r10d
+        movl    %r10d, 76(%rsp)
 .LleaIIS_53:
-        movl    $76(%rsp), %r10d
+        movl    76(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 leaISD:  # 1 params, 92 stack bytes
         movl    %edi, %r10d
 .LleaISD_entry:
-        movl    %r10d, $88(%rsp)
+        movl    %r10d, 88(%rsp)
         movl    $4, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, (%rsp)
-        movl    $60, $8(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $4(%rsp)
-        movl    $88(%rsp), %r10d
-        movl    %r10d, $16(%rsp)
+        movl    $60, 8(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 4(%rsp)
+        movl    88(%rsp), %r10d
+        movl    %r10d, 16(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $20(%rsp)
-        movl    $16(%rsp), %r11d
-        movl    $20(%rsp), %edi
+        movl    %r10d, 20(%rsp)
+        movl    16(%rsp), %r11d
+        movl    20(%rsp), %edi
         movl    %r11d, %r10d
         imull   %edi, %r10d
-        movl    %r10d, $16(%rsp)
-        movl    $4(%rsp), %r10d
-        movl    %r10d, $24(%rsp)
-        movl    $16(%rsp), %r10d
-        movl    $24(%rsp), %r11d
+        movl    %r10d, 16(%rsp)
+        movl    4(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    16(%rsp), %r10d
+        movl    24(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $16(%rsp)
-        movl    $16(%rsp), %r10d
-        movl    %r10d, $12(%rsp)
+        movl    %edi, 16(%rsp)
+        movl    16(%rsp), %r10d
+        movl    %r10d, 12(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $36(%rsp)
-        movl    $88(%rsp), %r10d
-        movl    %r10d, $40(%rsp)
-        movl    $36(%rsp), %r10d
-        movl    $40(%rsp), %edi
+        movl    %r10d, 36(%rsp)
+        movl    88(%rsp), %r10d
+        movl    %r10d, 40(%rsp)
+        movl    36(%rsp), %r10d
+        movl    40(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $36(%rsp)
-        movl    $4(%rsp), %r10d
-        movl    %r10d, $44(%rsp)
-        movl    $36(%rsp), %r10d
-        movl    $44(%rsp), %r11d
+        movl    %r11d, 36(%rsp)
+        movl    4(%rsp), %r10d
+        movl    %r10d, 44(%rsp)
+        movl    36(%rsp), %r10d
+        movl    44(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $36(%rsp)
-        movl    $36(%rsp), %r10d
-        movl    %r10d, $32(%rsp)
-        movl    $4(%rsp), %r10d
-        movl    %r10d, $52(%rsp)
-        movl    $88(%rsp), %r10d
-        movl    %r10d, $56(%rsp)
+        movl    %edi, 36(%rsp)
+        movl    36(%rsp), %r10d
+        movl    %r10d, 32(%rsp)
+        movl    4(%rsp), %r10d
+        movl    %r10d, 52(%rsp)
+        movl    88(%rsp), %r10d
+        movl    %r10d, 56(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $60(%rsp)
-        movl    $56(%rsp), %r10d
-        movl    $60(%rsp), %edi
+        movl    %r10d, 60(%rsp)
+        movl    56(%rsp), %r10d
+        movl    60(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $56(%rsp)
-        movl    $52(%rsp), %r10d
-        movl    $56(%rsp), %r11d
+        movl    %r11d, 56(%rsp)
+        movl    52(%rsp), %r10d
+        movl    56(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $52(%rsp)
-        movl    $52(%rsp), %r10d
-        movl    %r10d, $48(%rsp)
-        movl    $4(%rsp), %r10d
-        movl    %r10d, $68(%rsp)
+        movl    %edi, 52(%rsp)
+        movl    52(%rsp), %r10d
+        movl    %r10d, 48(%rsp)
+        movl    4(%rsp), %r10d
+        movl    %r10d, 68(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $72(%rsp)
-        movl    $88(%rsp), %r10d
-        movl    %r10d, $76(%rsp)
-        movl    $72(%rsp), %r10d
-        movl    $76(%rsp), %edi
+        movl    %r10d, 72(%rsp)
+        movl    88(%rsp), %r10d
+        movl    %r10d, 76(%rsp)
+        movl    72(%rsp), %r10d
+        movl    76(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $72(%rsp)
-        movl    $68(%rsp), %r10d
-        movl    $72(%rsp), %r11d
+        movl    %r11d, 72(%rsp)
+        movl    68(%rsp), %r10d
+        movl    72(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $68(%rsp)
-        movl    $68(%rsp), %r10d
-        movl    %r10d, $64(%rsp)
-        movl    $0, $80(%rsp)
-        movl    $80(%rsp), %r10d
-        movl    %r10d, $84(%rsp)
+        movl    %edi, 68(%rsp)
+        movl    68(%rsp), %r10d
+        movl    %r10d, 64(%rsp)
+        movl    $0, 80(%rsp)
+        movl    80(%rsp), %r10d
+        movl    %r10d, 84(%rsp)
 .LleaISD_67:
-        movl    $84(%rsp), %r10d
+        movl    84(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
 leaIISD:  # 1 params, 84 stack bytes
         movl    %edi, %r10d
 .LleaIISD_entry:
-        movl    %r10d, $80(%rsp)
+        movl    %r10d, 80(%rsp)
         movl    $60, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, (%rsp)
-        movl    $80(%rsp), %r10d
-        movl    %r10d, $8(%rsp)
-        movl    $3, $12(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    $12(%rsp), %edi
+        movl    80(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+        movl    $3, 12(%rsp)
+        movl    8(%rsp), %r10d
+        movl    12(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $8(%rsp)
+        movl    %r11d, 8(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $16(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    $16(%rsp), %r11d
+        movl    %r10d, 16(%rsp)
+        movl    8(%rsp), %r10d
+        movl    16(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $8(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $4(%rsp)
-        movl    $5, $24(%rsp)
-        movl    $80(%rsp), %r10d
-        movl    %r10d, $32(%rsp)
-        movl    $24(%rsp), %r10d
-        movl    $32(%rsp), %edi
+        movl    %edi, 8(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 4(%rsp)
+        movl    $5, 24(%rsp)
+        movl    80(%rsp), %r10d
+        movl    %r10d, 32(%rsp)
+        movl    24(%rsp), %r10d
+        movl    32(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $24(%rsp)
+        movl    %r11d, 24(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $36(%rsp)
-        movl    $24(%rsp), %r10d
-        movl    $36(%rsp), %r11d
+        movl    %r10d, 36(%rsp)
+        movl    24(%rsp), %r10d
+        movl    36(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $24(%rsp)
-        movl    $24(%rsp), %r10d
-        movl    %r10d, $20(%rsp)
+        movl    %edi, 24(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, 20(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $44(%rsp)
-        movl    $80(%rsp), %r10d
-        movl    %r10d, $48(%rsp)
-        movl    $9, $52(%rsp)
-        movl    $48(%rsp), %r10d
-        movl    $52(%rsp), %edi
+        movl    %r10d, 44(%rsp)
+        movl    80(%rsp), %r10d
+        movl    %r10d, 48(%rsp)
+        movl    $9, 52(%rsp)
+        movl    48(%rsp), %r10d
+        movl    52(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $48(%rsp)
-        movl    $44(%rsp), %r10d
-        movl    $48(%rsp), %r11d
+        movl    %r11d, 48(%rsp)
+        movl    44(%rsp), %r10d
+        movl    48(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $44(%rsp)
-        movl    $44(%rsp), %r10d
-        movl    %r10d, $40(%rsp)
+        movl    %edi, 44(%rsp)
+        movl    44(%rsp), %r10d
+        movl    %r10d, 40(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $60(%rsp)
-        movl    $3, $64(%rsp)
-        movl    $80(%rsp), %r10d
-        movl    %r10d, $68(%rsp)
-        movl    $64(%rsp), %r10d
-        movl    $68(%rsp), %edi
+        movl    %r10d, 60(%rsp)
+        movl    $3, 64(%rsp)
+        movl    80(%rsp), %r10d
+        movl    %r10d, 68(%rsp)
+        movl    64(%rsp), %r10d
+        movl    68(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $64(%rsp)
-        movl    $60(%rsp), %r10d
-        movl    $64(%rsp), %r11d
+        movl    %r11d, 64(%rsp)
+        movl    60(%rsp), %r10d
+        movl    64(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $60(%rsp)
-        movl    $60(%rsp), %r10d
-        movl    %r10d, $56(%rsp)
-        movl    $0, $72(%rsp)
-        movl    $72(%rsp), %r10d
-        movl    %r10d, $76(%rsp)
+        movl    %edi, 60(%rsp)
+        movl    60(%rsp), %r10d
+        movl    %r10d, 56(%rsp)
+        movl    $0, 72(%rsp)
+        movl    72(%rsp), %r10d
+        movl    %r10d, 76(%rsp)
 .LleaIISD_60:
-        movl    $76(%rsp), %r10d
+        movl    76(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
@@ -553,570 +553,570 @@ leaBISD:  # 2 params, 512 stack bytes
         movl    %edi, %r11d
         movl    %esi, %r10d
 .LleaBISD_entry:
-        movl    %r11d, $504(%rsp)
-        movl    %r10d, $508(%rsp)
-        movl    $8, $4(%rsp)
-        movl    $4(%rsp), %r10d
+        movl    %r11d, 504(%rsp)
+        movl    %r10d, 508(%rsp)
+        movl    $8, 4(%rsp)
+        movl    4(%rsp), %r10d
         movl    %r10d, (%rsp)
-        movl    $40, $12(%rsp)
-        movl    $12(%rsp), %r10d
-        movl    %r10d, $8(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $20(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $24(%rsp)
+        movl    $40, 12(%rsp)
+        movl    12(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 20(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $32(%rsp)
-        movl    $24(%rsp), %edi
-        movl    $32(%rsp), %r11d
+        movl    %r10d, 32(%rsp)
+        movl    24(%rsp), %edi
+        movl    32(%rsp), %r11d
         movl    %edi, %r10d
         imull   %r11d, %r10d
-        movl    %r10d, $24(%rsp)
-        movl    $20(%rsp), %edi
-        movl    $24(%rsp), %r11d
+        movl    %r10d, 24(%rsp)
+        movl    20(%rsp), %edi
+        movl    24(%rsp), %r11d
         leal    (%edi,%r11d), %r10d
-        movl    %r10d, $20(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $36(%rsp)
-        movl    $20(%rsp), %edi
-        movl    $36(%rsp), %r11d
+        movl    %r10d, 20(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 36(%rsp)
+        movl    20(%rsp), %edi
+        movl    36(%rsp), %r11d
         leal    (%edi,%r11d), %r10d
-        movl    %r10d, $20(%rsp)
-        movl    $20(%rsp), %r10d
-        movl    %r10d, $16(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $44(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $48(%rsp)
+        movl    %r10d, 20(%rsp)
+        movl    20(%rsp), %r10d
+        movl    %r10d, 16(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 44(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 48(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $52(%rsp)
-        movl    $48(%rsp), %edi
-        movl    $52(%rsp), %r11d
+        movl    %r10d, 52(%rsp)
+        movl    48(%rsp), %edi
+        movl    52(%rsp), %r11d
         movl    %edi, %r10d
         imull   %r11d, %r10d
-        movl    %r10d, $48(%rsp)
-        movl    $44(%rsp), %edi
-        movl    $48(%rsp), %r11d
+        movl    %r10d, 48(%rsp)
+        movl    44(%rsp), %edi
+        movl    48(%rsp), %r11d
         leal    (%edi,%r11d), %r10d
-        movl    %r10d, $44(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $56(%rsp)
-        movl    $44(%rsp), %edi
-        movl    $56(%rsp), %r11d
+        movl    %r10d, 44(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 56(%rsp)
+        movl    44(%rsp), %edi
+        movl    56(%rsp), %r11d
         leal    (%edi,%r11d), %r10d
-        movl    %r10d, $44(%rsp)
-        movl    $44(%rsp), %r10d
-        movl    %r10d, $40(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $64(%rsp)
+        movl    %r10d, 44(%rsp)
+        movl    44(%rsp), %r10d
+        movl    %r10d, 40(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 64(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $68(%rsp)
-        movl    $64(%rsp), %edi
-        movl    $68(%rsp), %r11d
+        movl    %r10d, 68(%rsp)
+        movl    64(%rsp), %edi
+        movl    68(%rsp), %r11d
         movl    %edi, %r10d
         imull   %r11d, %r10d
-        movl    %r10d, $64(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $72(%rsp)
-        movl    $64(%rsp), %edi
-        movl    $72(%rsp), %r11d
+        movl    %r10d, 64(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 72(%rsp)
+        movl    64(%rsp), %edi
+        movl    72(%rsp), %r11d
         leal    (%edi,%r11d), %r10d
-        movl    %r10d, $64(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $76(%rsp)
-        movl    $64(%rsp), %edi
-        movl    $76(%rsp), %r11d
+        movl    %r10d, 64(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 76(%rsp)
+        movl    64(%rsp), %edi
+        movl    76(%rsp), %r11d
         leal    (%edi,%r11d), %r10d
-        movl    %r10d, $64(%rsp)
-        movl    $64(%rsp), %r10d
-        movl    %r10d, $60(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $84(%rsp)
+        movl    %r10d, 64(%rsp)
+        movl    64(%rsp), %r10d
+        movl    %r10d, 60(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 84(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $88(%rsp)
-        movl    $84(%rsp), %edi
-        movl    $88(%rsp), %r11d
+        movl    %r10d, 88(%rsp)
+        movl    84(%rsp), %edi
+        movl    88(%rsp), %r11d
         movl    %edi, %r10d
         imull   %r11d, %r10d
-        movl    %r10d, $84(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $92(%rsp)
-        movl    $84(%rsp), %r11d
-        movl    $92(%rsp), %r10d
+        movl    %r10d, 84(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 92(%rsp)
+        movl    84(%rsp), %r11d
+        movl    92(%rsp), %r10d
         leal    (%r11d,%r10d), %edi
-        movl    %edi, $84(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $96(%rsp)
-        movl    $84(%rsp), %r11d
-        movl    $96(%rsp), %r10d
+        movl    %edi, 84(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 96(%rsp)
+        movl    84(%rsp), %r11d
+        movl    96(%rsp), %r10d
         leal    (%r11d,%r10d), %edi
-        movl    %edi, $84(%rsp)
-        movl    $84(%rsp), %r10d
-        movl    %r10d, $80(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $104(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $104(%rsp)
-        movl    $104(%rsp), %r11d
-        movl    $104(%rsp), %r10d
+        movl    %edi, 84(%rsp)
+        movl    84(%rsp), %r10d
+        movl    %r10d, 80(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 104(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 104(%rsp)
+        movl    104(%rsp), %r11d
+        movl    104(%rsp), %r10d
         leal    (%r11d,%r10d), %edi
-        movl    %edi, $104(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $108(%rsp)
+        movl    %edi, 104(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 108(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $112(%rsp)
-        movl    $108(%rsp), %r11d
-        movl    $112(%rsp), %edi
+        movl    %r10d, 112(%rsp)
+        movl    108(%rsp), %r11d
+        movl    112(%rsp), %edi
         movl    %r11d, %r10d
         imull   %edi, %r10d
-        movl    %r10d, $108(%rsp)
-        movl    $104(%rsp), %r11d
-        movl    $108(%rsp), %r10d
+        movl    %r10d, 108(%rsp)
+        movl    104(%rsp), %r11d
+        movl    108(%rsp), %r10d
         leal    (%r11d,%r10d), %edi
-        movl    %edi, $104(%rsp)
-        movl    $104(%rsp), %r10d
-        movl    %r10d, $100(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $120(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $124(%rsp)
-        movl    $120(%rsp), %r11d
-        movl    $124(%rsp), %r10d
+        movl    %edi, 104(%rsp)
+        movl    104(%rsp), %r10d
+        movl    %r10d, 100(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 120(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 124(%rsp)
+        movl    120(%rsp), %r11d
+        movl    124(%rsp), %r10d
         leal    (%r11d,%r10d), %edi
-        movl    %edi, $120(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $128(%rsp)
+        movl    %edi, 120(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 128(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $132(%rsp)
-        movl    $128(%rsp), %r11d
-        movl    $132(%rsp), %edi
+        movl    %r10d, 132(%rsp)
+        movl    128(%rsp), %r11d
+        movl    132(%rsp), %edi
         movl    %r11d, %r10d
         imull   %edi, %r10d
-        movl    %r10d, $128(%rsp)
-        movl    $120(%rsp), %r11d
-        movl    $128(%rsp), %r10d
+        movl    %r10d, 128(%rsp)
+        movl    120(%rsp), %r11d
+        movl    128(%rsp), %r10d
         leal    (%r11d,%r10d), %edi
-        movl    %edi, $120(%rsp)
-        movl    $120(%rsp), %r10d
-        movl    %r10d, $116(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $140(%rsp)
+        movl    %edi, 120(%rsp)
+        movl    120(%rsp), %r10d
+        movl    %r10d, 116(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 140(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $144(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $148(%rsp)
-        movl    $144(%rsp), %r11d
-        movl    $148(%rsp), %edi
+        movl    %r10d, 144(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 148(%rsp)
+        movl    144(%rsp), %r11d
+        movl    148(%rsp), %edi
         movl    %r11d, %r10d
         imull   %edi, %r10d
-        movl    %r10d, $144(%rsp)
-        movl    $140(%rsp), %r10d
-        movl    $144(%rsp), %r11d
+        movl    %r10d, 144(%rsp)
+        movl    140(%rsp), %r10d
+        movl    144(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $140(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $152(%rsp)
-        movl    $140(%rsp), %r10d
-        movl    $152(%rsp), %r11d
+        movl    %edi, 140(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 152(%rsp)
+        movl    140(%rsp), %r10d
+        movl    152(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $140(%rsp)
-        movl    $140(%rsp), %r10d
-        movl    %r10d, $136(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $160(%rsp)
+        movl    %edi, 140(%rsp)
+        movl    140(%rsp), %r10d
+        movl    %r10d, 136(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 160(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $164(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $168(%rsp)
-        movl    $164(%rsp), %r11d
-        movl    $168(%rsp), %edi
+        movl    %r10d, 164(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 168(%rsp)
+        movl    164(%rsp), %r11d
+        movl    168(%rsp), %edi
         movl    %r11d, %r10d
         imull   %edi, %r10d
-        movl    %r10d, $164(%rsp)
-        movl    $160(%rsp), %r10d
-        movl    $164(%rsp), %r11d
+        movl    %r10d, 164(%rsp)
+        movl    160(%rsp), %r10d
+        movl    164(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $160(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $172(%rsp)
-        movl    $160(%rsp), %r10d
-        movl    $172(%rsp), %r11d
+        movl    %edi, 160(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 172(%rsp)
+        movl    160(%rsp), %r10d
+        movl    172(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $160(%rsp)
-        movl    $160(%rsp), %r10d
-        movl    %r10d, $156(%rsp)
+        movl    %edi, 160(%rsp)
+        movl    160(%rsp), %r10d
+        movl    %r10d, 156(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $180(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $184(%rsp)
-        movl    $180(%rsp), %r11d
-        movl    $184(%rsp), %edi
+        movl    %r10d, 180(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 184(%rsp)
+        movl    180(%rsp), %r11d
+        movl    184(%rsp), %edi
         movl    %r11d, %r10d
         imull   %edi, %r10d
-        movl    %r10d, $180(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $188(%rsp)
-        movl    $180(%rsp), %r10d
-        movl    $188(%rsp), %r11d
+        movl    %r10d, 180(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 188(%rsp)
+        movl    180(%rsp), %r10d
+        movl    188(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $180(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $192(%rsp)
-        movl    $180(%rsp), %r10d
-        movl    $192(%rsp), %r11d
+        movl    %edi, 180(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 192(%rsp)
+        movl    180(%rsp), %r10d
+        movl    192(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $180(%rsp)
-        movl    $180(%rsp), %r10d
-        movl    %r10d, $176(%rsp)
+        movl    %edi, 180(%rsp)
+        movl    180(%rsp), %r10d
+        movl    %r10d, 176(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $200(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $204(%rsp)
-        movl    $200(%rsp), %r11d
-        movl    $204(%rsp), %edi
+        movl    %r10d, 200(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 204(%rsp)
+        movl    200(%rsp), %r11d
+        movl    204(%rsp), %edi
         movl    %r11d, %r10d
         imull   %edi, %r10d
-        movl    %r10d, $200(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $208(%rsp)
-        movl    $200(%rsp), %r10d
-        movl    $208(%rsp), %r11d
+        movl    %r10d, 200(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 208(%rsp)
+        movl    200(%rsp), %r10d
+        movl    208(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $200(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $212(%rsp)
-        movl    $200(%rsp), %r10d
-        movl    $212(%rsp), %r11d
+        movl    %edi, 200(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 212(%rsp)
+        movl    200(%rsp), %r10d
+        movl    212(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $200(%rsp)
-        movl    $200(%rsp), %r10d
-        movl    %r10d, $196(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $220(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $224(%rsp)
-        movl    $220(%rsp), %r10d
-        movl    $224(%rsp), %r11d
+        movl    %edi, 200(%rsp)
+        movl    200(%rsp), %r10d
+        movl    %r10d, 196(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 220(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 224(%rsp)
+        movl    220(%rsp), %r10d
+        movl    224(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $220(%rsp)
+        movl    %edi, 220(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $228(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $232(%rsp)
-        movl    $228(%rsp), %r11d
-        movl    $232(%rsp), %edi
+        movl    %r10d, 228(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 232(%rsp)
+        movl    228(%rsp), %r11d
+        movl    232(%rsp), %edi
         movl    %r11d, %r10d
         imull   %edi, %r10d
-        movl    %r10d, $228(%rsp)
-        movl    $220(%rsp), %r10d
-        movl    $228(%rsp), %r11d
+        movl    %r10d, 228(%rsp)
+        movl    220(%rsp), %r10d
+        movl    228(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $220(%rsp)
-        movl    $220(%rsp), %r10d
-        movl    %r10d, $216(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $240(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $244(%rsp)
-        movl    $240(%rsp), %r10d
-        movl    $244(%rsp), %r11d
+        movl    %edi, 220(%rsp)
+        movl    220(%rsp), %r10d
+        movl    %r10d, 216(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 240(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 244(%rsp)
+        movl    240(%rsp), %r10d
+        movl    244(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $240(%rsp)
+        movl    %edi, 240(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $248(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $252(%rsp)
-        movl    $248(%rsp), %r10d
-        movl    $252(%rsp), %edi
+        movl    %r10d, 248(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 252(%rsp)
+        movl    248(%rsp), %r10d
+        movl    252(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $248(%rsp)
-        movl    $240(%rsp), %r10d
-        movl    $248(%rsp), %r11d
+        movl    %r11d, 248(%rsp)
+        movl    240(%rsp), %r10d
+        movl    248(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $240(%rsp)
-        movl    $240(%rsp), %r10d
-        movl    %r10d, $236(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $260(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $264(%rsp)
+        movl    %edi, 240(%rsp)
+        movl    240(%rsp), %r10d
+        movl    %r10d, 236(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 260(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 264(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $268(%rsp)
-        movl    $264(%rsp), %r10d
-        movl    $268(%rsp), %edi
+        movl    %r10d, 268(%rsp)
+        movl    264(%rsp), %r10d
+        movl    268(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $264(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $272(%rsp)
-        movl    $264(%rsp), %r10d
-        movl    $272(%rsp), %r11d
+        movl    %r11d, 264(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 272(%rsp)
+        movl    264(%rsp), %r10d
+        movl    272(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $264(%rsp)
-        movl    $260(%rsp), %r10d
-        movl    $264(%rsp), %r11d
+        movl    %edi, 264(%rsp)
+        movl    260(%rsp), %r10d
+        movl    264(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $260(%rsp)
-        movl    $260(%rsp), %r10d
-        movl    %r10d, $256(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $280(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $284(%rsp)
+        movl    %edi, 260(%rsp)
+        movl    260(%rsp), %r10d
+        movl    %r10d, 256(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 280(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 284(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $288(%rsp)
-        movl    $284(%rsp), %r10d
-        movl    $288(%rsp), %edi
+        movl    %r10d, 288(%rsp)
+        movl    284(%rsp), %r10d
+        movl    288(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $284(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $292(%rsp)
-        movl    $284(%rsp), %r10d
-        movl    $292(%rsp), %r11d
+        movl    %r11d, 284(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 292(%rsp)
+        movl    284(%rsp), %r10d
+        movl    292(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $284(%rsp)
-        movl    $280(%rsp), %r10d
-        movl    $284(%rsp), %r11d
+        movl    %edi, 284(%rsp)
+        movl    280(%rsp), %r10d
+        movl    284(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $280(%rsp)
-        movl    $280(%rsp), %r10d
-        movl    %r10d, $276(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $300(%rsp)
+        movl    %edi, 280(%rsp)
+        movl    280(%rsp), %r10d
+        movl    %r10d, 276(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 300(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $304(%rsp)
-        movl    $300(%rsp), %r10d
-        movl    $304(%rsp), %edi
+        movl    %r10d, 304(%rsp)
+        movl    300(%rsp), %r10d
+        movl    304(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $300(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $308(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $312(%rsp)
-        movl    $308(%rsp), %r10d
-        movl    $312(%rsp), %r11d
+        movl    %r11d, 300(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 308(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 312(%rsp)
+        movl    308(%rsp), %r10d
+        movl    312(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $308(%rsp)
-        movl    $300(%rsp), %r10d
-        movl    $308(%rsp), %r11d
+        movl    %edi, 308(%rsp)
+        movl    300(%rsp), %r10d
+        movl    308(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $300(%rsp)
-        movl    $300(%rsp), %r10d
-        movl    %r10d, $296(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $320(%rsp)
+        movl    %edi, 300(%rsp)
+        movl    300(%rsp), %r10d
+        movl    %r10d, 296(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 320(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $324(%rsp)
-        movl    $320(%rsp), %r10d
-        movl    $324(%rsp), %edi
+        movl    %r10d, 324(%rsp)
+        movl    320(%rsp), %r10d
+        movl    324(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $320(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $328(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $332(%rsp)
-        movl    $328(%rsp), %r10d
-        movl    $332(%rsp), %r11d
+        movl    %r11d, 320(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 328(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 332(%rsp)
+        movl    328(%rsp), %r10d
+        movl    332(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $328(%rsp)
-        movl    $320(%rsp), %r10d
-        movl    $328(%rsp), %r11d
+        movl    %edi, 328(%rsp)
+        movl    320(%rsp), %r10d
+        movl    328(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $320(%rsp)
-        movl    $320(%rsp), %r10d
-        movl    %r10d, $316(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $340(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $344(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $348(%rsp)
+        movl    %edi, 320(%rsp)
+        movl    320(%rsp), %r10d
+        movl    %r10d, 316(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 340(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 344(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 348(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $352(%rsp)
-        movl    $348(%rsp), %r10d
-        movl    $352(%rsp), %edi
+        movl    %r10d, 352(%rsp)
+        movl    348(%rsp), %r10d
+        movl    352(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $348(%rsp)
-        movl    $344(%rsp), %r10d
-        movl    $348(%rsp), %r11d
+        movl    %r11d, 348(%rsp)
+        movl    344(%rsp), %r10d
+        movl    348(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $344(%rsp)
-        movl    $340(%rsp), %r10d
-        movl    $344(%rsp), %r11d
+        movl    %edi, 344(%rsp)
+        movl    340(%rsp), %r10d
+        movl    344(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $340(%rsp)
-        movl    $340(%rsp), %r10d
-        movl    %r10d, $336(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $360(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $364(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $368(%rsp)
+        movl    %edi, 340(%rsp)
+        movl    340(%rsp), %r10d
+        movl    %r10d, 336(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 360(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 364(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 368(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $372(%rsp)
-        movl    $368(%rsp), %r10d
-        movl    $372(%rsp), %edi
+        movl    %r10d, 372(%rsp)
+        movl    368(%rsp), %r10d
+        movl    372(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $368(%rsp)
-        movl    $364(%rsp), %r10d
-        movl    $368(%rsp), %r11d
+        movl    %r11d, 368(%rsp)
+        movl    364(%rsp), %r10d
+        movl    368(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $364(%rsp)
-        movl    $360(%rsp), %r10d
-        movl    $364(%rsp), %r11d
+        movl    %edi, 364(%rsp)
+        movl    360(%rsp), %r10d
+        movl    364(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $360(%rsp)
-        movl    $360(%rsp), %r10d
-        movl    %r10d, $356(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $380(%rsp)
+        movl    %edi, 360(%rsp)
+        movl    360(%rsp), %r10d
+        movl    %r10d, 356(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 380(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $384(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $388(%rsp)
-        movl    $384(%rsp), %r10d
-        movl    $388(%rsp), %edi
+        movl    %r10d, 384(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 388(%rsp)
+        movl    384(%rsp), %r10d
+        movl    388(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $384(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $392(%rsp)
-        movl    $384(%rsp), %r10d
-        movl    $392(%rsp), %r11d
+        movl    %r11d, 384(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 392(%rsp)
+        movl    384(%rsp), %r10d
+        movl    392(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $384(%rsp)
-        movl    $380(%rsp), %r10d
-        movl    $384(%rsp), %r11d
+        movl    %edi, 384(%rsp)
+        movl    380(%rsp), %r10d
+        movl    384(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $380(%rsp)
-        movl    $380(%rsp), %r10d
-        movl    %r10d, $376(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $400(%rsp)
+        movl    %edi, 380(%rsp)
+        movl    380(%rsp), %r10d
+        movl    %r10d, 376(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 400(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $404(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $408(%rsp)
-        movl    $404(%rsp), %r10d
-        movl    $408(%rsp), %edi
+        movl    %r10d, 404(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 408(%rsp)
+        movl    404(%rsp), %r10d
+        movl    408(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $404(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $412(%rsp)
-        movl    $404(%rsp), %r10d
-        movl    $412(%rsp), %r11d
+        movl    %r11d, 404(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 412(%rsp)
+        movl    404(%rsp), %r10d
+        movl    412(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $404(%rsp)
-        movl    $400(%rsp), %r10d
-        movl    $404(%rsp), %r11d
+        movl    %edi, 404(%rsp)
+        movl    400(%rsp), %r10d
+        movl    404(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $400(%rsp)
-        movl    $400(%rsp), %r10d
-        movl    %r10d, $396(%rsp)
+        movl    %edi, 400(%rsp)
+        movl    400(%rsp), %r10d
+        movl    %r10d, 396(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $420(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $424(%rsp)
-        movl    $420(%rsp), %r10d
-        movl    $424(%rsp), %edi
+        movl    %r10d, 420(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 424(%rsp)
+        movl    420(%rsp), %r10d
+        movl    424(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $420(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $428(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $432(%rsp)
-        movl    $428(%rsp), %r10d
-        movl    $432(%rsp), %r11d
+        movl    %r11d, 420(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 428(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 432(%rsp)
+        movl    428(%rsp), %r10d
+        movl    432(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $428(%rsp)
-        movl    $420(%rsp), %r10d
-        movl    $428(%rsp), %r11d
+        movl    %edi, 428(%rsp)
+        movl    420(%rsp), %r10d
+        movl    428(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $420(%rsp)
-        movl    $420(%rsp), %r10d
-        movl    %r10d, $416(%rsp)
+        movl    %edi, 420(%rsp)
+        movl    420(%rsp), %r10d
+        movl    %r10d, 416(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $440(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $444(%rsp)
-        movl    $440(%rsp), %r10d
-        movl    $444(%rsp), %edi
+        movl    %r10d, 440(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 444(%rsp)
+        movl    440(%rsp), %r10d
+        movl    444(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $440(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $448(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $452(%rsp)
-        movl    $448(%rsp), %r10d
-        movl    $452(%rsp), %r11d
+        movl    %r11d, 440(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 448(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 452(%rsp)
+        movl    448(%rsp), %r10d
+        movl    452(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $448(%rsp)
-        movl    $440(%rsp), %r10d
-        movl    $448(%rsp), %r11d
+        movl    %edi, 448(%rsp)
+        movl    440(%rsp), %r10d
+        movl    448(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $440(%rsp)
-        movl    $440(%rsp), %r10d
-        movl    %r10d, $436(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $460(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $464(%rsp)
+        movl    %edi, 440(%rsp)
+        movl    440(%rsp), %r10d
+        movl    %r10d, 436(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 460(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 464(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $468(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $472(%rsp)
-        movl    $468(%rsp), %r10d
-        movl    $472(%rsp), %edi
+        movl    %r10d, 468(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 472(%rsp)
+        movl    468(%rsp), %r10d
+        movl    472(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $468(%rsp)
-        movl    $464(%rsp), %r10d
-        movl    $468(%rsp), %r11d
+        movl    %r11d, 468(%rsp)
+        movl    464(%rsp), %r10d
+        movl    468(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $464(%rsp)
-        movl    $460(%rsp), %r10d
-        movl    $464(%rsp), %r11d
+        movl    %edi, 464(%rsp)
+        movl    460(%rsp), %r10d
+        movl    464(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $460(%rsp)
-        movl    $460(%rsp), %r10d
-        movl    %r10d, $456(%rsp)
-        movl    $8(%rsp), %r10d
-        movl    %r10d, $480(%rsp)
-        movl    $504(%rsp), %r10d
-        movl    %r10d, $484(%rsp)
+        movl    %edi, 460(%rsp)
+        movl    460(%rsp), %r10d
+        movl    %r10d, 456(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 480(%rsp)
+        movl    504(%rsp), %r10d
+        movl    %r10d, 484(%rsp)
         movl    (%rsp), %r10d
-        movl    %r10d, $488(%rsp)
-        movl    $508(%rsp), %r10d
-        movl    %r10d, $492(%rsp)
-        movl    $488(%rsp), %r10d
-        movl    $492(%rsp), %edi
+        movl    %r10d, 488(%rsp)
+        movl    508(%rsp), %r10d
+        movl    %r10d, 492(%rsp)
+        movl    488(%rsp), %r10d
+        movl    492(%rsp), %edi
         movl    %r10d, %r11d
         imull   %edi, %r11d
-        movl    %r11d, $488(%rsp)
-        movl    $484(%rsp), %r10d
-        movl    $488(%rsp), %r11d
+        movl    %r11d, 488(%rsp)
+        movl    484(%rsp), %r10d
+        movl    488(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $484(%rsp)
-        movl    $480(%rsp), %r10d
-        movl    $484(%rsp), %r11d
+        movl    %edi, 484(%rsp)
+        movl    480(%rsp), %r10d
+        movl    484(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, $480(%rsp)
-        movl    $480(%rsp), %r10d
-        movl    %r10d, $476(%rsp)
-        movl    $0, $496(%rsp)
-        movl    $496(%rsp), %r10d
-        movl    %r10d, $500(%rsp)
+        movl    %edi, 480(%rsp)
+        movl    480(%rsp), %r10d
+        movl    %r10d, 476(%rsp)
+        movl    $0, 496(%rsp)
+        movl    496(%rsp), %r10d
+        movl    %r10d, 500(%rsp)
 .LleaBISD_469:
-        movl    $500(%rsp), %r10d
+        movl    500(%rsp), %r10d
         movl    %r10d, %eax
         ret
