@@ -60,7 +60,7 @@ namespace backend::lir {
         std::string res = "";
 
         if (displacement->getValue())
-            res += displacement->toString();
+            res += std::to_string(displacement->getValue());
         if (!base && !index)
             return res;
 
