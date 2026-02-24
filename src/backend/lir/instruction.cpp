@@ -169,7 +169,7 @@ namespace backend::lir {
 
     void InstructionCmp::setSrc1(lir::Operand *new_src_1) { src_1 = new_src_1; }
 
-    void InstructionCmp::setSrc2(lir::Operand *new_src_2) { src_1 = new_src_2; }
+    void InstructionCmp::setSrc2(lir::Operand *new_src_2) { src_2 = new_src_2; }
 
     void InstructionCmp::accept(InstructionVisitor *v) { v->visit(this); }
 
