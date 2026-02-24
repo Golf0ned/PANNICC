@@ -133,6 +133,7 @@ namespace backend {
 
     void legalize(lir::Program &lir) {
         auto om = lir.getOm();
+        auto rsp = om->getRegister(lir::RegisterNum::RSP);
 
         for (auto &f : lir.getFunctions()) {
             auto liveness = computeLiveness(f.get(), om);
@@ -142,8 +143,6 @@ namespace backend {
 
             auto &instructions = f->getInstructions();
             auto ret_iter = std::prev(instructions.end());
-
-            auto rsp = om->getRegister(lir::RegisterNum::RSP);
 
             //
             // Preserve caller-saved registers, manage function args, and
@@ -170,18 +169,19 @@ namespace backend {
                 std::vector<lir::Register *> save;
                 std::unordered_set<lir::Register *> restore;
                 for (auto reg_num : lir::getCallerSavedRegisters()) {
-                    // TODO: use 64 bit once liveness is rewritten
+                    // TODO: skip the 32 bit step once liveness is rewritten
                     auto sized_reg_num =
                         lir::toSized(reg_num, lir::DataSize::DOUBLEWORD);
                     if (sized_reg_num == lir::RegisterNum::EAX)
                         continue;
 
-                    auto reg = om->getRegister(sized_reg_num);
-                    if (in_i.contains(reg)) {
-                        save.push_back(reg);
+                    auto reg_64 = om->getRegister(reg_num);
+                    auto reg_32 = om->getRegister(sized_reg_num);
+                    if (in_i.contains(reg_32)) {
+                        save.push_back(reg_64);
                     }
-                    if (out_i.contains(reg))
-                        restore.insert(reg);
+                    if (out_i.contains(reg_32))
+                        restore.insert(reg_64);
                 }
 
                 // Allocate/deallocate stack space
