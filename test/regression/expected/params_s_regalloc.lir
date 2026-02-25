@@ -9,35 +9,35 @@ fun1:  # 1 params, 0 stack bytes
 
 fun2:  # 2 params, 0 stack bytes
         movl    %edi, %r10d
-        movl    %esi, %r11d
+        movl    %esi, %esi
 .Lfun2_entry:
         call    fun1  # (%r10d)
-        movl    %eax, %edi
-        leal    (,%r10d,2), %esi
-        movl    %esi, %r10d
-        imull   %r11d, %r10d
-        leal    (%edi,%r10d), %esi
-        call    fun1  # (%r11d)
-        movl    %eax, %r10d
-        leal    (%esi,%r10d), %r11d
+        movl    %eax, %r11d
+        leal    (,%r10d,2), %edi
+        movl    %edi, %r10d
+        imull   %esi, %r10d
+        leal    (%r11d,%r10d), %edi
+        call    fun1  # (%esi)
+        movl    %eax, %r11d
+        leal    (%edi,%r11d), %r10d
 .Lfun2_8:
-        movl    %r11d, %eax
+        movl    %r10d, %eax
         ret
 
 fun3:  # 4 params, 0 stack bytes
-        movl    %edi, %esi
-        movl    %esi, %edx
-        movl    %edx, %ecx
+        movl    %edi, %ecx
+        movl    %esi, %esi
+        movl    %edx, %edx
         movl    %ecx, %edi
 .Lfun3_entry:
         call    fun1  # (%edi)
         movl    %eax, %r10d
-        movl    %esi, %r11d
+        movl    %ecx, %r11d
         imull   %r10d, %r11d
-        movl    %edx, %r10d
+        movl    %esi, %r10d
         imull   %edi, %r10d
         leal    (%r11d,%r10d), %edi
-        leal    (%edi,%ecx), %r10d
+        leal    (%edi,%edx), %r10d
 .Lfun3_9:
         movl    %r10d, %eax
         ret
@@ -81,22 +81,22 @@ call4:  # 0 params, 0 stack bytes
         ret
 
 super_fun:  # 8 params, 0 stack bytes
-        movl    %edi, %r10d
-        movl    %esi, %r11d
-        movl    %edx, %edi
-        movl    %ecx, %esi
-        movl    %r8d, %edx
-        movl    %r9d, %ecx
-        movl    (stack 0), %r8d
-        movl    (stack 1), %r9d
+        movl    %edi, %eax
+        movl    %esi, %r9d
+        movl    %edx, %ecx
+        movl    %ecx, %r11d
+        movl    %r8d, %edi
+        movl    %r9d, %esi
+        movl    (stack 0), %edx
+        movl    (stack 1), %r8d
 .Lsuper_fun_entry:
-        leal    (%r10d,%r11d), %eax
-        leal    (%eax,%edi), %r11d
+        leal    (%eax,%r9d), %r10d
+        leal    (%r10d,%ecx), %r9d
+        leal    (%r9d,%r11d), %r10d
+        leal    (%r10d,%edi), %r11d
         leal    (%r11d,%esi), %r10d
         leal    (%r10d,%edx), %r11d
-        leal    (%r11d,%ecx), %r10d
-        leal    (%r10d,%r8d), %r11d
-        leal    (%r11d,%r9d), %r10d
+        leal    (%r11d,%r8d), %r10d
 .Lsuper_fun_15:
         movl    %r10d, %eax
         ret
@@ -112,45 +112,45 @@ call_super_fun:  # 2 params, 0 stack bytes
         ret
 
 caller_saved:  # 2 params, 0 stack bytes
-        movl    %edi, %ecx
-        movl    %esi, %r14d
+        movl    %edi, %r12d
+        movl    %esi, %r13d
 .Lcaller_saved_entry:
-        movl    %ecx, %edx
-        addl    $1, %edx
-        movl    %ecx, %esi
-        addl    $2, %esi
-        movl    %ecx, %edi
-        addl    $3, %edi
-        movl    %ecx, %r11d
-        addl    $4, %r11d
-        movl    %ecx, %r10d
-        addl    $5, %r10d
-        movl    %ecx, %r8d
-        addl    $6, %r8d
-        movl    %ecx, %r9d
-        addl    $7, %r9d
-        movl    %ecx, %eax
-        addl    $8, %eax
-        movl    %ecx, %ebx
-        addl    $9, %ebx
-        movl    %ecx, %r12d
-        addl    $10, %r12d
-        movl    %ecx, %r13d
-        addl    $11, %r13d
-        call    super_fun  # (%edx, %esi, %edi, %r11d, %r10d, %r8d, %r9d, %eax)
-        movl    %eax, %r15d
+        movl    %r12d, %r14d
+        addl    $1, %r14d
+        movl    %r12d, %r8d
+        addl    $2, %r8d
+        movl    %r12d, %ebx
+        addl    $3, %ebx
+        movl    %r12d, %eax
+        addl    $4, %eax
+        movl    %r12d, %r9d
+        addl    $5, %r9d
+        movl    %r12d, %edx
+        addl    $6, %edx
+        movl    %r12d, %ecx
+        addl    $7, %ecx
+        movl    %r12d, %esi
+        addl    $8, %esi
+        movl    %r12d, %edi
+        addl    $9, %edi
+        movl    %r12d, %r10d
+        addl    $10, %r10d
+        movl    %r12d, %r11d
+        addl    $11, %r11d
+        call    super_fun  # (%r14d, %r8d, %ebx, %eax, %r9d, %edx, %ecx, %esi)
+        movl    %eax, %r12d
+        leal    (%r14d,%r8d), %r15d
+        leal    (%r15d,%ebx), %r8d
+        leal    (%r8d,%eax), %ebx
+        leal    (%ebx,%r9d), %r8d
+        leal    (%r8d,%edx), %r9d
+        leal    (%r9d,%ecx), %edx
         leal    (%edx,%esi), %ecx
         leal    (%ecx,%edi), %esi
-        leal    (%esi,%r11d), %edi
-        leal    (%edi,%r10d), %r11d
-        leal    (%r11d,%r8d), %edi
-        leal    (%edi,%r9d), %r10d
-        leal    (%r10d,%eax), %r11d
-        leal    (%r11d,%ebx), %r10d
+        leal    (%esi,%r10d), %edi
+        leal    (%edi,%r11d), %r10d
         leal    (%r10d,%r12d), %r11d
         leal    (%r11d,%r13d), %r10d
-        leal    (%r10d,%r15d), %r11d
-        leal    (%r11d,%r14d), %r10d
 .Lcaller_saved_26:
         movl    %r10d, %eax
         ret

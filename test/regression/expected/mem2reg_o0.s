@@ -48,11 +48,11 @@ mem2reg_branching:
         movl    32(%rsp), %r10d
         movl    %r10d, 8(%rsp)
         movl    $42, 12(%rsp)
-        movl    8(%rsp), %r10d
-        movl    12(%rsp), %edi
-        movl    %r10d, %r11d
-        subl    %edi, %r11d
-        movl    %r11d, 8(%rsp)
+        movl    8(%rsp), %edi
+        movl    12(%rsp), %r11d
+        movl    %edi, %r10d
+        subl    %r11d, %r10d
+        movl    %r10d, 8(%rsp)
         movl    8(%rsp), %r10d
         cmpl    $0, %r10d
         jne     .Lmem2reg_branching_18
@@ -113,10 +113,10 @@ mem2reg_while:
         movl    %r10d, 24(%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, 24(%rsp)
-        movl    24(%rsp), %r11d
+        movl    24(%rsp), %r10d
         movl    24(%rsp), %edi
-        leal    (%r11d,%edi), %r10d
-        movl    %r10d, 24(%rsp)
+        leal    (%r10d,%edi), %r11d
+        movl    %r11d, 24(%rsp)
         movl    24(%rsp), %r10d
         movl    %r10d, 8(%rsp)
         movl    (%rsp), %r10d

@@ -73,10 +73,10 @@ scope_reassign_variable:
         movl    16(%rsp), %r10d
         movl    %r10d, 24(%rsp)
         movl    $4, 28(%rsp)
-        movl    24(%rsp), %r10d
+        movl    24(%rsp), %edi
         movl    28(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
-        movl    %edi, 24(%rsp)
+        leal    (%edi,%r11d), %r10d
+        movl    %r10d, 24(%rsp)
         movl    24(%rsp), %r10d
         movl    %r10d, 16(%rsp)
         movl    (%rsp), %r10d

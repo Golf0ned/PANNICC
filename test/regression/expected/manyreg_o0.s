@@ -148,22 +148,22 @@ main:
         movl    %r10d, 124(%rsp)
         movl    20(%rsp), %r10d
         movl    %r10d, 140(%rsp)
-        movl    124(%rsp), %r11d
-        movl    140(%rsp), %r10d
-        leal    (%r11d,%r10d), %edi
-        movl    %edi, 124(%rsp)
+        movl    124(%rsp), %edi
+        movl    140(%rsp), %r11d
+        leal    (%edi,%r11d), %r10d
+        movl    %r10d, 124(%rsp)
         movl    8(%rsp), %r10d
         movl    %r10d, 144(%rsp)
-        movl    124(%rsp), %r11d
-        movl    144(%rsp), %r10d
-        leal    (%r11d,%r10d), %edi
-        movl    %edi, 124(%rsp)
+        movl    124(%rsp), %edi
+        movl    144(%rsp), %r11d
+        leal    (%edi,%r11d), %r10d
+        movl    %r10d, 124(%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, 148(%rsp)
-        movl    124(%rsp), %r11d
-        movl    148(%rsp), %r10d
-        leal    (%r11d,%r10d), %edi
-        movl    %edi, 124(%rsp)
+        movl    124(%rsp), %edi
+        movl    148(%rsp), %r11d
+        leal    (%edi,%r11d), %r10d
+        movl    %r10d, 124(%rsp)
         movl    124(%rsp), %r10d
         movl    %r10d, 120(%rsp)
         movl    120(%rsp), %r10d
@@ -304,15 +304,15 @@ main:
         movl    %edi, 232(%rsp)
         movl    20(%rsp), %r10d
         movl    %r10d, 260(%rsp)
-        movl    232(%rsp), %r10d
-        movl    260(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
+        movl    232(%rsp), %r11d
+        movl    260(%rsp), %r10d
+        leal    (%r11d,%r10d), %edi
         movl    %edi, 232(%rsp)
         movl    8(%rsp), %r10d
         movl    %r10d, 264(%rsp)
-        movl    232(%rsp), %r10d
-        movl    264(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
+        movl    232(%rsp), %r11d
+        movl    264(%rsp), %r10d
+        leal    (%r11d,%r10d), %edi
         movl    %edi, 232(%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, 268(%rsp)

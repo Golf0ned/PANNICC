@@ -282,10 +282,10 @@ unary_minus:
         movl    %r10d, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, 8(%rsp)
-        movl    8(%rsp), %r11d
-        movl    $0, %r10d
-        subl    %r11d, %r10d
-        movl    %r10d, 8(%rsp)
+        movl    8(%rsp), %r10d
+        movl    $0, %r11d
+        subl    %r10d, %r11d
+        movl    %r11d, 8(%rsp)
         movl    8(%rsp), %r10d
         movl    %r10d, 12(%rsp)
 .Lunary_minus_9:
@@ -325,10 +325,10 @@ add_equals:
         movl    4(%rsp), %r10d
         movl    %r10d, (%rsp)
         movl    $2, 8(%rsp)
-        movl    (%rsp), %edi
-        movl    8(%rsp), %r10d
-        leal    (%edi,%r10d), %r11d
-        movl    %r11d, (%rsp)
+        movl    (%rsp), %r11d
+        movl    8(%rsp), %edi
+        leal    (%r11d,%edi), %r10d
+        movl    %r10d, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, 12(%rsp)
         movl    12(%rsp), %r10d

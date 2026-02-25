@@ -26,25 +26,25 @@ lost_copy_problem:
     .globl  swap_problem
     .type   swap_problem, @function
 swap_problem:
-        movl    %edi, %r10d
-        movl    %esi, %edi
+        movl    %edi, %r11d
+        movl    %esi, %esi
 .Lswap_problem_entry:
-        movl    %r10d, %r11d
-        movl    %edi, %r10d
+        movl    %r11d, %r10d
+        movl    %esi, %edi
 .Lswap_problem_2:
-        movq    $1, %rdi
-        cmpq    $0, %rdi
+        movq    $1, %r11
+        cmpq    $0, %r11
         jne     .Lswap_problem_7
 .Lswap_problem_5:
 .Lswap_problem_6:
+        movl    %edi, %r11d
         movl    %r10d, %edi
         movl    %r11d, %r10d
-        movl    %edi, %r11d
         jmp     .Lswap_problem_2
 .Lswap_problem_7:
 .Lswap_problem_8:
-        leal    (%r11d,%r10d), %edi
-        movl    %edi, %eax
+        leal    (%r10d,%edi), %r11d
+        movl    %r11d, %eax
         ret
 .Lswap_problem_end:
     .section    .note.GNU-stack,"",@progbits

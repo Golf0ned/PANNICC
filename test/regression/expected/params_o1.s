@@ -13,38 +13,39 @@ fun1:
     .type   fun2, @function
 fun2:
         movl    %edi, %r10d
-        movl    %esi, %r11d
+        movl    %esi, %esi
 .Lfun2_entry:
-        subq    $16, %rsp
-        movq    %r10, 8(%rsp)
-        movq    %r11, (%rsp)
-        movl    %r10d, %edi
-        call    fun1
-        movq    (%rsp), %r11
-        movq    8(%rsp), %r10
-        addq    $16, %rsp
-        movl    %eax, %edi
-        leal    (,%r10d,2), %esi
-        movl    %esi, %r10d
-        imull   %r11d, %r10d
-        leal    (%edi,%r10d), %esi
         subq    $16, %rsp
         movq    %rsi, 8(%rsp)
         movq    %r10, (%rsp)
-        movl    %r11d, %edi
+        movl    %r10d, %edi
         call    fun1
+        movq    (%rsp), %r10
+        movq    8(%rsp), %rsi
         addq    $16, %rsp
-        movl    %eax, %r10d
-        leal    (%esi,%r10d), %r11d
-        movl    %r11d, %eax
+        movl    %eax, %r11d
+        leal    (,%r10d,2), %edi
+        movl    %edi, %r10d
+        imull   %esi, %r10d
+        leal    (%r11d,%r10d), %edi
+        subq    $16, %rsp
+        movq    %rdi, 8(%rsp)
+        movq    %rsi, (%rsp)
+        movl    %esi, %edi
+        call    fun1
+        movq    8(%rsp), %rdi
+        addq    $16, %rsp
+        movl    %eax, %r11d
+        leal    (%edi,%r11d), %r10d
+        movl    %r10d, %eax
         ret
 .Lfun2_end:
     .globl  fun3
     .type   fun3, @function
 fun3:
-        movl    %edi, %esi
-        movl    %esi, %edx
-        movl    %edx, %ecx
+        movl    %edi, %ecx
+        movl    %esi, %esi
+        movl    %edx, %edx
         movl    %ecx, %edi
 .Lfun3_entry:
         subq    $32, %rsp
@@ -60,12 +61,12 @@ fun3:
         movq    24(%rsp), %rdi
         addq    $32, %rsp
         movl    %eax, %r10d
-        movl    %esi, %r11d
+        movl    %ecx, %r11d
         imull   %r10d, %r11d
-        movl    %edx, %r10d
+        movl    %esi, %r10d
         imull   %edi, %r10d
         leal    (%r11d,%r10d), %edi
-        leal    (%edi,%ecx), %r10d
+        leal    (%edi,%edx), %r10d
         movl    %r10d, %eax
         ret
 .Lfun3_end:
@@ -130,22 +131,22 @@ call4:
     .globl  super_fun
     .type   super_fun, @function
 super_fun:
-        movl    %edi, %r10d
-        movl    %esi, %r11d
-        movl    %edx, %edi
-        movl    %ecx, %esi
-        movl    %r8d, %edx
-        movl    %r9d, %ecx
-        movl    (%rsp), %r8d
-        movl    8(%rsp), %r9d
+        movl    %edi, %eax
+        movl    %esi, %r9d
+        movl    %edx, %ecx
+        movl    %ecx, %r11d
+        movl    %r8d, %edi
+        movl    %r9d, %esi
+        movl    (%rsp), %edx
+        movl    8(%rsp), %r8d
 .Lsuper_fun_entry:
-        leal    (%r10d,%r11d), %eax
-        leal    (%eax,%edi), %r11d
+        leal    (%eax,%r9d), %r10d
+        leal    (%r10d,%ecx), %r9d
+        leal    (%r9d,%r11d), %r10d
+        leal    (%r10d,%edi), %r11d
         leal    (%r11d,%esi), %r10d
         leal    (%r10d,%edx), %r11d
-        leal    (%r11d,%ecx), %r10d
-        leal    (%r10d,%r8d), %r11d
-        leal    (%r11d,%r9d), %r10d
+        leal    (%r11d,%r8d), %r10d
         movl    %r10d, %eax
         ret
 .Lsuper_fun_end:
@@ -181,69 +182,71 @@ caller_saved:
         movq    %r13, 16(%rsp)
         movq    %r12, 8(%rsp)
         movq    %rbx, (%rsp)
-        movl    %edi, %ecx
-        movl    %esi, %r14d
+        movl    %edi, %r12d
+        movl    %esi, %r13d
 .Lcaller_saved_entry:
-        movl    %ecx, %edx
-        addl    $1, %edx
-        movl    %ecx, %esi
-        addl    $2, %esi
-        movl    %ecx, %edi
-        addl    $3, %edi
-        movl    %ecx, %r11d
-        addl    $4, %r11d
-        movl    %ecx, %r10d
-        addl    $5, %r10d
-        movl    %ecx, %r8d
-        addl    $6, %r8d
-        movl    %ecx, %r9d
-        addl    $7, %r9d
-        movl    %ecx, %eax
-        addl    $8, %eax
-        movl    %ecx, %ebx
-        addl    $9, %ebx
-        movl    %ecx, %r12d
-        addl    $10, %r12d
-        movl    %ecx, %r13d
-        addl    $11, %r13d
+        movl    %r12d, %r14d
+        addl    $1, %r14d
+        movl    %r12d, %r8d
+        addl    $2, %r8d
+        movl    %r12d, %ebx
+        addl    $3, %ebx
+        movl    %r12d, %eax
+        addl    $4, %eax
+        movl    %r12d, %r9d
+        addl    $5, %r9d
+        movl    %r12d, %edx
+        addl    $6, %edx
+        movl    %r12d, %ecx
+        addl    $7, %ecx
+        movl    %r12d, %esi
+        addl    $8, %esi
+        movl    %r12d, %edi
+        addl    $9, %edi
+        movl    %r12d, %r10d
+        addl    $10, %r10d
+        movl    %r12d, %r11d
+        addl    $11, %r11d
         subq    $80, %rsp
         movq    %rdi, 72(%rsp)
         movq    %rsi, 64(%rsp)
         movq    %rdx, 56(%rsp)
-        movq    %r8, 48(%rsp)
-        movq    %r9, 40(%rsp)
-        movq    %r10, 32(%rsp)
-        movq    %r11, 24(%rsp)
-        movl    %edx, %edi
-        movl    %esi, %esi
-        movl    %edi, %edx
-        movl    %r11d, %ecx
-        movl    %r10d, %r8d
-        movl    %r8d, %r9d
-        movl    %r9d, (%rsp)
-        movl    %eax, 8(%rsp)
+        movq    %rcx, 48(%rsp)
+        movq    %r8, 40(%rsp)
+        movq    %r9, 32(%rsp)
+        movq    %r10, 24(%rsp)
+        movq    %r11, 16(%rsp)
+        movl    %r14d, %edi
+        movl    %r8d, %esi
+        movl    %ebx, %edx
+        movl    %eax, %ecx
+        movl    %r9d, %r8d
+        movl    %edx, %r9d
+        movl    %ecx, (%rsp)
+        movl    %esi, 8(%rsp)
         call    super_fun
-        movq    24(%rsp), %r11
-        movq    32(%rsp), %r10
-        movq    40(%rsp), %r9
-        movq    48(%rsp), %r8
+        movq    16(%rsp), %r11
+        movq    24(%rsp), %r10
+        movq    32(%rsp), %r9
+        movq    40(%rsp), %r8
+        movq    48(%rsp), %rcx
         movq    56(%rsp), %rdx
         movq    64(%rsp), %rsi
         movq    72(%rsp), %rdi
         addq    $80, %rsp
-        movl    %eax, %r15d
+        movl    %eax, %r12d
+        leal    (%r14d,%r8d), %r15d
+        leal    (%r15d,%ebx), %r8d
+        leal    (%r8d,%eax), %ebx
+        leal    (%ebx,%r9d), %r8d
+        leal    (%r8d,%edx), %r9d
+        leal    (%r9d,%ecx), %edx
         leal    (%edx,%esi), %ecx
         leal    (%ecx,%edi), %esi
-        leal    (%esi,%r11d), %edi
-        leal    (%edi,%r10d), %r11d
-        leal    (%r11d,%r8d), %edi
-        leal    (%edi,%r9d), %r10d
-        leal    (%r10d,%eax), %r11d
-        leal    (%r11d,%ebx), %r10d
+        leal    (%esi,%r10d), %edi
+        leal    (%edi,%r11d), %r10d
         leal    (%r10d,%r12d), %r11d
         leal    (%r11d,%r13d), %r10d
-        leal    (%r10d,%r15d), %r11d
-        leal    (%r11d,%r14d), %r10d
         movl    %r10d, %eax
         movq    (%rsp), %rbx
         movq    8(%rsp), %r12

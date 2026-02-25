@@ -46,9 +46,9 @@ if_basic_else:  # 0 params, 36 stack bytes
         movl    (%rsp), %r10d
         movl    %r10d, 12(%rsp)
         movl    $3, 16(%rsp)
-        movl    12(%rsp), %r10d
-        movl    16(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
+        movl    12(%rsp), %r11d
+        movl    16(%rsp), %r10d
+        leal    (%r11d,%r10d), %edi
         movl    %edi, 12(%rsp)
         movl    12(%rsp), %r10d
         movl    %r10d, (%rsp)

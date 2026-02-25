@@ -22,10 +22,10 @@ second:
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
         movl    $1, 4(%rsp)
-        movl    (%rsp), %r10d
-        movl    4(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
-        movl    %edi, (%rsp)
+        movl    (%rsp), %edi
+        movl    4(%rsp), %r10d
+        leal    (%edi,%r10d), %r11d
+        movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, 8(%rsp)
 .Lsecond_8:
@@ -43,10 +43,10 @@ third:
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
         movl    $2, 4(%rsp)
-        movl    (%rsp), %r10d
-        movl    4(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
-        movl    %edi, (%rsp)
+        movl    (%rsp), %edi
+        movl    4(%rsp), %r10d
+        leal    (%edi,%r10d), %r11d
+        movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, 8(%rsp)
 .Lthird_8:
@@ -64,10 +64,10 @@ fourth:
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
         movl    $3, 4(%rsp)
-        movl    (%rsp), %r10d
-        movl    4(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
-        movl    %edi, (%rsp)
+        movl    (%rsp), %edi
+        movl    4(%rsp), %r10d
+        leal    (%edi,%r10d), %r11d
+        movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, 8(%rsp)
 .Lfourth_8:
@@ -85,10 +85,10 @@ fifth:
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
         movl    $4, 4(%rsp)
-        movl    (%rsp), %r10d
-        movl    4(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
-        movl    %edi, (%rsp)
+        movl    (%rsp), %edi
+        movl    4(%rsp), %r10d
+        leal    (%edi,%r10d), %r11d
+        movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, 8(%rsp)
 .Lfifth_8:
@@ -106,10 +106,10 @@ sixth:
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
         movl    $5, 4(%rsp)
-        movl    (%rsp), %r10d
-        movl    4(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
-        movl    %edi, (%rsp)
+        movl    (%rsp), %edi
+        movl    4(%rsp), %r10d
+        leal    (%edi,%r10d), %r11d
+        movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, 8(%rsp)
 .Lsixth_8:
@@ -134,10 +134,10 @@ main:
         call    first
         movl    %eax, %r10d
         movl    %r10d, 16(%rsp)
-        movl    12(%rsp), %r11d
-        movl    16(%rsp), %r10d
-        leal    (%r11d,%r10d), %edi
-        movl    %edi, 12(%rsp)
+        movl    12(%rsp), %edi
+        movl    16(%rsp), %r11d
+        leal    (%edi,%r11d), %r10d
+        movl    %r10d, 12(%rsp)
         movl    12(%rsp), %r10d
         movl    %r10d, 4(%rsp)
         movl    4(%rsp), %r10d
@@ -145,9 +145,9 @@ main:
         call    second
         movl    %eax, %r10d
         movl    %r10d, 24(%rsp)
-        movl    20(%rsp), %r10d
-        movl    24(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
+        movl    20(%rsp), %r11d
+        movl    24(%rsp), %r10d
+        leal    (%r11d,%r10d), %edi
         movl    %edi, 20(%rsp)
         movl    20(%rsp), %r10d
         movl    %r10d, 4(%rsp)
@@ -156,9 +156,9 @@ main:
         call    third
         movl    %eax, %r10d
         movl    %r10d, 32(%rsp)
-        movl    28(%rsp), %r10d
-        movl    32(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
+        movl    28(%rsp), %r11d
+        movl    32(%rsp), %r10d
+        leal    (%r11d,%r10d), %edi
         movl    %edi, 28(%rsp)
         movl    28(%rsp), %r10d
         movl    %r10d, 4(%rsp)

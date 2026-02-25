@@ -54,40 +54,40 @@ main:  # 0 params, 0 stack bytes
         movl    %eax, %r10d
         call    first  # ()
         movl    %eax, %r10d
-        movl    $0, %r11d
-        addl    %r10d, %r11d
+        movl    $0, %edi
+        addl    %r10d, %edi
         call    second  # ()
         movl    %eax, %r10d
-        leal    (%r11d,%r10d), %edi
+        leal    (%edi,%r10d), %r11d
         call    third  # ()
         movl    %eax, %r10d
-        leal    (%edi,%r10d), %r11d
+        leal    (%r11d,%r10d), %edi
         call    fourth  # ()
         movl    %eax, %r10d
-        leal    (%r11d,%r10d), %edi
+        leal    (%edi,%r10d), %r11d
         call    fifth  # ()
         movl    %eax, %r10d
-        leal    (%edi,%r10d), %r11d
+        leal    (%r11d,%r10d), %edi
         call    sixth  # ()
         movl    %eax, %r10d
-        leal    (%r11d,%r10d), %edi
+        leal    (%edi,%r10d), %r11d
         call    first  # ()
         movl    %eax, %r10d
-        leal    (%edi,%r10d), %r11d
+        leal    (%r11d,%r10d), %edi
         call    second  # ()
         movl    %eax, %r10d
-        leal    (%r11d,%r10d), %edi
+        leal    (%edi,%r10d), %r11d
         call    third  # ()
         movl    %eax, %r10d
-        leal    (%edi,%r10d), %r11d
+        leal    (%r11d,%r10d), %edi
         call    fourth  # ()
         movl    %eax, %r10d
-        leal    (%r11d,%r10d), %edi
+        leal    (%edi,%r10d), %r11d
         call    fifth  # ()
         movl    %eax, %r10d
-        leal    (%edi,%r10d), %esi
+        leal    (%r11d,%r10d), %edi
         call    sixth  # ()
         movl    %eax, %r11d
-        leal    (%esi,%r11d), %r10d
+        leal    (%edi,%r11d), %r10d
         movl    %r10d, %eax
         ret
