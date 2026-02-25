@@ -160,7 +160,7 @@ namespace backend {
 
                 has_call = true;
 
-                auto next_iter = i_iter;
+                auto next_iter = std::next(i_iter);
 
                 // TODO: do we need to save from in at all? we currently save it
                 // for potential arg collision issues
@@ -200,8 +200,8 @@ namespace backend {
                     auto deallocate =
                         std::make_unique<lir::InstructionBinaryOp>(
                             lir::BinaryOp::ADD, reg_size, stack_bytes, rsp);
-                    next_iter = instructions.insert(std::next(i_iter),
-                                                    std::move(deallocate));
+                    instructions.insert(std::next(i_iter),
+                                        std::move(deallocate));
                 }
 
                 // Save/restore registers
@@ -224,8 +224,7 @@ namespace backend {
 
                     auto pop = std::make_unique<lir::InstructionMov>(
                         lir::Extend::NONE, reg_size, reg_size, stack_slot, reg);
-                    next_iter =
-                        instructions.insert(std::next(i_iter), std::move(pop));
+                    instructions.insert(std::next(i_iter), std::move(pop));
                 }
 
                 // Store args
@@ -251,7 +250,7 @@ namespace backend {
                     instructions.insert(i_iter, std::move(mov));
                 }
 
-                i_iter = next_iter;
+                i_iter = std::prev(next_iter);
                 i_index++;
             }
 
