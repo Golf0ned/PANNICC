@@ -1,0 +1,90 @@
+int fib_rec(int n_0) {
+    __entry:
+    int __v;
+    __v = n_0;
+    goto_if (__v) __if_t __if_cont;
+    __if_t:
+    int __v1;
+    __v1 = n_0;
+    int __v2;
+    __v2 = 1;
+    __v1 = __v1 - __v2;
+    goto_if (__v1) __if_t1 __if_cont1;
+    __if_t1:
+    int __v3;
+    __v3 = n_0;
+    int __v4;
+    __v4 = 1;
+    __v3 = __v3 - __v4;
+    int __v5;
+    __v5 = fib_rec(__v3);
+    int __v6;
+    __v6 = n_0;
+    int __v7;
+    __v7 = 2;
+    __v6 = __v6 - __v7;
+    int __v8;
+    __v8 = fib_rec(__v6);
+    __v5 = __v5 + __v8;
+    return __v5;
+    __if_cont1:
+    int __v9;
+    __v9 = 1;
+    return __v9;
+    __if_cont:
+    int __v10;
+    __v10 = 0;
+    return __v10;
+}
+
+int fib_it(int n_0) {
+    __entry:
+    int first_1;
+    int __v;
+    __v = 0;
+    first_1 = __v;
+    int second_1;
+    int __v1;
+    __v1 = 1;
+    second_1 = __v1;
+    int temp_1;
+    __while_cond:
+    int __v2;
+    __v2 = n_0;
+    goto_if (__v2) __while_body __while_cont;
+    __while_body:
+    int __v3;
+    __v3 = first_1;
+    int __v4;
+    __v4 = second_1;
+    __v3 = __v3 + __v4;
+    temp_1 = __v3;
+    int __v5;
+    __v5 = second_1;
+    first_1 = __v5;
+    int __v6;
+    __v6 = temp_1;
+    second_1 = __v6;
+    int __v7;
+    __v7 = 1;
+    n_0 = n_0 - __v7;
+    goto __while_cond;
+    __while_cont:
+    int __v8;
+    __v8 = first_1;
+    return __v8;
+}
+
+int main() {
+    __entry:
+    int __v;
+    __v = 10;
+    int __v1;
+    __v1 = fib_rec(__v);
+    int __v2;
+    __v2 = 1000;
+    int __v3;
+    __v3 = fib_it(__v2);
+    __v1 = __v1 + __v3;
+    return __v1;
+}
