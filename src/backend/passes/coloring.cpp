@@ -186,7 +186,7 @@ namespace backend {
                                                Interference &interference,
                                                const SpillCosts &sc,
                                                lir::OperandManager *om) {
-        int num_regs = 16;
+        int num_regs = 15;
 
         //
         // "Pruning" (degree < R)

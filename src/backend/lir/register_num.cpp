@@ -332,7 +332,6 @@ namespace backend::lir {
             RegisterNum::R8,  RegisterNum::R9,  RegisterNum::RAX,
             RegisterNum::RBX, RegisterNum::R12, RegisterNum::R13,
             RegisterNum::R14, RegisterNum::R15, RegisterNum::RBP,
-            RegisterNum::RSP,
         };
         return coloring_priority;
     }
