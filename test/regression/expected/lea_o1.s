@@ -41,15 +41,15 @@ leaBIS:
     .globl  leaBID
     .type   leaBID, @function
 leaBID:
-        movl    %edi, %r10d
-        movl    %esi, %r11d
+        movl    %edi, %r11d
+        movl    %esi, %r10d
 .LleaBID_entry:
-        leal    13(%r10d,%r11d), %r10d
-        leal    13(%r10d,%r11d), %r10d
-        leal    13(%r10d,%r11d), %r10d
+        leal    13(%r11d,%r10d), %r10d
         leal    13(%r11d,%r10d), %r10d
         leal    13(%r11d,%r10d), %r10d
         leal    13(%r10d,%r11d), %r10d
+        leal    13(%r10d,%r11d), %r10d
+        leal    13(%r11d,%r10d), %r10d
         movl    $0, %eax
         ret
 .LleaBID_end:

@@ -24,18 +24,18 @@ while_basic:
 while_complex:
 .Lwhile_complex_entry:
         movl    $0, %r11d
-        movl    $100, %r10d
+        movl    $100, %esi
 .Lwhile_complex_0:
-        cmpl    $0, %r10d
+        cmpl    $0, %esi
         jne     .Lwhile_complex_7
 .Lwhile_complex_3:
 .Lwhile_complex_4:
-        movl    %r11d, %edi
-        addl    $5, %edi
-        movl    %r10d, %esi
-        subl    $1, %esi
-        movl    %edi, %r11d
-        movl    %esi, %r10d
+        movl    %r11d, %r10d
+        addl    $5, %r10d
+        movl    %esi, %edi
+        subl    $1, %edi
+        movl    %r10d, %r11d
+        movl    %edi, %esi
         jmp     .Lwhile_complex_0
 .Lwhile_complex_7:
 .Lwhile_complex_8:

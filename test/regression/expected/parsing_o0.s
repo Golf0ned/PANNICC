@@ -18,27 +18,27 @@ compound:
 .Lcompound_entry:
         movl    $9, 4(%rsp)
         movl    $123, 8(%rsp)
-        movl    4(%rsp), %r11d
-        movl    8(%rsp), %edi
-        movl    %r11d, %r10d
-        imull   %edi, %r10d
+        movl    4(%rsp), %edi
+        movl    8(%rsp), %r11d
+        movl    %edi, %r10d
+        imull   %r11d, %r10d
         movl    %r10d, 4(%rsp)
         movl    $3, 12(%rsp)
-        movl    4(%rsp), %r11d
-        movl    12(%rsp), %r10d
-        leal    (%r11d,%r10d), %edi
-        movl    %edi, 4(%rsp)
+        movl    4(%rsp), %edi
+        movl    12(%rsp), %r11d
+        leal    (%edi,%r11d), %r10d
+        movl    %r10d, 4(%rsp)
         movl    $123, 16(%rsp)
         movl    $122, 20(%rsp)
-        movl    16(%rsp), %r11d
-        movl    20(%rsp), %edi
-        movl    %r11d, %r10d
-        subl    %edi, %r10d
-        movl    %r10d, 16(%rsp)
-        movl    4(%rsp), %r11d
         movl    16(%rsp), %edi
-        movl    %r11d, %r10d
-        andl    %edi, %r10d
+        movl    20(%rsp), %r11d
+        movl    %edi, %r10d
+        subl    %r11d, %r10d
+        movl    %r10d, 16(%rsp)
+        movl    4(%rsp), %edi
+        movl    16(%rsp), %r11d
+        movl    %edi, %r10d
+        andl    %r11d, %r10d
         movl    %r10d, 4(%rsp)
         movl    4(%rsp), %r10d
         movl    %r10d, (%rsp)
@@ -50,9 +50,9 @@ compound:
         movl    %r11d, %r10d
         imull   %edi, %r10d
         movl    %r10d, 32(%rsp)
-        movl    28(%rsp), %r10d
-        movl    32(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
+        movl    28(%rsp), %r11d
+        movl    32(%rsp), %r10d
+        leal    (%r11d,%r10d), %edi
         movl    %edi, 28(%rsp)
         movl    $4, 40(%rsp)
         movl    28(%rsp), %r11d
@@ -112,16 +112,16 @@ parens:
         movl    $3, 4(%rsp)
         movl    $2, 8(%rsp)
         movl    $1, 12(%rsp)
-        movl    8(%rsp), %r10d
-        movl    12(%rsp), %edi
-        movl    %r10d, %r11d
-        subl    %edi, %r11d
-        movl    %r11d, 8(%rsp)
-        movl    4(%rsp), %r10d
         movl    8(%rsp), %edi
-        movl    %r10d, %r11d
-        subl    %edi, %r11d
-        movl    %r11d, 4(%rsp)
+        movl    12(%rsp), %r11d
+        movl    %edi, %r10d
+        subl    %r11d, %r10d
+        movl    %r10d, 8(%rsp)
+        movl    4(%rsp), %r11d
+        movl    8(%rsp), %edi
+        movl    %r11d, %r10d
+        subl    %edi, %r10d
+        movl    %r10d, 4(%rsp)
         movl    (%rsp), %r10d
         movl    4(%rsp), %edi
         movl    %r10d, %r11d

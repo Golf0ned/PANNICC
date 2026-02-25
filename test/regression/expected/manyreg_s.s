@@ -2,13 +2,13 @@
     .globl  main
     .type   main, @function
 main:
-        subq    $48, %rsp
-        movq    %r15, 40(%rsp)
-        movq    %r14, 32(%rsp)
-        movq    %r13, 24(%rsp)
-        movq    %r12, 16(%rsp)
-        movq    %rbp, 8(%rsp)
-        movq    %rbx, (%rsp)
+        subq    $476, %rsp
+        movq    %r15, 468(%rsp)
+        movq    %r14, 460(%rsp)
+        movq    %r13, 452(%rsp)
+        movq    %r12, 444(%rsp)
+        movq    %rbp, 436(%rsp)
+        movq    %rbx, 428(%rsp)
 .Lmain_entry:
         movl    $0, %esi
         addl    $1, %esi
@@ -16,118 +16,359 @@ main:
         addl    $0, %edx
         leal    (%edx,%esi), %ecx
         leal    (%ecx,%edx), %r10d
+        movl    %r10d, 368(%rsp)
+        movl    368(%rsp), %r10d
         leal    (%r10d,%esi), %r8d
         leal    (%r8d,%ecx), %r11d
+        movl    %r11d, 364(%rsp)
+        movl    364(%rsp), %r11d
         leal    (%r11d,%edx), %r10d
+        movl    %r10d, 360(%rsp)
+        movl    360(%rsp), %r10d
         leal    (%r10d,%esi), %r9d
         leal    (%r9d,%r8d), %r10d
+        movl    %r10d, 356(%rsp)
+        movl    356(%rsp), %r10d
         leal    (%r10d,%ecx), %r11d
+        movl    %r11d, 352(%rsp)
+        movl    352(%rsp), %r11d
         leal    (%r11d,%edx), %r10d
+        movl    %r10d, 348(%rsp)
+        movl    348(%rsp), %r10d
         leal    (%r10d,%esi), %eax
         leal    (%eax,%r9d), %r11d
+        movl    %r11d, 344(%rsp)
+        movl    344(%rsp), %r11d
         leal    (%r11d,%r8d), %r10d
+        movl    %r10d, 340(%rsp)
+        movl    340(%rsp), %r10d
         leal    (%r10d,%ecx), %r11d
+        movl    %r11d, 336(%rsp)
+        movl    336(%rsp), %r11d
         leal    (%r11d,%edx), %r10d
+        movl    %r10d, 332(%rsp)
+        movl    332(%rsp), %r10d
         leal    (%r10d,%esi), %ebx
         leal    (%ebx,%eax), %r10d
+        movl    %r10d, 328(%rsp)
+        movl    328(%rsp), %r10d
         leal    (%r10d,%r9d), %r11d
+        movl    %r11d, 324(%rsp)
+        movl    324(%rsp), %r11d
         leal    (%r11d,%r8d), %r10d
+        movl    %r10d, 320(%rsp)
+        movl    320(%rsp), %r10d
         leal    (%r10d,%ecx), %r11d
+        movl    %r11d, 316(%rsp)
+        movl    316(%rsp), %r11d
         leal    (%r11d,%edx), %r10d
+        movl    %r10d, 312(%rsp)
+        movl    312(%rsp), %r10d
         leal    (%r10d,%esi), %r12d
         leal    (%r12d,%ebx), %r11d
+        movl    %r11d, 308(%rsp)
+        movl    308(%rsp), %r11d
         leal    (%r11d,%eax), %r10d
+        movl    %r10d, 304(%rsp)
+        movl    304(%rsp), %r10d
         leal    (%r10d,%r9d), %r11d
+        movl    %r11d, 300(%rsp)
+        movl    300(%rsp), %r11d
         leal    (%r11d,%r8d), %r10d
+        movl    %r10d, 296(%rsp)
+        movl    296(%rsp), %r10d
         leal    (%r10d,%ecx), %r11d
+        movl    %r11d, 292(%rsp)
+        movl    292(%rsp), %r11d
         leal    (%r11d,%edx), %r10d
+        movl    %r10d, 288(%rsp)
+        movl    288(%rsp), %r10d
         leal    (%r10d,%esi), %r13d
         leal    (%r13d,%r12d), %r10d
+        movl    %r10d, 284(%rsp)
+        movl    284(%rsp), %r10d
         leal    (%r10d,%ebx), %r11d
+        movl    %r11d, 280(%rsp)
+        movl    280(%rsp), %r11d
         leal    (%r11d,%eax), %r10d
+        movl    %r10d, 276(%rsp)
+        movl    276(%rsp), %r10d
         leal    (%r10d,%r9d), %r11d
+        movl    %r11d, 272(%rsp)
+        movl    272(%rsp), %r11d
         leal    (%r11d,%r8d), %r10d
+        movl    %r10d, 268(%rsp)
+        movl    268(%rsp), %r10d
         leal    (%r10d,%ecx), %r11d
+        movl    %r11d, 264(%rsp)
+        movl    264(%rsp), %r11d
         leal    (%r11d,%edx), %r10d
+        movl    %r10d, 260(%rsp)
+        movl    260(%rsp), %r10d
         leal    (%r10d,%esi), %r14d
         leal    (%r14d,%r13d), %r11d
+        movl    %r11d, 256(%rsp)
+        movl    256(%rsp), %r11d
         leal    (%r11d,%r12d), %r10d
+        movl    %r10d, 252(%rsp)
+        movl    252(%rsp), %r10d
         leal    (%r10d,%ebx), %r11d
+        movl    %r11d, 248(%rsp)
+        movl    248(%rsp), %r11d
         leal    (%r11d,%eax), %r10d
+        movl    %r10d, 244(%rsp)
+        movl    244(%rsp), %r10d
         leal    (%r10d,%r9d), %r11d
+        movl    %r11d, 240(%rsp)
+        movl    240(%rsp), %r11d
         leal    (%r11d,%r8d), %r10d
+        movl    %r10d, 236(%rsp)
+        movl    236(%rsp), %r10d
         leal    (%r10d,%ecx), %r11d
+        movl    %r11d, 232(%rsp)
+        movl    232(%rsp), %r11d
         leal    (%r11d,%edx), %r10d
+        movl    %r10d, 228(%rsp)
+        movl    228(%rsp), %r10d
         leal    (%r10d,%esi), %r15d
         leal    (%r15d,%r14d), %r10d
+        movl    %r10d, 224(%rsp)
+        movl    224(%rsp), %r10d
         leal    (%r10d,%r13d), %r11d
+        movl    %r11d, 220(%rsp)
+        movl    220(%rsp), %r11d
         leal    (%r11d,%r12d), %r10d
+        movl    %r10d, 216(%rsp)
+        movl    216(%rsp), %r10d
         leal    (%r10d,%ebx), %r11d
+        movl    %r11d, 212(%rsp)
+        movl    212(%rsp), %r11d
         leal    (%r11d,%eax), %r10d
+        movl    %r10d, 208(%rsp)
+        movl    208(%rsp), %r10d
         leal    (%r10d,%r9d), %r11d
+        movl    %r11d, 204(%rsp)
+        movl    204(%rsp), %r11d
         leal    (%r11d,%r8d), %r10d
+        movl    %r10d, 200(%rsp)
+        movl    200(%rsp), %r10d
         leal    (%r10d,%ecx), %r11d
+        movl    %r11d, 196(%rsp)
+        movl    196(%rsp), %r11d
         leal    (%r11d,%edx), %r10d
+        movl    %r10d, 192(%rsp)
+        movl    192(%rsp), %r10d
         leal    (%r10d,%esi), %ebp
         leal    (%ebp,%r15d), %r10d
+        movl    %r10d, 188(%rsp)
+        movl    188(%rsp), %r10d
         leal    (%r10d,%r14d), %r11d
-        leal    (%r11d,%r13d), %edi
-        leal    (%edi,%r12d), %r10d
-        leal    (%r10d,%ebx), %r11d
-        leal    (%r11d,%eax), %r10d
-        leal    (%r10d,%r9d), %r11d
-        leal    (%r11d,%r8d), %r10d
-        leal    (%r10d,%ecx), %r11d
-        leal    (%r11d,%edx), %r10d
-        leal    (%r10d,%esi), %edi
-        leal    (%edi,%ebp), %r10d
-        leal    (%r10d,%r15d), %r11d
-        leal    (%r11d,%r14d), %r10d
-        leal    (%r10d,%r13d), %r11d
-        leal    (%r11d,%r12d), %r10d
-        leal    (%r10d,%ebx), %r11d
-        leal    (%r11d,%eax), %r10d
-        leal    (%r10d,%r9d), %r11d
-        leal    (%r11d,%r8d), %r10d
-        leal    (%r10d,%ecx), %r11d
-        leal    (%r11d,%edx), %r10d
-        leal    (%r10d,%esi), %r11d
-        leal    (%r11d,%edi), %r10d
-        leal    (%r10d,%ebp), %esp
-        leal    (%esp,%r15d), %r10d
-        leal    (%r10d,%r14d), %esp
-        leal    (%esp,%r13d), %r10d
-        leal    (%r10d,%r12d), %esp
-        leal    (%esp,%ebx), %r10d
-        leal    (%r10d,%eax), %esp
-        leal    (%esp,%r9d), %r10d
-        leal    (%r10d,%r8d), %esp
-        leal    (%esp,%ecx), %r10d
-        leal    (%r10d,%edx), %esp
-        leal    (%esp,%esi), %r10d
-        leal    (%r10d,%r11d), %esp
-        leal    (%esp,%edi), %r10d
-        leal    (%r10d,%ebp), %r11d
-        leal    (%r11d,%r15d), %r10d
-        leal    (%r10d,%r14d), %r11d
+        movl    %r11d, 184(%rsp)
+        movl    184(%rsp), %r11d
         leal    (%r11d,%r13d), %r10d
+        movl    %r10d, 180(%rsp)
+        movl    180(%rsp), %r10d
         leal    (%r10d,%r12d), %r11d
+        movl    %r11d, 176(%rsp)
+        movl    176(%rsp), %r11d
         leal    (%r11d,%ebx), %r10d
+        movl    %r10d, 172(%rsp)
+        movl    172(%rsp), %r10d
         leal    (%r10d,%eax), %r11d
+        movl    %r11d, 168(%rsp)
+        movl    168(%rsp), %r11d
         leal    (%r11d,%r9d), %r10d
+        movl    %r10d, 164(%rsp)
+        movl    164(%rsp), %r10d
         leal    (%r10d,%r8d), %r11d
+        movl    %r11d, 160(%rsp)
+        movl    160(%rsp), %r11d
         leal    (%r11d,%ecx), %r10d
+        movl    %r10d, 156(%rsp)
+        movl    156(%rsp), %r10d
+        leal    (%r10d,%edx), %edi
+        movl    %edi, 152(%rsp)
+        movl    152(%rsp), %edi
+        leal    (%edi,%esi), %r11d
+        movl    %r11d, 376(%rsp)
+        movl    376(%rsp), %r11d
+        leal    (%r11d,%ebp), %edi
+        movl    %edi, 148(%rsp)
+        movl    148(%rsp), %edi
+        leal    (%edi,%r15d), %r10d
+        movl    %r10d, 144(%rsp)
+        movl    144(%rsp), %r10d
+        leal    (%r10d,%r14d), %r11d
+        movl    %r11d, 140(%rsp)
+        movl    140(%rsp), %r11d
+        leal    (%r11d,%r13d), %r10d
+        movl    %r10d, 136(%rsp)
+        movl    136(%rsp), %r10d
+        leal    (%r10d,%r12d), %r11d
+        movl    %r11d, 132(%rsp)
+        movl    132(%rsp), %r11d
+        leal    (%r11d,%ebx), %r10d
+        movl    %r10d, 128(%rsp)
+        movl    128(%rsp), %r10d
+        leal    (%r10d,%eax), %r11d
+        movl    %r11d, 124(%rsp)
+        movl    124(%rsp), %r11d
+        leal    (%r11d,%r9d), %r10d
+        movl    %r10d, 120(%rsp)
+        movl    120(%rsp), %r10d
+        leal    (%r10d,%r8d), %r11d
+        movl    %r11d, 116(%rsp)
+        movl    116(%rsp), %r11d
+        leal    (%r11d,%ecx), %r10d
+        movl    %r10d, 112(%rsp)
+        movl    112(%rsp), %r10d
         leal    (%r10d,%edx), %r11d
+        movl    %r11d, 108(%rsp)
+        movl    108(%rsp), %r11d
         leal    (%r11d,%esi), %r10d
+        movl    %r10d, 372(%rsp)
+        movl    372(%rsp), %r10d
+        movl    376(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, 104(%rsp)
+        movl    104(%rsp), %edi
+        leal    (%edi,%ebp), %r10d
+        movl    %r10d, 100(%rsp)
+        movl    100(%rsp), %r10d
+        leal    (%r10d,%r15d), %r11d
+        movl    %r11d, 96(%rsp)
+        movl    96(%rsp), %r11d
+        leal    (%r11d,%r14d), %r10d
+        movl    %r10d, 92(%rsp)
+        movl    92(%rsp), %r10d
+        leal    (%r10d,%r13d), %r11d
+        movl    %r11d, 88(%rsp)
+        movl    88(%rsp), %r11d
+        leal    (%r11d,%r12d), %r10d
+        movl    %r10d, 84(%rsp)
+        movl    84(%rsp), %r10d
+        leal    (%r10d,%ebx), %r11d
+        movl    %r11d, 80(%rsp)
+        movl    80(%rsp), %r11d
+        leal    (%r11d,%eax), %r10d
+        movl    %r10d, 76(%rsp)
+        movl    76(%rsp), %r10d
+        leal    (%r10d,%r9d), %r11d
+        movl    %r11d, 72(%rsp)
+        movl    72(%rsp), %r11d
+        leal    (%r11d,%r8d), %r10d
+        movl    %r10d, 68(%rsp)
+        movl    68(%rsp), %r10d
+        leal    (%r10d,%ecx), %r11d
+        movl    %r11d, 64(%rsp)
+        movl    64(%rsp), %r11d
+        leal    (%r11d,%edx), %r10d
+        movl    %r10d, 60(%rsp)
+        movl    60(%rsp), %r10d
+        leal    (%r10d,%esi), %r11d
+        movl    %r11d, 56(%rsp)
+        movl    56(%rsp), %r11d
+        movl    372(%rsp), %r10d
+        leal    (%r11d,%r10d), %edi
+        movl    %edi, 52(%rsp)
+        movl    52(%rsp), %edi
+        movl    376(%rsp), %r11d
+        leal    (%edi,%r11d), %r10d
+        movl    %r10d, 424(%rsp)
+        movl    424(%rsp), %r10d
+        movl    %r10d, 48(%rsp)
+        movl    48(%rsp), %r10d
+        movl    %r10d, 424(%rsp)
+        movl    424(%rsp), %r10d
+        leal    (%r10d,%ebp), %r11d
+        movl    %r11d, 420(%rsp)
+        movl    420(%rsp), %r11d
+        movl    %r11d, 44(%rsp)
+        movl    44(%rsp), %r11d
+        movl    %r11d, 420(%rsp)
+        movl    420(%rsp), %r11d
+        leal    (%r11d,%r15d), %r10d
+        movl    %r10d, 416(%rsp)
+        movl    416(%rsp), %r10d
+        movl    %r10d, 40(%rsp)
+        movl    40(%rsp), %r10d
+        movl    %r10d, 416(%rsp)
+        movl    416(%rsp), %r10d
+        leal    (%r10d,%r14d), %r11d
+        movl    %r11d, 412(%rsp)
+        movl    412(%rsp), %r11d
+        movl    %r11d, 36(%rsp)
+        movl    36(%rsp), %r11d
+        movl    %r11d, 412(%rsp)
+        movl    412(%rsp), %r11d
+        leal    (%r11d,%r13d), %r10d
+        movl    %r10d, 408(%rsp)
+        movl    408(%rsp), %r10d
+        movl    %r10d, 32(%rsp)
+        movl    32(%rsp), %r10d
+        movl    %r10d, 408(%rsp)
+        movl    408(%rsp), %r10d
+        leal    (%r10d,%r12d), %r11d
+        movl    %r11d, 404(%rsp)
+        movl    404(%rsp), %r11d
+        movl    %r11d, 28(%rsp)
+        movl    28(%rsp), %r11d
+        movl    %r11d, 404(%rsp)
+        movl    404(%rsp), %r11d
+        leal    (%r11d,%ebx), %r10d
+        movl    %r10d, 400(%rsp)
+        movl    400(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, 400(%rsp)
+        movl    400(%rsp), %r10d
+        leal    (%r10d,%eax), %r11d
+        movl    %r11d, 396(%rsp)
+        movl    396(%rsp), %r11d
+        movl    %r11d, 20(%rsp)
+        movl    20(%rsp), %r11d
+        movl    %r11d, 396(%rsp)
+        movl    396(%rsp), %r11d
+        leal    (%r11d,%r9d), %r10d
+        movl    %r10d, 392(%rsp)
+        movl    392(%rsp), %r10d
+        movl    %r10d, 16(%rsp)
+        movl    16(%rsp), %r10d
+        movl    %r10d, 392(%rsp)
+        movl    392(%rsp), %r10d
+        leal    (%r10d,%r8d), %r11d
+        movl    %r11d, 388(%rsp)
+        movl    388(%rsp), %r11d
+        movl    %r11d, 12(%rsp)
+        movl    12(%rsp), %r11d
+        movl    %r11d, 388(%rsp)
+        movl    388(%rsp), %r11d
+        leal    (%r11d,%ecx), %r10d
+        movl    %r10d, 384(%rsp)
+        movl    384(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 384(%rsp)
+        movl    384(%rsp), %r10d
+        leal    (%r10d,%edx), %r11d
+        movl    %r11d, 380(%rsp)
+        movl    380(%rsp), %r11d
+        movl    %r11d, 4(%rsp)
+        movl    4(%rsp), %r11d
+        movl    %r11d, 380(%rsp)
+        movl    380(%rsp), %r11d
+        leal    (%r11d,%esi), %r10d
+        movl    %r10d, (%rsp)
 .Lmain_121:
+        movl    (%rsp), %r10d
         movl    %r10d, %eax
-        movq    (%rsp), %rbx
-        movq    8(%rsp), %rbp
-        movq    16(%rsp), %r12
-        movq    24(%rsp), %r13
-        movq    32(%rsp), %r14
-        movq    40(%rsp), %r15
-        addq    $48, %rsp
+        movq    428(%rsp), %rbx
+        movq    436(%rsp), %rbp
+        movq    444(%rsp), %r12
+        movq    452(%rsp), %r13
+        movq    460(%rsp), %r14
+        movq    468(%rsp), %r15
+        addq    $476, %rsp
         ret
 .Lmain_end:
     .section    .note.GNU-stack,"",@progbits

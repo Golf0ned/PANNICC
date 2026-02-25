@@ -6,11 +6,11 @@ lost_copy_problem:  # 1 params, 36 stack bytes
         movl    32(%rsp), %r10d
         movl    %r10d, 4(%rsp)
         movl    $10, 8(%rsp)
-        movl    4(%rsp), %r10d
-        movl    8(%rsp), %edi
-        movl    %r10d, %r11d
-        subl    %edi, %r11d
-        movl    %r11d, 4(%rsp)
+        movl    4(%rsp), %edi
+        movl    8(%rsp), %r11d
+        movl    %edi, %r10d
+        subl    %r11d, %r10d
+        movl    %r10d, 4(%rsp)
         movl    4(%rsp), %r10d
         cmpl    $0, %r10d
         jne     .Llost_copy_problem_23
