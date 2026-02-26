@@ -9,6 +9,8 @@
 
 namespace frontend {
     std::unordered_map<uint64_t, middleend::mir::Function *> lowered_functions;
+    std::unordered_map<middleend::mir::Instruction *, uint64_t>
+        call_to_function;
 
     middleend::mir::Program hirToMir(hir::Program &hir) {
         middleend::mir::LiteralMap literal_map;
@@ -41,8 +43,25 @@ namespace frontend {
                 function_type, name, std::move(params), std::move(basic_blocks),
                 entry);
             lowered_functions[name_atom->getValue()] = fun.get();
+
+            // Resolve functions (thanks recursion)
+            for (auto &bb : fun->getBasicBlocks()) {
+                for (auto &i : bb->getInstructions()) {
+                    auto call = dynamic_cast<middleend::mir::InstructionCall *>(
+                        i.get());
+                    if (!call)
+                        continue;
+
+                    auto function_id = call_to_function[i.get()];
+                    auto function = lowered_functions[function_id];
+
+                    call->setCallee(function);
+                }
+            }
+
             functions.push_back(std::move(fun));
         }
+
         return middleend::mir::Program(std::move(functions),
                                        std::move(literal_map));
     }
@@ -300,8 +319,6 @@ namespace frontend {
 
     void HIRToMIRVisitor::visit(hir::InstructionCall *i) {
         auto type = toMir(Type::INT);
-        middleend::mir::Function *callee =
-            lowered_functions.at(i->getCallee()->getValue());
 
         std::vector<middleend::mir::Value *> args;
         for (auto &arg : i->getArguments()) {
@@ -310,15 +327,15 @@ namespace frontend {
         }
 
         auto call = std::make_unique<middleend::mir::InstructionCall>(
-            type, callee, std::move(args));
+            type, nullptr, std::move(args));
+
+        call_to_function[call.get()] = i->getCallee()->getValue();
 
         cur_instructions.push_back(std::move(call));
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionCallAssign *i) {
         auto type = toMir(Type::INT);
-        middleend::mir::Function *callee =
-            lowered_functions.at(i->getCallee()->getValue());
 
         std::vector<middleend::mir::Value *> args;
         for (auto &arg : i->getArguments()) {
@@ -327,7 +344,9 @@ namespace frontend {
         }
 
         auto call = std::make_unique<middleend::mir::InstructionCall>(
-            type, callee, std::move(args));
+            type, nullptr, std::move(args));
+
+        call_to_function[call.get()] = i->getCallee()->getValue();
 
         middleend::mir::InstructionAlloca *ptr =
             value_mappings.at(i->getVariable()->getValue());
