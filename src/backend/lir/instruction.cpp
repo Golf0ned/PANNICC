@@ -5,7 +5,6 @@
 namespace backend::lir {
     Label::Label(std::string name) : name(name) {}
 
-
     std::string Label::getName() { return name; }
 
     void Label::accept(InstructionVisitor *v) { v->visit(this); }
