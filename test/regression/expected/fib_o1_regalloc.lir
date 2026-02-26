@@ -1,0 +1,67 @@
+fib_rec:  # 1 params, 0 stack bytes
+        movl    %edi, %r11d
+.Lfib_rec_entry:
+        cmpl    $0, %r11d
+        jne     .Lfib_rec_13
+.Lfib_rec_1:
+.Lfib_rec_2:
+        movl    %r11d, %r10d
+        subl    $1, %r10d
+        cmpl    $0, %r10d
+        jne     .Lfib_rec_11
+.Lfib_rec_4:
+.Lfib_rec_5:
+        movl    %r11d, %r10d
+        subl    $1, %r10d
+        call    fib_rec  # (%r10d)
+        movl    %eax, %edi
+        movl    %r11d, %r10d
+        subl    $2, %r10d
+        call    fib_rec  # (%r10d)
+        movl    %eax, %r10d
+        leal    (%edi,%r10d), %r11d
+        movl    %r11d, %r10d
+.Lfib_rec_15:
+        movl    %r10d, %eax
+        ret
+.Lfib_rec_13:
+.Lfib_rec_14:
+        movl    $0, %r10d
+        jmp     .Lfib_rec_15
+.Lfib_rec_11:
+.Lfib_rec_12:
+        movl    $1, %r10d
+        jmp     .Lfib_rec_15
+
+fib_it:  # 1 params, 0 stack bytes
+        movl    %edi, %r10d
+.Lfib_it_entry:
+        movl    $1, %r11d
+        movl    %r10d, %edi
+        movl    $0, %r10d
+.Lfib_it_1:
+        cmpl    $0, %edi
+        jne     .Lfib_it_9
+.Lfib_it_5:
+.Lfib_it_6:
+        leal    (%r10d,%r11d), %esi
+        movl    %edi, %r10d
+        subl    $1, %r10d
+        movl    %r10d, %edi
+        movl    %r11d, %r10d
+        movl    %esi, %r11d
+        jmp     .Lfib_it_1
+.Lfib_it_9:
+.Lfib_it_10:
+        movl    %r10d, %eax
+        ret
+
+main:  # 0 params, 0 stack bytes
+.Lmain_entry:
+        call    fib_rec  # ($10)
+        movl    %eax, %edi
+        call    fib_it  # ($1000)
+        movl    %eax, %r11d
+        leal    (%edi,%r11d), %r10d
+        movl    %r10d, %eax
+        ret
