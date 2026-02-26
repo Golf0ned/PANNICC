@@ -47,6 +47,8 @@ namespace middleend::mir {
 
     Function *InstructionCall::getCallee() { return callee; }
 
+    void InstructionCall::setCallee(Function *new_val) { callee = new_val; }
+
     std::vector<Value *> &InstructionCall::getArguments() { return arguments; }
 
     void InstructionCall::accept(InstructionVisitor *v) { v->visit(this); }
