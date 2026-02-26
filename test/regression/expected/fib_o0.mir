@@ -1,0 +1,174 @@
+define i32 @fib_rec(i32 %0) {
+entry:
+  %1 = alloca i32
+  %2 = alloca i32
+  %3 = alloca i32
+  %4 = alloca i32
+  %5 = alloca i32
+  %6 = alloca i32
+  %7 = alloca i32
+  %8 = alloca i32
+  %9 = alloca i32
+  %10 = alloca i32
+  %11 = alloca i32
+  %12 = alloca i32
+  %13 = alloca i32
+  store i32 %0, ptr %13
+  %14 = load ptr %13
+  store i32 %14, ptr %1
+  %15 = load ptr %1
+  br i32 %15, label 16, label 41
+
+16:
+  %17 = load ptr %13
+  store i32 %17, ptr %2
+  store i32 1, ptr %3
+  %18 = load ptr %2
+  %19 = load ptr %3
+  %20 = sub i32 %18, i32 %19
+  store i32 %20, ptr %2
+  %21 = load ptr %2
+  br i32 %21, label 22, label 39
+
+22:
+  %23 = load ptr %13
+  store i32 %23, ptr %4
+  store i32 1, ptr %5
+  %24 = load ptr %4
+  %25 = load ptr %5
+  %26 = sub i32 %24, i32 %25
+  store i32 %26, ptr %4
+  %27 = load ptr %4
+  %28 = call i32 @fib_rec(i32 %27)
+  store i32 %28, ptr %6
+  %29 = load ptr %13
+  store i32 %29, ptr %7
+  store i32 2, ptr %8
+  %30 = load ptr %7
+  %31 = load ptr %8
+  %32 = sub i32 %30, i32 %31
+  store i32 %32, ptr %7
+  %33 = load ptr %7
+  %34 = call i32 @fib_rec(i32 %33)
+  store i32 %34, ptr %9
+  %35 = load ptr %6
+  %36 = load ptr %9
+  %37 = add i32 %35, i32 %36
+  store i32 %37, ptr %6
+  %38 = load ptr %6
+  store i32 %38, ptr %12
+  br label 43
+
+39:
+  store i32 1, ptr %10
+  %40 = load ptr %10
+  store i32 %40, ptr %12
+  br label 43
+
+41:
+  store i32 0, ptr %11
+  %42 = load ptr %11
+  store i32 %42, ptr %12
+  br label 43
+
+43:
+  %44 = load ptr %12
+  ret i32 %44
+}
+
+define i32 @fib_it(i32 %0) {
+entry:
+  %1 = alloca i32
+  %2 = alloca i32
+  %3 = alloca i32
+  %4 = alloca i32
+  %5 = alloca i32
+  %6 = alloca i32
+  %7 = alloca i32
+  %8 = alloca i32
+  %9 = alloca i32
+  %10 = alloca i32
+  %11 = alloca i32
+  %12 = alloca i32
+  %13 = alloca i32
+  %14 = alloca i32
+  store i32 %0, ptr %14
+  store i32 0, ptr %2
+  %15 = load ptr %2
+  store i32 %15, ptr %1
+  store i32 1, ptr %4
+  %16 = load ptr %4
+  store i32 %16, ptr %3
+  br label 17
+
+17:
+  %18 = load ptr %14
+  store i32 %18, ptr %6
+  %19 = load ptr %6
+  br i32 %19, label 20, label 34
+
+20:
+  %21 = load ptr %1
+  store i32 %21, ptr %7
+  %22 = load ptr %3
+  store i32 %22, ptr %8
+  %23 = load ptr %7
+  %24 = load ptr %8
+  %25 = add i32 %23, i32 %24
+  store i32 %25, ptr %7
+  %26 = load ptr %7
+  store i32 %26, ptr %5
+  %27 = load ptr %3
+  store i32 %27, ptr %9
+  %28 = load ptr %9
+  store i32 %28, ptr %1
+  %29 = load ptr %5
+  store i32 %29, ptr %10
+  %30 = load ptr %10
+  store i32 %30, ptr %3
+  store i32 1, ptr %11
+  %31 = load ptr %14
+  %32 = load ptr %11
+  %33 = sub i32 %31, i32 %32
+  store i32 %33, ptr %14
+  br label 17
+
+34:
+  %35 = load ptr %1
+  store i32 %35, ptr %12
+  %36 = load ptr %12
+  store i32 %36, ptr %13
+  br label 37
+
+37:
+  %38 = load ptr %13
+  ret i32 %38
+}
+
+define i32 @main() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  %3 = alloca i32
+  %4 = alloca i32
+  store i32 10, ptr %0
+  %5 = load ptr %0
+  %6 = call i32 @fib_rec(i32 %5)
+  store i32 %6, ptr %1
+  store i32 1000, ptr %2
+  %7 = load ptr %2
+  %8 = call i32 @fib_it(i32 %7)
+  store i32 %8, ptr %3
+  %9 = load ptr %1
+  %10 = load ptr %3
+  %11 = add i32 %9, i32 %10
+  store i32 %11, ptr %1
+  %12 = load ptr %1
+  store i32 %12, ptr %4
+  br label 13
+
+13:
+  %14 = load ptr %4
+  ret i32 %14
+}
