@@ -40,6 +40,7 @@ namespace middleend::mir {
         InstructionCall(Type type, Function *callee,
                         std::vector<Value *> arguments);
         Function *getCallee();
+        void setCallee(Function *new_val);
         std::vector<Value *> &getArguments();
         void accept(InstructionVisitor *v) override;
 
