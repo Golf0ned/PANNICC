@@ -8,7 +8,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      - uses: RafikFarhad/clang-format-github-action@v6
-        with:
-          sources: "src/**/*.h,src/**/*.cpp"
-          style: file
+
+      - name: Install clang-format
+        run: sudo apt-get update && sudo apt-get install -y clang-format
+
+      - name: Check formatting
+        run: |
+          files=$(git ls-files 'src/**/*.h' 'src/**/*.cpp')
+          if [ -n "$files" ]; then
+            clang-format -style=file -i $files
+            git diff --exit-code
+          fi
