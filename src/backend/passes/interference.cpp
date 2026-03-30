@@ -68,7 +68,7 @@ namespace backend {
                 ib.interfere(om->getRegister(physical_regs[r1]),
                              om->getRegister(physical_regs[r2]));
 
-        auto gen = l[0], kill = l[1], out = l[3];
+        const auto &gen = l.getGen(), &kill = l.getKill(), &out = l.getOut();
         for (size_t i = 0; i < gen.size(); i++) {
             auto &gen_i = gen[i], &kill_i = kill[i], &out_i = out[i];
             for (auto gen_reg : gen_i) {

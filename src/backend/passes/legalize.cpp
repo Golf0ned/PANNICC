@@ -108,7 +108,7 @@ namespace backend {
     void ReplaceStackArgVisitor::visit(lir::InstructionUnknown *i) {}
 
     std::vector<lir::RegisterNum> getUsedRegisters(Liveness &l) {
-        auto &gen = l[0], &kill = l[1];
+        const auto &gen = l.getGen(), &kill = l.getKill();
 
         // TODO: do this in a less awful way
         std::unordered_set<lir::RegisterNum> registers_used;
@@ -137,7 +137,7 @@ namespace backend {
 
         for (auto &f : lir.getFunctions()) {
             auto liveness = computeLiveness(f.get(), om);
-            auto &in = liveness[2], &out = liveness[3];
+            const auto &in = liveness.getIn(), &out = liveness.getOut();
             auto registers_used = getUsedRegisters(liveness);
             auto function_stack_bytes = f->getStackBytes();
 
