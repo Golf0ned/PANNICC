@@ -11,13 +11,13 @@ namespace backend {
     public:
         Liveness(std::vector<RegisterSet> gen, std::vector<RegisterSet> kill,
                  std::vector<RegisterSet> in, std::vector<RegisterSet> out);
-        std::vector<RegisterSet> &getGen();
-        std::vector<RegisterSet> &getKill();
-        std::vector<RegisterSet> &getIn();
-        std::vector<RegisterSet> &getOut();
+        const std::vector<RegisterSet> &getGen();
+        const std::vector<RegisterSet> &getKill();
+        const std::vector<RegisterSet> &getIn();
+        const std::vector<RegisterSet> &getOut();
 
     private:
-        std::vector<RegisterSet> gen, kill, in, out;
+        const std::vector<RegisterSet> gen, kill, in, out;
     };
 
     Liveness computeLiveness(lir::Function *f, lir::OperandManager *om);
