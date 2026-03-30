@@ -214,7 +214,7 @@ namespace backend {
                         om->getAddress(rsp, nullptr, nullptr,
                                        om->getImmediate(call_stack_bytes));
                     auto push = std::make_unique<lir::InstructionMov>(
-                        lir::Extend::NONE, reg_size, reg_size, reg, stack_slot);
+                        reg_size, reg, stack_slot);
                     instructions.insert(i_iter, std::move(push));
 
                     saved_values[reg] = stack_slot;
@@ -223,7 +223,7 @@ namespace backend {
                         continue;
 
                     auto pop = std::make_unique<lir::InstructionMov>(
-                        lir::Extend::NONE, reg_size, reg_size, stack_slot, reg);
+                        reg_size, stack_slot, reg);
                     instructions.insert(std::next(i_iter), std::move(pop));
                 }
 
@@ -246,7 +246,7 @@ namespace backend {
                         val = saved_values[val_reg];
 
                     auto mov = std::make_unique<lir::InstructionMov>(
-                        lir::Extend::NONE, size_32, size_32, val, param);
+                        size_32, val, param);
                     instructions.insert(i_iter, std::move(mov));
                 }
 
@@ -272,13 +272,11 @@ namespace backend {
                                    om->getImmediate(function_stack_bytes));
 
                 auto push = std::make_unique<lir::InstructionMov>(
-                    lir::Extend::NONE, reg_size, reg_size, reg_to_save,
-                    stack_slot);
+                    reg_size, reg_to_save, stack_slot);
                 instructions.push_front(std::move(push));
 
                 auto pop = std::make_unique<lir::InstructionMov>(
-                    lir::Extend::NONE, reg_size, reg_size, stack_slot,
-                    reg_to_save);
+                    reg_size, stack_slot, reg_to_save);
                 instructions.insert(ret_iter, std::move(pop));
 
                 function_stack_bytes += 8;
