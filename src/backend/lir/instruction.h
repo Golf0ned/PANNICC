@@ -26,6 +26,7 @@ namespace backend::lir {
 
     class InstructionMov : public Instruction {
     public:
+        InstructionMov(DataSize size, Operand *src, Operand *dst);
         InstructionMov(Extend extend, DataSize src_size, DataSize dst_size,
                        Operand *src, Operand *dst);
         Extend getExtend();

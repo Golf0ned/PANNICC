@@ -9,6 +9,10 @@ namespace backend::lir {
 
     void Label::accept(InstructionVisitor *v) { v->visit(this); }
 
+    InstructionMov::InstructionMov(DataSize size, Operand *src, Operand *dst)
+        : extend(lir::Extend::NONE), src_size(size), dst_size(size), src(src),
+          dst(dst) {}
+
     InstructionMov::InstructionMov(Extend extend, DataSize src_size,
                                    DataSize dst_size, Operand *src,
                                    Operand *dst)
