@@ -1,13 +1,24 @@
 #pragma once
 
-#include <array>
 #include <unordered_set>
 
 #include "backend/lir/lir.h"
 
 namespace backend {
     using RegisterSet = std::unordered_set<lir::Register *>;
-    using Liveness = std::array<std::vector<RegisterSet>, 4>;
+
+    class Liveness {
+    public:
+        Liveness(std::vector<RegisterSet> gen, std::vector<RegisterSet> kill,
+                 std::vector<RegisterSet> in, std::vector<RegisterSet> out);
+        std::vector<RegisterSet> &getGen();
+        std::vector<RegisterSet> &getKill();
+        std::vector<RegisterSet> &getIn();
+        std::vector<RegisterSet> &getOut();
+
+    private:
+        std::vector<RegisterSet> gen, kill, in, out;
+    };
 
     Liveness computeLiveness(lir::Function *f, lir::OperandManager *om);
     void printLiveness(lir::Function *f, Liveness &l);
@@ -16,7 +27,7 @@ namespace backend {
     public:
         GenSetVisitor(lir::OperandManager *om);
 
-        std::unordered_set<lir::Register *> getResult();
+        RegisterSet getResult();
         void checkOperand(lir::Operand *o);
         void addRegister(lir::RegisterNum reg);
 
@@ -37,7 +48,7 @@ namespace backend {
         void visit(lir::InstructionUnknown *i) override;
 
     private:
-        std::unordered_set<lir::Register *> gen;
+        RegisterSet gen;
         lir::OperandManager *om;
     };
 
@@ -45,7 +56,7 @@ namespace backend {
     public:
         KillSetVisitor(lir::OperandManager *om);
 
-        std::unordered_set<lir::Register *> getResult();
+        RegisterSet getResult();
         void checkOperand(lir::Operand *o);
         void addRegister(lir::RegisterNum reg);
 
@@ -66,7 +77,7 @@ namespace backend {
         void visit(lir::InstructionUnknown *i) override;
 
     private:
-        std::unordered_set<lir::Register *> kill;
+        RegisterSet kill;
         lir::OperandManager *om;
     };
 
