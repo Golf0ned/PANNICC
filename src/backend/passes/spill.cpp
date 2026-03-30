@@ -111,13 +111,13 @@ namespace backend {
 
             if (gen_i.contains(reg_32)) {
                 auto load = std::make_unique<lir::InstructionMov>(
-                    lir::Extend::NONE, size, size, stack_var, reg_32);
+                    size, stack_var, reg_32);
                 instructions.insert(iter, std::move(load));
             }
 
             if (kill_i.contains(reg_32)) {
-                auto store = std::make_unique<lir::InstructionMov>(
-                    lir::Extend::NONE, size, size, reg_32, stack_var);
+                auto store = std::make_unique<lir::InstructionMov>(size, reg_32,
+                                                                   stack_var);
                 iter = instructions.insert(std::next(iter), std::move(store));
             }
 

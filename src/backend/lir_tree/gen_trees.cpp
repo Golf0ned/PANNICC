@@ -35,7 +35,6 @@ namespace backend::lir_tree {
         auto &params = f->getParameters();
         auto &arg_registers = lir::getArgRegisters();
         for (size_t param_num = 0; param_num < params.size(); param_num++) {
-            auto extend = lir::Extend::NONE;
             auto size = lir::DataSize::DOUBLEWORD;
             auto src = param_num < 6
                            ? static_cast<lir::Operand *>(om->getRegister(
@@ -43,8 +42,7 @@ namespace backend::lir_tree {
                            : static_cast<lir::Operand *>(
                                  om->getStackArg(param_num - 6));
             auto dst = resolveOperand(params[param_num].get());
-            auto mov = std::make_unique<lir::InstructionMov>(extend, size, size,
-                                                             src, dst);
+            auto mov = std::make_unique<lir::InstructionMov>(size, src, dst);
             instructions.push_back(std::move(mov));
         }
 
@@ -154,8 +152,7 @@ namespace backend::lir_tree {
         auto size = lir::DataSize::DOUBLEWORD;
         auto src = om->getRegister(lir::RegisterNum::EAX);
         auto dst = resolveOperand(i);
-        auto mov_ret = std::make_unique<lir::InstructionMov>(
-            lir::Extend::NONE, size, size, src, dst);
+        auto mov_ret = std::make_unique<lir::InstructionMov>(size, src, dst);
         instructions.push_back(std::move(mov_ret));
 
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
@@ -236,8 +233,8 @@ namespace backend::lir_tree {
 
                 // TODO: is this necessarily correct?
                 auto size = lir::DataSize::DOUBLEWORD;
-                auto copy = std::make_unique<lir::InstructionMov>(
-                    lir::Extend::NONE, size, size, src, dst);
+                auto copy =
+                    std::make_unique<lir::InstructionMov>(size, src, dst);
                 instructions.push_back(std::move(copy));
 
                 src_vals.erase(src_vals.find(src));
@@ -256,8 +253,7 @@ namespace backend::lir_tree {
 
             // TODO: is this necessarily correct?
             auto size = lir::DataSize::DOUBLEWORD;
-            auto copy = std::make_unique<lir::InstructionMov>(
-                lir::Extend::NONE, size, size, src, tmp);
+            auto copy = std::make_unique<lir::InstructionMov>(size, src, tmp);
             instructions.push_back(std::move(copy));
             src_vals.erase(src_vals.find(src));
             src_vals.insert(tmp);
@@ -279,8 +275,7 @@ namespace backend::lir_tree {
         auto size = lir::DataSize::DOUBLEWORD;
         auto src = resolveOperand(t->getValue());
         auto dst = om->getRegister(lir::RegisterNum::EAX);
-        auto mov_ret = std::make_unique<lir::InstructionMov>(
-            lir::Extend::NONE, size, size, src, dst);
+        auto mov_ret = std::make_unique<lir::InstructionMov>(size, src, dst);
         instructions.push_back(std::move(mov_ret));
 
         //
@@ -319,8 +314,8 @@ namespace backend::lir_tree {
         if (cond_imm) {
             size = lir::DataSize::QUADWORD;
             auto cond_tmp = om->getRegister("cond", size);
-            auto mov_cond = std::make_unique<lir::InstructionMov>(
-                lir::Extend::NONE, size, size, cond, cond_tmp);
+            auto mov_cond =
+                std::make_unique<lir::InstructionMov>(size, cond, cond_tmp);
             instructions.push_back(std::move(mov_cond));
             cond = static_cast<lir::Operand *>(cond_tmp);
         }

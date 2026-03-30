@@ -153,8 +153,7 @@ namespace backend::lir_tree {
         auto src = resolveOperand(tile_src, worklist);
         auto dst = resolveOperand(tile_ptr, worklist);
 
-        auto store_asm = std::make_unique<lir::InstructionMov>(
-            lir::Extend::NONE, size, size, src, dst);
+        auto store_asm = std::make_unique<lir::InstructionMov>(size, src, dst);
         assembly.push_back(std::move(store_asm));
 
         return assembly;
@@ -183,8 +182,7 @@ namespace backend::lir_tree {
         auto src = resolveOperand(tile_load->getPtr().get(), worklist);
         auto dst = om->getRegister(tile_dst->getName(), size);
 
-        auto load_asm = std::make_unique<lir::InstructionMov>(
-            lir::Extend::NONE, size, size, src, dst);
+        auto load_asm = std::make_unique<lir::InstructionMov>(size, src, dst);
         assembly.push_back(std::move(load_asm));
 
         return assembly;
@@ -221,8 +219,8 @@ namespace backend::lir_tree {
         if (op == middleend::mir::BinaryOp::SDIV) {
             auto eax = om->getRegister(lir::RegisterNum::EAX);
 
-            auto in_asm = std::make_unique<lir::InstructionMov>(
-                lir::Extend::NONE, size, size, left, eax);
+            auto in_asm =
+                std::make_unique<lir::InstructionMov>(size, left, eax);
             assembly.push_back(std::move(in_asm));
 
             auto extend_asm =
@@ -233,12 +231,12 @@ namespace backend::lir_tree {
                 bin_op, size, right);
             assembly.push_back(std::move(div_asm));
 
-            auto out_asm = std::make_unique<lir::InstructionMov>(
-                lir::Extend::NONE, size, size, eax, dst);
+            auto out_asm =
+                std::make_unique<lir::InstructionMov>(size, eax, dst);
             assembly.push_back(std::move(out_asm));
         } else {
-            auto mov_asm = std::make_unique<lir::InstructionMov>(
-                lir::Extend::NONE, size, size, left, dst);
+            auto mov_asm =
+                std::make_unique<lir::InstructionMov>(size, left, dst);
             assembly.push_back(std::move(mov_asm));
 
             if (op == middleend::mir::BinaryOp::ASHR ||
@@ -297,8 +295,7 @@ namespace backend::lir_tree {
         auto src = resolveOperand(tile_src, worklist);
         auto dst = om->getRegister(tile_dst->getName(), size);
 
-        auto mov_asm = std::make_unique<lir::InstructionMov>(
-            lir::Extend::NONE, size, size, src, dst);
+        auto mov_asm = std::make_unique<lir::InstructionMov>(size, src, dst);
         assembly.push_back(std::move(mov_asm));
 
         return assembly;
