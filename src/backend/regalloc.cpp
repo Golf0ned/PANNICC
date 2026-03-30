@@ -12,7 +12,7 @@ namespace backend {
         for (auto &unique_f : lir.getFunctions()) {
             auto f = unique_f.get();
 
-            Liveness liveness;
+            Liveness liveness({}, {}, {}, {});
             Interference interference;
 
             while (true) {

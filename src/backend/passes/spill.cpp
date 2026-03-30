@@ -12,7 +12,7 @@ namespace backend {
         RegisterSet not_load_only;
 
         size_t i_index = 0;
-        auto &gen = l[0];
+        const auto &gen = l.getGen();
         // TODO: what in the world
         for (auto &i : f->getInstructions()) {
             auto &gen_i = gen[i_index++];
@@ -68,7 +68,7 @@ namespace backend {
                                                             : cur_cost + amount;
         };
 
-        auto gen = l[0], kill = l[1];
+        const auto &gen = l.getGen(), &kill = l.getKill();
         for (size_t i = 0; i < gen.size(); i++) {
             for (auto &reg : gen[i]) {
                 add_to_cost(reg, def_weight);
@@ -101,7 +101,7 @@ namespace backend {
         auto reg_64 = om->getRegister(reg->getName(), lir::DataSize::QUADWORD),
              reg_32 =
                  om->getRegister(reg->getName(), lir::DataSize::DOUBLEWORD);
-        auto &gen = l[0], &kill = l[1];
+        const auto &gen = l.getGen(), &kill = l.getKill();
 
         size_t i_index = 0;
         auto &instructions = f->getInstructions();
