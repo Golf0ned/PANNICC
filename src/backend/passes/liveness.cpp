@@ -11,13 +11,13 @@ namespace backend {
                        std::vector<RegisterSet> out)
         : gen(gen), kill(kill), in(in), out(out) {}
 
-    const std::vector<RegisterSet> &Liveness::getGen() { return gen; }
+    const std::vector<RegisterSet> &Liveness::getGen() const { return gen; }
 
-    const std::vector<RegisterSet> &Liveness::getKill() { return kill; }
+    const std::vector<RegisterSet> &Liveness::getKill() const { return kill; }
 
-    const std::vector<RegisterSet> &Liveness::getIn() { return in; }
+    const std::vector<RegisterSet> &Liveness::getIn() const { return in; }
 
-    const std::vector<RegisterSet> &Liveness::getOut() { return out; }
+    const std::vector<RegisterSet> &Liveness::getOut() const { return out; }
 
     GenSetVisitor::GenSetVisitor(lir::OperandManager *om) : om(om) {}
 
