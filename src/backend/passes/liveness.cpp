@@ -5,11 +5,23 @@
 #include "backend/passes/liveness.h"
 
 namespace backend {
+    Liveness::Liveness(std::vector<RegisterSet> gen,
+                       std::vector<RegisterSet> kill,
+                       std::vector<RegisterSet> in,
+                       std::vector<RegisterSet> out)
+        : gen(gen), kill(kill), in(in), out(out) {}
+
+    std::vector<RegisterSet> &Liveness::getGen() { return gen; }
+
+    std::vector<RegisterSet> &Liveness::getKill() { return kill; }
+
+    std::vector<RegisterSet> &Liveness::getIn() { return in; }
+
+    std::vector<RegisterSet> &Liveness::getOut() { return out; }
+
     GenSetVisitor::GenSetVisitor(lir::OperandManager *om) : om(om) {}
 
-    std::unordered_set<lir::Register *> GenSetVisitor::getResult() {
-        return gen;
-    }
+    RegisterSet GenSetVisitor::getResult() { return gen; }
 
     void GenSetVisitor::checkOperand(lir::Operand *o) {
         auto constrained = dynamic_cast<lir::ConstrainedRegister *>(o);
@@ -108,9 +120,7 @@ namespace backend {
 
     KillSetVisitor::KillSetVisitor(lir::OperandManager *om) : om(om) {}
 
-    std::unordered_set<lir::Register *> KillSetVisitor::getResult() {
-        return kill;
-    }
+    RegisterSet KillSetVisitor::getResult() { return kill; }
 
     void KillSetVisitor::checkOperand(lir::Operand *o) {
         auto reg = dynamic_cast<lir::Register *>(o);
@@ -296,7 +306,7 @@ namespace backend {
         auto size = instructions.size();
         std::vector<RegisterSet> in(size), out(size);
 
-        std::unordered_set<lir::Register *> cur_in, cur_out;
+        RegisterSet cur_in, cur_out;
         bool changed = true;
         while (changed) {
             changed = false;
@@ -322,7 +332,7 @@ namespace backend {
             }
         }
 
-        return {gen, kill, in, out};
+        return Liveness(gen, kill, in, out);
     }
 
     void printLiveness(lir::Function *f, Liveness &l) {
@@ -337,12 +347,13 @@ namespace backend {
 
             for (size_t set_index = 0; set_index < 4; set_index++) {
                 std::cout << "    - " << sets[set_index] << ": {";
-                auto regs = l[set_index][i_index];
-                for (auto reg = regs.begin(); reg != regs.end(); reg++) {
-                    if (reg != regs.begin())
-                        std::cout << ", ";
-                    std::cout << (*reg)->toString();
-                }
+                std::cout << "TODO";
+                // auto regs = l[set_index][i_index];
+                // for (auto reg = regs.begin(); reg != regs.end(); reg++) {
+                //     if (reg != regs.begin())
+                //         std::cout << ", ";
+                //     std::cout << (*reg)->toString();
+                // }
                 std::cout << "}\n";
             }
 
