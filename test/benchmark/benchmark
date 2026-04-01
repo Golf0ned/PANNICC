@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# yes, some of this was chatgpt
+
+# TODO: unhardcode PANNICC_DIR
+PANNICC_DIR="${HOME}/code/projects/PANNICC"
+
+PANNICC="${PANNICC_DIR}/build/bin/pannicc"
+INPUT_DIR="${PANNICC_DIR}/test/benchmark/input"
+EXPECTED_DIR="${PANNICC_DIR}/test/benchmark/expected"
+
+require() {
+    command -v "$1" >/dev/null 2>&1 || { echo "missing: $1"; exit 1; }
+}
+
+run_benchmark_with() {
+    local benchmark="$1"
+    local benchmark_name=$(basename ${benchmark} .c)
+
+    local compiler="$2"
+    local compiler_name=$(basename ${compiler})
+
+    local bin=$(mktemp)
+    local expected="${EXPECTED_DIR}/${benchmark_name}.out"
+
+    echo "- [${compiler_name}] building..."
+    ${compiler} ${benchmark} -o ${bin}
+
+    echo "- [${compiler_name}] running..."
+    local output start_time end_time
+    start_time=$(date +%s.%N)
+    ./${bin}
+    local output=$?
+    end_time=$(date +%s.%N)
+
+    rm ${bin}
+
+    echo -n "- [${compiler_name}] verifying..."
+    if ! diff -q <(echo "$output") "$expected" >/dev/null; then
+        echo "INCORRECT"
+    else
+        echo "CORRECT"
+    fi
+
+    echo "- [${compiler_name}] time: ${elapsed}s"
+}
+
+require gcc
+require clang
+
+for benchmark in ${INPUT_DIR}/*.c; do
+    base_name=$(basename ${benchmark})
+
+    echo "Benchmarking ${base_name}..."
+    run_benchmark_with ${benchmark} $(command -v gcc)
+    run_benchmark_with ${benchmark} $(command -v clang)
+    # run_benchmark_with ${benchmark} ${PANNICC}
+done
+
+exit 0
