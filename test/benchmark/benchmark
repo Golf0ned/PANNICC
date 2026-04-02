@@ -56,7 +56,7 @@ for benchmark in ${INPUT_DIR}/*.c; do
     echo "Benchmarking ${base_name}..."
     run_benchmark_with ${benchmark} $(command -v gcc)
     run_benchmark_with ${benchmark} $(command -v clang)
-    # run_benchmark_with ${benchmark} ${PANNICC}
+    run_benchmark_with ${benchmark} ${PANNICC}
 done
 rm -r ${TMP_DIR}
 

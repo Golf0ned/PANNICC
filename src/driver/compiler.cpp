@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -13,7 +14,17 @@
 #define PRINT(str) (std::cerr << str << std::endl)
 #define ERROR(str) (std::cerr << "ERROR: " << str << std::endl)
 
-enum class OutputLevel { AST, HIR, MIR, LIR_ISEL, LIR_REGALLOC, ASM };
+enum class OutputLevel {
+    PREPROCESS,
+    AST,
+    HIR,
+    MIR,
+    LIR_ISEL,
+    LIR_REGALLOC,
+    ASM,
+    OBJ,
+    BIN
+};
 
 void printHelp(const std::string &program_name) {
     PRINT("USAGE: " + program_name + " [options] <input-file>");
@@ -22,17 +33,22 @@ void printHelp(const std::string &program_name) {
     PRINT("  --help                 Show this help message");
     PRINT("  -o <file>              Output file");
     PRINT("");
+    PRINT("  -E, --preprocess       Only run preprocessor (WIP)");
+    PRINT("");
     PRINT("  --emit-ast             Output AST to file");
     PRINT("  --emit-hir             Output HIR to file");
     PRINT("");
     PRINT("  --emit-mir             Output MIR to file");
-    PRINT("  -O0|1                  Opt level (defualt O1)");
+    PRINT("  -O0|1                  Opt level (default O1)");
     PRINT("  --passes=<passes>      Run comma-separated list of passes");
     PRINT("");
     PRINT("  --emit-lir-isel        Output LIR to file, after instruction "
           "selection");
     PRINT("  --emit-lir-regalloc    Output LIR to file, after register "
           "allocation");
+    PRINT("");
+    PRINT("  -S, --assemble         Output assembly");
+    PRINT("  -c, --compile          Output assembly (WIP)");
 }
 
 void output(const std::string &output, std::filesystem::path output_path) {
@@ -54,7 +70,7 @@ int main(int argc, char *argv[]) {
     }
 
     std::filesystem::path input_file, output_file;
-    OutputLevel output_level = OutputLevel::ASM;
+    OutputLevel output_level = OutputLevel::BIN;
     auto pm = middleend::initializeO1();
 
     for (int i = 1; i < argc; i++) {
@@ -72,6 +88,8 @@ int main(int argc, char *argv[]) {
                 return 1;
             }
             output_file = argv[i];
+        } else if (arg == "-E" || arg == "--preprocess") {
+            output_level = OutputLevel::PREPROCESS;
         } else if (arg == "--emit-ast") {
             output_level = OutputLevel::AST;
         } else if (arg == "--emit-hir") {
@@ -82,6 +100,10 @@ int main(int argc, char *argv[]) {
             output_level = OutputLevel::LIR_ISEL;
         } else if (arg == "--emit-lir-regalloc") {
             output_level = OutputLevel::LIR_REGALLOC;
+        } else if (arg == "-S" || arg == "--assemble") {
+            output_level = OutputLevel::ASM;
+        } else if (arg == "-c" || arg == "--compile") {
+            output_level = OutputLevel::OBJ;
         } else if (arg.starts_with("-O") && arg.size() == 3) {
             switch (arg.back()) {
             case '0':
@@ -115,6 +137,9 @@ int main(int argc, char *argv[]) {
     if (output_file.empty()) {
         output_file = input_file.stem();
         switch (output_level) {
+        case OutputLevel::PREPROCESS:
+            output_file.replace_extension(".c");
+            break;
         case OutputLevel::AST:
             output_file.replace_extension(".ast");
             break;
@@ -131,7 +156,20 @@ int main(int argc, char *argv[]) {
         case OutputLevel::ASM:
             output_file.replace_extension(".s");
             break;
+        case OutputLevel::OBJ:
+            output_file.replace_extension(".o");
+            break;
+        case OutputLevel::BIN:
+            output_file.replace_filename("a");
+            output_file.replace_extension(".out");
+            break;
         }
+    }
+
+    // TODO: preprocessor
+    if (output_level == OutputLevel::AST) {
+        ERROR("Preprocessor WIP");
+        return 0;
     }
 
     frontend::ast::Program ast = frontend::parse(input_file);
@@ -168,7 +206,24 @@ int main(int argc, char *argv[]) {
     }
 
     std::string assembly = backend::generateCode(lir);
-    output(assembly, output_file);
+    if (output_level == OutputLevel::ASM) {
+        output(assembly, output_file);
+        return 0;
+    }
+
+    // TODO: write to tmp file
+
+    switch (output_level) {
+    case OutputLevel::OBJ:
+        std::system("");
+        break;
+    case OutputLevel::BIN:
+        std::system("");
+        break;
+    default:
+        ERROR("invalid state after compilation");
+        return 1;
+    }
 
     return 0;
 }
