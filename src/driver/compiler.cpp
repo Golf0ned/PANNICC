@@ -167,7 +167,7 @@ int main(int argc, char *argv[]) {
     }
 
     // TODO: preprocessor
-    if (output_level == OutputLevel::AST) {
+    if (output_level == OutputLevel::PREPROCESS) {
         ERROR("Preprocessor WIP");
         return 0;
     }
