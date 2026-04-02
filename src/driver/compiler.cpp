@@ -211,19 +211,16 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    // TODO: write to tmp file
+    auto tmp = std::filesystem::temp_directory_path();
+    auto tmp_file = tmp / input_file.stem();
+    tmp_file.replace_extension(".s");
+    output(assembly, tmp_file);
 
-    switch (output_level) {
-    case OutputLevel::OBJ:
-        std::system("");
-        break;
-    case OutputLevel::BIN:
-        std::system("");
-        break;
-    default:
-        ERROR("invalid state after compilation");
-        return 1;
-    }
+    std::string cc_command =
+        "cc -o " + output_file.string() + " " + tmp_file.string();
+    if (output_level == OutputLevel::OBJ)
+        cc_command += " -c";
+    std::system(cc_command.c_str());
 
     return 0;
 }
