@@ -214,7 +214,7 @@ int main(int argc, char *argv[]) {
     auto tmp = std::filesystem::temp_directory_path();
     auto tmp_file = tmp / input_file.stem();
     tmp_file.replace_extension(".s");
-    output(assembly, tmp_file);
+    output(assembly + "\n", tmp_file);
 
     std::string cc_command =
         "cc -o " + output_file.string() + " " + tmp_file.string();
