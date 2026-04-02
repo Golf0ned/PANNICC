@@ -16,12 +16,12 @@ for test in ${INPUT_DIR}/*.c; do
     ${PANNICC} -O0 --emit-ast ${test} -o ${OUTPUT_DIR}/${input}.ast
     ${PANNICC} -O0 --emit-hir ${test} -o ${OUTPUT_DIR}/${input}.hir
 
-    for opt in "-O0" "-O1"; do
-        output_base=${OUTPUT_DIR}/${input}_o${opt:2}
-        ${PANNICC} ${opt} --emit-mir ${test} -o ${output_base}.mir
-        ${PANNICC} ${opt} --emit-lir-isel ${test} -o ${output_base}_isel.lir
-        ${PANNICC} ${opt} --emit-lir-regalloc ${test} -o ${output_base}_regalloc.lir
-        ${PANNICC} ${opt} ${test} -o ${output_base}.s
+    for opt in "0" "1"; do
+        output_base=${OUTPUT_DIR}/${input}_o${opt}
+        ${PANNICC} -O${opt} --emit-mir ${test} -o ${output_base}.mir
+        ${PANNICC} -O${opt} --emit-lir-isel ${test} -o ${output_base}_isel.lir
+        ${PANNICC} -O${opt} --emit-lir-regalloc ${test} -o ${output_base}_regalloc.lir
+        ${PANNICC} -O${opt} -S ${test} -o ${output_base}.s
     done
 
     passes=${INPUT_DIR}/${input}.passes
@@ -33,7 +33,7 @@ for test in ${INPUT_DIR}/*.c; do
         ${PANNICC} ${opt} --emit-mir ${test} -o ${output_base}.mir
         ${PANNICC} ${opt} --emit-lir-isel ${test} -o ${output_base}_isel.lir
         ${PANNICC} ${opt} --emit-lir-regalloc ${test} -o ${output_base}_regalloc.lir
-        ${PANNICC} ${opt} ${test} -o ${output_base}.s
+        ${PANNICC} ${opt} -S ${test} -o ${output_base}.s
     fi
 done
 
