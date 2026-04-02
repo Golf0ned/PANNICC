@@ -8,5 +8,10 @@ int fibonacci(int n) {
 }
 
 int main() {
-    return fibonacci(42);
+    int expected = 267914296;
+    int actual = fibonacci(42);
+
+    if (expected - actual)
+        return 1;
+    return 0;
 }
