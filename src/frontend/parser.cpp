@@ -156,8 +156,10 @@ namespace frontend {
     // struct unary_logical_not : pegtl::seq<bang, ignorable, expr_2> {};
     struct unary_bitwise_not : pegtl_try<pegtl::seq<tilde, ignorable, expr_2>> {
     };
-    struct expr_2
-        : pegtl::sor<expr_1, unary_plus, unary_minus, unary_bitwise_not> {};
+    struct deref : pegtl_try<pegtl::seq<asterisk, ignorable, expr_2>> {};
+    struct address : pegtl_try<pegtl::seq<ampersand, ignorable, expr_2>> {};
+    struct expr_2 : pegtl::sor<expr_1, unary_plus, unary_minus,
+                               unary_bitwise_not, deref, address> {};
 
     // 3
     struct expr_3;
@@ -370,6 +372,28 @@ namespace frontend {
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto back = popExpr();
             auto expr = std::make_unique<ast::UnaryOpExpr>(UnaryOp::NOT,
+                                                           std::move(back));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<deref> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            // TODO
+            auto back = popExpr();
+            auto expr = std::make_unique<ast::UnaryOpExpr>(UnaryOp::DEREF,
+                                                           std::move(back));
+            parsed_exprs.push_back(std::move(expr));
+        }
+    };
+
+    template <> struct action<address> {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
+            // TODO
+            auto back = popExpr();
+            auto expr = std::make_unique<ast::UnaryOpExpr>(UnaryOp::ADDRESS,
                                                            std::move(back));
             parsed_exprs.push_back(std::move(expr));
         }
