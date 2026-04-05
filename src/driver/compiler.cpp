@@ -220,7 +220,12 @@ int main(int argc, char *argv[]) {
         "cc -o " + output_file.string() + " " + tmp_file.string();
     if (output_level == OutputLevel::OBJ)
         cc_command += " -c";
-    std::system(cc_command.c_str());
+
+    int failure = std::system(cc_command.c_str());
+    if (failure) {
+        ERROR("cc failed: error code " + std::to_string(failure));
+        return 1;
+    }
 
     return 0;
 }
