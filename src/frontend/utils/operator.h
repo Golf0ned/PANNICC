@@ -22,6 +22,8 @@ namespace frontend {
         PLUS,
         MINUS,
         NOT,
+        DEREF,
+        ADDRESS,
     };
 
     // clang-format off
@@ -39,9 +41,8 @@ namespace frontend {
     // clang-format on
 
     const std::unordered_map<std::string, UnaryOp> strToUnaryOp = {
-        {"+", UnaryOp::PLUS},
-        {"-", UnaryOp::MINUS},
-        {"~", UnaryOp::NOT},
+        {"+", UnaryOp::PLUS},  {"-", UnaryOp::MINUS},   {"~", UnaryOp::NOT},
+        {"*", UnaryOp::DEREF}, {"&", UnaryOp::ADDRESS},
     };
 
     std::string toString(BinaryOp op);
