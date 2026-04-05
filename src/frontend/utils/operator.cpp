@@ -35,6 +35,10 @@ namespace frontend {
             return "-";
         case UnaryOp::NOT:
             return "~";
+        case UnaryOp::DEREF:
+            return "*";
+        case UnaryOp::ADDRESS:
+            return "&";
         }
         std::unreachable();
     }
