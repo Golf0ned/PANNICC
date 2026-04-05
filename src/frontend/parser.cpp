@@ -207,9 +207,7 @@ namespace frontend {
     struct expr : expr_10 {};
 
     // Other useful pieces
-    struct type
-        : pegtl::sor<pegtl_try<keyword_long_long>, pegtl_try<keyword_long>,
-                     pegtl_try<keyword_int>, pegtl_try<keyword_short>> {};
+    struct type : pegtl::sor<pegtl_try<keyword_int>> {};
 
     struct add_equals : pegtl::seq<plus, equal> {};
     struct sub_equals : pegtl::seq<minus, equal> {};
