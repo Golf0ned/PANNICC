@@ -118,15 +118,22 @@ namespace frontend::ast {
         const std::string type = toString(i->getType());
         const std::string variable = i->getVariable()->toString(*symbol_table);
 
-        res = prefix + type + " " + variable + ";";
+        res = prefix + type;
+        if (!type.ends_with('*'))
+            res += " ";
+        res += variable + ";";
     }
 
     void ToStringVisitor::visit(InstructionDeclarationAssign *i) {
         const std::string type = toString(i->getType());
         const std::string variable = i->getVariable()->toString(*symbol_table);
         i->getValue()->accept(this);
+        const std::string value = res;
 
-        res = prefix + type + " " + variable + " = " + res + ";";
+        res = prefix + type;
+        if (!type.ends_with('*'))
+            res += " ";
+        res += variable + " = " + value + ";";
     }
 
     void ToStringVisitor::visit(InstructionAssign *i) {
