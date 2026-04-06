@@ -6,13 +6,14 @@
 #include "frontend/utils/type.h"
 
 namespace frontend::ast {
-    Function::Function(Type type, std::unique_ptr<AtomIdentifier> name,
+    Function::Function(std::unique_ptr<Type> type,
+                       std::unique_ptr<AtomIdentifier> name,
                        std::vector<Parameter> parameters,
                        std::unique_ptr<Scope> body)
-        : type(type), name(std::move(name)), parameters(std::move(parameters)),
-          body(std::move(body)) {}
+        : type(std::move(type)), name(std::move(name)),
+          parameters(std::move(parameters)), body(std::move(body)) {}
 
-    Type Function::getType() { return type; }
+    std::unique_ptr<Type> &Function::getType() { return type; }
 
     std::unique_ptr<AtomIdentifier> &Function::getName() { return name; }
 
@@ -21,7 +22,7 @@ namespace frontend::ast {
     std::unique_ptr<Scope> &Function::getBody() { return body; }
 
     std::string Function::toString(SymbolTable *symbol_table) {
-        std::string type_str = ::frontend::toString(type);
+        std::string type_str = type->toString();
         std::string name_str = name->toString(*symbol_table);
 
         std::string res = type_str + " " + name_str + '(';
@@ -29,7 +30,7 @@ namespace frontend::ast {
             if (iter != parameters.begin())
                 res += ", ";
             auto &[param_type, param_name] = *iter;
-            res += ::frontend::toString(param_type) + ' ' +
+            res += param_type->toString() + ' ' +
                    param_name->toString(*symbol_table);
         }
         res += ')';
@@ -115,7 +116,7 @@ namespace frontend::ast {
     }
 
     void ToStringVisitor::visit(InstructionDeclaration *i) {
-        const std::string type = toString(i->getType());
+        const std::string type = i->getType()->toString();
         const std::string variable = i->getVariable()->toString(*symbol_table);
 
         res = prefix + type;
@@ -125,7 +126,7 @@ namespace frontend::ast {
     }
 
     void ToStringVisitor::visit(InstructionDeclarationAssign *i) {
-        const std::string type = toString(i->getType());
+        const std::string type = i->getType()->toString();
         const std::string variable = i->getVariable()->toString(*symbol_table);
         i->getValue()->accept(this);
         const std::string value = res;
