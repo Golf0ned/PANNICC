@@ -19,10 +19,10 @@ namespace frontend::ast {
     void InstructionExpr::accept(InstructionVisitor *v) { v->visit(this); }
 
     InstructionDeclaration::InstructionDeclaration(
-        Type type, std::unique_ptr<AtomIdentifier> variable)
-        : type(type), variable(std::move(variable)) {}
+        std::unique_ptr<Type> type, std::unique_ptr<AtomIdentifier> variable)
+        : type(std::move(type)), variable(std::move(variable)) {}
 
-    Type InstructionDeclaration::getType() { return type; }
+    std::unique_ptr<Type> &InstructionDeclaration::getType() { return type; }
 
     std::unique_ptr<AtomIdentifier> &InstructionDeclaration::getVariable() {
         return variable;
@@ -33,11 +33,14 @@ namespace frontend::ast {
     }
 
     InstructionDeclarationAssign::InstructionDeclarationAssign(
-        Type type, std::unique_ptr<AtomIdentifier> variable,
+        std::unique_ptr<Type> type, std::unique_ptr<AtomIdentifier> variable,
         std::unique_ptr<Expr> value)
-        : type(type), variable(std::move(variable)), value(std::move(value)) {}
+        : type(std::move(type)), variable(std::move(variable)),
+          value(std::move(value)) {}
 
-    Type InstructionDeclarationAssign::getType() { return type; }
+    std::unique_ptr<Type> &InstructionDeclarationAssign::getType() {
+        return type;
+    }
 
     std::unique_ptr<AtomIdentifier> &
     InstructionDeclarationAssign::getVariable() {
