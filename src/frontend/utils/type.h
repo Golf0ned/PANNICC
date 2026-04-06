@@ -1,13 +1,32 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "middleend/mir/type.h"
 
 namespace frontend {
-    enum class Type { INT, INT_PTR };
+    class Type {
+    public:
+        virtual std::string toString() = 0;
+        virtual middleend::mir::Type toMir() = 0;
+        virtual ~Type() = default;
+    };
 
-    std::string toString(Type type);
+    class Int : Type {
+    public:
+        std::string toString() override;
+        middleend::mir::Type toMir() override;
+    };
 
-    middleend::mir::Type toMir(Type type);
+    class Ptr : Type {
+    public:
+        Ptr(std::unique_ptr<Type> base);
+        std::unique_ptr<Type> &getBase();
+        std::string toString() override;
+        middleend::mir::Type toMir() override;
+
+    private:
+        std::unique_ptr<Type> base;
+    };
 } // namespace frontend
