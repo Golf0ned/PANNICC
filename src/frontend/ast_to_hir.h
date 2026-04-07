@@ -33,6 +33,8 @@ namespace frontend {
         std::unique_ptr<AtomIdentifier> makeLabelAtom(hir::Label *l);
         std::unique_ptr<AtomIdentifier> makeTemp(std::string name);
         void addReturnIfMissing(ast::Function &f);
+        void mapFunctionType(AtomIdentifier *function, Type *type);
+        void mapVariableType(AtomIdentifier *var, Type *type);
 
         void visit(ast::Instruction *i) override;
         void visit(ast::Scope *s) override;
@@ -57,6 +59,8 @@ namespace frontend {
         AtomIdentifier *last_expr;
         uint64_t cur_scope;
         std::vector<std::unordered_set<std::string>> scope_mappings;
+        std::unordered_map<uint64_t, Type *> function_type_mappings;
+        std::unordered_map<uint64_t, Type *> var_type_mappings;
         SymbolTable *old_table;
         SymbolTable *new_table;
         std::unordered_map<std::string, uint64_t> internal_counts;
