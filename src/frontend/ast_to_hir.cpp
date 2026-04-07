@@ -25,6 +25,7 @@ namespace frontend {
     void ASTToHIRVisitor::clearResult() {
         result.clear();
         internal_counts.clear();
+        var_type_mappings.clear();
         result.push_back(makeLabel("entry"));
     }
 
@@ -117,6 +118,15 @@ namespace frontend {
         // TODO: void function
     }
 
+    void ASTToHIRVisitor::mapFunctionType(AtomIdentifier *function,
+                                          Type *type) {
+        function_type_mappings[function->getValue()] = type;
+    }
+
+    void ASTToHIRVisitor::mapVariableType(AtomIdentifier *var, Type *type) {
+        var_type_mappings[var->getValue()] = type;
+    }
+
     void ASTToHIRVisitor::visit(ast::Instruction *i) {}
 
     void ASTToHIRVisitor::visit(ast::Scope *s) {
@@ -134,20 +144,22 @@ namespace frontend {
     }
 
     void ASTToHIRVisitor::visit(ast::InstructionDeclaration *i) {
-        Type type = i->getType();
+        auto type = std::move(i->getType());
         auto variable = resolveDeclarationScope(i->getVariable().get());
+        var_type_mappings[variable->getValue()] = type.get();
 
         auto new_i = std::make_unique<hir::InstructionDeclaration>(
-            type, std::move(variable));
+            std::move(type), std::move(variable));
         result.push_back(std::move(new_i));
     }
 
     void ASTToHIRVisitor::visit(ast::InstructionDeclarationAssign *i) {
-        Type type = i->getType();
+        auto type = std::move(i->getType());
         auto variable = resolveDeclarationScope(i->getVariable().get());
+        var_type_mappings[variable->getValue()] = type.get();
 
         auto new_declare = std::make_unique<hir::InstructionDeclaration>(
-            type, std::move(variable));
+            std::move(type), std::move(variable));
         result.push_back(std::move(new_declare));
 
         auto variable2 = resolveUseScope(i->getVariable().get());
@@ -252,19 +264,29 @@ namespace frontend {
     void ASTToHIRVisitor::visit(ast::Expr *e) {}
 
     void ASTToHIRVisitor::visit(ast::TerminalExpr *e) {
-        auto type = Type::INT;
         auto var_declare = makeTemp("v");
         auto var_assign =
             std::make_unique<AtomIdentifier>(var_declare->getValue());
         last_expr = var_declare.get();
 
+        auto var_prev = resolveUseScope(e->getAtom().get());
+
+        std::unique_ptr<Type> type;
+        if (!e->getAtom()->isIdentifier()) {
+            // TODO: more types
+            type = std::make_unique<Int>();
+        } else {
+            type = var_type_mappings[var_prev->getValue()]->clone();
+        }
+
+        var_type_mappings[var_declare->getValue()] = type.get();
+
         auto new_declare = std::make_unique<hir::InstructionDeclaration>(
-            type, std::move(var_declare));
+            std::move(type), std::move(var_declare));
         result.push_back(std::move(new_declare));
 
         auto new_assign = std::make_unique<hir::InstructionAssignValue>(
-            std::move(var_assign),
-            std::move(resolveUseScope(e->getAtom().get())));
+            std::move(var_assign), std::move(var_prev));
 
         result.push_back(std::move(new_assign));
     }
@@ -281,29 +303,56 @@ namespace frontend {
                 std::make_unique<AtomIdentifier>(last_expr->getValue()));
         }
 
-        auto type = Type::INT;
         auto var_declare = makeTemp("v");
         auto var_assign =
             std::make_unique<AtomIdentifier>(var_declare->getValue());
         last_expr = var_declare.get();
 
+        auto callee =
+            createUnscopedIdentifier(e->getCallee()->toString(*old_table));
+        auto type = function_type_mappings[callee->getValue()]->clone();
+
+        var_type_mappings[var_declare->getValue()] = type.get();
+
         auto new_declare = std::make_unique<hir::InstructionDeclaration>(
-            type, std::move(var_declare));
+            std::move(type), std::move(var_declare));
         result.push_back(std::move(new_declare));
 
         auto new_assign = std::make_unique<hir::InstructionCallAssign>(
-            std::move(var_assign),
-            createUnscopedIdentifier(e->getCallee()->toString(*old_table)),
-            std::move(args));
+            std::move(var_assign), std::move(callee), std::move(args));
         result.push_back(std::move(new_assign));
     }
 
     void ASTToHIRVisitor::visit(ast::UnaryOpExpr *e) {
         e->getValue()->accept(this);
         auto value = std::make_unique<AtomIdentifier>(last_expr->getValue());
-        auto var_assign = std::make_unique<AtomIdentifier>(value->getValue());
+        auto var_declare = makeTemp("v");
+        auto var_assign =
+            std::make_unique<AtomIdentifier>(var_declare->getValue());
+        last_expr = var_declare.get();
 
-        last_expr = var_assign.get();
+        std::unique_ptr<Type> type =
+            var_type_mappings[value->getValue()]->clone();
+        switch (e->getOp()) {
+        case UnaryOp::PLUS:
+        case UnaryOp::MINUS:
+        case UnaryOp::NOT:
+            type = std::make_unique<Int>();
+            break;
+        case UnaryOp::ADDRESS:
+            type = std::make_unique<Ptr>(std::move(type));
+            break;
+        case UnaryOp::DEREF:
+            auto ptr = dynamic_cast<Ptr *>(type.get());
+            type = std::move(ptr->getBase());
+            break;
+        }
+
+        var_type_mappings[var_declare->getValue()] = type.get();
+
+        auto new_declare = std::make_unique<hir::InstructionDeclaration>(
+            std::move(type), std::move(var_declare));
+        result.push_back(std::move(new_declare));
 
         auto new_assign = std::make_unique<hir::InstructionAssignUnaryOp>(
             std::move(var_assign), e->getOp(), std::move(value));
@@ -311,6 +360,8 @@ namespace frontend {
     }
 
     void ASTToHIRVisitor::visit(ast::BinaryOpExpr *e) {
+        // TODO: figure out the details for this
+
         e->getLeft()->accept(this);
         auto left = std::make_unique<AtomIdentifier>(last_expr->getValue());
 
@@ -333,23 +384,24 @@ namespace frontend {
         std::vector<hir::Function> functions;
         ASTToHIRVisitor visitor(old_table.get(), new_table.get());
         for (ast::Function &f : ast.getFunctions()) {
-            Type type = f.getType();
-
+            auto type = std::move(f.getType());
             auto name = visitor.createUnscopedIdentifier(
                 f.getName()->toString(*old_table));
+            visitor.mapFunctionType(name.get(), type.get());
 
             std::vector<hir::Parameter> params;
             for (auto &[param_type, param_name] : f.getParameters()) {
-                params.push_back({param_type, visitor.resolveDeclarationScope(
-                                                  param_name.get())});
+                auto param = visitor.resolveDeclarationScope(param_name.get());
+                visitor.mapVariableType(param.get(), param_type.get());
+                params.push_back({std::move(param_type), std::move(param)});
             }
 
             f.getBody()->accept(&visitor);
             visitor.addReturnIfMissing(f);
             auto body = visitor.getResult();
 
-            hir::Function hir_function(type, std::move(name), std::move(params),
-                                       std::move(body));
+            hir::Function hir_function(std::move(type), std::move(name),
+                                       std::move(params), std::move(body));
             functions.push_back(std::move(hir_function));
             visitor.clearResult();
         }
