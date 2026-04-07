@@ -29,7 +29,7 @@ namespace frontend {
 
     std::unique_ptr<SymbolTable> symbol_table;
     std::vector<Token> parsed_tokens;
-    std::vector<Type> parsed_types;
+    std::vector<std::unique_ptr<Type>> parsed_types;
     std::vector<std::unique_ptr<ast::Expr>> parsed_exprs;
     std::vector<std::unique_ptr<ast::Scope>> active_scopes;
     BinaryOp last_op_equals;
@@ -63,8 +63,8 @@ namespace frontend {
         return expr;
     }
 
-    Type popType() {
-        auto type = parsed_types.back();
+    std::unique_ptr<Type> popType() {
+        auto type = std::move(parsed_types.back());
         parsed_types.pop_back();
         return type;
     }
@@ -214,9 +214,10 @@ namespace frontend {
     struct expr : expr_10 {};
 
     // Types
+    struct type;
     struct type_int : keyword_int {};
-    struct type_int_ptr : pegtl::seq<keyword_int, ignorable, asterisk> {};
-    struct type : pegtl::sor<pegtl_try<type_int_ptr>, pegtl_try<type_int>> {};
+    struct type_ptr : pegtl::seq<type, ignorable, asterisk> {};
+    struct type : pegtl::sor<pegtl_try<type_ptr>, pegtl_try<type_int>> {};
 
     // Op equals
     struct add_equals : pegtl::seq<plus, equal> {};
@@ -507,14 +508,17 @@ namespace frontend {
     template <> struct action<type_int> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
-            parsed_types.push_back(Type::INT);
+            auto type = std::make_unique<Int>();
+            parsed_types.push_back(std::move(type));
         }
     };
 
-    template <> struct action<type_int_ptr> {
+    template <> struct action<type_ptr> {
         template <typename Input>
         static void apply(const Input &in, std::vector<ast::Function> &res) {
-            parsed_types.push_back(Type::INT_PTR);
+            auto base = popType();
+            auto type = std::make_unique<Ptr>(std::move(base));
+            parsed_types.push_back(std::move(type));
         }
     };
 
@@ -619,7 +623,7 @@ namespace frontend {
             auto type = popType();
 
             auto i = std::make_unique<ast::InstructionDeclaration>(
-                type, std::move(variable));
+                std::move(type), std::move(variable));
             active_scopes.back()->addInstruction(std::move(i));
         }
     };
@@ -632,7 +636,7 @@ namespace frontend {
             auto type = popType();
 
             auto i = std::make_unique<ast::InstructionDeclarationAssign>(
-                type, std::move(variable), std::move(value));
+                std::move(type), std::move(variable), std::move(value));
             active_scopes.back()->addInstruction(std::move(i));
         }
     };
@@ -714,7 +718,8 @@ namespace frontend {
         static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto param_name = popIdentifier();
             auto param_type = popType();
-            active_params.push_back({param_type, std::move(param_name)});
+            active_params.push_back(
+                {std::move(param_type), std::move(param_name)});
         }
     };
 
@@ -726,7 +731,7 @@ namespace frontend {
             auto name = popIdentifier();
             auto type = popType();
 
-            res.push_back(ast::Function(type, std::move(name),
+            res.push_back(ast::Function(std::move(type), std::move(name),
                                         std::move(active_params),
                                         std::move(body)));
             active_params.clear();
