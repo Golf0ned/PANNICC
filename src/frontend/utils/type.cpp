@@ -8,6 +8,8 @@ namespace frontend {
 
     middleend::mir::Type Int::toMir() { return middleend::mir::Type::I32; }
 
+    std::unique_ptr<Type> Int::clone() { return std::make_unique<Int>(); }
+
     Ptr::Ptr(std::unique_ptr<Type> base) : base(std::move(base)) {}
 
     std::unique_ptr<Type> &Ptr::getBase() { return base; }
@@ -18,4 +20,8 @@ namespace frontend {
     }
 
     middleend::mir::Type Ptr::toMir() { return middleend::mir::Type::PTR; }
+
+    std::unique_ptr<Type> Ptr::clone() {
+        return std::make_unique<Ptr>(base->clone());
+    }
 } // namespace frontend
