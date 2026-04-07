@@ -1,4 +1,11 @@
-int deref_address(int foo) {
+int address_deref(int foo) {
     int *bar = &foo;
-    return *bar;
+    int **baz = &bar;
+    int ***qux = &baz;
+    return ***qux;
+}
+
+int *return_ptr() {
+    int foo = 1;
+    return &foo;
 }
