@@ -216,8 +216,8 @@ namespace frontend {
     // Types
     struct type;
     struct type_int : keyword_int {};
-    struct type_ptr : pegtl::seq<type, ignorable, asterisk> {};
-    struct type : pegtl::sor<pegtl_try<type_ptr>, pegtl_try<type_int>> {};
+    struct type_ptr : pegtl::seq<ignorable, asterisk> {};
+    struct type : pegtl::seq<type_int, pegtl::star<type_ptr>> {};
 
     // Op equals
     struct add_equals : pegtl::seq<plus, equal> {};
