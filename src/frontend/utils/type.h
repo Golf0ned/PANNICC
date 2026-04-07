@@ -10,6 +10,7 @@ namespace frontend {
     public:
         virtual std::string toString() = 0;
         virtual middleend::mir::Type toMir() = 0;
+        virtual std::unique_ptr<Type> clone() = 0;
         virtual ~Type() = default;
     };
 
@@ -17,6 +18,7 @@ namespace frontend {
     public:
         std::string toString() override;
         middleend::mir::Type toMir() override;
+        std::unique_ptr<Type> clone() override;
     };
 
     class Ptr : public Type {
@@ -25,6 +27,7 @@ namespace frontend {
         std::unique_ptr<Type> &getBase();
         std::string toString() override;
         middleend::mir::Type toMir() override;
+        std::unique_ptr<Type> clone() override;
 
     private:
         std::unique_ptr<Type> base;
