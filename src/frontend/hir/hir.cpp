@@ -1,13 +1,14 @@
 #include "frontend/hir/hir.h"
 
 namespace frontend::hir {
-    Function::Function(Type type, std::unique_ptr<AtomIdentifier> name,
+    Function::Function(std::unique_ptr<Type> type,
+                       std::unique_ptr<AtomIdentifier> name,
                        std::vector<Parameter> parameters,
                        std::vector<std::unique_ptr<Instruction>> body)
-        : type(type), name(std::move(name)), parameters(std::move(parameters)),
-          body(std::move(body)) {}
+        : type(std::move(type)), name(std::move(name)),
+          parameters(std::move(parameters)), body(std::move(body)) {}
 
-    Type Function::getType() { return type; }
+    std::unique_ptr<Type> &Function::getType() { return type; }
 
     std::unique_ptr<AtomIdentifier> &Function::getName() { return name; }
 
@@ -18,7 +19,7 @@ namespace frontend::hir {
     }
 
     std::string Function::toString(SymbolTable *symbol_table) {
-        std::string type_str = ::frontend::toString(type);
+        std::string type_str = type->toString();
         std::string name_str = name->toString(*symbol_table);
 
         std::string res = type_str + " " + name_str + "(";
@@ -26,7 +27,7 @@ namespace frontend::hir {
             if (iter != parameters.begin())
                 res += ", ";
             auto &[param_type, param_name] = *iter;
-            res += ::frontend::toString(param_type) + ' ' +
+            res += param_type->toString() + ' ' +
                    param_name->toString(*symbol_table);
         }
         res += ") {\n";
@@ -79,7 +80,7 @@ namespace frontend::hir {
     }
 
     void ToStringVisitor::visit(InstructionDeclaration *i) {
-        const std::string type = toString(i->getType());
+        const std::string type = i->getType()->toString();
         const std::string variable = i->getVariable()->toString(*symbol_table);
 
         res = "    " + type + ' ' + variable + ';';

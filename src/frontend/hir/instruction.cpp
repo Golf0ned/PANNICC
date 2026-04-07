@@ -12,10 +12,10 @@ namespace frontend::hir {
     void Label::accept(InstructionVisitor *visitor) { visitor->visit(this); }
 
     InstructionDeclaration::InstructionDeclaration(
-        Type type, std::unique_ptr<AtomIdentifier> variable)
-        : type(type), variable(std::move(variable)) {}
+        std::unique_ptr<Type> type, std::unique_ptr<AtomIdentifier> variable)
+        : type(std::move(type)), variable(std::move(variable)) {}
 
-    Type InstructionDeclaration::getType() { return type; }
+    std::unique_ptr<Type> &InstructionDeclaration::getType() { return type; }
 
     std::unique_ptr<AtomIdentifier> &InstructionDeclaration::getVariable() {
         return variable;
