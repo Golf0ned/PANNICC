@@ -1,3 +1,4 @@
 int deref_address(int foo) {
-    return *&foo;
+    int *bar = &foo;
+    return *bar;
 }
