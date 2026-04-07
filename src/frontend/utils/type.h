@@ -13,13 +13,13 @@ namespace frontend {
         virtual ~Type() = default;
     };
 
-    class Int : Type {
+    class Int : public Type {
     public:
         std::string toString() override;
         middleend::mir::Type toMir() override;
     };
 
-    class Ptr : Type {
+    class Ptr : public Type {
     public:
         Ptr(std::unique_ptr<Type> base);
         std::unique_ptr<Type> &getBase();
