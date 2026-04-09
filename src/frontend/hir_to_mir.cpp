@@ -17,12 +17,13 @@ namespace frontend {
         std::list<std::unique_ptr<middleend::mir::Function>> functions;
 
         for (auto &f : hir.getFunctions()) {
-            middleend::mir::Type function_type = toMir(f.getType());
+            middleend::mir::Type function_type = f.getType()->toMir();
             HIRToMIRVisitor visitor(function_type, literal_map);
 
             std::vector<std::unique_ptr<middleend::mir::Value>> params;
             for (auto &[param_type, param_name] : f.getParameters()) {
-                auto param = visitor.addParameter(param_type, param_name.get());
+                auto param =
+                    visitor.addParameter(param_type.get(), param_name.get());
                 params.push_back(std::move(param));
             }
 
@@ -83,13 +84,14 @@ namespace frontend {
     }
 
     std::unique_ptr<middleend::mir::Value>
-    HIRToMIRVisitor::addParameter(Type type, AtomIdentifier *name) {
-        auto t = toMir(type);
+    HIRToMIRVisitor::addParameter(Type *type, AtomIdentifier *name) {
+        auto t = type->toMir();
         auto param = std::make_unique<middleend::mir::Value>(t);
         auto alloca = std::make_unique<middleend::mir::InstructionAlloca>(t);
         auto store = std::make_unique<middleend::mir::InstructionStore>(
             param.get(), alloca.get());
         value_mappings[name->getValue()] = alloca.get();
+        type_mappings[name->getValue()] = t;
 
         cur_instructions.push_back(std::move(alloca));
         cur_instructions.push_back(std::move(store));
@@ -98,8 +100,9 @@ namespace frontend {
     }
 
     middleend::mir::Value *HIRToMIRVisitor::resolveAtom(Atom *a) {
-        auto type = toMir(Type::INT);
+        auto type = middleend::mir::Type::I32;
         if (a->isIdentifier()) {
+            type = type_mappings.at(a->getValue());
             auto load = std::make_unique<middleend::mir::InstructionLoad>(
                 type, value_mappings.at(a->getValue()));
             middleend::mir::InstructionLoad *load_ptr = load.get();
@@ -197,7 +200,7 @@ namespace frontend {
             if (cond_branch) {
                 auto t_succ = cond_branch->getTSuccessor();
                 bb->getSuccessors().addEdge(t_succ);
-                t_succ->getPredecessors().addEdge(bb.get()); // problematic line
+                t_succ->getPredecessors().addEdge(bb.get());
 
                 auto f_succ = cond_branch->getFSuccessor();
                 bb->getSuccessors().addEdge(f_succ);
@@ -233,9 +236,10 @@ namespace frontend {
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionDeclaration *i) {
-        auto t = toMir(Type::INT);
+        auto t = i->getType()->toMir();
         auto alloca = std::make_unique<middleend::mir::InstructionAlloca>(t);
         value_mappings[i->getVariable()->getValue()] = alloca.get();
+        type_mappings[i->getVariable()->getValue()] = t;
 
         allocas.push_back(std::move(alloca));
     }
@@ -251,11 +255,11 @@ namespace frontend {
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionAssignUnaryOp *i) {
-        auto type = toMir(Type::INT);
+        auto type = type_mappings.at(i->getVariable()->getValue());
         middleend::mir::Value *value = resolveAtom(i->getValue().get());
 
         middleend::mir::Value *un_op_res, *literal;
-        std::unique_ptr<middleend::mir::InstructionBinaryOp> bin_op;
+        std::unique_ptr<middleend::mir::Instruction> bin_op;
         switch (i->getOp()) {
         case UnaryOp::PLUS:
             // do nothing lol
@@ -266,7 +270,8 @@ namespace frontend {
             literal = getLiteral(0, middleend::mir::Type::I32);
             bin_op = std::make_unique<middleend::mir::InstructionBinaryOp>(
                 type, middleend::mir::BinaryOp::SUB, literal, value);
-            un_op_res = bin_op.get();
+            un_op_res = static_cast<middleend::mir::InstructionBinaryOp *>(
+                bin_op.get());
             cur_instructions.push_back(std::move(bin_op));
             break;
         case UnaryOp::NOT:
@@ -274,8 +279,21 @@ namespace frontend {
             literal = getLiteral(-1, middleend::mir::Type::I32);
             bin_op = std::make_unique<middleend::mir::InstructionBinaryOp>(
                 type, middleend::mir::BinaryOp::XOR, value, literal);
-            un_op_res = bin_op.get();
+            un_op_res = static_cast<middleend::mir::InstructionBinaryOp *>(
+                bin_op.get());
             cur_instructions.push_back(std::move(bin_op));
+            break;
+        case UnaryOp::DEREF:
+            // load from value
+            bin_op = std::make_unique<middleend::mir::InstructionLoad>(
+                type, value_mappings.at(i->getValue()->getValue()));
+            un_op_res =
+                static_cast<middleend::mir::InstructionLoad *>(bin_op.get());
+            cur_instructions.push_back(std::move(bin_op));
+            break;
+        case UnaryOp::ADDRESS:
+            // take address of value
+            un_op_res = value_mappings.at(i->getValue()->getValue());
             break;
         }
 
@@ -287,7 +305,7 @@ namespace frontend {
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionAssignBinaryOp *i) {
-        auto type = toMir(Type::INT);
+        auto type = type_mappings.at(i->getVariable()->getValue());
         middleend::mir::Value *left = resolveAtom(i->getLeft().get());
         middleend::mir::Value *right = resolveAtom(i->getRight().get());
         middleend::mir::BinaryOp op = toMir(i->getOp());
@@ -318,7 +336,8 @@ namespace frontend {
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionCall *i) {
-        auto type = toMir(Type::INT);
+        // TODO: figure out what type the function is
+        auto type = middleend::mir::Type::I32;
 
         std::vector<middleend::mir::Value *> args;
         for (auto &arg : i->getArguments()) {
@@ -335,7 +354,7 @@ namespace frontend {
     }
 
     void HIRToMIRVisitor::visit(hir::InstructionCallAssign *i) {
-        auto type = toMir(Type::INT);
+        auto type = type_mappings.at(i->getVariable()->getValue());
 
         std::vector<middleend::mir::Value *> args;
         for (auto &arg : i->getArguments()) {
