@@ -14,7 +14,7 @@ namespace frontend {
 
         std::list<std::unique_ptr<middleend::mir::BasicBlock>> getResult();
         std::unique_ptr<middleend::mir::Value>
-        addParameter(Type type, AtomIdentifier *name);
+        addParameter(Type *type, AtomIdentifier *name);
         middleend::mir::Value *resolveAtom(Atom *a);
         middleend::mir::Value *getLiteral(uint64_t value,
                                           middleend::mir::Type type);
@@ -48,6 +48,7 @@ namespace frontend {
         std::vector<uint64_t> labels;
         std::unordered_map<uint64_t, middleend::mir::InstructionAlloca *>
             value_mappings;
+        std::unordered_map<uint64_t, middleend::mir::Type> type_mappings;
         std::vector<
             std::pair<middleend::mir::Instruction *, std::vector<uint64_t>>>
             instruction_to_bbs;
