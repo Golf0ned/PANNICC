@@ -60,12 +60,12 @@ namespace middleend::mir {
 
     void InstructionAlloca::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionLoad::InstructionLoad(Type type, InstructionAlloca *ptr)
+    InstructionLoad::InstructionLoad(Type type, Value *ptr)
         : Value(type), ptr(ptr) {
         addUse(ptr);
     }
 
-    InstructionAlloca *InstructionLoad::getPtr() { return ptr; }
+    Value *InstructionLoad::getPtr() { return ptr; }
 
     void InstructionLoad::accept(InstructionVisitor *v) { v->visit(this); }
 

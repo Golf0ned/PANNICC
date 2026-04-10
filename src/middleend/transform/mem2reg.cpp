@@ -86,9 +86,9 @@ namespace middleend {
             //
             // Variable renaming
             //
-            std::vector<std::pair<
-                mir::BasicBlock *,
-                std::unordered_map<mir::InstructionAlloca *, mir::Value *>>>
+            std::vector<
+                std::pair<mir::BasicBlock *,
+                          std::unordered_map<mir::Value *, mir::Value *>>>
                 worklist = {{f->getEntryBlock(), {}}};
             std::unordered_set<mir::BasicBlock *> visited;
             std::vector<std::unique_ptr<mir::Instruction>> to_drop;
