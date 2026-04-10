@@ -256,7 +256,10 @@ namespace frontend {
 
     void HIRToMIRVisitor::visit(hir::InstructionAssignUnaryOp *i) {
         auto type = type_mappings.at(i->getVariable()->getValue());
-        middleend::mir::Value *value = resolveAtom(i->getValue().get());
+        // TODO: make this pretty
+        middleend::mir::Value *value = i->getOp() == UnaryOp::ADDRESS
+                                           ? nullptr
+                                           : resolveAtom(i->getValue().get());
 
         middleend::mir::Value *un_op_res, *literal;
         std::unique_ptr<middleend::mir::Instruction> bin_op;
@@ -285,8 +288,8 @@ namespace frontend {
             break;
         case UnaryOp::DEREF:
             // load from value
-            bin_op = std::make_unique<middleend::mir::InstructionLoad>(
-                type, value_mappings.at(i->getValue()->getValue()));
+            bin_op =
+                std::make_unique<middleend::mir::InstructionLoad>(type, value);
             un_op_res =
                 static_cast<middleend::mir::InstructionLoad *>(bin_op.get());
             cur_instructions.push_back(std::move(bin_op));
