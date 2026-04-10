@@ -1,4 +1,8 @@
 int address_deref(int foo) {
+    return *&foo;
+}
+
+int address_deref_many(int foo) {
     int *bar = &foo;
     int **baz = &bar;
     int ***qux = &baz;
