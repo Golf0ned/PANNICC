@@ -38,30 +38,67 @@ namespace middleend {
         EraseUsesVisitor euv;
         for (auto &f : p.getFunctions()) {
             //
-            // Phi Insertion
+            // Compute dominance frontiers
             //
             std::unordered_map<mir::BasicBlock *,
                                std::vector<mir::BasicBlock *>>
                 dominance_frontiers = computeDominanceFrontiers(dt, f.get());
 
+            //
+            // Get all defs and mark unpromotable allocas
+            //
             std::unordered_map<mir::InstructionAlloca *,
                                std::unordered_set<mir::BasicBlock *>>
                 defs;
+            std::unordered_set<mir::InstructionAlloca *> unpromotable;
             for (auto &bb : f->getBasicBlocks()) {
                 for (auto &i : bb->getInstructions()) {
+                    // Mark unpromotable allocas
+                    auto *alloca =
+                        dynamic_cast<mir::InstructionAlloca *>(i.get());
+                    if (alloca) {
+                        for (auto &[use, _] : alloca->getUses()) {
+                            if (dynamic_cast<mir::InstructionLoad *>(use))
+                                continue;
+
+                            auto *use_store =
+                                dynamic_cast<mir::InstructionStore *>(use);
+                            if (use_store &&
+                                dynamic_cast<mir::InstructionAlloca *>(
+                                    use_store->getValue()) != alloca)
+                                continue;
+
+                            unpromotable.insert(alloca);
+                            break;
+                        }
+                    }
+
+                    // Mark defs
                     auto *store =
                         dynamic_cast<mir::InstructionStore *>(i.get());
-                    if (store)
-                        defs[store->getPtr()].insert(bb.get());
+                    if (store) {
+                        auto ptr_alloca =
+                            dynamic_cast<mir::InstructionAlloca *>(
+                                store->getPtr());
+                        if (!ptr_alloca)
+                            continue;
+                        defs[ptr_alloca].insert(bb.get());
+                    }
                 }
             }
 
+            //
+            // Phi Insertion
+            //
             std::unordered_map<
                 mir::BasicBlock *,
                 std::unordered_map<mir::InstructionAlloca *,
                                    std::unique_ptr<mir::InstructionPhi>>>
                 phis;
             for (auto const &[alloca, def_blocks] : defs) {
+                if (unpromotable.contains(alloca))
+                    continue;
+
                 mir::Type type = alloca->getAllocType();
                 std::vector<mir::BasicBlock *> worklist(def_blocks.begin(),
                                                         def_blocks.end());
@@ -98,6 +135,7 @@ namespace middleend {
                 worklist.pop_back();
 
                 for (auto &[alloca, phi] : phis[bb]) {
+                    // Safely assume no unlowerable allocas
                     reaching[alloca] = phi.get();
                     for (auto succ : bb->getSuccessors().getUniqueEdges()) {
                         auto &succ_phis = phis[succ];
@@ -114,6 +152,11 @@ namespace middleend {
                     // Alloca: mark for drop
                     auto *alloca = dynamic_cast<mir::InstructionAlloca *>(i);
                     if (alloca) {
+                        if (unpromotable.contains(alloca)) {
+                            iter++;
+                            continue;
+                        }
+
                         i->accept(&euv);
                         to_drop.push_back(std::move(*iter));
                         iter = instructions.erase(iter);
@@ -123,7 +166,13 @@ namespace middleend {
                     // Store: update reaching def, delete
                     auto *store = dynamic_cast<mir::InstructionStore *>(i);
                     if (store) {
-                        auto alloca = store->getPtr();
+                        auto alloca = dynamic_cast<mir::InstructionAlloca *>(
+                            store->getPtr());
+                        if (!alloca || unpromotable.contains(alloca)) {
+                            iter++;
+                            continue;
+                        }
+
                         auto value = store->getValue();
                         reaching[alloca] = value;
                         for (auto succ : bb->getSuccessors().getUniqueEdges()) {
@@ -141,6 +190,12 @@ namespace middleend {
                     // Load: replace uses with reaching def, delete
                     auto *load = dynamic_cast<mir::InstructionLoad *>(i);
                     if (load) {
+                        auto alloca = dynamic_cast<mir::InstructionAlloca *>(
+                            load->getPtr());
+                        if (!alloca || unpromotable.contains(alloca)) {
+                            iter++;
+                            continue;
+                        }
                         ReplaceUsesVisitor ruv(load, reaching[load->getPtr()]);
                         auto uses_range = std::views::keys(load->getUses());
                         std::vector<mir::Instruction *> uses(uses_range.begin(),
