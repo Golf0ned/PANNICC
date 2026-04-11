@@ -1,3 +1,11 @@
+int deref(int *foo) {
+    return *foo;
+}
+
+int *address(int foo) {
+    return &foo;
+}
+
 int address_deref(int foo) {
     return *&foo;
 }
