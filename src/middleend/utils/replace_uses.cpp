@@ -28,11 +28,17 @@ namespace middleend {
 
     void ReplaceUsesVisitor::visit(mir::InstructionAlloca *i) {}
 
-    void ReplaceUsesVisitor::visit(mir::InstructionLoad *i) {}
+    void ReplaceUsesVisitor::visit(mir::InstructionLoad *i) {
+        if (i->getPtr() == old_value)
+            i->setPtr(new_value);
+    }
 
     void ReplaceUsesVisitor::visit(mir::InstructionStore *i) {
         if (i->getValue() == old_value)
             i->setValue(new_value);
+
+        if (i->getPtr() == old_value)
+            i->setPtr(new_value);
     }
 
     void ReplaceUsesVisitor::visit(mir::InstructionPhi *i) {
