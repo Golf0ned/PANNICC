@@ -67,9 +67,15 @@ namespace middleend::mir {
 
     Value *InstructionLoad::getPtr() { return ptr; }
 
+    void InstructionLoad::setPtr(Value *new_val) {
+        delUse(ptr);
+        addUse(new_val);
+        ptr = new_val;
+    }
+
     void InstructionLoad::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionStore::InstructionStore(Value *value, InstructionAlloca *ptr)
+    InstructionStore::InstructionStore(Value *value, Value *ptr)
         : value(value), ptr(ptr) {
         addUse(value);
         addUse(ptr);
@@ -77,12 +83,18 @@ namespace middleend::mir {
 
     Value *InstructionStore::getValue() { return value; }
 
-    InstructionAlloca *InstructionStore::getPtr() { return ptr; }
+    Value *InstructionStore::getPtr() { return ptr; }
 
     void InstructionStore::setValue(Value *new_val) {
         delUse(value);
         addUse(new_val);
         value = new_val;
+    }
+
+    void InstructionStore::setPtr(Value *new_val) {
+        delUse(ptr);
+        addUse(new_val);
+        ptr = new_val;
     }
 
     void InstructionStore::accept(InstructionVisitor *v) { v->visit(this); }
