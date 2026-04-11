@@ -63,6 +63,7 @@ namespace middleend::mir {
     public:
         InstructionLoad(Type type, Value *ptr);
         Value *getPtr();
+        void setPtr(Value *new_val);
         void accept(InstructionVisitor *v) override;
 
     private:
@@ -71,15 +72,16 @@ namespace middleend::mir {
 
     class InstructionStore : public Instruction {
     public:
-        InstructionStore(Value *value, InstructionAlloca *ptr);
+        InstructionStore(Value *value, Value *ptr);
         Value *getValue();
-        InstructionAlloca *getPtr();
+        Value *getPtr();
         void setValue(Value *new_val);
+        void setPtr(Value *new_val);
         void accept(InstructionVisitor *v) override;
 
     private:
         Value *value;
-        InstructionAlloca *ptr;
+        Value *ptr;
     };
 
     class InstructionPhi : public Instruction, public Value {
