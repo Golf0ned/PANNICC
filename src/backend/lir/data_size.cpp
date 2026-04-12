@@ -19,6 +19,8 @@ namespace backend::lir {
         switch (type) {
         case middleend::mir::Type::I32:
             return DataSize::DOUBLEWORD;
+        case middleend::mir::Type::PTR:
+            return DataSize::QUADWORD;
         default:
             std::unreachable();
         }
