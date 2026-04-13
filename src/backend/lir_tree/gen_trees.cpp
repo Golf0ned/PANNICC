@@ -90,21 +90,51 @@ namespace backend::lir_tree {
         return std::make_unique<RegisterNode>(reg, nullptr);
     }
 
-    std::unique_ptr<Node>
-    TreeGenVisitor::resolveStackVar(middleend::mir::Value *v) {
+    std::unique_ptr<Node> TreeGenVisitor::resolvePtr(middleend::mir::Value *v) {
         auto name = std::to_string(nir.getNumber(v));
-        auto offset = stack_variables.at(name);
+        if (stack_variables.contains(name)) {
+            auto offset = stack_variables.at(name);
 
-        auto reg = om->getRegister(lir::RegisterNum::RSP);
-        auto rsp = std::make_unique<RegisterNode>(reg, nullptr);
-        return std::make_unique<AddressNode>(std::move(rsp), nullptr, 0,
-                                             offset);
+            auto reg = om->getRegister(lir::RegisterNum::RSP);
+            auto rsp = std::make_unique<RegisterNode>(reg, nullptr);
+            return std::make_unique<AddressNode>(std::move(rsp), nullptr, 0,
+                                                 offset);
+        }
+
+        auto size = lir::fromMir(v->getType());
+        auto reg = om->getRegister(std::to_string(nir.getNumber(v)), size);
+        auto base = std::make_unique<RegisterNode>(reg, nullptr);
+        return std::make_unique<AddressNode>(std::move(base), nullptr, 0, 0);
     }
 
     lir::Operand *TreeGenVisitor::resolveOperand(middleend::mir::Value *v) {
         auto literal = dynamic_cast<middleend::mir::Literal *>(v);
         if (literal)
             return om->getImmediate(literal->getValue());
+
+        auto alloca = dynamic_cast<middleend::mir::InstructionAlloca *>(v);
+        if (alloca) {
+            auto name = std::to_string(nir.getNumber(v));
+            auto offset = stack_variables.at(name);
+
+            auto rsp = om->getRegister(lir::RegisterNum::RSP);
+            if (!offset)
+                return rsp;
+
+            auto size = lir::DataSize::QUADWORD;
+            auto address = om->getAddress(rsp, nullptr, om->getImmediate(0),
+                                          om->getImmediate(offset));
+            auto dst = om->getRegister(name + "_tmp", size);
+
+            std::list<std::unique_ptr<lir::Instruction>> instructions;
+            auto lea =
+                std::make_unique<lir::InstructionLea>(size, address, dst);
+            instructions.push_back(std::move(lea));
+            auto assembly = std::make_unique<AsmNode>(std::move(instructions));
+            function_trees.push_back(std::move(assembly));
+
+            return dst;
+        }
 
         auto size = lir::fromMir(v->getType());
         return om->getRegister(std::to_string(nir.getNumber(v)), size);
@@ -177,7 +207,7 @@ namespace backend::lir_tree {
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionLoad *i) {
-        auto ptr = resolveStackVar(i->getPtr());
+        auto ptr = resolvePtr(i->getPtr());
 
         auto ptr_leaf = ptr.get();
 
@@ -193,7 +223,7 @@ namespace backend::lir_tree {
 
     void TreeGenVisitor::visit(middleend::mir::InstructionStore *i) {
         auto source = resolveLeaf(i->getValue());
-        auto ptr = resolveStackVar(i->getPtr());
+        auto ptr = resolvePtr(i->getPtr());
 
         auto source_leaf = source.get();
         auto ptr_leaf = ptr.get();

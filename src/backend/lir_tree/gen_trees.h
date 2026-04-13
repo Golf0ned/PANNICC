@@ -22,7 +22,7 @@ namespace backend::lir_tree {
                              middleend::mir::BasicBlock *next_bb);
         std::string resolveLabel(middleend::mir::BasicBlock *bb);
         std::unique_ptr<Node> resolveLeaf(middleend::mir::Value *v);
-        std::unique_ptr<Node> resolveStackVar(middleend::mir::Value *v);
+        std::unique_ptr<Node> resolvePtr(middleend::mir::Value *v);
         lir::Operand *resolveOperand(middleend::mir::Value *v);
 
         void visit(middleend::mir::InstructionBinaryOp *i) override;
