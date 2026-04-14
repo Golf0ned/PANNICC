@@ -1,0 +1,39 @@
+deref:  # 1 params, 0 stack bytes
+        movq    %rdi, %r11
+.Lderef_entry:
+        movl    (%r11), %r10d
+        movl    %r10d, %eax
+        ret
+
+address:  # 1 params, 4 stack bytes
+        movl    %edi, %r10d
+.Laddress_entry:
+        movl    %r10d, (%rsp)
+        movq    %rsp, %rax
+        ret
+
+address_deref:  # 1 params, 4 stack bytes
+        movl    %edi, %r10d
+.Laddress_deref_entry:
+        movl    %r10d, (%rsp)
+        movl    (%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+
+address_deref_many:  # 1 params, 12 stack bytes
+        movl    %edi, %edi
+.Laddress_deref_many_entry:
+        movl    %edi, (%rsp)
+        movq    %r10, 4(%rsp)
+        movq    %r11, 8(%rsp)
+        movq    8(%rsp), %r10
+        movq    (%r10), %r11
+        movl    (%r11), %r10d
+        movl    %r10d, %eax
+        ret
+
+return_ptr:  # 0 params, 4 stack bytes
+.Lreturn_ptr_entry:
+        movl    $1, (%rsp)
+        movq    %rsp, %rax
+        ret

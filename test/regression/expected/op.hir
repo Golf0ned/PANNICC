@@ -168,8 +168,9 @@ int unary_plus() {
     a_1 = __v;
     int __v1;
     __v1 = a_1;
-    __v1 = +__v1;
-    return __v1;
+    int __v2;
+    __v2 = +__v1;
+    return __v2;
 }
 
 int unary_minus() {
@@ -180,8 +181,9 @@ int unary_minus() {
     a_1 = __v;
     int __v1;
     __v1 = a_1;
-    __v1 = -__v1;
-    return __v1;
+    int __v2;
+    __v2 = -__v1;
+    return __v2;
 }
 
 int unary_bitwise_not() {
@@ -192,8 +194,9 @@ int unary_bitwise_not() {
     a_1 = __v;
     int __v1;
     __v1 = a_1;
-    __v1 = ~__v1;
-    return __v1;
+    int __v2;
+    __v2 = ~__v1;
+    return __v2;
 }
 
 int add_equals() {
