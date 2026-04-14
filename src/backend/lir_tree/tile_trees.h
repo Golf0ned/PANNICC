@@ -28,6 +28,7 @@ namespace backend::lir_tree {
         apply(std::vector<Node *> &worklist) override;
 
     private:
+        lir::DataSize tile_size;
         AddressNode *tile_ptr;
         Node *tile_src;
     };

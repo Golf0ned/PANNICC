@@ -134,6 +134,8 @@ namespace backend::lir_tree {
         if (!store)
             return false;
 
+        tile_size = store->getSize();
+
         tile_ptr = dynamic_cast<AddressNode *>(store->getPtr().get());
         if (!tile_ptr)
             return false;
@@ -149,11 +151,11 @@ namespace backend::lir_tree {
     StoreTile::apply(std::vector<Node *> &worklist) {
         std::list<std::unique_ptr<lir::Instruction>> assembly;
 
-        auto size = lir::DataSize::DOUBLEWORD;
         auto src = resolveOperand(tile_src, worklist);
         auto dst = resolveOperand(tile_ptr, worklist);
 
-        auto store_asm = std::make_unique<lir::InstructionMov>(size, src, dst);
+        auto store_asm =
+            std::make_unique<lir::InstructionMov>(tile_size, src, dst);
         assembly.push_back(std::move(store_asm));
 
         return assembly;
@@ -178,7 +180,7 @@ namespace backend::lir_tree {
     LoadTile::apply(std::vector<Node *> &worklist) {
         std::list<std::unique_ptr<lir::Instruction>> assembly;
 
-        auto size = lir::DataSize::DOUBLEWORD;
+        auto size = tile_load->getSize();
         auto src = resolveOperand(tile_load->getPtr().get(), worklist);
         auto dst = om->getRegister(tile_dst->getName(), size);
 

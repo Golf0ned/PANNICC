@@ -35,7 +35,7 @@ namespace backend::lir_tree {
         auto &params = f->getParameters();
         auto &arg_registers = lir::getArgRegisters();
         for (size_t param_num = 0; param_num < params.size(); param_num++) {
-            auto size = lir::DataSize::DOUBLEWORD;
+            auto size = lir::fromMir(params[param_num]->getType());
             auto src = param_num < 6
                            ? static_cast<lir::Operand *>(om->getRegister(
                                  lir::toSized(arg_registers[param_num], size)))
@@ -179,8 +179,8 @@ namespace backend::lir_tree {
         //
         // Move return value
         //
-        auto size = lir::DataSize::DOUBLEWORD;
-        auto src = om->getRegister(lir::RegisterNum::EAX);
+        auto size = lir::fromMir(i->getType());
+        auto src = om->getRegister(lir::toSized(lir::RegisterNum::EAX, size));
         auto dst = resolveOperand(i);
         auto mov_ret = std::make_unique<lir::InstructionMov>(size, src, dst);
         instructions.push_back(std::move(mov_ret));
@@ -197,11 +197,6 @@ namespace backend::lir_tree {
         stack_variables.insert(
             {std::to_string(nir.getNumber(i)), function_info->allocate(4)});
 
-        // TODO: turn this into some temporary alloca instruction
-        auto rsp = om->getRegister(lir::RegisterNum::RSP);
-        auto allocate = std::make_unique<lir::InstructionBinaryOp>(
-            lir::BinaryOp::SUB, lir::DataSize::QUADWORD, size, rsp);
-
         auto assembly = std::make_unique<AsmNode>(std::move(instructions));
         function_trees.push_back(std::move(assembly));
     }
@@ -211,9 +206,10 @@ namespace backend::lir_tree {
 
         auto ptr_leaf = ptr.get();
 
-        auto load = std::make_unique<LoadNode>(std::move(ptr));
-
         auto size = lir::fromMir(i->getType());
+
+        auto load = std::make_unique<LoadNode>(std::move(ptr), size);
+
         auto om_reg = om->getRegister(std::to_string(nir.getNumber(i)), size);
         auto reg = std::make_unique<RegisterNode>(om_reg, std::move(load));
 
@@ -222,14 +218,15 @@ namespace backend::lir_tree {
     }
 
     void TreeGenVisitor::visit(middleend::mir::InstructionStore *i) {
+        auto size = lir::fromMir(i->getValue()->getType());
         auto source = resolveLeaf(i->getValue());
         auto ptr = resolvePtr(i->getPtr());
 
         auto source_leaf = source.get();
         auto ptr_leaf = ptr.get();
 
-        auto store =
-            std::make_unique<StoreNode>(std::move(source), std::move(ptr));
+        auto store = std::make_unique<StoreNode>(std::move(source),
+                                                 std::move(ptr), size);
         tree_info->insertTree(store.get(), {source_leaf, ptr_leaf}, true);
         function_trees.push_back(std::move(store));
     }
@@ -301,10 +298,9 @@ namespace backend::lir_tree {
         //
         // Move value into return register
         //
-        // TODO: unhardcode if we have 64 bit
-        auto size = lir::DataSize::DOUBLEWORD;
+        auto size = lir::fromMir(t->getValue()->getType());
         auto src = resolveOperand(t->getValue());
-        auto dst = om->getRegister(lir::RegisterNum::EAX);
+        auto dst = om->getRegister(lir::toSized(lir::RegisterNum::RAX, size));
         auto mov_ret = std::make_unique<lir::InstructionMov>(size, src, dst);
         instructions.push_back(std::move(mov_ret));
 
@@ -336,7 +332,7 @@ namespace backend::lir_tree {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
         // TODO: what the hell are we doing with size
-        auto size = lir::DataSize::DOUBLEWORD;
+        auto size = lir::fromMir(t->getCond()->getType());
 
         // TODO: replace with test cond, cond
         auto cond = resolveOperand(t->getCond());
