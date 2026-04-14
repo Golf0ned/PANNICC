@@ -137,66 +137,66 @@ TEST_P(RegressionTest, HIR) {
     testHir(input_path, expected_path);
 }
 
-TEST_P(RegressionTest, MIR) {
+TEST_P(RegressionTest, MIR_O0) {
     auto expected_path = test_dir + "/expected/" + test_name + "_o0.mir";
     testMir(input_path, expected_path, initializeO0().get());
 }
 
-TEST_P(RegressionTest, MIRWithO1) {
+TEST_P(RegressionTest, MIR_O1) {
     auto expected_path = test_dir + "/expected/" + test_name + "_o1.mir";
     testMir(input_path, expected_path, initializeO1().get());
 }
 
-TEST_P(RegressionTest, MIRWithSelectPasses) {
+TEST_P(RegressionTest, MIR_Select) {
     auto expected_path = test_dir + "/expected/" + test_name + "_s.mir";
     testMir(input_path, expected_path, buildPassManager(passes_path).get());
 }
 
-TEST_P(RegressionTest, LIRIsel) {
+TEST_P(RegressionTest, LIRIsel_O0) {
     auto expected_path = test_dir + "/expected/" + test_name + "_o0_isel.lir";
     testLirIsel(input_path, expected_path, initializeO0().get());
 }
 
-TEST_P(RegressionTest, LIRIselWithO1) {
+TEST_P(RegressionTest, LIRIsel_O1) {
     auto expected_path = test_dir + "/expected/" + test_name + "_o1_isel.lir";
     testLirIsel(input_path, expected_path, initializeO1().get());
 }
 
-TEST_P(RegressionTest, LIRIselWithSelectPasses) {
+TEST_P(RegressionTest, LIRIsel_Select) {
     auto expected_path = test_dir + "/expected/" + test_name + "_s_isel.lir";
     testLirIsel(input_path, expected_path, buildPassManager(passes_path).get());
 }
 
-TEST_P(RegressionTest, LIRRegalloc) {
+TEST_P(RegressionTest, LIRRegalloc_O0) {
     auto expected_path =
         test_dir + "/expected/" + test_name + "_o0_regalloc.lir";
     testLirRegalloc(input_path, expected_path, initializeO0().get());
 }
 
-TEST_P(RegressionTest, LIRRegallocWithO1) {
+TEST_P(RegressionTest, LIRRegalloc_O1) {
     auto expected_path =
         test_dir + "/expected/" + test_name + "_o1_regalloc.lir";
     testLirRegalloc(input_path, expected_path, initializeO1().get());
 }
 
-TEST_P(RegressionTest, LIRRegallocWithSelectPasses) {
+TEST_P(RegressionTest, LIRRegalloc_Select) {
     auto expected_path =
         test_dir + "/expected/" + test_name + "_s_regalloc.lir";
     testLirRegalloc(input_path, expected_path,
                     buildPassManager(passes_path).get());
 }
 
-TEST_P(RegressionTest, ASM) {
+TEST_P(RegressionTest, ASM_O0) {
     auto expected_path = test_dir + "/expected/" + test_name + "_o0.s";
     testAsm(input_path, expected_path, initializeO0().get());
 }
 
-TEST_P(RegressionTest, ASMWithO1) {
+TEST_P(RegressionTest, ASM_O1) {
     auto expected_path = test_dir + "/expected/" + test_name + "_o1.s";
     testAsm(input_path, expected_path, initializeO1().get());
 }
 
-TEST_P(RegressionTest, ASMWithSelectPasses) {
+TEST_P(RegressionTest, ASM_Select) {
     auto expected_path = test_dir + "/expected/" + test_name + "_s.s";
     testAsm(input_path, expected_path, buildPassManager(passes_path).get());
 }
