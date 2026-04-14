@@ -22,6 +22,9 @@ namespace backend::lir_tree {
 
     class Node {
     public:
+        // TODO: is this a good design choice?
+        //       we don't use it for half the nodes
+        virtual lir::DataSize getSize();
         virtual void accept(NodeVisitor *v) = 0;
         virtual ~Node() = default;
     };
@@ -32,9 +35,10 @@ namespace backend::lir_tree {
         std::string getName();
         lir::Register *getReg();
         std::unique_ptr<Node> &getSource();
+        lir::DataSize getSize() override;
         bool sameReg(RegisterNode *other);
         void consume(RegisterNode *other);
-        void accept(NodeVisitor *v);
+        void accept(NodeVisitor *v) override;
 
     private:
         lir::Register *reg;
@@ -45,7 +49,7 @@ namespace backend::lir_tree {
     public:
         ImmediateNode(uint64_t value);
         uint64_t getValue();
-        void accept(NodeVisitor *v);
+        void accept(NodeVisitor *v) override;
 
     private:
         uint64_t value;
@@ -60,7 +64,7 @@ namespace backend::lir_tree {
         std::unique_ptr<RegisterNode> &getIndex();
         uint64_t getScale();
         uint64_t getDisplacement();
-        void accept(NodeVisitor *v);
+        void accept(NodeVisitor *v) override;
 
     private:
         std::unique_ptr<RegisterNode> base;
@@ -76,7 +80,7 @@ namespace backend::lir_tree {
         middleend::mir::BinaryOp getOp();
         std::unique_ptr<Node> &getLeft();
         std::unique_ptr<Node> &getRight();
-        void accept(NodeVisitor *v);
+        void accept(NodeVisitor *v) override;
 
     private:
         middleend::mir::BinaryOp op;
@@ -86,31 +90,36 @@ namespace backend::lir_tree {
 
     class LoadNode : public Node {
     public:
-        LoadNode(std::unique_ptr<Node> ptr);
+        LoadNode(std::unique_ptr<Node> ptr, lir::DataSize size);
         std::unique_ptr<Node> &getPtr();
-        void accept(NodeVisitor *v);
+        lir::DataSize getSize() override;
+        void accept(NodeVisitor *v) override;
 
     private:
+        lir::DataSize size;
         std::unique_ptr<Node> ptr;
     };
 
     class StoreNode : public Node {
     public:
-        StoreNode(std::unique_ptr<Node> source, std::unique_ptr<Node> ptr);
+        StoreNode(std::unique_ptr<Node> source, std::unique_ptr<Node> ptr,
+                  lir::DataSize size);
         std::unique_ptr<Node> &getSource();
         std::unique_ptr<Node> &getPtr();
-        void accept(NodeVisitor *v);
+        lir::DataSize getSize() override;
+        void accept(NodeVisitor *v) override;
 
     private:
         std::unique_ptr<Node> source;
         std::unique_ptr<Node> ptr;
+        lir::DataSize size;
     };
 
     class AsmNode : public Node {
     public:
         AsmNode(std::list<std::unique_ptr<lir::Instruction>> assembly);
         std::list<std::unique_ptr<lir::Instruction>> &getAssembly();
-        void accept(NodeVisitor *v);
+        void accept(NodeVisitor *v) override;
 
     private:
         std::list<std::unique_ptr<lir::Instruction>> assembly;

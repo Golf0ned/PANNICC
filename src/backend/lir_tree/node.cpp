@@ -1,6 +1,8 @@
 #include "backend/lir_tree/node.h"
 
 namespace backend::lir_tree {
+    lir::DataSize Node::getSize() { return lir::DataSize::QUADWORD; }
+
     RegisterNode::RegisterNode(lir::Register *reg, std::unique_ptr<Node> source)
         : reg(reg), source(std::move(source)) {}
 
@@ -16,6 +18,8 @@ namespace backend::lir_tree {
     lir::Register *RegisterNode::getReg() { return reg; }
 
     std::unique_ptr<Node> &RegisterNode::getSource() { return source; }
+
+    lir::DataSize RegisterNode::getSize() { return reg->getSize(); }
 
     bool RegisterNode::sameReg(RegisterNode *other) {
         return reg == other->reg;
@@ -61,19 +65,24 @@ namespace backend::lir_tree {
 
     void OpNode::accept(NodeVisitor *v) { v->visit(this); }
 
-    LoadNode::LoadNode(std::unique_ptr<Node> ptr) : ptr(std::move(ptr)) {}
+    LoadNode::LoadNode(std::unique_ptr<Node> ptr, lir::DataSize size)
+        : ptr(std::move(ptr)), size(size) {}
 
     std::unique_ptr<Node> &LoadNode::getPtr() { return ptr; }
+
+    lir::DataSize LoadNode::getSize() { return size; }
 
     void LoadNode::accept(NodeVisitor *v) { v->visit(this); }
 
     StoreNode::StoreNode(std::unique_ptr<Node> source,
-                         std::unique_ptr<Node> ptr)
-        : source(std::move(source)), ptr(std::move(ptr)) {}
+                         std::unique_ptr<Node> ptr, lir::DataSize size)
+        : source(std::move(source)), ptr(std::move(ptr)), size(size) {}
 
     std::unique_ptr<Node> &StoreNode::getSource() { return source; }
 
     std::unique_ptr<Node> &StoreNode::getPtr() { return ptr; }
+
+    lir::DataSize StoreNode::getSize() { return size; }
 
     void StoreNode::accept(NodeVisitor *v) { v->visit(this); }
 
