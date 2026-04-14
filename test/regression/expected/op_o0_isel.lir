@@ -215,56 +215,56 @@ bit_xor:  # 0 params, 28 stack bytes
         movl    %16, %eax
         ret
 
-unary_plus:  # 0 params, 16 stack bytes
+unary_plus:  # 0 params, 20 stack bytes
 .Lunary_plus_entry:
         movl    $42, 4(%rsp)
-        movl    4(%rsp), %4
-        movl    %4, (%rsp)
-        movl    (%rsp), %5
-        movl    %5, 8(%rsp)
-        movl    8(%rsp), %6
+        movl    4(%rsp), %5
+        movl    %5, (%rsp)
+        movl    (%rsp), %6
         movl    %6, 8(%rsp)
         movl    8(%rsp), %7
         movl    %7, 12(%rsp)
-.Lunary_plus_8:
-        movl    12(%rsp), %9
-        movl    %9, %eax
+        movl    12(%rsp), %8
+        movl    %8, 16(%rsp)
+.Lunary_plus_9:
+        movl    16(%rsp), %10
+        movl    %10, %eax
         ret
 
-unary_minus:  # 0 params, 16 stack bytes
+unary_minus:  # 0 params, 20 stack bytes
 .Lunary_minus_entry:
         movl    $42, 4(%rsp)
-        movl    4(%rsp), %4
-        movl    %4, (%rsp)
-        movl    (%rsp), %5
-        movl    %5, 8(%rsp)
-        movl    8(%rsp), %6
-        movl    $0, %7
-        subl    %6, %7
-        movl    %7, 8(%rsp)
-        movl    8(%rsp), %8
+        movl    4(%rsp), %5
+        movl    %5, (%rsp)
+        movl    (%rsp), %6
+        movl    %6, 8(%rsp)
+        movl    8(%rsp), %7
+        movl    $0, %8
+        subl    %7, %8
         movl    %8, 12(%rsp)
-.Lunary_minus_9:
-        movl    12(%rsp), %10
-        movl    %10, %eax
+        movl    12(%rsp), %9
+        movl    %9, 16(%rsp)
+.Lunary_minus_10:
+        movl    16(%rsp), %11
+        movl    %11, %eax
         ret
 
-unary_bitwise_not:  # 0 params, 16 stack bytes
+unary_bitwise_not:  # 0 params, 20 stack bytes
 .Lunary_bitwise_not_entry:
         movl    $42, 4(%rsp)
-        movl    4(%rsp), %4
-        movl    %4, (%rsp)
-        movl    (%rsp), %5
-        movl    %5, 8(%rsp)
-        movl    8(%rsp), %6
-        movl    %6, %7
-        xorl    $18446744073709551615, %7
-        movl    %7, 8(%rsp)
-        movl    8(%rsp), %8
+        movl    4(%rsp), %5
+        movl    %5, (%rsp)
+        movl    (%rsp), %6
+        movl    %6, 8(%rsp)
+        movl    8(%rsp), %7
+        movl    %7, %8
+        xorl    $18446744073709551615, %8
         movl    %8, 12(%rsp)
-.Lunary_bitwise_not_9:
-        movl    12(%rsp), %10
-        movl    %10, %eax
+        movl    12(%rsp), %9
+        movl    %9, 16(%rsp)
+.Lunary_bitwise_not_10:
+        movl    16(%rsp), %11
+        movl    %11, %eax
         ret
 
 add_equals:  # 0 params, 20 stack bytes
