@@ -12,9 +12,11 @@ Currently PANNICC supports the following subset of C:
     - Shift operators (<<, >>, <<=, >>=)
     - Some bitwise operators (&, |, ^)
     - Some unary operators (+, -, ~)
+    - Pointer operators (&, *)
 - Functions and scopes
 - Some control flow (if, else, while)
 - Return statements
+- Pointers (just int***... for now)
 - Comments
 
 Refer to the grammar in [parser.cpp](https://github.com/Golf0ned/PANNICC/blob/main/src/frontend/parser.cpp) for more specifics.
