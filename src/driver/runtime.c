@@ -3,9 +3,9 @@
 
 #include "driver/runtime.h"
 
-void *alloc(int size) { return malloc(size); }
+int *alloc(int size) { return (int *)malloc(size); }
 
-int dealloc(void *ptr) {
+int dealloc(int *ptr) {
     free(ptr);
     return 0;
 }

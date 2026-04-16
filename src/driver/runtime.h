@@ -1,5 +1,5 @@
-void *alloc(int size);
+int *alloc(int size);
 
-int dealloc(void *ptr);
+int dealloc(int *ptr);
 
 int print(int value);
