@@ -1,5 +1,6 @@
 #pragma once
 
+#include "frontend/ast/ast.h"
 #include "frontend/parser/core.h"
 #include "frontend/utils/type.h"
 
@@ -18,14 +19,16 @@ namespace frontend {
     // Actions
     //
     template <> struct action<type_int> {
-        template <typename Input> static void apply(const Input &in) {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto type = std::make_unique<Int>();
             parsed_types.push_back(std::move(type));
         }
     };
 
     template <> struct action<type_ptr> {
-        template <typename Input> static void apply(const Input &in) {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto base = popType();
             auto type = std::make_unique<Ptr>(std::move(base));
             parsed_types.push_back(std::move(type));
