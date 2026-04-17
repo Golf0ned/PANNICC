@@ -1,6 +1,5 @@
 #pragma once
 
-#include "frontend/ast/ast.h"
 #include "frontend/parser/instruction.h"
 
 namespace frontend {
@@ -17,7 +16,8 @@ namespace frontend {
     // Actions
     //
     template <> struct action<function_param> {
-        template <typename Input> static void apply(const Input &in) {
+        template <typename Input>
+        static void apply(const Input &in, std::vector<ast::Function> &res) {
             auto param_name = popIdentifier();
             auto param_type = popType();
             active_params.push_back(
