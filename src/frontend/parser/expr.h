@@ -27,9 +27,7 @@ namespace frontend {
     //
     // 0
     //
-    struct identifier
-        : pegtl::seq<pegtl::plus<pegtl::sor<pegtl::alpha, pegtl::one<'_'>>>,
-                     pegtl::star<pegtl::sor<pegtl::alnum, pegtl::one<'_'>>>> {};
+    struct identifier : pegtl::identifier {};
 
     struct number : pegtl::seq<pegtl::opt<pegtl::sor<plus, minus>>,
                                pegtl::plus<pegtl::digit>> {};
