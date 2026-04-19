@@ -9,6 +9,7 @@
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
 #include "frontend/parser.h"
+#include "frontend/preprocessor/preprocess.h"
 #include "middleend/pass_manager.h"
 
 #define PRINT(str) (std::cerr << str << std::endl)
@@ -167,8 +168,9 @@ int main(int argc, char *argv[]) {
     }
 
     // TODO: preprocessor
+    std::string preprocessed = frontend::preprocess(input_file);
     if (output_level == OutputLevel::PREPROCESS) {
-        ERROR("Preprocessor WIP");
+        output(preprocessed, output_file);
         return 0;
     }
 
