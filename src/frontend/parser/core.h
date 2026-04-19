@@ -53,8 +53,7 @@ namespace frontend {
     struct comment
         : pegtl::disable<TAO_PEGTL_STRING("//"), pegtl::until<pegtl::eolf>> {};
 
-    struct whitespace_char
-        : pegtl::sor<pegtl::one<' '>, pegtl::one<'\t'>, pegtl::eol> {};
+    struct whitespace_char : pegtl::sor<pegtl::space> {};
 
     struct whitespace : pegtl::plus<whitespace_char> {};
 
