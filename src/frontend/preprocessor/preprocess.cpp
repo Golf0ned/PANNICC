@@ -1,9 +1,10 @@
 #include "frontend/preprocessor/preprocess.h"
 
-#include <iostream>
+#include <filesystem>
 #include <unordered_map>
 
 namespace frontend {
+    std::vector<std::filesystem::path> current_file;
     std::vector<std::string> parsed_clauses;
     std::unordered_map<std::string, std::string> define_map;
 
@@ -111,13 +112,17 @@ namespace frontend {
             std::string clause = parsed_clauses.back();
             parsed_clauses.pop_back();
 
-            std::cout << "[TODO] include: " << clause << std::endl;
+            std::string file_name = clause.substr(1, clause.size() - 2);
 
-            std::string path = clause.substr(1, clause.size() - 2);
             if (clause[0] == '"') {
-                // TODO: handle quote include
+                auto file = current_file.back().replace_filename(file_name);
+                if (std::filesystem::exists(file))
+                    res += preprocess(file);
+
+                // TODO: search quote directories
             }
-            // TODO: handle angle brace include + qutoe include fallback
+
+            // TODO: search standard system directories
         }
     };
 
@@ -126,8 +131,12 @@ namespace frontend {
 
         parsed_clauses.clear();
 
+        current_file.push_back((std::filesystem::path)input_file);
+
         std::string preprocessed;
         pegtl::parse<grammar, action>(in, preprocessed);
+
+        current_file.pop_back();
 
         return preprocessed;
     }
