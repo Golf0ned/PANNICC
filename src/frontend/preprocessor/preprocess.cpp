@@ -43,7 +43,7 @@ namespace frontend {
     // Rest of translation unit
     //
     struct line
-        : pegtl::seq<pegtl::opt<whitespace>, pegtl::sor<directive, body>> {};
+        : pegtl::sor<pegtl::seq<pegtl::opt<whitespace>, directive>, body> {};
 
     struct grammar : pegtl::must<pegtl::until<pegtl::eof, line>> {};
 
@@ -54,23 +54,25 @@ namespace frontend {
 
     template <> struct action<body> {
         template <typename Input>
-        static void apply(const Input &in, std::string res) {
+        static void apply(const Input &in, std::string &res) {
             std::string line = in.string();
 
-            // Replace "define" macros
+            // TODO: Replace "define" macros
+
+            res += line;
         }
     };
 
     template <> struct action<identifier> {
         template <typename Input>
-        static void apply(const Input &in, std::string res) {
+        static void apply(const Input &in, std::string &res) {
             parsed_clauses.push_back(in.string());
         }
     };
 
     template <> struct action<rest_of_line> {
         template <typename Input>
-        static void apply(const Input &in, std::string res) {
+        static void apply(const Input &in, std::string &res) {
             std::string rest = in.string();
             parsed_clauses.push_back(rest.erase(rest.size() - 1));
         }
@@ -91,21 +93,21 @@ namespace frontend {
 
     template <> struct action<braces_include> {
         template <typename Input>
-        static void apply(const Input &in, std::string res) {
+        static void apply(const Input &in, std::string &res) {
             parsed_clauses.push_back(in.string());
         }
     };
 
     template <> struct action<quotes_include> {
         template <typename Input>
-        static void apply(const Input &in, std::string res) {
+        static void apply(const Input &in, std::string &res) {
             parsed_clauses.push_back(in.string());
         }
     };
 
     template <> struct action<directive_include> {
         template <typename Input>
-        static void apply(const Input &in, std::string res) {
+        static void apply(const Input &in, std::string &res) {
             std::string clause = parsed_clauses.back();
             parsed_clauses.pop_back();
 
