@@ -55,14 +55,14 @@ namespace frontend::ast {
 
     class Program {
     public:
-        Program(std::vector<Function> functions,
+        Program(std::vector<std::unique_ptr<Function>> functions,
                 std::unique_ptr<SymbolTable> symbol_table);
-        std::vector<Function> &getFunctions();
+        std::vector<std::unique_ptr<Function>> &getFunctions();
         std::unique_ptr<SymbolTable> &getSymbolTable();
         std::string toString();
 
     private:
-        std::vector<Function> functions;
+        std::vector<std::unique_ptr<Function>> functions;
         std::unique_ptr<SymbolTable> symbol_table;
     };
 

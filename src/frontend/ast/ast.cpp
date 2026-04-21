@@ -79,12 +79,14 @@ namespace frontend::ast {
         return res;
     }
 
-    Program::Program(std::vector<Function> functions,
+    Program::Program(std::vector<std::unique_ptr<Function>> functions,
                      std::unique_ptr<SymbolTable> symbol_table)
         : functions(std::move(functions)),
           symbol_table(std::move(symbol_table)) {}
 
-    std::vector<Function> &Program::getFunctions() { return functions; }
+    std::vector<std::unique_ptr<Function>> &Program::getFunctions() {
+        return functions;
+    }
 
     std::unique_ptr<SymbolTable> &Program::getSymbolTable() {
         return symbol_table;
@@ -96,7 +98,7 @@ namespace frontend::ast {
         for (auto iter = functions.begin(); iter != functions.end(); iter++) {
             if (iter != functions.begin())
                 res += "\n\n";
-            res += iter->toString(symbol_table.get());
+            res += (*iter)->toString(symbol_table.get());
         }
 
         return res;
