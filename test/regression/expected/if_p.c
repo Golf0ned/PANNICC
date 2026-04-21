@@ -1,0 +1,52 @@
+int if_basic() {
+    int cond = 1;
+    if (cond) {
+        cond = cond + 100;
+    }
+    return cond;
+}
+
+int if_basic_else() {
+    int cond = 1;
+    if (cond) {
+        cond = cond + 3;
+    } else {
+        cond = cond + 100;
+    }
+    return cond;
+}
+
+int if_no_braces() {
+    int cond = 1;
+    if (cond)
+        return cond;
+    else
+        return cond;
+}
+
+int if_chain() {
+  int cond = 1;
+  int cond_2 = 2;
+  if (cond) if (cond_2) return 0;
+  return 1;
+}
+
+int if_chain_many() {
+  int cond = 1;
+  int cond_2 = 2;
+  int cond_3 = 0;
+  if (cond) if (cond_2) {
+      if (cond_3) return 0;
+      else return 3;
+  }
+  return 1;
+}
+
+int if_else_if() {
+    if (1)
+        return 2;
+    else if (3)
+        return 4;
+    else
+        return 5;
+}
