@@ -1,0 +1,46 @@
+define i32 @deref(ptr %0) {
+entry:
+  %1 = load ptr %0
+  ret i32 %1
+}
+
+define ptr @address(i32 %0) {
+entry:
+  %1 = alloca i32
+  store i32 %0, ptr %1
+  ret ptr %1
+}
+
+define i32 @address_deref(i32 %0) {
+entry:
+  %1 = alloca i32
+  store i32 %0, ptr %1
+  %2 = load ptr %1
+  ret i32 %2
+}
+
+define i32 @address_deref_many(i32 %0) {
+entry:
+  %1 = alloca i32
+  %2 = alloca ptr
+  %3 = alloca ptr
+  store i32 %0, ptr %1
+  store ptr %1, ptr %2
+  store ptr %2, ptr %3
+  %4 = load ptr %3
+  %5 = load ptr %4
+  %6 = load ptr %5
+  ret i32 %6
+}
+
+define ptr @return_ptr() {
+entry:
+  %0 = alloca i32
+  store i32 1, ptr %0
+  ret ptr %0
+}
+
+define i32 @main() {
+entry:
+  ret i32 0
+}

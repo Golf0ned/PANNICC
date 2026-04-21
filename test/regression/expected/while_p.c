@@ -1,0 +1,34 @@
+int while_basic() {
+    int val = 0;
+    while (1) {
+        val = val + 2;
+    }
+    return val;
+}
+
+int while_complex() {
+    int res = 0;
+    int cond = 100;
+    while (cond) {
+        res = res + 5;
+        cond = cond - 1;
+    }
+    return res;
+}
+
+int while_empty() {
+    while (0) {
+    }
+    return 0;
+}
+
+int while_if() {
+    int counter = 200;
+    while (1) {
+        if (counter) {
+        } else {
+            return 500;
+        }
+    }
+    return 0;
+}

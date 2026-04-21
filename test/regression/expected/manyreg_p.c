@@ -1,0 +1,20 @@
+int main() {
+    int a = 0;
+    int b = a + 1;
+    int c = b + a;
+    int d = c + b + a;
+    int e = d + c + b + a;
+    int f = e + d + c + b + a;
+    int g = f + e + d + c + b + a;
+    int h = g + f + e + d + c + b + a;
+    int i = h + g + f + e + d + c + b + a;
+    int j = i + h + g + f + e + d + c + b + a;
+    int k = j + i + h + g + f + e + d + c + b + a;
+    int l = k + j + i + h + g + f + e + d + c + b + a;
+    int m = l + k + j + i + h + g + f + e + d + c + b + a;
+    int n = m + l + k + j + i + h + g + f + e + d + c + b + a;
+    int o = n + m + l + k + j + i + h + g + f + e + d + c + b + a;
+    int p = o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
+
+    return p + o + n + m + l + k + j + i + h + g + f + e + d + c + b + a;
+}
