@@ -13,6 +13,7 @@ for test in ${INPUT_DIR}/*.c; do
 
     input="${base_name%.c}"
 
+    ${PANNICC} -O0 -E ${test} -o ${OUTPUT_DIR}/${input}_p.c
     ${PANNICC} -O0 --emit-ast ${test} -o ${OUTPUT_DIR}/${input}.ast
     ${PANNICC} -O0 --emit-hir ${test} -o ${OUTPUT_DIR}/${input}.hir
 
