@@ -6,22 +6,26 @@
 #include "frontend/utils/type.h"
 
 namespace frontend::ast {
-    Function::Function(std::unique_ptr<Type> type,
-                       std::unique_ptr<AtomIdentifier> name,
-                       std::vector<Parameter> parameters,
-                       std::unique_ptr<Scope> body)
+    FunctionDefinition::FunctionDefinition(std::unique_ptr<Type> type,
+                                           std::unique_ptr<AtomIdentifier> name,
+                                           std::vector<Parameter> parameters,
+                                           std::unique_ptr<Scope> body)
         : type(std::move(type)), name(std::move(name)),
           parameters(std::move(parameters)), body(std::move(body)) {}
 
-    std::unique_ptr<Type> &Function::getType() { return type; }
+    std::unique_ptr<Type> &FunctionDefinition::getType() { return type; }
 
-    std::unique_ptr<AtomIdentifier> &Function::getName() { return name; }
+    std::unique_ptr<AtomIdentifier> &FunctionDefinition::getName() {
+        return name;
+    }
 
-    std::vector<Parameter> &Function::getParameters() { return parameters; }
+    std::vector<Parameter> &FunctionDefinition::getParameters() {
+        return parameters;
+    }
 
-    std::unique_ptr<Scope> &Function::getBody() { return body; }
+    std::unique_ptr<Scope> &FunctionDefinition::getBody() { return body; }
 
-    std::string Function::toString(SymbolTable *symbol_table) {
+    std::string FunctionDefinition::toString(SymbolTable *symbol_table) {
         std::string type_str = type->toString();
         std::string name_str = name->toString(*symbol_table);
 
@@ -38,6 +42,39 @@ namespace frontend::ast {
         ToStringVisitor tsv(symbol_table);
         body->accept(&tsv);
         res += " " + tsv.getResult();
+
+        return res;
+    }
+
+    FunctionPrototype::FunctionPrototype(std::unique_ptr<Type> type,
+                                         std::unique_ptr<AtomIdentifier> name,
+                                         std::vector<Parameter> parameters)
+        : type(std::move(type)), name(std::move(name)),
+          parameters(std::move(parameters)) {}
+
+    std::unique_ptr<Type> &FunctionPrototype::getType() { return type; }
+
+    std::unique_ptr<AtomIdentifier> &FunctionPrototype::getName() {
+        return name;
+    }
+
+    std::vector<Parameter> &FunctionPrototype::getParameters() {
+        return parameters;
+    }
+
+    std::string FunctionPrototype::toString(SymbolTable *symbol_table) {
+        std::string type_str = type->toString();
+        std::string name_str = name->toString(*symbol_table);
+
+        std::string res = type_str + " " + name_str + '(';
+        for (auto iter = parameters.begin(); iter != parameters.end(); iter++) {
+            if (iter != parameters.begin())
+                res += ", ";
+            auto &[param_type, param_name] = *iter;
+            res += param_type->toString() + ' ' +
+                   param_name->toString(*symbol_table);
+        }
+        res += ");";
 
         return res;
     }

@@ -14,21 +14,43 @@ namespace frontend::ast {
 
     class Function {
     public:
-        Function(std::unique_ptr<Type> type,
-                 std::unique_ptr<AtomIdentifier> name,
-                 std::vector<Parameter> parameters,
-                 std::unique_ptr<Scope> body);
+        virtual std::string toString(SymbolTable *symbol_table) = 0;
+        virtual ~Function() = default;
+    };
+
+    class FunctionDefinition : public Function {
+    public:
+        FunctionDefinition(std::unique_ptr<Type> type,
+                           std::unique_ptr<AtomIdentifier> name,
+                           std::vector<Parameter> parameters,
+                           std::unique_ptr<Scope> body);
         std::unique_ptr<Type> &getType();
         std::unique_ptr<AtomIdentifier> &getName();
         std::vector<Parameter> &getParameters();
         std::unique_ptr<Scope> &getBody();
-        std::string toString(SymbolTable *symbol_table);
+        std::string toString(SymbolTable *symbol_table) override;
 
     private:
         std::unique_ptr<Type> type;
         std::unique_ptr<AtomIdentifier> name;
         std::vector<Parameter> parameters;
         std::unique_ptr<Scope> body;
+    };
+
+    class FunctionPrototype : public Function {
+    public:
+        FunctionPrototype(std::unique_ptr<Type> type,
+                          std::unique_ptr<AtomIdentifier> name,
+                          std::vector<Parameter> parameters);
+        std::unique_ptr<Type> &getType();
+        std::unique_ptr<AtomIdentifier> &getName();
+        std::vector<Parameter> &getParameters();
+        std::string toString(SymbolTable *symbol_table) override;
+
+    private:
+        std::unique_ptr<Type> type;
+        std::unique_ptr<AtomIdentifier> name;
+        std::vector<Parameter> parameters;
     };
 
     class Program {
