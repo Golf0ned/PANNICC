@@ -14,15 +14,21 @@ namespace frontend::hir {
 
     class Function {
     public:
-        Function(std::unique_ptr<Type> type,
-                 std::unique_ptr<AtomIdentifier> name,
-                 std::vector<Parameter> parameters,
-                 std::vector<std::unique_ptr<Instruction>> body);
+        virtual std::string toString(SymbolTable *symbol_table) = 0;
+        virtual ~Function() = default;
+    };
+
+    class FunctionDefinition : public Function {
+    public:
+        FunctionDefinition(std::unique_ptr<Type> type,
+                           std::unique_ptr<AtomIdentifier> name,
+                           std::vector<Parameter> parameters,
+                           std::vector<std::unique_ptr<Instruction>> body);
         std::unique_ptr<Type> &getType();
         std::unique_ptr<AtomIdentifier> &getName();
         std::vector<Parameter> &getParameters();
         std::vector<std::unique_ptr<Instruction>> &getBody();
-        std::string toString(SymbolTable *symbol_table);
+        std::string toString(SymbolTable *symbol_table) override;
 
     private:
         std::unique_ptr<Type> type;
@@ -31,16 +37,32 @@ namespace frontend::hir {
         std::vector<std::unique_ptr<Instruction>> body;
     };
 
+    class FunctionPrototype : public Function {
+    public:
+        FunctionPrototype(std::unique_ptr<Type> type,
+                          std::unique_ptr<AtomIdentifier> name,
+                          std::vector<Parameter> parameters);
+        std::unique_ptr<Type> &getType();
+        std::unique_ptr<AtomIdentifier> &getName();
+        std::vector<Parameter> &getParameters();
+        std::string toString(SymbolTable *symbol_table) override;
+
+    private:
+        std::unique_ptr<Type> type;
+        std::unique_ptr<AtomIdentifier> name;
+        std::vector<Parameter> parameters;
+    };
+
     class Program {
     public:
-        Program(std::vector<Function> functions,
+        Program(std::vector<std::unique_ptr<Function>> functions,
                 std::unique_ptr<SymbolTable> symbol_table);
-        std::vector<Function> &getFunctions();
+        std::vector<std::unique_ptr<Function>> &getFunctions();
         std::unique_ptr<SymbolTable> &getSymbolTable();
         std::string toString();
 
     private:
-        std::vector<Function> functions;
+        std::vector<std::unique_ptr<Function>> functions;
         std::unique_ptr<SymbolTable> symbol_table;
     };
 
