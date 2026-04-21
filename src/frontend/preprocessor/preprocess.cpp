@@ -19,7 +19,11 @@ namespace frontend {
     //
     // Body
     //
-    struct body : pegtl::until<pegtl::eolf> {};
+    struct body_identifier : pegtl::identifier {};
+    struct body_other : pegtl::plus<pegtl::not_at<pegtl::identifier_first>,
+                                    pegtl::not_at<pegtl::eolf>, pegtl::any> {};
+    struct body
+        : pegtl::until<pegtl::eolf, pegtl::sor<body_identifier, body_other>> {};
 
     //
     // Directives
@@ -53,14 +57,28 @@ namespace frontend {
     //
     template <typename Rule> struct action {};
 
+    template <> struct action<body_identifier> {
+        template <typename Input>
+        static void apply(const Input &in, std::string &res) {
+            std::string token = in.string();
+
+            auto replacement = define_map.find(token);
+            res +=
+                replacement != define_map.end() ? replacement->second : token;
+        }
+    };
+
+    template <> struct action<body_other> {
+        template <typename Input>
+        static void apply(const Input &in, std::string &res) {
+            res += in.string();
+        }
+    };
+
     template <> struct action<body> {
         template <typename Input>
         static void apply(const Input &in, std::string &res) {
-            std::string line = in.string();
-
-            // TODO: Replace "define" macros
-
-            res += line;
+            res += '\n';
         }
     };
 
@@ -87,6 +105,8 @@ namespace frontend {
 
             std::string to_replace = parsed_clauses.back();
             parsed_clauses.pop_back();
+
+            // TODO: do recursive macro replacement
 
             define_map[to_replace] = replacement;
         }
