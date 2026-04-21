@@ -32,7 +32,7 @@ namespace frontend {
         std::unique_ptr<hir::Label> makeLabel(std::string name);
         std::unique_ptr<AtomIdentifier> makeLabelAtom(hir::Label *l);
         std::unique_ptr<AtomIdentifier> makeTemp(std::string name);
-        void addReturnIfMissing(ast::Function &f);
+        void addReturnIfMissing(ast::FunctionDefinition *f);
         void mapFunctionType(AtomIdentifier *function, Type *type);
         void mapVariableType(AtomIdentifier *var, Type *type);
 
