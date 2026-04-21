@@ -10,7 +10,8 @@
 #include "backend/regalloc.h"
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
-#include "frontend/parser.h"
+#include "frontend/parser/parser.h"
+#include "frontend/preprocessor/preprocess.h"
 #include "middleend/pass_manager.h"
 
 namespace fs = std::filesystem;
@@ -51,20 +52,28 @@ void compareIfFileExists(std::string actual, std::string expected_path) {
     EXPECT_EQ(expected, actual);
 }
 
+void testPreprocessor(std::string input_path, std::string expected_path) {
+    auto preprocessed = preprocess(input_path);
+    compareIfFileExists(preprocessed, expected_path);
+}
+
 void testAst(std::string input_path, std::string expected_path) {
-    auto ast = parse(input_path);
+    auto preprocessed = preprocess(input_path);
+    auto ast = parse_string(preprocessed);
     compareIfFileExists(ast.toString(), expected_path);
 }
 
 void testHir(std::string input_path, std::string expected_path) {
-    auto ast = parse(input_path);
+    auto preprocessed = preprocess(input_path);
+    auto ast = parse_string(preprocessed);
     auto hir = astToHir(ast);
     compareIfFileExists(hir.toString(), expected_path);
 }
 
 void testMir(std::string input_path, std::string expected_path,
              PassManager *pm) {
-    auto ast = parse(input_path);
+    auto preprocessed = preprocess(input_path);
+    auto ast = parse_string(preprocessed);
     auto hir = astToHir(ast);
     auto mir = hirToMir(hir);
     if (!pm)
@@ -75,7 +84,8 @@ void testMir(std::string input_path, std::string expected_path,
 
 void testLirIsel(std::string input_path, std::string expected_path,
                  PassManager *pm) {
-    auto ast = parse(input_path);
+    auto preprocessed = preprocess(input_path);
+    auto ast = parse_string(preprocessed);
     auto hir = astToHir(ast);
     auto mir = hirToMir(hir);
     if (!pm)
@@ -87,7 +97,8 @@ void testLirIsel(std::string input_path, std::string expected_path,
 
 void testLirRegalloc(std::string input_path, std::string expected_path,
                      PassManager *pm) {
-    auto ast = parse(input_path);
+    auto preprocessed = preprocess(input_path);
+    auto ast = parse_string(preprocessed);
     auto hir = astToHir(ast);
     auto mir = hirToMir(hir);
     if (!pm)
@@ -100,7 +111,8 @@ void testLirRegalloc(std::string input_path, std::string expected_path,
 
 void testAsm(std::string input_path, std::string expected_path,
              PassManager *pm) {
-    auto ast = parse(input_path);
+    auto preprocessed = preprocess(input_path);
+    auto ast = parse_string(preprocessed);
     auto hir = astToHir(ast);
     auto mir = hirToMir(hir);
     if (!pm)
@@ -126,6 +138,11 @@ protected:
         passes_path = test_dir + "/input/" + test_name + ".passes";
     }
 };
+
+TEST_P(RegressionTest, Preprocessor) {
+    auto expected_path = test_dir + "/expected/" + test_name + "_p.c";
+    testPreprocessor(input_path, expected_path);
+}
 
 TEST_P(RegressionTest, AST) {
     auto expected_path = test_dir + "/expected/" + test_name + ".ast";
