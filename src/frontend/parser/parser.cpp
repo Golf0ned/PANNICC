@@ -5,8 +5,12 @@
 
 namespace frontend {
     struct grammar
-        : pegtl::must<pegtl::seq<ignorable, pegtl::star<function>, ignorable>> {
-    };
+        : pegtl::must<pegtl::seq<
+              ignorable,
+              pegtl::opt<pegtl::list<
+                  pegtl::sor<pegtl_try<function>, pegtl_try<prototype>>,
+                  ignorable>>,
+              ignorable>> {};
 
     ast::Program parse_file(const std::string &input_file) {
         file_input in(input_file);
@@ -15,7 +19,7 @@ namespace frontend {
         parsed_tokens.clear();
         active_scopes.clear();
 
-        std::vector<ast::Function> parsed_functions;
+        std::vector<std::unique_ptr<ast::Function>> parsed_functions;
         pegtl::parse<grammar, action>(in, parsed_functions);
 
         ast::Program ast(std::move(parsed_functions), std::move(symbol_table));
@@ -29,7 +33,7 @@ namespace frontend {
         parsed_tokens.clear();
         active_scopes.clear();
 
-        std::vector<ast::Function> parsed_functions;
+        std::vector<std::unique_ptr<ast::Function>> parsed_functions;
         pegtl::parse<grammar, action>(in, parsed_functions);
 
         ast::Program ast(std::move(parsed_functions), std::move(symbol_table));
