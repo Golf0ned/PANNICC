@@ -8,7 +8,7 @@
 #include "backend/regalloc.h"
 #include "frontend/ast_to_hir.h"
 #include "frontend/hir_to_mir.h"
-#include "frontend/parser.h"
+#include "frontend/parser/parser.h"
 #include "frontend/preprocessor/preprocess.h"
 #include "middleend/pass_manager.h"
 
@@ -174,7 +174,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    frontend::ast::Program ast = frontend::parse(input_file);
+    frontend::ast::Program ast = frontend::parse_string(preprocessed);
     if (output_level == OutputLevel::AST) {
         output(ast.toString(), output_file);
         return 0;
