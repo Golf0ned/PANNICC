@@ -100,14 +100,14 @@ namespace frontend {
         return std::make_unique<AtomIdentifier>(l->getName()->getValue());
     }
 
-    void ASTToHIRVisitor::addReturnIfMissing(ast::Function &f) {
+    void ASTToHIRVisitor::addReturnIfMissing(ast::FunctionDefinition *f) {
         // if f is main with return type int, implicit return 0
         // if f is void type, implicit return
         if (!result.empty() &&
             dynamic_cast<hir::InstructionReturn *>(result.back().get()))
             return;
 
-        if (f.getName()->toString(*old_table) == "main") {
+        if (f->getName()->toString(*old_table) == "main") {
             auto zero = std::make_unique<AtomLiteral>(0);
             auto ret =
                 std::make_unique<hir::InstructionReturn>(std::move(zero));
@@ -381,29 +381,60 @@ namespace frontend {
         auto &old_table = ast.getSymbolTable();
         auto new_table = std::make_unique<SymbolTable>();
 
-        std::vector<hir::Function> functions;
+        std::vector<std::unique_ptr<hir::Function>> functions;
         ASTToHIRVisitor visitor(old_table.get(), new_table.get());
-        for (ast::Function &f : ast.getFunctions()) {
-            auto type = std::move(f.getType());
-            auto name = visitor.createUnscopedIdentifier(
-                f.getName()->toString(*old_table));
-            visitor.mapFunctionType(name.get(), type.get());
+        for (auto &f : ast.getFunctions()) {
+            // TODO: deduplicate somehow (visitor or something else)
+            auto prototype = dynamic_cast<ast::FunctionPrototype *>(f.get());
+            if (prototype) {
+                auto type = std::move(prototype->getType());
+                auto name = visitor.createUnscopedIdentifier(
+                    prototype->getName()->toString(*old_table));
+                visitor.mapFunctionType(name.get(), type.get());
 
-            std::vector<hir::Parameter> params;
-            for (auto &[param_type, param_name] : f.getParameters()) {
-                auto param = visitor.resolveDeclarationScope(param_name.get());
-                visitor.mapVariableType(param.get(), param_type.get());
-                params.push_back({std::move(param_type), std::move(param)});
+                std::vector<hir::Parameter> params;
+                for (auto &[param_type, param_name] :
+                     prototype->getParameters()) {
+                    auto param =
+                        visitor.resolveDeclarationScope(param_name.get());
+                    visitor.mapVariableType(param.get(), param_type.get());
+                    params.push_back({std::move(param_type), std::move(param)});
+                }
+
+                auto hir_prototype = std::make_unique<hir::FunctionPrototype>(
+                    std::move(type), std::move(name), std::move(params));
+
+                functions.push_back(std::move(hir_prototype));
+                visitor.clearResult();
             }
 
-            f.getBody()->accept(&visitor);
-            visitor.addReturnIfMissing(f);
-            auto body = visitor.getResult();
+            auto function = dynamic_cast<ast::FunctionDefinition *>(f.get());
+            if (function) {
+                auto type = std::move(function->getType());
+                auto name = visitor.createUnscopedIdentifier(
+                    function->getName()->toString(*old_table));
+                visitor.mapFunctionType(name.get(), type.get());
 
-            hir::Function hir_function(std::move(type), std::move(name),
-                                       std::move(params), std::move(body));
-            functions.push_back(std::move(hir_function));
-            visitor.clearResult();
+                std::vector<hir::Parameter> params;
+                for (auto &[param_type, param_name] :
+                     function->getParameters()) {
+                    auto param =
+                        visitor.resolveDeclarationScope(param_name.get());
+                    visitor.mapVariableType(param.get(), param_type.get());
+                    params.push_back({std::move(param_type), std::move(param)});
+                }
+
+                function->getBody()->accept(&visitor);
+                visitor.addReturnIfMissing(function);
+                auto body = visitor.getResult();
+
+                auto hir_function = std::make_unique<hir::FunctionDefinition>(
+                    std::move(type), std::move(name), std::move(params),
+                    std::move(body));
+
+                functions.push_back(std::move(hir_function));
+                visitor.clearResult();
+            }
         }
 
         hir::Program hir_program(std::move(functions), std::move(new_table));
