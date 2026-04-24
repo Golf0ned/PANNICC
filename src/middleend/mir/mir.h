@@ -80,6 +80,8 @@ namespace middleend::mir {
 
     class FunctionDeclaration : public Function {
     public:
+        FunctionDeclaration(Type type, std::string name,
+                            std::vector<std::unique_ptr<Value>> parameters);
         Type getType() override;
         std::string getName() override;
         std::vector<std::unique_ptr<Value>> &getParameters();

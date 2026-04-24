@@ -125,6 +125,11 @@ namespace middleend::mir {
         return res;
     }
 
+    FunctionDeclaration::FunctionDeclaration(
+        Type type, std::string name,
+        std::vector<std::unique_ptr<Value>> parameters)
+        : type(type), name(name), parameters(std::move(parameters)) {}
+
     Type FunctionDeclaration::getType() { return type; }
 
     std::string FunctionDeclaration::getName() { return name; }
