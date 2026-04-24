@@ -7,7 +7,7 @@
 #include "middleend/utils/traversal.h"
 
 namespace middleend {
-    std::list<mir::BasicBlock *> traversePreorder(mir::Function *f) {
+    std::list<mir::BasicBlock *> traversePreorder(mir::FunctionDefinition *f) {
         // TODO: implement
         std::list<mir::BasicBlock *> traversal_order;
         return traversal_order;
@@ -23,7 +23,7 @@ namespace middleend {
         to.push_back(bb);
     }
 
-    std::list<mir::BasicBlock *> numberPostorder(mir::Function *f,
+    std::list<mir::BasicBlock *> numberPostorder(mir::FunctionDefinition *f,
                                                  TraversalOrderMap &tom) {
         std::list<mir::BasicBlock *> traversal_order;
 
@@ -34,18 +34,19 @@ namespace middleend {
         return traversal_order;
     }
 
-    std::list<mir::BasicBlock *> traversePostorder(mir::Function *f) {
+    std::list<mir::BasicBlock *> traversePostorder(mir::FunctionDefinition *f) {
         TraversalOrderMap tom;
         return numberPostorder(f, tom);
     }
 
-    std::list<mir::BasicBlock *> traverseLeastBranches(mir::Function *f) {
+    std::list<mir::BasicBlock *>
+    traverseLeastBranches(mir::FunctionDefinition *f) {
         // TODO: implement
         std::list<mir::BasicBlock *> traversal_order;
         return traversal_order;
     }
 
-    std::list<mir::BasicBlock *> traverseTraces(mir::Function *f) {
+    std::list<mir::BasicBlock *> traverseTraces(mir::FunctionDefinition *f) {
         NumberIR nir;
         nir.run(f);
 

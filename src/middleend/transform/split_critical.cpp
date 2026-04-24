@@ -4,7 +4,11 @@
 namespace middleend {
     void SplitCritical::run(mir::Program &p) {
         for (auto &f : p.getFunctions()) {
-            auto &bbs = f->getBasicBlocks();
+            auto definition = dynamic_cast<mir::FunctionDefinition *>(f.get());
+            if (!definition)
+                continue;
+
+            auto &bbs = definition->getBasicBlocks();
             for (auto bb_iter = bbs.begin(); bb_iter != bbs.end(); bb_iter++) {
                 auto bb = bb_iter->get();
 

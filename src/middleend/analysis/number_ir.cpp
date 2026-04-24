@@ -7,13 +7,17 @@ namespace middleend {
     }
 
     void NumberIR::run(mir::Function *f) {
+        auto definition = dynamic_cast<mir::FunctionDefinition *>(f);
+        if (!definition)
+            return;
+
         uint64_t counter = 0;
 
-        for (auto &param : f->getParameters())
+        for (auto &param : definition->getParameters())
             value_ids[param.get()] = counter++;
 
-        auto entry = f->getEntryBlock();
-        for (auto &bb : f->getBasicBlocks()) {
+        auto entry = definition->getEntryBlock();
+        for (auto &bb : definition->getBasicBlocks()) {
             basic_block_ids[bb.get()] = bb.get() == entry ? -1 : counter++;
 
             for (auto &i : bb->getInstructions()) {

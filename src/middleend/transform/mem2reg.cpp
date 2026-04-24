@@ -12,7 +12,7 @@
 
 namespace middleend {
     std::unordered_map<mir::BasicBlock *, std::vector<mir::BasicBlock *>>
-    computeDominanceFrontiers(DominatorTree *dt, mir::Function *f) {
+    computeDominanceFrontiers(DominatorTree *dt, mir::FunctionDefinition *f) {
         std::unordered_map<mir::BasicBlock *, std::vector<mir::BasicBlock *>>
             res;
 
@@ -37,12 +37,16 @@ namespace middleend {
     void Mem2Reg::run(mir::Program &p) {
         EraseUsesVisitor euv;
         for (auto &f : p.getFunctions()) {
+            auto definition = dynamic_cast<mir::FunctionDefinition *>(f.get());
+            if (!definition)
+                continue;
+
             //
             // Compute dominance frontiers
             //
             std::unordered_map<mir::BasicBlock *,
                                std::vector<mir::BasicBlock *>>
-                dominance_frontiers = computeDominanceFrontiers(dt, f.get());
+                dominance_frontiers = computeDominanceFrontiers(dt, definition);
 
             //
             // Get all defs and mark unpromotable allocas
@@ -51,7 +55,7 @@ namespace middleend {
                                std::unordered_set<mir::BasicBlock *>>
                 defs;
             std::unordered_set<mir::InstructionAlloca *> unpromotable;
-            for (auto &bb : f->getBasicBlocks()) {
+            for (auto &bb : definition->getBasicBlocks()) {
                 for (auto &i : bb->getInstructions()) {
                     // Mark unpromotable allocas
                     auto *alloca =
@@ -126,7 +130,7 @@ namespace middleend {
             std::vector<
                 std::pair<mir::BasicBlock *,
                           std::unordered_map<mir::Value *, mir::Value *>>>
-                worklist = {{f->getEntryBlock(), {}}};
+                worklist = {{definition->getEntryBlock(), {}}};
             std::unordered_set<mir::BasicBlock *> visited;
             std::vector<std::unique_ptr<mir::Instruction>> to_drop;
             while (!worklist.empty()) {
