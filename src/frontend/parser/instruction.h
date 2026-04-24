@@ -85,63 +85,72 @@ namespace frontend {
     //
     template <> struct action<add_equals> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             last_op_equals = BinaryOp::ADD;
         }
     };
 
     template <> struct action<sub_equals> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             last_op_equals = BinaryOp::SUB;
         }
     };
 
     template <> struct action<mul_equals> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             last_op_equals = BinaryOp::MUL;
         }
     };
 
     template <> struct action<div_equals> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             last_op_equals = BinaryOp::DIV;
         }
     };
 
     template <> struct action<lshift_equals> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             last_op_equals = BinaryOp::LSHIFT;
         }
     };
 
     template <> struct action<rshift_equals> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             last_op_equals = BinaryOp::RSHIFT;
         }
     };
 
     template <> struct action<and_equals> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             last_op_equals = BinaryOp::AND;
         }
     };
 
     template <> struct action<or_equals> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             last_op_equals = BinaryOp::OR;
         }
     };
 
     template <> struct action<xor_equals> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             last_op_equals = BinaryOp::XOR;
         }
     };
@@ -149,7 +158,8 @@ namespace frontend {
     // Instruction actions
     template <> struct action<left_brace> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             auto scope = std::make_unique<ast::Scope>();
             active_scopes.push_back(std::move(scope));
         }
@@ -157,7 +167,8 @@ namespace frontend {
 
     template <> struct action<right_brace> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             if (active_scopes.size() == 1) // function -- in global scope
                 return;
 
@@ -169,7 +180,8 @@ namespace frontend {
 
     template <> struct action<instruction_expr> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             auto expr = popExpr();
 
             auto i = std::make_unique<ast::InstructionExpr>(std::move(expr));
@@ -179,7 +191,8 @@ namespace frontend {
 
     template <> struct action<instruction_declaration> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             auto variable = popIdentifier();
             auto type = popType();
 
@@ -191,7 +204,8 @@ namespace frontend {
 
     template <> struct action<instruction_declaration_assign> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             auto value = popExpr();
             auto variable = popIdentifier();
             auto type = popType();
@@ -204,7 +218,8 @@ namespace frontend {
 
     template <> struct action<instruction_assign> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             auto value = popExpr();
             auto variable = popIdentifier();
 
@@ -216,7 +231,8 @@ namespace frontend {
 
     template <> struct action<instruction_op_assign> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             auto value = popExpr();
             auto variable = popIdentifier();
 
@@ -228,7 +244,8 @@ namespace frontend {
 
     template <> struct action<instruction_return> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             auto value = popExpr();
 
             auto i = std::make_unique<ast::InstructionReturn>(std::move(value));
@@ -238,7 +255,8 @@ namespace frontend {
 
     template <> struct action<instruction_if> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             auto t_branch = popInstruction();
             auto cond = popExpr();
 
@@ -250,7 +268,8 @@ namespace frontend {
 
     template <> struct action<instruction_if_else> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             auto f_branch = popInstruction();
             auto t_branch = popInstruction();
             auto cond = popExpr();
@@ -263,7 +282,8 @@ namespace frontend {
 
     template <> struct action<instruction_while> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             auto body = popInstruction();
             auto cond = popExpr();
 

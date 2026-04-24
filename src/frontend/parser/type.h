@@ -20,7 +20,8 @@ namespace frontend {
     //
     template <> struct action<type_int> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             auto type = std::make_unique<Int>();
             parsed_types.push_back(std::move(type));
         }
@@ -28,7 +29,8 @@ namespace frontend {
 
     template <> struct action<type_ptr> {
         template <typename Input>
-        static void apply(const Input &in, std::vector<ast::Function> &res) {
+        static void apply(const Input &in,
+                          std::vector<std::unique_ptr<ast::Function>> &res) {
             auto base = popType();
             auto type = std::make_unique<Ptr>(std::move(base));
             parsed_types.push_back(std::move(type));
