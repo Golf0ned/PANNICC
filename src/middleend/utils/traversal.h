@@ -7,11 +7,11 @@ namespace middleend {
 
     // TODO: make iterators
 
-    std::list<mir::BasicBlock *> traversePreorder(mir::Function *f);
+    std::list<mir::BasicBlock *> traversePreorder(mir::FunctionDefinition *f);
 
-    std::list<mir::BasicBlock *> numberPostorder(mir::Function *f,
+    std::list<mir::BasicBlock *> numberPostorder(mir::FunctionDefinition *f,
                                                  TraversalOrderMap &tom);
-    std::list<mir::BasicBlock *> traversePostorder(mir::Function *f);
+    std::list<mir::BasicBlock *> traversePostorder(mir::FunctionDefinition *f);
 
-    std::list<mir::BasicBlock *> traverseTraces(mir::Function *f);
+    std::list<mir::BasicBlock *> traverseTraces(mir::FunctionDefinition *f);
 } // namespace middleend

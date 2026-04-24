@@ -4,7 +4,11 @@
 namespace middleend {
     void InsertParallelCopies::run(mir::Program &p) {
         for (auto &f : p.getFunctions()) {
-            for (auto &bb : f->getBasicBlocks()) {
+            auto definition = dynamic_cast<mir::FunctionDefinition *>(f.get());
+            if (!definition)
+                return;
+
+            for (auto &bb : definition->getBasicBlocks()) {
                 for (auto &i : bb->getInstructions()) {
                     auto phi = dynamic_cast<mir::InstructionPhi *>(i.get());
                     if (!phi)

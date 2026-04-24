@@ -8,11 +8,15 @@ namespace middleend {
     void InstCombine::run(mir::Program &p) {
         EraseUsesVisitor euv;
         for (auto &f : p.getFunctions()) {
+            auto definition = dynamic_cast<mir::FunctionDefinition *>(f.get());
+            if (!definition)
+                continue;
+
             bool changed = true;
             while (changed) {
                 changed = false;
                 std::vector<std::unique_ptr<mir::Instruction>> to_drop;
-                for (auto &bb : f->getBasicBlocks()) {
+                for (auto &bb : definition->getBasicBlocks()) {
                     auto &instructions = bb->getInstructions();
                     auto iter = instructions.begin();
                     while (iter != instructions.end()) {

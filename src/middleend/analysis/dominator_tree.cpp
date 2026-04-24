@@ -7,8 +7,13 @@ namespace middleend {
 
     void DominatorTree::run(mir::Program &p) {
         for (auto &f : p.getFunctions()) {
+            auto definition = dynamic_cast<mir::FunctionDefinition *>(f.get());
+            if (!definition)
+                continue;
+
             TraversalOrderMap traversal_numbers;
-            auto traversal_order = numberPostorder(f.get(), traversal_numbers);
+            auto traversal_order =
+                numberPostorder(definition, traversal_numbers);
             std::ranges::reverse_view reverse_traversal_order{traversal_order};
 
             auto findLCA = [&](mir::BasicBlock *b1, mir::BasicBlock *b2) {
@@ -21,7 +26,7 @@ namespace middleend {
                 return b1;
             };
 
-            auto entry = f->getEntryBlock();
+            auto entry = definition->getEntryBlock();
             immediate_dominators[entry] = entry;
 
             bool changed = true;

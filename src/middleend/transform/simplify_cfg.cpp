@@ -5,11 +5,15 @@
 namespace middleend {
     void SimplifyCFG::run(mir::Program &p) {
         for (auto &f : p.getFunctions()) {
+            auto definition = dynamic_cast<mir::FunctionDefinition *>(f.get());
+            if (!definition)
+                continue;
+
             bool changed = true;
             while (changed) {
                 changed = false;
                 std::vector<std::unique_ptr<mir::BasicBlock>> to_drop;
-                auto &bbs = f->getBasicBlocks();
+                auto &bbs = definition->getBasicBlocks();
                 // TODO: handle non-sequential BB storage order
                 auto iter = bbs.begin();
                 while (iter != bbs.end()) {
@@ -19,7 +23,8 @@ namespace middleend {
                     auto &succs = bb->getSuccessors();
 
                     auto tryRemoveOrphaned = [&]() {
-                        if (preds.getSize() || bb == f->getEntryBlock())
+                        if (preds.getSize() ||
+                            bb == definition->getEntryBlock())
                             return false;
 
                         for (auto succ : succs.getEdges())
@@ -65,8 +70,8 @@ namespace middleend {
                         pred->getSuccessors() = std::move(succs);
                         pred->getTerminator().swap(bb->getTerminator());
 
-                        if (bb == f->getEntryBlock())
-                            f->setEntryBlock(pred);
+                        if (bb == definition->getEntryBlock())
+                            definition->setEntryBlock(pred);
 
                         to_drop.push_back(std::move(*iter));
                         iter = bbs.erase(iter);
@@ -122,8 +127,8 @@ namespace middleend {
                             }
                         }
 
-                        if (bb == f->getEntryBlock())
-                            f->setEntryBlock(succ);
+                        if (bb == definition->getEntryBlock())
+                            definition->setEntryBlock(succ);
 
                         to_drop.push_back(std::move(*iter));
                         iter = bbs.erase(iter);
