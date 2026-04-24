@@ -16,7 +16,7 @@ namespace backend::lir_tree {
         std::unique_ptr<TreeInfo> getTreeInfo();
         std::vector<std::unique_ptr<FunctionInfo>> getFunctionInfo();
 
-        void startFunction(middleend::mir::Function *f);
+        void startFunction(middleend::mir::FunctionDefinition *f);
         void endFunction();
         void startBasicBlock(middleend::mir::BasicBlock *bb,
                              middleend::mir::BasicBlock *next_bb);
