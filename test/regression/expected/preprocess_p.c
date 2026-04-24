@@ -23,4 +23,7 @@ int *return_ptr() {
 }
 
 
+int foo(int bar);
+int bar(int foo);
+
 int main() { return 0; }
