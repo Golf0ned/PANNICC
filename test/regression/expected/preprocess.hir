@@ -71,6 +71,10 @@ int * return_ptr() {
     return __v2;
 }
 
+int foo(int bar_0);
+
+int bar(int foo_0);
+
 int main() {
     __entry:
     int __v;

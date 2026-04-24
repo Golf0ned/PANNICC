@@ -1,0 +1,3 @@
+int foo(int bar_0);
+
+int bar(int foo_0);

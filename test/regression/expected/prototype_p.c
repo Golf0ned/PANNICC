@@ -1,0 +1,2 @@
+int foo(int bar);
+int bar(int foo);
