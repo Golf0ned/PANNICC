@@ -98,7 +98,7 @@ namespace frontend::hir {
         for (auto iter = functions.begin(); iter != functions.end(); iter++) {
             if (iter != functions.begin())
                 res += "\n\n";
-            res += iter->toString(symbol_table.get());
+            res += iter->get()->toString(symbol_table.get());
         }
 
         return res;
