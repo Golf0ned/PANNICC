@@ -14,9 +14,14 @@ namespace backend {
         lir_tree::TreeGenVisitor tgv(mir, om);
 
         for (auto &f : mir.getFunctions()) {
-            auto linearized = middleend::traverseTraces(f.get());
+            auto definition =
+                dynamic_cast<middleend::mir::FunctionDefinition *>(f.get());
+            if (!definition)
+                continue;
 
-            tgv.startFunction(f.get());
+            auto linearized = middleend::traverseTraces(definition);
+
+            tgv.startFunction(definition);
             for (auto iter = linearized.begin(); iter != linearized.end();
                  iter++) {
                 auto next = std::next(iter);

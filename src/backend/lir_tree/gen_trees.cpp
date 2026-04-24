@@ -24,7 +24,7 @@ namespace backend::lir_tree {
         return std::move(all_function_info);
     }
 
-    void TreeGenVisitor::startFunction(middleend::mir::Function *f) {
+    void TreeGenVisitor::startFunction(middleend::mir::FunctionDefinition *f) {
         std::list<std::unique_ptr<lir::Instruction>> instructions;
 
         function_trees.clear();
