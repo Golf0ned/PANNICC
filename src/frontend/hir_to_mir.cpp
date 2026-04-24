@@ -17,50 +17,82 @@ namespace frontend {
         std::list<std::unique_ptr<middleend::mir::Function>> functions;
 
         for (auto &f : hir.getFunctions()) {
-            middleend::mir::Type function_type = f.getType()->toMir();
-            HIRToMIRVisitor visitor(function_type, literal_map);
+            auto prototype = dynamic_cast<hir::FunctionPrototype *>(f.get());
+            if (prototype) {
+                middleend::mir::Type function_type =
+                    prototype->getType()->toMir();
+                HIRToMIRVisitor visitor(function_type, literal_map);
 
-            std::vector<std::unique_ptr<middleend::mir::Value>> params;
-            for (auto &[param_type, param_name] : f.getParameters()) {
-                auto param =
-                    visitor.addParameter(param_type.get(), param_name.get());
-                params.push_back(std::move(param));
-            }
-
-            for (auto &i : f.getBody()) {
-                if (visitor.startOfBasicBlock() &&
-                    !dynamic_cast<hir::Label *>(i.get()))
-                    continue;
-                i->accept(&visitor);
-            }
-            visitor.connectBasicBlocks();
-            middleend::mir::BasicBlock *entry = visitor.createEntryBlock();
-            auto basic_blocks = visitor.getResult();
-
-            auto &name_atom = f.getName();
-            std::string name = name_atom->toString(*hir.getSymbolTable().get());
-
-            auto fun = std::make_unique<middleend::mir::Function>(
-                function_type, name, std::move(params), std::move(basic_blocks),
-                entry);
-            lowered_functions[name_atom->getValue()] = fun.get();
-
-            // Resolve functions (thanks recursion)
-            for (auto &bb : fun->getBasicBlocks()) {
-                for (auto &i : bb->getInstructions()) {
-                    auto call = dynamic_cast<middleend::mir::InstructionCall *>(
-                        i.get());
-                    if (!call)
-                        continue;
-
-                    auto function_id = call_to_function[i.get()];
-                    auto function = lowered_functions[function_id];
-
-                    call->setCallee(function);
+                std::vector<std::unique_ptr<middleend::mir::Value>> params;
+                for (auto &[param_type, param_name] :
+                     prototype->getParameters()) {
+                    auto param = visitor.addParameter(param_type.get(),
+                                                      param_name.get());
+                    params.push_back(std::move(param));
                 }
+
+                auto &name_atom = prototype->getName();
+                std::string name =
+                    name_atom->toString(*hir.getSymbolTable().get());
+
+                auto fun =
+                    std::make_unique<middleend::mir::FunctionDeclaration>(
+                        function_type, name, std::move(params));
+                lowered_functions[name_atom->getValue()] = fun.get();
+                functions.push_back(std::move(fun));
             }
 
-            functions.push_back(std::move(fun));
+            auto function = dynamic_cast<hir::FunctionDefinition *>(f.get());
+            if (function) {
+                middleend::mir::Type function_type =
+                    function->getType()->toMir();
+                HIRToMIRVisitor visitor(function_type, literal_map);
+
+                std::vector<std::unique_ptr<middleend::mir::Value>> params;
+                for (auto &[param_type, param_name] :
+                     function->getParameters()) {
+                    auto param = visitor.addParameter(param_type.get(),
+                                                      param_name.get());
+                    params.push_back(std::move(param));
+                }
+
+                for (auto &i : function->getBody()) {
+                    if (visitor.startOfBasicBlock() &&
+                        !dynamic_cast<hir::Label *>(i.get()))
+                        continue;
+                    i->accept(&visitor);
+                }
+                visitor.connectBasicBlocks();
+                middleend::mir::BasicBlock *entry = visitor.createEntryBlock();
+                auto basic_blocks = visitor.getResult();
+
+                auto &name_atom = function->getName();
+                std::string name =
+                    name_atom->toString(*hir.getSymbolTable().get());
+
+                auto fun = std::make_unique<middleend::mir::FunctionDefinition>(
+                    function_type, name, std::move(params),
+                    std::move(basic_blocks), entry);
+                lowered_functions[name_atom->getValue()] = fun.get();
+
+                // Resolve functions (thanks recursion)
+                for (auto &bb : fun->getBasicBlocks()) {
+                    for (auto &i : bb->getInstructions()) {
+                        auto call =
+                            dynamic_cast<middleend::mir::InstructionCall *>(
+                                i.get());
+                        if (!call)
+                            continue;
+
+                        auto function_id = call_to_function[i.get()];
+                        auto function = lowered_functions[function_id];
+
+                        call->setCallee(function);
+                    }
+                }
+
+                functions.push_back(std::move(fun));
+            }
         }
 
         return middleend::mir::Program(std::move(functions),
