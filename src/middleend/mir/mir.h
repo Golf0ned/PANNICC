@@ -50,17 +50,25 @@ namespace middleend::mir {
 
     class Function {
     public:
-        Function(Type type, std::string name,
-                 std::vector<std::unique_ptr<Value>> parameters,
-                 std::list<std::unique_ptr<BasicBlock>> basic_blocks,
-                 BasicBlock *entry_block);
-        Type getType();
-        std::string getName();
+        virtual Type getType() = 0;
+        virtual std::string getName() = 0;
+        virtual std::string toString() = 0;
+        virtual ~Function() = default;
+    };
+
+    class FunctionDefinition : public Function {
+    public:
+        FunctionDefinition(Type type, std::string name,
+                           std::vector<std::unique_ptr<Value>> parameters,
+                           std::list<std::unique_ptr<BasicBlock>> basic_blocks,
+                           BasicBlock *entry_block);
+        Type getType() override;
+        std::string getName() override;
         std::vector<std::unique_ptr<Value>> &getParameters();
         std::list<std::unique_ptr<BasicBlock>> &getBasicBlocks();
         BasicBlock *getEntryBlock();
         void setEntryBlock(BasicBlock *new_block);
-        std::string toString();
+        std::string toString() override;
 
     private:
         Type type;
@@ -68,6 +76,19 @@ namespace middleend::mir {
         std::vector<std::unique_ptr<Value>> parameters;
         std::list<std::unique_ptr<BasicBlock>> basic_blocks;
         BasicBlock *entry_block;
+    };
+
+    class FunctionDeclaration : public Function {
+    public:
+        Type getType() override;
+        std::string getName() override;
+        std::vector<std::unique_ptr<Value>> &getParameters();
+        std::string toString() override;
+
+    private:
+        Type type;
+        std::string name;
+        std::vector<std::unique_ptr<Value>> parameters;
     };
 
     class Program {

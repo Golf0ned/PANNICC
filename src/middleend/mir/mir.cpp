@@ -72,32 +72,34 @@ namespace middleend::mir {
         return res;
     }
 
-    Function::Function(Type type, std::string name,
-                       std::vector<std::unique_ptr<Value>> parameters,
-                       std::list<std::unique_ptr<BasicBlock>> basic_blocks,
-                       BasicBlock *entry_block)
+    FunctionDefinition::FunctionDefinition(
+        Type type, std::string name,
+        std::vector<std::unique_ptr<Value>> parameters,
+        std::list<std::unique_ptr<BasicBlock>> basic_blocks,
+        BasicBlock *entry_block)
         : type(type), name(name), parameters(std::move(parameters)),
           basic_blocks(std::move(basic_blocks)), entry_block(entry_block) {}
 
-    Type Function::getType() { return type; }
+    Type FunctionDefinition::getType() { return type; }
 
-    std::string Function::getName() { return name; }
+    std::string FunctionDefinition::getName() { return name; }
 
-    std::vector<std::unique_ptr<Value>> &Function::getParameters() {
+    std::vector<std::unique_ptr<Value>> &FunctionDefinition::getParameters() {
         return parameters;
     }
 
-    std::list<std::unique_ptr<BasicBlock>> &Function::getBasicBlocks() {
+    std::list<std::unique_ptr<BasicBlock>> &
+    FunctionDefinition::getBasicBlocks() {
         return basic_blocks;
     }
 
-    BasicBlock *Function::getEntryBlock() { return entry_block; }
+    BasicBlock *FunctionDefinition::getEntryBlock() { return entry_block; }
 
-    void Function::setEntryBlock(BasicBlock *new_block) {
+    void FunctionDefinition::setEntryBlock(BasicBlock *new_block) {
         entry_block = new_block;
     }
 
-    std::string Function::toString() {
+    std::string FunctionDefinition::toString() {
         NumberIR nir;
         nir.run(this);
 
@@ -120,6 +122,28 @@ namespace middleend::mir {
             res += iter->get()->toString(&nir);
         }
         res += "\n}";
+        return res;
+    }
+
+    Type FunctionDeclaration::getType() { return type; }
+
+    std::string FunctionDeclaration::getName() { return name; }
+
+    std::vector<std::unique_ptr<Value>> &FunctionDeclaration::getParameters() {
+        return parameters;
+    }
+
+    std::string FunctionDeclaration::toString() {
+        std::string res =
+            "declare " + ::middleend::mir::toString(type) + " @" + name + "(";
+
+        for (auto iter = parameters.begin(); iter != parameters.end(); iter++) {
+            if (iter != parameters.begin())
+                res += ", ";
+            res += ::middleend::mir::toString(iter->get()->getType());
+        }
+
+        res += ')';
         return res;
     }
 
