@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "driver/runtime.h"
+#include "runtime.h"
 
 int *alloc(int size) { return (int *)malloc(size); }
 
