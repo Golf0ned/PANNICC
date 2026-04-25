@@ -97,6 +97,29 @@ return_ptr:  # 0 params, 20 stack bytes
         movq    %r10, %rax
         ret
 
+use_proto:  # 0 params, 20 stack bytes
+.Luse_proto_entry:
+        movl    $1, (%rsp)
+        movl    (%rsp), %r10d
+        call    foo  # (%r10d)
+        movl    %eax, %r10d
+        movl    %r10d, (%rsp)
+        movl    $2, 4(%rsp)
+        movl    4(%rsp), %r10d
+        call    bar  # (%r10d)
+        movl    %eax, %r10d
+        movl    %r10d, 8(%rsp)
+        movl    (%rsp), %r10d
+        movl    8(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, (%rsp)
+        movl    (%rsp), %r10d
+        movl    %r10d, 12(%rsp)
+.Luse_proto_13:
+        movl    12(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+
 main:  # 0 params, 8 stack bytes
 .Lmain_entry:
         movl    $0, (%rsp)
