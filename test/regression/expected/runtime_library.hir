@@ -1,0 +1,16 @@
+int * alloc(int size_0);
+
+int dealloc(int * ptr_0);
+
+int print(int value_0);
+
+int main() {
+    __entry:
+    int __v;
+    __v = 67;
+    int __v1;
+    __v1 = print(__v);
+    int __v2;
+    __v2 = 0;
+    return __v2;
+}

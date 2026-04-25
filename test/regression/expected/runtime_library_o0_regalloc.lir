@@ -1,0 +1,14 @@
+main:  # 0 params, 16 stack bytes
+.Lmain_entry:
+        movl    $67, (%rsp)
+        movl    (%rsp), %r10d
+        call    print  # (%r10d)
+        movl    %eax, %r10d
+        movl    %r10d, 4(%rsp)
+        movl    $0, 8(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 12(%rsp)
+.Lmain_7:
+        movl    12(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
