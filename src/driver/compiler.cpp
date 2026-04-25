@@ -218,8 +218,9 @@ int main(int argc, char *argv[]) {
     tmp_file.replace_extension(".s");
     output(assembly + "\n", tmp_file);
 
-    std::string cc_command =
-        "cc -o " + output_file.string() + " " + tmp_file.string();
+    std::string cc_command = "cc " + tmp_file.string() + " -L" +
+                             std::string(LIB_DIR) + " -lpannicc_runtime -o " +
+                             output_file.string();
     if (output_level == OutputLevel::OBJ)
         cc_command += " -c";
 
