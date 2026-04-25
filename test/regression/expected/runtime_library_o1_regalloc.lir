@@ -2,5 +2,9 @@ main:  # 0 params, 0 stack bytes
 .Lmain_entry:
         call    print  # ($67)
         movl    %eax, %r10d
+        call    alloc  # ($4)
+        movq    %rax, %r10
+        call    dealloc  # (%r10)
+        movl    %eax, %r10d
         movl    $0, %eax
         ret
