@@ -1,0 +1,22 @@
+use_proto:  # 0 params, 20 stack bytes
+.Luse_proto_entry:
+        movl    $1, (%rsp)
+        movl    (%rsp), %5
+        call    foo  # (%5)
+        movl    %eax, %6
+        movl    %6, 4(%rsp)
+        movl    $2, 8(%rsp)
+        movl    8(%rsp), %7
+        call    bar  # (%7)
+        movl    %eax, %8
+        movl    %8, 12(%rsp)
+        movl    4(%rsp), %9
+        movl    12(%rsp), %10
+        leal    (%9,%10), %11
+        movl    %11, 4(%rsp)
+        movl    4(%rsp), %12
+        movl    %12, 16(%rsp)
+.Luse_proto_13:
+        movl    16(%rsp), %14
+        movl    %14, %eax
+        ret

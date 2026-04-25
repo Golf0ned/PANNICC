@@ -140,6 +140,34 @@ declare i32 @foo(i32)
 
 declare i32 @bar(i32)
 
+define i32 @use_proto() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  %3 = alloca i32
+  %4 = alloca i32
+  store i32 1, ptr %0
+  %5 = load ptr %0
+  %6 = call i32 @foo(i32 %5)
+  store i32 %6, ptr %1
+  store i32 2, ptr %2
+  %7 = load ptr %2
+  %8 = call i32 @bar(i32 %7)
+  store i32 %8, ptr %3
+  %9 = load ptr %1
+  %10 = load ptr %3
+  %11 = add i32 %9, i32 %10
+  store i32 %11, ptr %1
+  %12 = load ptr %1
+  store i32 %12, ptr %4
+  br label 13
+
+13:
+  %14 = load ptr %4
+  ret i32 %14
+}
+
 define i32 @main() {
 entry:
   %0 = alloca i32

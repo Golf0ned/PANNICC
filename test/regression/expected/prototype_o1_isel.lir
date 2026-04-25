@@ -1,0 +1,9 @@
+use_proto:  # 0 params, 0 stack bytes
+.Luse_proto_entry:
+        call    foo  # ($1)
+        movl    %eax, %0
+        call    bar  # ($2)
+        movl    %eax, %1
+        leal    (%0,%1), %2
+        movl    %2, %eax
+        ret
