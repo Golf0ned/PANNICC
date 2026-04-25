@@ -1,0 +1,10 @@
+int * alloc(int size);
+
+int dealloc(int * ptr);
+
+int print(int value);
+
+int main() {
+    print(67);
+    return 0;
+}

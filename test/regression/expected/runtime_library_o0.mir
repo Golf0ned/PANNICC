@@ -1,0 +1,25 @@
+declare ptr @alloc(i32)
+
+declare i32 @dealloc(ptr)
+
+declare i32 @print(i32)
+
+define i32 @main() {
+entry:
+  %0 = alloca i32
+  %1 = alloca i32
+  %2 = alloca i32
+  %3 = alloca i32
+  store i32 67, ptr %0
+  %4 = load ptr %0
+  %5 = call i32 @print(i32 %4)
+  store i32 %5, ptr %1
+  store i32 0, ptr %2
+  %6 = load ptr %2
+  store i32 %6, ptr %3
+  br label 7
+
+7:
+  %8 = load ptr %3
+  ret i32 %8
+}
