@@ -11,6 +11,6 @@ int dealloc(int *ptr) {
 }
 
 int print(int value) {
-    printf("%d", value);
+    printf("%d\n", value);
     return 0;
 }
