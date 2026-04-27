@@ -6,40 +6,24 @@ entry:
   %3 = alloca i32
   %4 = alloca i32
   %5 = alloca i32
-  %6 = alloca i32
-  %7 = alloca i32
-  %8 = alloca i32
-  %9 = alloca i32
-  store i32 1, ptr %1
+  store i32 1, ptr %0
+  store i32 4, ptr %1
+  %6 = load ptr %0
+  %7 = shl i32 %6, i32 8
+  store i32 %7, ptr %3
+  %8 = load ptr %3
+  store i32 %8, ptr %2
+  %9 = load ptr %0
   %10 = load ptr %1
-  store i32 %10, ptr %0
-  store i32 4, ptr %3
-  %11 = load ptr %3
-  store i32 %11, ptr %2
-  %12 = load ptr %0
+  %11 = shl i32 %9, i32 %10
+  store i32 %11, ptr %4
+  %12 = load ptr %4
   store i32 %12, ptr %5
-  store i32 8, ptr %6
-  %13 = load ptr %5
-  %14 = load ptr %6
-  %15 = shl i32 %13, i32 %14
-  store i32 %15, ptr %5
-  %16 = load ptr %5
-  store i32 %16, ptr %4
-  %17 = load ptr %0
-  store i32 %17, ptr %7
-  %18 = load ptr %2
-  store i32 %18, ptr %8
-  %19 = load ptr %7
-  %20 = load ptr %8
-  %21 = shl i32 %19, i32 %20
-  store i32 %21, ptr %7
-  %22 = load ptr %7
-  store i32 %22, ptr %9
-  br label 23
+  br label 13
 
-23:
-  %24 = load ptr %9
-  ret i32 %24
+13:
+  %14 = load ptr %5
+  ret i32 %14
 }
 
 define i32 @rshift() {
@@ -50,38 +34,22 @@ entry:
   %3 = alloca i32
   %4 = alloca i32
   %5 = alloca i32
-  %6 = alloca i32
-  %7 = alloca i32
-  %8 = alloca i32
-  %9 = alloca i32
-  store i32 16, ptr %1
+  store i32 16, ptr %0
+  store i32 3, ptr %1
+  %6 = load ptr %0
+  %7 = ashr i32 %6, i32 8
+  store i32 %7, ptr %3
+  %8 = load ptr %3
+  store i32 %8, ptr %2
+  %9 = load ptr %0
   %10 = load ptr %1
-  store i32 %10, ptr %0
-  store i32 3, ptr %3
-  %11 = load ptr %3
-  store i32 %11, ptr %2
-  %12 = load ptr %0
+  %11 = ashr i32 %9, i32 %10
+  store i32 %11, ptr %4
+  %12 = load ptr %4
   store i32 %12, ptr %5
-  store i32 8, ptr %6
-  %13 = load ptr %5
-  %14 = load ptr %6
-  %15 = ashr i32 %13, i32 %14
-  store i32 %15, ptr %5
-  %16 = load ptr %5
-  store i32 %16, ptr %4
-  %17 = load ptr %0
-  store i32 %17, ptr %7
-  %18 = load ptr %2
-  store i32 %18, ptr %8
-  %19 = load ptr %7
-  %20 = load ptr %8
-  %21 = ashr i32 %19, i32 %20
-  store i32 %21, ptr %7
-  %22 = load ptr %7
-  store i32 %22, ptr %9
-  br label 23
+  br label 13
 
-23:
-  %24 = load ptr %9
-  ret i32 %24
+13:
+  %14 = load ptr %5
+  ret i32 %14
 }

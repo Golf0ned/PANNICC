@@ -21,13 +21,13 @@ entry:
 
 define i32 @address_deref_many(i32 %0) {
 entry:
-  %1 = alloca i32
+  %1 = alloca ptr
   %2 = alloca ptr
-  %3 = alloca ptr
-  store i32 %0, ptr %1
+  %3 = alloca i32
+  store i32 %0, ptr %3
+  store ptr %3, ptr %1
   store ptr %1, ptr %2
-  store ptr %2, ptr %3
-  %4 = load ptr %3
+  %4 = load ptr %2
   %5 = load ptr %4
   %6 = load ptr %5
   ret i32 %6

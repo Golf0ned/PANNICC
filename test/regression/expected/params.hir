@@ -1,291 +1,171 @@
 int fun1(int a_0) {
     __entry:
     int __v;
-    __v = a_0;
-    int __v1;
-    __v1 = a_0;
-    __v = __v * __v1;
+    __v = a_0 * a_0;
     return __v;
 }
 
 int fun2(int a_0, int b_0) {
     __entry:
     int __v;
-    __v = a_0;
+    __v = fun1(a_0);
     int __v1;
-    __v1 = fun1(__v);
+    __v1 = 2 * a_0;
     int __v2;
-    __v2 = 2;
+    __v2 = __v1 * b_0;
     int __v3;
-    __v3 = a_0;
-    __v2 = __v2 * __v3;
+    __v3 = __v + __v2;
     int __v4;
-    __v4 = b_0;
-    __v2 = __v2 * __v4;
-    __v1 = __v1 + __v2;
+    __v4 = fun1(b_0);
     int __v5;
-    __v5 = b_0;
-    int __v6;
-    __v6 = fun1(__v5);
-    __v1 = __v1 + __v6;
-    return __v1;
+    __v5 = __v3 + __v4;
+    return __v5;
 }
 
 int fun3(int a_0, int b_0, int c_0, int x_0) {
     __entry:
     int __v;
-    __v = a_0;
+    __v = fun1(x_0);
     int __v1;
-    __v1 = x_0;
+    __v1 = a_0 * __v;
     int __v2;
-    __v2 = fun1(__v1);
-    __v = __v * __v2;
+    __v2 = b_0 * x_0;
     int __v3;
-    __v3 = b_0;
+    __v3 = __v1 + __v2;
     int __v4;
-    __v4 = x_0;
-    __v3 = __v3 * __v4;
-    __v = __v + __v3;
-    int __v5;
-    __v5 = c_0;
-    __v = __v + __v5;
-    return __v;
+    __v4 = __v3 + c_0;
+    return __v4;
 }
 
 int call1() {
     __entry:
     int __v;
-    __v = 5;
-    int __v1;
-    __v1 = fun1(__v);
-    return __v1;
+    __v = fun1(5);
+    return __v;
 }
 
 int call2(int foo_0, int bar_0) {
     __entry:
     int __v;
-    __v = foo_0;
-    int __v1;
-    __v1 = bar_0;
-    int __v2;
-    __v2 = fun2(__v, __v1);
-    return __v2;
+    __v = fun2(foo_0, bar_0);
+    return __v;
 }
 
 int call3(int foo_0, int bar_0) {
     __entry:
     int __v;
-    __v = foo_0;
-    int __v1;
-    __v1 = bar_0;
-    int __v2;
-    __v2 = 1;
-    int __v3;
-    __v3 = 0;
-    int __v4;
-    __v4 = fun3(__v, __v1, __v2, __v3);
-    return __v4;
+    __v = fun3(foo_0, bar_0, 1, 0);
+    return __v;
 }
 
 int call4() {
     __entry:
     int __v;
-    __v = 10;
+    __v = fun1(10);
     int __v1;
-    __v1 = fun1(__v);
-    int __v2;
-    __v2 = 100;
-    __v1 = __v1 - __v2;
+    __v1 = __v - 100;
     return __v1;
 }
 
 int super_fun(int a_0, int b_0, int c_0, int d_0, int e_0, int f_0, int g_0, int h_0) {
     __entry:
     int __v;
-    __v = a_0;
+    __v = a_0 + b_0;
     int __v1;
-    __v1 = b_0;
-    __v = __v + __v1;
+    __v1 = __v + c_0;
     int __v2;
-    __v2 = c_0;
-    __v = __v + __v2;
+    __v2 = __v1 + d_0;
     int __v3;
-    __v3 = d_0;
-    __v = __v + __v3;
+    __v3 = __v2 + e_0;
     int __v4;
-    __v4 = e_0;
-    __v = __v + __v4;
+    __v4 = __v3 + f_0;
     int __v5;
-    __v5 = f_0;
-    __v = __v + __v5;
+    __v5 = __v4 + g_0;
     int __v6;
-    __v6 = g_0;
-    __v = __v + __v6;
-    int __v7;
-    __v7 = h_0;
-    __v = __v + __v7;
-    return __v;
+    __v6 = __v5 + h_0;
+    return __v6;
 }
 
 int call_super_fun(int seventh_0, int eighth_0) {
     __entry:
     int __v;
-    __v = 1;
-    int __v1;
-    __v1 = 2;
-    int __v2;
-    __v2 = 3;
-    int __v3;
-    __v3 = 4;
-    int __v4;
-    __v4 = 5;
-    int __v5;
-    __v5 = 6;
-    int __v6;
-    __v6 = seventh_0;
-    int __v7;
-    __v7 = eighth_0;
-    int __v8;
-    __v8 = super_fun(__v, __v1, __v2, __v3, __v4, __v5, __v6, __v7);
-    return __v8;
+    __v = super_fun(1, 2, 3, 4, 5, 6, seventh_0, eighth_0);
+    return __v;
 }
 
 int caller_saved(int first_0, int second_0) {
     __entry:
     int p1_1;
     int __v;
-    __v = first_0;
-    int __v1;
-    __v1 = 1;
-    __v = __v + __v1;
+    __v = first_0 + 1;
     p1_1 = __v;
     int p2_1;
-    int __v2;
-    __v2 = first_0;
-    int __v3;
-    __v3 = 2;
-    __v2 = __v2 + __v3;
-    p2_1 = __v2;
+    int __v1;
+    __v1 = first_0 + 2;
+    p2_1 = __v1;
     int p3_1;
-    int __v4;
-    __v4 = first_0;
-    int __v5;
-    __v5 = 3;
-    __v4 = __v4 + __v5;
-    p3_1 = __v4;
+    int __v2;
+    __v2 = first_0 + 3;
+    p3_1 = __v2;
     int p4_1;
-    int __v6;
-    __v6 = first_0;
-    int __v7;
-    __v7 = 4;
-    __v6 = __v6 + __v7;
-    p4_1 = __v6;
+    int __v3;
+    __v3 = first_0 + 4;
+    p4_1 = __v3;
     int p5_1;
-    int __v8;
-    __v8 = first_0;
-    int __v9;
-    __v9 = 5;
-    __v8 = __v8 + __v9;
-    p5_1 = __v8;
+    int __v4;
+    __v4 = first_0 + 5;
+    p5_1 = __v4;
     int p6_1;
-    int __v10;
-    __v10 = first_0;
-    int __v11;
-    __v11 = 6;
-    __v10 = __v10 + __v11;
-    p6_1 = __v10;
+    int __v5;
+    __v5 = first_0 + 6;
+    p6_1 = __v5;
     int p7_1;
-    int __v12;
-    __v12 = first_0;
-    int __v13;
-    __v13 = 7;
-    __v12 = __v12 + __v13;
-    p7_1 = __v12;
+    int __v6;
+    __v6 = first_0 + 7;
+    p7_1 = __v6;
     int p8_1;
-    int __v14;
-    __v14 = first_0;
-    int __v15;
-    __v15 = 8;
-    __v14 = __v14 + __v15;
-    p8_1 = __v14;
+    int __v7;
+    __v7 = first_0 + 8;
+    p8_1 = __v7;
     int p9_1;
-    int __v16;
-    __v16 = first_0;
-    int __v17;
-    __v17 = 9;
-    __v16 = __v16 + __v17;
-    p9_1 = __v16;
+    int __v8;
+    __v8 = first_0 + 9;
+    p9_1 = __v8;
     int p10_1;
-    int __v18;
-    __v18 = first_0;
-    int __v19;
-    __v19 = 10;
-    __v18 = __v18 + __v19;
-    p10_1 = __v18;
+    int __v9;
+    __v9 = first_0 + 10;
+    p10_1 = __v9;
     int p11_1;
-    int __v20;
-    __v20 = first_0;
-    int __v21;
-    __v21 = 11;
-    __v20 = __v20 + __v21;
-    p11_1 = __v20;
+    int __v10;
+    __v10 = first_0 + 11;
+    p11_1 = __v10;
     int superfun_1;
+    int __v11;
+    __v11 = super_fun(p1_1, p2_1, p3_1, p4_1, p5_1, p6_1, p7_1, p8_1);
+    superfun_1 = __v11;
+    int __v12;
+    __v12 = p1_1 + p2_1;
+    int __v13;
+    __v13 = __v12 + p3_1;
+    int __v14;
+    __v14 = __v13 + p4_1;
+    int __v15;
+    __v15 = __v14 + p5_1;
+    int __v16;
+    __v16 = __v15 + p6_1;
+    int __v17;
+    __v17 = __v16 + p7_1;
+    int __v18;
+    __v18 = __v17 + p8_1;
+    int __v19;
+    __v19 = __v18 + p9_1;
+    int __v20;
+    __v20 = __v19 + p10_1;
+    int __v21;
+    __v21 = __v20 + p11_1;
     int __v22;
-    __v22 = p1_1;
+    __v22 = __v21 + superfun_1;
     int __v23;
-    __v23 = p2_1;
-    int __v24;
-    __v24 = p3_1;
-    int __v25;
-    __v25 = p4_1;
-    int __v26;
-    __v26 = p5_1;
-    int __v27;
-    __v27 = p6_1;
-    int __v28;
-    __v28 = p7_1;
-    int __v29;
-    __v29 = p8_1;
-    int __v30;
-    __v30 = super_fun(__v22, __v23, __v24, __v25, __v26, __v27, __v28, __v29);
-    superfun_1 = __v30;
-    int __v31;
-    __v31 = p1_1;
-    int __v32;
-    __v32 = p2_1;
-    __v31 = __v31 + __v32;
-    int __v33;
-    __v33 = p3_1;
-    __v31 = __v31 + __v33;
-    int __v34;
-    __v34 = p4_1;
-    __v31 = __v31 + __v34;
-    int __v35;
-    __v35 = p5_1;
-    __v31 = __v31 + __v35;
-    int __v36;
-    __v36 = p6_1;
-    __v31 = __v31 + __v36;
-    int __v37;
-    __v37 = p7_1;
-    __v31 = __v31 + __v37;
-    int __v38;
-    __v38 = p8_1;
-    __v31 = __v31 + __v38;
-    int __v39;
-    __v39 = p9_1;
-    __v31 = __v31 + __v39;
-    int __v40;
-    __v40 = p10_1;
-    __v31 = __v31 + __v40;
-    int __v41;
-    __v41 = p11_1;
-    __v31 = __v31 + __v41;
-    int __v42;
-    __v42 = superfun_1;
-    __v31 = __v31 + __v42;
-    int __v43;
-    __v43 = second_0;
-    __v31 = __v31 + __v43;
-    return __v31;
+    __v23 = __v22 + second_0;
+    return __v23;
 }

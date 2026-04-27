@@ -7,20 +7,12 @@ int print(int value_0);
 int main() {
     __entry:
     int __v;
-    __v = 67;
-    int __v1;
-    __v1 = print(__v);
+    __v = print(67);
     int * foo_1;
+    int * __v1;
+    __v1 = alloc(4);
+    foo_1 = __v1;
     int __v2;
-    __v2 = 4;
-    int * __v3;
-    __v3 = alloc(__v2);
-    foo_1 = __v3;
-    int * __v4;
-    __v4 = foo_1;
-    int __v5;
-    __v5 = dealloc(__v4);
-    int __v6;
-    __v6 = 0;
-    return __v6;
+    __v2 = dealloc(foo_1);
+    return 0;
 }

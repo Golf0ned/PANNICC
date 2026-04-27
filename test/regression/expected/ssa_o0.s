@@ -2,96 +2,75 @@
     .globl  lost_copy_problem
     .type   lost_copy_problem, @function
 lost_copy_problem:
-        subq    $36, %rsp
+        subq    $20, %rsp
         movl    %edi, %r10d
 .Llost_copy_problem_entry:
-        movl    %r10d, 32(%rsp)
-.Llost_copy_problem_10:
-        movl    32(%rsp), %r10d
-        movl    %r10d, 4(%rsp)
-        movl    $10, 8(%rsp)
-        movl    4(%rsp), %edi
-        movl    8(%rsp), %r11d
-        movl    %edi, %r10d
-        subl    %r11d, %r10d
+        movl    %r10d, 16(%rsp)
+.Llost_copy_problem_6:
+        movl    16(%rsp), %r11d
+        movl    %r11d, %r10d
+        subl    $10, %r10d
         movl    %r10d, 4(%rsp)
         movl    4(%rsp), %r10d
         cmpl    $0, %r10d
-        jne     .Llost_copy_problem_23
-.Llost_copy_problem_16:
-.Llost_copy_problem_17:
-        movl    32(%rsp), %r10d
-        movl    %r10d, 12(%rsp)
-        movl    12(%rsp), %r10d
+        jne     .Llost_copy_problem_15
+.Llost_copy_problem_10:
+.Llost_copy_problem_11:
+        movl    16(%rsp), %r10d
         movl    %r10d, (%rsp)
-        movl    $1, 16(%rsp)
-        movl    32(%rsp), %r10d
-        movl    16(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
-        movl    %edi, 32(%rsp)
-        jmp     .Llost_copy_problem_10
-.Llost_copy_problem_23:
-.Llost_copy_problem_24:
+        movl    16(%rsp), %r10d
+        movl    %r10d, %r11d
+        addl    $1, %r11d
+        movl    %r11d, 16(%rsp)
+        jmp     .Llost_copy_problem_6
+.Llost_copy_problem_15:
+.Llost_copy_problem_16:
         movl    (%rsp), %r10d
-        movl    %r10d, 20(%rsp)
-        movl    $3, 24(%rsp)
-        movl    20(%rsp), %r10d
-        movl    24(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
-        movl    %edi, 20(%rsp)
-        movl    20(%rsp), %r10d
-        movl    %r10d, 28(%rsp)
-.Llost_copy_problem_30:
-        movl    28(%rsp), %r10d
+        movl    %r10d, %r11d
+        addl    $3, %r11d
+        movl    %r11d, 8(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 12(%rsp)
+.Llost_copy_problem_20:
+        movl    12(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $36, %rsp
+        addq    $20, %rsp
         ret
 .Llost_copy_problem_end:
     .globl  swap_problem
     .type   swap_problem, @function
 swap_problem:
-        subq    $40, %rsp
+        subq    $20, %rsp
         movl    %edi, %r11d
         movl    %esi, %r10d
 .Lswap_problem_entry:
-        movl    %r11d, 32(%rsp)
-        movl    %r10d, 36(%rsp)
-.Lswap_problem_12:
-        movl    $1, 4(%rsp)
-        movl    4(%rsp), %r10d
-        cmpl    $0, %r10d
-        jne     .Lswap_problem_22
-.Lswap_problem_14:
-.Lswap_problem_15:
-        movl    32(%rsp), %r10d
-        movl    %r10d, 12(%rsp)
-        movl    12(%rsp), %r10d
-        movl    %r10d, 8(%rsp)
-        movl    36(%rsp), %r10d
+        movl    %r11d, 16(%rsp)
         movl    %r10d, 16(%rsp)
+.Lswap_problem_7:
+        movq    $1, %r10
+        cmpq    $0, %r10
+        jne     .Lswap_problem_13
+.Lswap_problem_8:
+.Lswap_problem_9:
         movl    16(%rsp), %r10d
-        movl    %r10d, 32(%rsp)
+        movl    %r10d, 4(%rsp)
+        movl    16(%rsp), %r10d
+        movl    %r10d, 16(%rsp)
+        movl    4(%rsp), %r10d
+        movl    %r10d, 16(%rsp)
+        jmp     .Lswap_problem_7
+.Lswap_problem_13:
+.Lswap_problem_14:
+        movl    16(%rsp), %r10d
+        movl    16(%rsp), %edi
+        leal    (%r10d,%edi), %r11d
+        movl    %r11d, 8(%rsp)
         movl    8(%rsp), %r10d
-        movl    %r10d, 20(%rsp)
-        movl    20(%rsp), %r10d
-        movl    %r10d, 36(%rsp)
-        jmp     .Lswap_problem_12
-.Lswap_problem_22:
-.Lswap_problem_23:
-        movl    32(%rsp), %r10d
-        movl    %r10d, 24(%rsp)
-        movl    36(%rsp), %r10d
-        movl    %r10d, 28(%rsp)
-        movl    24(%rsp), %r10d
-        movl    28(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
-        movl    %edi, 24(%rsp)
-        movl    24(%rsp), %r10d
-        movl    %r10d, 32(%rsp)
-.Lswap_problem_30:
-        movl    32(%rsp), %r10d
+        movl    %r10d, 12(%rsp)
+.Lswap_problem_19:
+        movl    12(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $40, %rsp
+        addq    $20, %rsp
         ret
 .Lswap_problem_end:
     .section    .note.GNU-stack,"",@progbits

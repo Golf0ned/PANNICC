@@ -2,77 +2,53 @@
     .globl  lshift
     .type   lshift, @function
 lshift:
-        subq    $40, %rsp
+        subq    $24, %rsp
 .Llshift_entry:
-        movl    $1, 4(%rsp)
-        movl    4(%rsp), %r10d
-        movl    %r10d, (%rsp)
-        movl    $4, 12(%rsp)
+        movl    $1, (%rsp)
+        movl    $4, 4(%rsp)
+        movl    (%rsp), %r10d
+        movl    %r10d, %ecx
+        shll    $8, %ecx
+        movl    %ecx, 12(%rsp)
         movl    12(%rsp), %r10d
         movl    %r10d, 8(%rsp)
         movl    (%rsp), %r10d
+        movl    4(%rsp), %r11d
+        movl    %r10d, %ecx
+        shll    %r11d, %ecx
+        movl    %ecx, 16(%rsp)
+        movl    16(%rsp), %r10d
         movl    %r10d, 20(%rsp)
-        movl    $8, 24(%rsp)
+.Llshift_13:
         movl    20(%rsp), %r10d
-        movl    24(%rsp), %r11d
-        movl    %r10d, %ecx
-        shll    %r11d, %ecx
-        movl    %ecx, 20(%rsp)
-        movl    20(%rsp), %r10d
-        movl    %r10d, 16(%rsp)
-        movl    (%rsp), %r10d
-        movl    %r10d, 28(%rsp)
-        movl    8(%rsp), %r10d
-        movl    %r10d, 32(%rsp)
-        movl    28(%rsp), %r10d
-        movl    32(%rsp), %r11d
-        movl    %r10d, %ecx
-        shll    %r11d, %ecx
-        movl    %ecx, 28(%rsp)
-        movl    28(%rsp), %r10d
-        movl    %r10d, 36(%rsp)
-.Llshift_23:
-        movl    36(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $40, %rsp
+        addq    $24, %rsp
         ret
 .Llshift_end:
     .globl  rshift
     .type   rshift, @function
 rshift:
-        subq    $40, %rsp
+        subq    $24, %rsp
 .Lrshift_entry:
-        movl    $16, 4(%rsp)
-        movl    4(%rsp), %r10d
-        movl    %r10d, (%rsp)
-        movl    $3, 12(%rsp)
+        movl    $16, (%rsp)
+        movl    $3, 4(%rsp)
+        movl    (%rsp), %r10d
+        movl    %r10d, %ecx
+        sarl    $8, %ecx
+        movl    %ecx, 12(%rsp)
         movl    12(%rsp), %r10d
         movl    %r10d, 8(%rsp)
         movl    (%rsp), %r10d
+        movl    4(%rsp), %r11d
+        movl    %r10d, %ecx
+        sarl    %r11d, %ecx
+        movl    %ecx, 16(%rsp)
+        movl    16(%rsp), %r10d
         movl    %r10d, 20(%rsp)
-        movl    $8, 24(%rsp)
+.Lrshift_13:
         movl    20(%rsp), %r10d
-        movl    24(%rsp), %r11d
-        movl    %r10d, %ecx
-        sarl    %r11d, %ecx
-        movl    %ecx, 20(%rsp)
-        movl    20(%rsp), %r10d
-        movl    %r10d, 16(%rsp)
-        movl    (%rsp), %r10d
-        movl    %r10d, 28(%rsp)
-        movl    8(%rsp), %r10d
-        movl    %r10d, 32(%rsp)
-        movl    28(%rsp), %r10d
-        movl    32(%rsp), %r11d
-        movl    %r10d, %ecx
-        sarl    %r11d, %ecx
-        movl    %ecx, 28(%rsp)
-        movl    28(%rsp), %r10d
-        movl    %r10d, 36(%rsp)
-.Lrshift_23:
-        movl    36(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $40, %rsp
+        addq    $24, %rsp
         ret
 .Lrshift_end:
     .section    .note.GNU-stack,"",@progbits

@@ -5,13 +5,10 @@ int bar(int foo_0);
 int use_proto() {
     __entry:
     int __v;
-    __v = 1;
+    __v = foo(1);
     int __v1;
-    __v1 = foo(__v);
+    __v1 = bar(2);
     int __v2;
-    __v2 = 2;
-    int __v3;
-    __v3 = bar(__v2);
-    __v1 = __v1 + __v3;
-    return __v1;
+    __v2 = __v + __v1;
+    return __v2;
 }
