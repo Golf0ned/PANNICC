@@ -279,25 +279,8 @@ namespace frontend {
     void ASTToHIRVisitor::visit(ast::Expr *e) {}
 
     void ASTToHIRVisitor::visit(ast::TerminalExpr *e) {
-        // last_expr = resolveUseScope(e->getAtom().get());
-
-        // auto var_declare = makeTemp("v");
-        // auto var_assign =
-        //     std::make_unique<AtomIdentifier>(var_declare->getValue());
-        // last_expr = copyAtom(var_declare.get());
-
         auto var_prev = resolveUseScope(e->getAtom().get());
         last_expr = std::move(var_prev);
-
-        //
-        // auto new_declare = std::make_unique<hir::InstructionDeclaration>(
-        //     std::move(type), std::move(var_declare));
-        // result.push_back(std::move(new_declare));
-        //
-        // auto new_assign = std::make_unique<hir::InstructionAssignValue>(
-        //     std::move(var_assign), std::move(var_prev));
-        //
-        // result.push_back(std::move(new_assign));
     }
 
     void ASTToHIRVisitor::visit(ast::ParenExpr *e) {
@@ -394,8 +377,6 @@ namespace frontend {
         } else {
             type = var_type_mappings[left->getValue()]->clone();
         }
-
-        var_type_mappings[var_declare->getValue()] = type.get();
 
         var_type_mappings[var_declare->getValue()] = type.get();
 
