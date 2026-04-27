@@ -179,17 +179,27 @@ namespace frontend {
     }
 
     void ASTToHIRVisitor::visit(ast::InstructionAssign *i) {
-        auto variable = resolveUseScope(i->getVariable().get());
+        i->getVariable()->accept(this);
+        auto variable = std::unique_ptr<AtomIdentifier>(
+            static_cast<AtomIdentifier *>(last_expr.release()));
+
         i->getValue()->accept(this);
         auto value = std::move(last_expr);
+
         auto new_i = std::make_unique<hir::InstructionAssignValue>(
             std::move(variable), std::move(value));
         result.push_back(std::move(new_i));
     }
 
     void ASTToHIRVisitor::visit(ast::InstructionOpAssign *i) {
-        auto left_variable = resolveUseScope(i->getVariable().get());
-        auto right_variable = resolveUseScope(i->getVariable().get());
+        i->getVariable()->accept(this);
+        auto left_variable = std::unique_ptr<AtomIdentifier>(
+            static_cast<AtomIdentifier *>(last_expr.release()));
+
+        i->getVariable()->accept(this);
+        auto right_variable = std::unique_ptr<AtomIdentifier>(
+            static_cast<AtomIdentifier *>(last_expr.release()));
+
         auto op = i->getOp();
         i->getValue()->accept(this);
         auto value = std::move(last_expr);

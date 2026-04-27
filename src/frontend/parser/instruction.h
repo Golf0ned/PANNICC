@@ -41,13 +41,12 @@ namespace frontend {
         : pegtl::seq<type, ignorable, identifier, ignorable, equal, ignorable,
                      expr, ignorable, semicolon> {};
 
-    struct instruction_assign
-        : pegtl::seq<identifier, ignorable, equal, ignorable, expr, ignorable,
-                     semicolon> {};
+    struct instruction_assign : pegtl::seq<expr, ignorable, equal, ignorable,
+                                           expr, ignorable, semicolon> {};
 
     struct instruction_op_assign
-        : pegtl::seq<identifier, ignorable, op_equals, ignorable, expr,
-                     ignorable, semicolon> {};
+        : pegtl::seq<expr, ignorable, op_equals, ignorable, expr, ignorable,
+                     semicolon> {};
 
     struct instruction_return
         : pegtl::seq<keyword_return, ignorable, expr, ignorable, semicolon> {};
@@ -221,7 +220,9 @@ namespace frontend {
         static void apply(const Input &in,
                           std::vector<std::unique_ptr<ast::Function>> &res) {
             auto value = popExpr();
-            auto variable = popIdentifier();
+            auto variable = popExpr();
+
+            // TODO: check variable for lvalue
 
             auto i = std::make_unique<ast::InstructionAssign>(
                 std::move(variable), std::move(value));
@@ -234,7 +235,9 @@ namespace frontend {
         static void apply(const Input &in,
                           std::vector<std::unique_ptr<ast::Function>> &res) {
             auto value = popExpr();
-            auto variable = popIdentifier();
+            auto variable = popExpr();
+
+            // TODO: check variable for lvalue
 
             auto i = std::make_unique<ast::InstructionOpAssign>(
                 std::move(variable), last_op_equals, std::move(value));
