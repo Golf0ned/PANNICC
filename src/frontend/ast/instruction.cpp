@@ -55,24 +55,22 @@ namespace frontend::ast {
         v->visit(this);
     }
 
-    InstructionAssign::InstructionAssign(
-        std::unique_ptr<AtomIdentifier> variable, std::unique_ptr<Expr> value)
+    InstructionAssign::InstructionAssign(std::unique_ptr<Expr> variable,
+                                         std::unique_ptr<Expr> value)
         : variable(std::move(variable)), value(std::move(value)) {}
 
-    std::unique_ptr<AtomIdentifier> &InstructionAssign::getVariable() {
-        return variable;
-    }
+    std::unique_ptr<Expr> &InstructionAssign::getVariable() { return variable; }
 
     std::unique_ptr<Expr> &InstructionAssign::getValue() { return value; }
 
     void InstructionAssign::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionOpAssign::InstructionOpAssign(
-        std::unique_ptr<AtomIdentifier> variable, BinaryOp op,
-        std::unique_ptr<Expr> value)
+    InstructionOpAssign::InstructionOpAssign(std::unique_ptr<Expr> variable,
+                                             BinaryOp op,
+                                             std::unique_ptr<Expr> value)
         : variable(std::move(variable)), op(op), value(std::move(value)) {}
 
-    std::unique_ptr<AtomIdentifier> &InstructionOpAssign::getVariable() {
+    std::unique_ptr<Expr> &InstructionOpAssign::getVariable() {
         return variable;
     }
 

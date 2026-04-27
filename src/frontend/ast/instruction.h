@@ -67,28 +67,28 @@ namespace frontend::ast {
 
     class InstructionAssign : public Instruction {
     public:
-        InstructionAssign(std::unique_ptr<AtomIdentifier> variable,
+        InstructionAssign(std::unique_ptr<Expr> variable,
                           std::unique_ptr<Expr> value);
-        std::unique_ptr<AtomIdentifier> &getVariable();
+        std::unique_ptr<Expr> &getVariable();
         std::unique_ptr<Expr> &getValue();
         void accept(InstructionVisitor *v) override;
 
     private:
-        std::unique_ptr<AtomIdentifier> variable;
+        std::unique_ptr<Expr> variable;
         std::unique_ptr<Expr> value;
     };
 
     class InstructionOpAssign : public Instruction {
     public:
-        InstructionOpAssign(std::unique_ptr<AtomIdentifier> variable,
-                            BinaryOp op, std::unique_ptr<Expr> value);
-        std::unique_ptr<AtomIdentifier> &getVariable();
+        InstructionOpAssign(std::unique_ptr<Expr> variable, BinaryOp op,
+                            std::unique_ptr<Expr> value);
+        std::unique_ptr<Expr> &getVariable();
         BinaryOp getOp();
         std::unique_ptr<Expr> &getValue();
         void accept(InstructionVisitor *v) override;
 
     private:
-        std::unique_ptr<AtomIdentifier> variable;
+        std::unique_ptr<Expr> variable;
         BinaryOp op;
         std::unique_ptr<Expr> value;
     };

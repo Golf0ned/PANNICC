@@ -177,18 +177,25 @@ namespace frontend::ast {
     }
 
     void ToStringVisitor::visit(InstructionAssign *i) {
-        const std::string variable = i->getVariable()->toString(*symbol_table);
-        i->getValue()->accept(this);
+        i->getVariable()->accept(this);
+        const std::string variable = res;
 
-        res = prefix + variable + " = " + res + ";";
+        i->getValue()->accept(this);
+        const std::string value = res;
+
+        res = prefix + variable + " = " + value + ";";
     }
 
     void ToStringVisitor::visit(InstructionOpAssign *i) {
-        const std::string variable = i->getVariable()->toString(*symbol_table);
-        const std::string op = toString(i->getOp());
-        i->getValue()->accept(this);
+        i->getVariable()->accept(this);
+        const std::string variable = res;
 
-        res = prefix + variable + ' ' + op + "= " + res + ";";
+        const std::string op = toString(i->getOp());
+
+        i->getValue()->accept(this);
+        const std::string value = res;
+
+        res = prefix + variable + ' ' + op + "= " + value + ";";
     }
 
     void ToStringVisitor::visit(InstructionReturn *i) {
