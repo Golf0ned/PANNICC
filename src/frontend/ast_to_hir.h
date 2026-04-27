@@ -32,6 +32,7 @@ namespace frontend {
         std::unique_ptr<hir::Label> makeLabel(std::string name);
         std::unique_ptr<AtomIdentifier> makeLabelAtom(hir::Label *l);
         std::unique_ptr<AtomIdentifier> makeTemp(std::string name);
+        std::unique_ptr<Atom> copyAtom(Atom *atom);
         void addReturnIfMissing(ast::FunctionDefinition *f);
         void mapFunctionType(AtomIdentifier *function, Type *type);
         void mapVariableType(AtomIdentifier *var, Type *type);
@@ -56,7 +57,7 @@ namespace frontend {
 
     private:
         std::vector<std::unique_ptr<hir::Instruction>> result;
-        AtomIdentifier *last_expr;
+        std::unique_ptr<Atom> last_expr;
         uint64_t cur_scope;
         std::vector<std::unordered_set<std::string>> scope_mappings;
         std::unordered_map<uint64_t, Type *> function_type_mappings;
