@@ -95,6 +95,13 @@ namespace frontend {
         return createUnscopedIdentifier(label_str);
     }
 
+    std::unique_ptr<Atom> ASTToHIRVisitor::copyAtom(Atom *atom) {
+        return atom->isIdentifier()
+                   ? static_cast<std::unique_ptr<Atom>>(
+                         std::make_unique<AtomIdentifier>(atom->getValue()))
+                   : std::make_unique<AtomLiteral>(atom->getValue());
+    }
+
     std::unique_ptr<AtomIdentifier>
     ASTToHIRVisitor::makeLabelAtom(hir::Label *l) {
         return std::make_unique<AtomIdentifier>(l->getName()->getValue());
@@ -164,7 +171,7 @@ namespace frontend {
 
         auto variable2 = resolveUseScope(i->getVariable().get());
         i->getValue()->accept(this);
-        auto value = std::make_unique<AtomIdentifier>(last_expr->getValue());
+        auto value = std::move(last_expr);
 
         auto new_assign = std::make_unique<hir::InstructionAssignValue>(
             std::move(variable2), std::move(value));
@@ -174,8 +181,7 @@ namespace frontend {
     void ASTToHIRVisitor::visit(ast::InstructionAssign *i) {
         auto variable = resolveUseScope(i->getVariable().get());
         i->getValue()->accept(this);
-        auto value = std::make_unique<AtomIdentifier>(last_expr->getValue());
-
+        auto value = std::move(last_expr);
         auto new_i = std::make_unique<hir::InstructionAssignValue>(
             std::move(variable), std::move(value));
         result.push_back(std::move(new_i));
@@ -186,7 +192,7 @@ namespace frontend {
         auto right_variable = resolveUseScope(i->getVariable().get());
         auto op = i->getOp();
         i->getValue()->accept(this);
-        auto value = std::make_unique<AtomIdentifier>(last_expr->getValue());
+        auto value = std::move(last_expr);
 
         auto new_i = std::make_unique<hir::InstructionAssignBinaryOp>(
             std::move(left_variable), op, std::move(right_variable),
@@ -196,8 +202,7 @@ namespace frontend {
 
     void ASTToHIRVisitor::visit(ast::InstructionReturn *i) {
         i->getValue()->accept(this);
-        auto value = std::make_unique<AtomIdentifier>(last_expr->getValue());
-
+        auto value = std::move(last_expr);
         auto new_i = std::make_unique<hir::InstructionReturn>(std::move(value));
         result.push_back(std::move(new_i));
     }
@@ -214,7 +219,7 @@ namespace frontend {
             makeLabelAtom(has_else ? f_label.get() : cont_label.get());
 
         i->getCond()->accept(this);
-        auto cond = std::make_unique<AtomIdentifier>(last_expr->getValue());
+        auto cond = std::move(last_expr);
         auto cond_i = std::make_unique<hir::InstructionBranchCond>(
             std::move(cond), std::move(t_atom), std::move(f_atom));
         result.push_back(std::move(cond_i));
@@ -247,7 +252,7 @@ namespace frontend {
 
         result.push_back(std::move(cond_label));
         i->getCond()->accept(this);
-        auto cond = std::make_unique<AtomIdentifier>(last_expr->getValue());
+        auto cond = std::move(last_expr);
         auto cond_i = std::make_unique<hir::InstructionBranchCond>(
             std::move(cond), std::move(body_atom), std::move(cont_atom));
         result.push_back(std::move(cond_i));
@@ -264,31 +269,25 @@ namespace frontend {
     void ASTToHIRVisitor::visit(ast::Expr *e) {}
 
     void ASTToHIRVisitor::visit(ast::TerminalExpr *e) {
-        auto var_declare = makeTemp("v");
-        auto var_assign =
-            std::make_unique<AtomIdentifier>(var_declare->getValue());
-        last_expr = var_declare.get();
+        // last_expr = resolveUseScope(e->getAtom().get());
+
+        // auto var_declare = makeTemp("v");
+        // auto var_assign =
+        //     std::make_unique<AtomIdentifier>(var_declare->getValue());
+        // last_expr = copyAtom(var_declare.get());
 
         auto var_prev = resolveUseScope(e->getAtom().get());
+        last_expr = std::move(var_prev);
 
-        std::unique_ptr<Type> type;
-        if (!e->getAtom()->isIdentifier()) {
-            // TODO: more types
-            type = std::make_unique<Int>();
-        } else {
-            type = var_type_mappings[var_prev->getValue()]->clone();
-        }
-
-        var_type_mappings[var_declare->getValue()] = type.get();
-
-        auto new_declare = std::make_unique<hir::InstructionDeclaration>(
-            std::move(type), std::move(var_declare));
-        result.push_back(std::move(new_declare));
-
-        auto new_assign = std::make_unique<hir::InstructionAssignValue>(
-            std::move(var_assign), std::move(var_prev));
-
-        result.push_back(std::move(new_assign));
+        //
+        // auto new_declare = std::make_unique<hir::InstructionDeclaration>(
+        //     std::move(type), std::move(var_declare));
+        // result.push_back(std::move(new_declare));
+        //
+        // auto new_assign = std::make_unique<hir::InstructionAssignValue>(
+        //     std::move(var_assign), std::move(var_prev));
+        //
+        // result.push_back(std::move(new_assign));
     }
 
     void ASTToHIRVisitor::visit(ast::ParenExpr *e) {
@@ -299,14 +298,13 @@ namespace frontend {
         std::vector<std::unique_ptr<Atom>> args;
         for (auto &arg : e->getArguments()) {
             arg->accept(this);
-            args.push_back(
-                std::make_unique<AtomIdentifier>(last_expr->getValue()));
+            args.push_back(std::move(last_expr));
         }
 
         auto var_declare = makeTemp("v");
         auto var_assign =
             std::make_unique<AtomIdentifier>(var_declare->getValue());
-        last_expr = var_declare.get();
+        last_expr = copyAtom(var_declare.get());
 
         auto callee =
             createUnscopedIdentifier(e->getCallee()->toString(*old_table));
@@ -325,14 +323,21 @@ namespace frontend {
 
     void ASTToHIRVisitor::visit(ast::UnaryOpExpr *e) {
         e->getValue()->accept(this);
-        auto value = std::make_unique<AtomIdentifier>(last_expr->getValue());
+        auto value = std::move(last_expr);
         auto var_declare = makeTemp("v");
         auto var_assign =
             std::make_unique<AtomIdentifier>(var_declare->getValue());
-        last_expr = var_declare.get();
+        last_expr = copyAtom(var_declare.get());
 
-        std::unique_ptr<Type> type =
-            var_type_mappings[value->getValue()]->clone();
+        // TODO: figure out the details for type + casting/coercion
+        std::unique_ptr<Type> type;
+        if (!value->isIdentifier()) {
+            // TODO: more types
+            type = std::make_unique<Int>();
+        } else {
+            type = var_type_mappings[value->getValue()]->clone();
+        }
+
         switch (e->getOp()) {
         case UnaryOp::PLUS:
         case UnaryOp::MINUS:
@@ -360,16 +365,33 @@ namespace frontend {
     }
 
     void ASTToHIRVisitor::visit(ast::BinaryOpExpr *e) {
-        // TODO: figure out the details for this
-
         e->getLeft()->accept(this);
-        auto left = std::make_unique<AtomIdentifier>(last_expr->getValue());
+        auto left = std::move(last_expr);
 
         e->getRight()->accept(this);
-        auto right = std::make_unique<AtomIdentifier>(last_expr->getValue());
+        auto right = std::move(last_expr);
 
-        auto var_assign = std::make_unique<AtomIdentifier>(left->getValue());
-        last_expr = var_assign.get();
+        auto var_declare = makeTemp("v");
+        auto var_assign =
+            std::make_unique<AtomIdentifier>(var_declare->getValue());
+        last_expr = copyAtom(var_declare.get());
+
+        // TODO: figure out the details for type + casting/coercion
+        std::unique_ptr<Type> type;
+        if (!left->isIdentifier()) {
+            // TODO: more types
+            type = std::make_unique<Int>();
+        } else {
+            type = var_type_mappings[left->getValue()]->clone();
+        }
+
+        var_type_mappings[var_declare->getValue()] = type.get();
+
+        var_type_mappings[var_declare->getValue()] = type.get();
+
+        auto new_declare = std::make_unique<hir::InstructionDeclaration>(
+            std::move(type), std::move(var_declare));
+        result.push_back(std::move(new_declare));
 
         auto new_assign = std::make_unique<hir::InstructionAssignBinaryOp>(
             std::move(var_assign), e->getOp(), std::move(left),
