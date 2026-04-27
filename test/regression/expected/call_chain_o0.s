@@ -2,15 +2,13 @@
     .globl  first
     .type   first, @function
 first:
-        subq    $8, %rsp
+        subq    $4, %rsp
 .Lfirst_entry:
         movl    $1, (%rsp)
+.Lfirst_1:
         movl    (%rsp), %r10d
-        movl    %r10d, 4(%rsp)
-.Lfirst_3:
-        movl    4(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $8, %rsp
+        addq    $4, %rsp
         ret
 .Lfirst_end:
     .globl  second
@@ -21,14 +19,13 @@ second:
         call    first
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
-        movl    $1, 4(%rsp)
-        movl    (%rsp), %edi
-        movl    4(%rsp), %r10d
-        leal    (%edi,%r10d), %r11d
-        movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
+        movl    %r10d, %r11d
+        addl    $1, %r11d
+        movl    %r11d, 4(%rsp)
+        movl    4(%rsp), %r10d
         movl    %r10d, 8(%rsp)
-.Lsecond_8:
+.Lsecond_7:
         movl    8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $16, %rsp
@@ -42,14 +39,13 @@ third:
         call    second
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
-        movl    $2, 4(%rsp)
-        movl    (%rsp), %edi
-        movl    4(%rsp), %r10d
-        leal    (%edi,%r10d), %r11d
-        movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
+        movl    %r10d, %r11d
+        addl    $2, %r11d
+        movl    %r11d, 4(%rsp)
+        movl    4(%rsp), %r10d
         movl    %r10d, 8(%rsp)
-.Lthird_8:
+.Lthird_7:
         movl    8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $16, %rsp
@@ -63,14 +59,13 @@ fourth:
         call    third
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
-        movl    $3, 4(%rsp)
-        movl    (%rsp), %edi
-        movl    4(%rsp), %r10d
-        leal    (%edi,%r10d), %r11d
-        movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
+        movl    %r10d, %r11d
+        addl    $3, %r11d
+        movl    %r11d, 4(%rsp)
+        movl    4(%rsp), %r10d
         movl    %r10d, 8(%rsp)
-.Lfourth_8:
+.Lfourth_7:
         movl    8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $16, %rsp
@@ -84,14 +79,13 @@ fifth:
         call    fourth
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
-        movl    $4, 4(%rsp)
-        movl    (%rsp), %edi
-        movl    4(%rsp), %r10d
-        leal    (%edi,%r10d), %r11d
-        movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
+        movl    %r10d, %r11d
+        addl    $4, %r11d
+        movl    %r11d, 4(%rsp)
+        movl    4(%rsp), %r10d
         movl    %r10d, 8(%rsp)
-.Lfifth_8:
+.Lfifth_7:
         movl    8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $16, %rsp
@@ -105,14 +99,13 @@ sixth:
         call    fifth
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
-        movl    $5, 4(%rsp)
-        movl    (%rsp), %edi
-        movl    4(%rsp), %r10d
-        leal    (%edi,%r10d), %r11d
-        movl    %r11d, (%rsp)
         movl    (%rsp), %r10d
+        movl    %r10d, %r11d
+        addl    $5, %r11d
+        movl    %r11d, 4(%rsp)
+        movl    4(%rsp), %r10d
         movl    %r10d, 8(%rsp)
-.Lsixth_8:
+.Lsixth_7:
         movl    8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $16, %rsp
@@ -121,134 +114,116 @@ sixth:
     .globl  main
     .type   main, @function
 main:
-        subq    $96, %rsp
+        subq    $112, %rsp
 .Lmain_entry:
         call    sixth
         movl    %eax, %r10d
         movl    %r10d, (%rsp)
-        movl    $0, 8(%rsp)
-        movl    8(%rsp), %r10d
-        movl    %r10d, 4(%rsp)
-        movl    4(%rsp), %r10d
-        movl    %r10d, 12(%rsp)
+        movl    $0, 4(%rsp)
         call    first
         movl    %eax, %r10d
-        movl    %r10d, 16(%rsp)
-        movl    12(%rsp), %edi
-        movl    16(%rsp), %r11d
+        movl    %r10d, 8(%rsp)
+        movl    4(%rsp), %edi
+        movl    8(%rsp), %r11d
         leal    (%edi,%r11d), %r10d
         movl    %r10d, 12(%rsp)
         movl    12(%rsp), %r10d
         movl    %r10d, 4(%rsp)
-        movl    4(%rsp), %r10d
-        movl    %r10d, 20(%rsp)
         call    second
         movl    %eax, %r10d
-        movl    %r10d, 24(%rsp)
-        movl    20(%rsp), %r11d
-        movl    24(%rsp), %r10d
-        leal    (%r11d,%r10d), %edi
-        movl    %edi, 20(%rsp)
+        movl    %r10d, 16(%rsp)
+        movl    4(%rsp), %edi
+        movl    16(%rsp), %r11d
+        leal    (%edi,%r11d), %r10d
+        movl    %r10d, 20(%rsp)
         movl    20(%rsp), %r10d
         movl    %r10d, 4(%rsp)
-        movl    4(%rsp), %r10d
-        movl    %r10d, 28(%rsp)
         call    third
         movl    %eax, %r10d
-        movl    %r10d, 32(%rsp)
-        movl    28(%rsp), %r11d
-        movl    32(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    4(%rsp), %r11d
+        movl    24(%rsp), %r10d
         leal    (%r11d,%r10d), %edi
         movl    %edi, 28(%rsp)
         movl    28(%rsp), %r10d
         movl    %r10d, 4(%rsp)
-        movl    4(%rsp), %r10d
-        movl    %r10d, 36(%rsp)
         call    fourth
         movl    %eax, %r10d
-        movl    %r10d, 40(%rsp)
-        movl    36(%rsp), %r10d
-        movl    40(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
+        movl    %r10d, 32(%rsp)
+        movl    4(%rsp), %r11d
+        movl    32(%rsp), %r10d
+        leal    (%r11d,%r10d), %edi
         movl    %edi, 36(%rsp)
         movl    36(%rsp), %r10d
         movl    %r10d, 4(%rsp)
-        movl    4(%rsp), %r10d
-        movl    %r10d, 44(%rsp)
         call    fifth
         movl    %eax, %r10d
-        movl    %r10d, 48(%rsp)
-        movl    44(%rsp), %r10d
-        movl    48(%rsp), %r11d
+        movl    %r10d, 40(%rsp)
+        movl    4(%rsp), %r10d
+        movl    40(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 44(%rsp)
         movl    44(%rsp), %r10d
         movl    %r10d, 4(%rsp)
-        movl    4(%rsp), %r10d
-        movl    %r10d, 52(%rsp)
         call    sixth
         movl    %eax, %r10d
-        movl    %r10d, 56(%rsp)
-        movl    52(%rsp), %r10d
-        movl    56(%rsp), %r11d
+        movl    %r10d, 48(%rsp)
+        movl    4(%rsp), %r10d
+        movl    48(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 52(%rsp)
         movl    52(%rsp), %r10d
         movl    %r10d, 4(%rsp)
-        movl    4(%rsp), %r10d
-        movl    %r10d, 60(%rsp)
         call    first
+        movl    %eax, %r10d
+        movl    %r10d, 56(%rsp)
+        movl    4(%rsp), %r10d
+        movl    56(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, 60(%rsp)
+        call    second
         movl    %eax, %r10d
         movl    %r10d, 64(%rsp)
         movl    60(%rsp), %r10d
         movl    64(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, 60(%rsp)
-        call    second
-        movl    %eax, %r10d
-        movl    %r10d, 68(%rsp)
-        movl    60(%rsp), %r10d
-        movl    68(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
-        movl    %edi, 60(%rsp)
+        movl    %edi, 68(%rsp)
         call    third
         movl    %eax, %r10d
         movl    %r10d, 72(%rsp)
-        movl    60(%rsp), %r10d
+        movl    68(%rsp), %r10d
         movl    72(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, 60(%rsp)
+        movl    %edi, 76(%rsp)
         call    fourth
         movl    %eax, %r10d
-        movl    %r10d, 76(%rsp)
-        movl    60(%rsp), %r10d
-        movl    76(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
-        movl    %edi, 60(%rsp)
-        call    fifth
-        movl    %eax, %r10d
         movl    %r10d, 80(%rsp)
-        movl    60(%rsp), %r10d
+        movl    76(%rsp), %r10d
         movl    80(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, 60(%rsp)
+        movl    %edi, 84(%rsp)
+        call    fifth
+        movl    %eax, %r10d
+        movl    %r10d, 88(%rsp)
+        movl    84(%rsp), %r10d
+        movl    88(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, 92(%rsp)
         call    sixth
         movl    %eax, %r10d
-        movl    %r10d, 84(%rsp)
-        movl    60(%rsp), %r10d
-        movl    84(%rsp), %r11d
+        movl    %r10d, 96(%rsp)
+        movl    92(%rsp), %r10d
+        movl    96(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, 60(%rsp)
-        movl    60(%rsp), %r10d
+        movl    %edi, 100(%rsp)
+        movl    100(%rsp), %r10d
         movl    %r10d, 4(%rsp)
         movl    4(%rsp), %r10d
-        movl    %r10d, 88(%rsp)
-        movl    88(%rsp), %r10d
-        movl    %r10d, 92(%rsp)
-.Lmain_90:
-        movl    92(%rsp), %r10d
+        movl    %r10d, 104(%rsp)
+.Lmain_84:
+        movl    104(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $96, %rsp
+        addq    $112, %rsp
         ret
 .Lmain_end:
     .section    .note.GNU-stack,"",@progbits

@@ -1,0 +1,7 @@
+foo:  # 0 params, 4 stack bytes
+.Lfoo_entry:
+        movl    $0, (%rsp)
+.Lfoo_1:
+        movl    (%rsp), %r10d
+        movl    %r10d, %eax
+        ret

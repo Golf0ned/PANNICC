@@ -1,326 +1,197 @@
 int add() {
     __entry:
     int a_1;
-    int __v;
-    __v = 1;
-    a_1 = __v;
+    a_1 = 1;
     int b_1;
-    int __v1;
-    __v1 = 2;
-    b_1 = __v1;
-    int __v2;
-    __v2 = a_1;
-    int __v3;
-    __v3 = b_1;
-    __v2 = __v2 + __v3;
-    return __v2;
+    b_1 = 2;
+    int __v;
+    __v = a_1 + b_1;
+    return __v;
 }
 
 int sub() {
     __entry:
     int a_1;
-    int __v;
-    __v = 10;
-    a_1 = __v;
+    a_1 = 10;
     int b_1;
-    int __v1;
-    __v1 = 1;
-    b_1 = __v1;
-    int __v2;
-    __v2 = a_1;
-    int __v3;
-    __v3 = b_1;
-    __v2 = __v2 - __v3;
-    return __v2;
+    b_1 = 1;
+    int __v;
+    __v = a_1 - b_1;
+    return __v;
 }
 
 int mul() {
     __entry:
     int a_1;
-    int __v;
-    __v = 3;
-    a_1 = __v;
+    a_1 = 3;
     int b_1;
-    int __v1;
-    __v1 = 4;
-    b_1 = __v1;
-    int __v2;
-    __v2 = a_1;
-    int __v3;
-    __v3 = b_1;
-    __v2 = __v2 * __v3;
-    return __v2;
+    b_1 = 4;
+    int __v;
+    __v = a_1 * b_1;
+    return __v;
 }
 
 int div() {
     __entry:
     int a_1;
-    int __v;
-    __v = 24;
-    a_1 = __v;
+    a_1 = 24;
     int b_1;
-    int __v1;
-    __v1 = 6;
-    b_1 = __v1;
-    int __v2;
-    __v2 = a_1;
-    int __v3;
-    __v3 = b_1;
-    __v2 = __v2 / __v3;
-    return __v2;
+    b_1 = 6;
+    int __v;
+    __v = a_1 / b_1;
+    return __v;
 }
 
 int lshift() {
     __entry:
     int a_1;
-    int __v;
-    __v = 1;
-    a_1 = __v;
+    a_1 = 1;
     int b_1;
-    int __v1;
-    __v1 = 4;
-    b_1 = __v1;
-    int __v2;
-    __v2 = a_1;
-    int __v3;
-    __v3 = b_1;
-    __v2 = __v2 << __v3;
-    return __v2;
+    b_1 = 4;
+    int __v;
+    __v = a_1 << b_1;
+    return __v;
 }
 
 int rshift() {
     __entry:
     int a_1;
-    int __v;
-    __v = 16;
-    a_1 = __v;
+    a_1 = 16;
     int b_1;
-    int __v1;
-    __v1 = 3;
-    b_1 = __v1;
-    int __v2;
-    __v2 = a_1;
-    int __v3;
-    __v3 = b_1;
-    __v2 = __v2 >> __v3;
-    return __v2;
+    b_1 = 3;
+    int __v;
+    __v = a_1 >> b_1;
+    return __v;
 }
 
 int bit_and() {
     __entry:
     int a_1;
-    int __v;
-    __v = 31;
-    a_1 = __v;
+    a_1 = 31;
     int b_1;
-    int __v1;
-    __v1 = 4;
-    b_1 = __v1;
-    int __v2;
-    __v2 = a_1;
-    int __v3;
-    __v3 = b_1;
-    __v2 = __v2 & __v3;
-    return __v2;
+    b_1 = 4;
+    int __v;
+    __v = a_1 & b_1;
+    return __v;
 }
 
 int bit_or() {
     __entry:
     int a_1;
-    int __v;
-    __v = 12;
-    a_1 = __v;
+    a_1 = 12;
     int b_1;
-    int __v1;
-    __v1 = 3;
-    b_1 = __v1;
-    int __v2;
-    __v2 = a_1;
-    int __v3;
-    __v3 = b_1;
-    __v2 = __v2 | __v3;
-    return __v2;
+    b_1 = 3;
+    int __v;
+    __v = a_1 | b_1;
+    return __v;
 }
 
 int bit_xor() {
     __entry:
     int a_1;
-    int __v;
-    __v = 15;
-    a_1 = __v;
+    a_1 = 15;
     int b_1;
-    int __v1;
-    __v1 = 4;
-    b_1 = __v1;
-    int __v2;
-    __v2 = a_1;
-    int __v3;
-    __v3 = b_1;
-    __v2 = __v2 ^ __v3;
-    return __v2;
+    b_1 = 4;
+    int __v;
+    __v = a_1 ^ b_1;
+    return __v;
 }
 
 int unary_plus() {
     __entry:
     int a_1;
+    a_1 = 42;
     int __v;
-    __v = 42;
-    a_1 = __v;
-    int __v1;
-    __v1 = a_1;
-    int __v2;
-    __v2 = +__v1;
-    return __v2;
+    __v = +a_1;
+    return __v;
 }
 
 int unary_minus() {
     __entry:
     int a_1;
+    a_1 = 42;
     int __v;
-    __v = 42;
-    a_1 = __v;
-    int __v1;
-    __v1 = a_1;
-    int __v2;
-    __v2 = -__v1;
-    return __v2;
+    __v = -a_1;
+    return __v;
 }
 
 int unary_bitwise_not() {
     __entry:
     int a_1;
+    a_1 = 42;
     int __v;
-    __v = 42;
-    a_1 = __v;
-    int __v1;
-    __v1 = a_1;
-    int __v2;
-    __v2 = ~__v1;
-    return __v2;
+    __v = ~a_1;
+    return __v;
 }
 
 int add_equals() {
     __entry:
     int a_1;
-    int __v;
-    __v = 1;
-    a_1 = __v;
-    int __v1;
-    __v1 = 2;
-    a_1 = a_1 + __v1;
-    int __v2;
-    __v2 = a_1;
-    return __v2;
+    a_1 = 1;
+    a_1 = a_1 + 2;
+    return a_1;
 }
 
 int sub_equals() {
     __entry:
     int a_1;
-    int __v;
-    __v = 10;
-    a_1 = __v;
-    int __v1;
-    __v1 = 2;
-    a_1 = a_1 - __v1;
-    int __v2;
-    __v2 = a_1;
-    return __v2;
+    a_1 = 10;
+    a_1 = a_1 - 2;
+    return a_1;
 }
 
 int mul_equals() {
     __entry:
     int a_1;
-    int __v;
-    __v = 3;
-    a_1 = __v;
-    int __v1;
-    __v1 = 4;
-    a_1 = a_1 * __v1;
-    int __v2;
-    __v2 = a_1;
-    return __v2;
+    a_1 = 3;
+    a_1 = a_1 * 4;
+    return a_1;
 }
 
 int div_equals() {
     __entry:
     int a_1;
-    int __v;
-    __v = 24;
-    a_1 = __v;
-    int __v1;
-    __v1 = 6;
-    a_1 = a_1 / __v1;
-    int __v2;
-    __v2 = a_1;
-    return __v2;
+    a_1 = 24;
+    a_1 = a_1 / 6;
+    return a_1;
 }
 
 int lshift_equals() {
     __entry:
     int a_1;
-    int __v;
-    __v = 1;
-    a_1 = __v;
-    int __v1;
-    __v1 = 4;
-    a_1 = a_1 << __v1;
-    int __v2;
-    __v2 = a_1;
-    return __v2;
+    a_1 = 1;
+    a_1 = a_1 << 4;
+    return a_1;
 }
 
 int rshift_equals() {
     __entry:
     int a_1;
-    int __v;
-    __v = 16;
-    a_1 = __v;
-    int __v1;
-    __v1 = 3;
-    a_1 = a_1 >> __v1;
-    int __v2;
-    __v2 = a_1;
-    return __v2;
+    a_1 = 16;
+    a_1 = a_1 >> 3;
+    return a_1;
 }
 
 int bit_and_equals() {
     __entry:
     int a_1;
-    int __v;
-    __v = 31;
-    a_1 = __v;
-    int __v1;
-    __v1 = 4;
-    a_1 = a_1 & __v1;
-    int __v2;
-    __v2 = a_1;
-    return __v2;
+    a_1 = 31;
+    a_1 = a_1 & 4;
+    return a_1;
 }
 
 int bit_or_equals() {
     __entry:
     int a_1;
-    int __v;
-    __v = 12;
-    a_1 = __v;
-    int __v1;
-    __v1 = 3;
-    a_1 = a_1 | __v1;
-    int __v2;
-    __v2 = a_1;
-    return __v2;
+    a_1 = 12;
+    a_1 = a_1 | 3;
+    return a_1;
 }
 
 int bit_xor_equals() {
     __entry:
     int a_1;
-    int __v;
-    __v = 15;
-    a_1 = __v;
-    int __v1;
-    __v1 = 4;
-    a_1 = a_1 ^ __v1;
-    int __v2;
-    __v2 = a_1;
-    return __v2;
+    a_1 = 15;
+    a_1 = a_1 ^ 4;
+    return a_1;
 }

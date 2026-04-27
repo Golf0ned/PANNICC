@@ -1,125 +1,87 @@
-fun_call:  # 0 params, 8 stack bytes
+fun_call:  # 0 params, 4 stack bytes
 .Lfun_call_entry:
         movl    $42, (%rsp)
+.Lfun_call_1:
         movl    (%rsp), %2
-        movl    %2, 4(%rsp)
-.Lfun_call_3:
-        movl    4(%rsp), %4
-        movl    %4, %eax
+        movl    %2, %eax
         ret
 
-mem2reg_basic:  # 0 params, 28 stack bytes
+mem2reg_basic:  # 0 params, 12 stack bytes
 .Lmem2reg_basic_entry:
-        movl    $0, 8(%rsp)
-        movl    8(%rsp), %7
-        movl    %7, (%rsp)
-        movl    $5, 12(%rsp)
-        movl    12(%rsp), %8
-        movl    %8, (%rsp)
-        movl    (%rsp), %9
-        movl    %9, 16(%rsp)
-        movl    16(%rsp), %10
-        movl    %10, 4(%rsp)
-        movl    4(%rsp), %11
-        movl    %11, 20(%rsp)
-        movl    20(%rsp), %12
-        movl    %12, 24(%rsp)
-.Lmem2reg_basic_13:
-        movl    24(%rsp), %14
-        movl    %14, %eax
+        movl    $0, (%rsp)
+        movl    $5, (%rsp)
+        movl    (%rsp), %3
+        movl    %3, 4(%rsp)
+        movl    4(%rsp), %4
+        movl    %4, 8(%rsp)
+.Lmem2reg_basic_5:
+        movl    8(%rsp), %6
+        movl    %6, %eax
         ret
 
-mem2reg_branching:  # 1 params, 36 stack bytes
+mem2reg_branching:  # 1 params, 20 stack bytes
         movl    %edi, %0
 .Lmem2reg_branching_entry:
-        movl    %0, 32(%rsp)
-        movl    32(%rsp), %10
-        movl    %10, 8(%rsp)
-        movl    $42, 12(%rsp)
-        movl    8(%rsp), %11
-        movl    12(%rsp), %12
-        movl    %11, %13
-        subl    %12, %13
-        movl    %13, 8(%rsp)
-        movl    8(%rsp), %14
-        cmpl    $0, %14
-        jne     .Lmem2reg_branching_18
-.Lmem2reg_branching_15:
+        movl    %0, 16(%rsp)
+        movl    16(%rsp), %6
+        movl    %6, %7
+        subl    $42, %7
+        movl    %7, 8(%rsp)
+        movl    8(%rsp), %8
+        cmpl    $0, %8
+        jne     .Lmem2reg_branching_11
+.Lmem2reg_branching_9:
+.Lmem2reg_branching_10:
+        movl    $1, 4(%rsp)
 .Lmem2reg_branching_16:
-        movl    $1, 16(%rsp)
-        movl    16(%rsp), %17
-        movl    %17, 4(%rsp)
-.Lmem2reg_branching_25:
-        movl    4(%rsp), %26
-        movl    %26, 24(%rsp)
-        movl    24(%rsp), %27
-        movl    %27, 28(%rsp)
-.Lmem2reg_branching_28:
-        movl    28(%rsp), %29
-        movl    %29, %eax
-        ret
+        movl    4(%rsp), %17
+        movl    %17, 12(%rsp)
 .Lmem2reg_branching_18:
-.Lmem2reg_branching_19:
-        movl    32(%rsp), %20
-        movl    %20, 20(%rsp)
-        movl    $2, 24(%rsp)
-        movl    20(%rsp), %21
-        movl    24(%rsp), %22
-        leal    (%21,%22), %23
-        movl    %23, 20(%rsp)
-        movl    20(%rsp), %24
-        movl    %24, 4(%rsp)
-        jmp     .Lmem2reg_branching_25
+        movl    12(%rsp), %19
+        movl    %19, %eax
+        ret
+.Lmem2reg_branching_11:
+.Lmem2reg_branching_12:
+        movl    16(%rsp), %13
+        movl    %13, %14
+        addl    $2, %14
+        movl    %14, 8(%rsp)
+        movl    8(%rsp), %15
+        movl    %15, 4(%rsp)
+        jmp     .Lmem2reg_branching_16
 
-mem2reg_while:  # 0 params, 48 stack bytes
+mem2reg_while:  # 0 params, 24 stack bytes
 .Lmem2reg_while_entry:
+        movl    $0, (%rsp)
         movl    $0, 4(%rsp)
+.Lmem2reg_while_6:
+        movl    (%rsp), %7
+        movl    %7, %8
+        subl    $10, %8
+        movl    %8, 8(%rsp)
+        movl    8(%rsp), %9
+        cmpl    $0, %9
+        jne     .Lmem2reg_while_19
+.Lmem2reg_while_10:
+.Lmem2reg_while_11:
         movl    4(%rsp), %12
-        movl    %12, (%rsp)
-        movl    $0, 12(%rsp)
-        movl    12(%rsp), %13
-        movl    %13, 8(%rsp)
-.Lmem2reg_while_14:
-        movl    (%rsp), %15
-        movl    %15, 16(%rsp)
-        movl    $10, 20(%rsp)
-        movl    16(%rsp), %16
-        movl    20(%rsp), %17
-        movl    %16, %18
-        subl    %17, %18
-        movl    %18, 16(%rsp)
-        movl    16(%rsp), %19
-        cmpl    $0, %19
-        jne     .Lmem2reg_while_33
+        movl    (%rsp), %13
+        leal    (%12,%13), %14
+        movl    %14, 8(%rsp)
+        movl    8(%rsp), %15
+        movl    %15, 4(%rsp)
+        movl    (%rsp), %16
+        movl    %16, %17
+        addl    $1, %17
+        movl    %17, 12(%rsp)
+        movl    12(%rsp), %18
+        movl    %18, (%rsp)
+        jmp     .Lmem2reg_while_6
+.Lmem2reg_while_19:
 .Lmem2reg_while_20:
-.Lmem2reg_while_21:
-        movl    8(%rsp), %22
-        movl    %22, 24(%rsp)
-        movl    (%rsp), %23
-        movl    %23, 24(%rsp)
-        movl    24(%rsp), %24
-        movl    24(%rsp), %25
-        leal    (%24,%25), %26
-        movl    %26, 24(%rsp)
-        movl    24(%rsp), %27
-        movl    %27, 8(%rsp)
-        movl    (%rsp), %28
-        movl    %28, 28(%rsp)
-        movl    $1, 32(%rsp)
-        movl    28(%rsp), %29
-        movl    32(%rsp), %30
-        leal    (%29,%30), %31
-        movl    %31, 28(%rsp)
-        movl    28(%rsp), %32
-        movl    %32, (%rsp)
-        jmp     .Lmem2reg_while_14
-.Lmem2reg_while_33:
-.Lmem2reg_while_34:
-        movl    8(%rsp), %35
-        movl    %35, 40(%rsp)
-        movl    40(%rsp), %36
-        movl    %36, 44(%rsp)
-.Lmem2reg_while_37:
-        movl    44(%rsp), %38
-        movl    %38, %eax
+        movl    4(%rsp), %21
+        movl    %21, 16(%rsp)
+.Lmem2reg_while_22:
+        movl    16(%rsp), %23
+        movl    %23, %eax
         ret

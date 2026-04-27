@@ -1,131 +1,107 @@
-deref:  # 1 params, 16 stack bytes
+deref:  # 1 params, 12 stack bytes
         movq    %rdi, %r10
 .Lderef_entry:
-        movq    %r10, 12(%rsp)
-        movq    12(%rsp), %r10
-        movq    %r10, (%rsp)
-        movq    (%rsp), %r11
-        movl    (%r11), %r10d
-        movl    %r10d, 4(%rsp)
-        movl    4(%rsp), %r10d
-        movl    %r10d, 8(%rsp)
-.Lderef_9:
-        movl    8(%rsp), %r10d
-        movl    %r10d, %eax
-        ret
-
-address:  # 1 params, 16 stack bytes
-        movl    %edi, %r10d
-.Laddress_entry:
-        movl    %r10d, 12(%rsp)
-        movl    12(%rsp), %r10d
-        movl    %r10d, (%rsp)
-        movq    %r11, 4(%rsp)
-        movq    4(%rsp), %r10
         movq    %r10, 8(%rsp)
-.Laddress_7:
-        movq    8(%rsp), %r10
-        movq    %r10, %rax
-        ret
-
-address_deref:  # 1 params, 20 stack bytes
-        movl    %edi, %r10d
-.Laddress_deref_entry:
-        movl    %r10d, 16(%rsp)
-        movl    16(%rsp), %r10d
+        movq    8(%rsp), %r11
+        movl    (%r11), %r10d
         movl    %r10d, (%rsp)
-        movq    %r11, 4(%rsp)
-        movq    4(%rsp), %r10
-        movl    (%r10), %r11d
-        movl    %r11d, 8(%rsp)
-        movl    8(%rsp), %r10d
-        movl    %r10d, 12(%rsp)
-.Laddress_deref_10:
-        movl    12(%rsp), %r10d
+        movl    (%rsp), %r10d
+        movl    %r10d, 4(%rsp)
+.Lderef_7:
+        movl    4(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
-address_deref_many:  # 1 params, 60 stack bytes
-        movl    %edi, %r10d
-.Laddress_deref_many_entry:
-        movl    %r10d, 56(%rsp)
-        movl    56(%rsp), %r10d
-        movl    %r10d, 4(%rsp)
-        movq    %r11, 8(%rsp)
-        movq    8(%rsp), %r10
+address:  # 1 params, 12 stack bytes
+        movl    %edi, %r11d
+.Laddress_entry:
+        movl    %r11d, 8(%rsp)
         movq    %r10, (%rsp)
         movq    (%rsp), %r10
-        movq    %r10, 16(%rsp)
-        movq    %rdi, 20(%rsp)
-        movq    20(%rsp), %r10
-        movq    %r10, 12(%rsp)
-        movq    12(%rsp), %r10
-        movq    %r10, 28(%rsp)
-        movq    %rsi, 32(%rsp)
-        movq    32(%rsp), %r10
-        movq    %r10, 24(%rsp)
-        movq    24(%rsp), %r10
-        movq    %r10, 36(%rsp)
-        movq    36(%rsp), %r11
-        movq    (%r11), %r10
-        movq    %r10, 40(%rsp)
-        movq    40(%rsp), %r11
-        movq    (%r11), %r10
-        movq    %r10, 44(%rsp)
-        movq    44(%rsp), %r11
-        movl    (%r11), %r10d
-        movl    %r10d, 48(%rsp)
-        movl    48(%rsp), %r10d
-        movl    %r10d, 52(%rsp)
-.Laddress_deref_many_30:
-        movl    52(%rsp), %r10d
-        movl    %r10d, %eax
-        ret
-
-return_ptr:  # 0 params, 20 stack bytes
-.Lreturn_ptr_entry:
-        movl    $1, (%rsp)
-        movl    (%rsp), %r10d
-        movl    %r10d, (%rsp)
-        movl    (%rsp), %r10d
-        movl    %r10d, 4(%rsp)
-        movq    %r11, 8(%rsp)
-        movq    8(%rsp), %r10
-        movq    %r10, 12(%rsp)
-.Lreturn_ptr_8:
-        movq    12(%rsp), %r10
+        movq    %r10, 4(%rsp)
+.Laddress_5:
+        movq    4(%rsp), %r10
         movq    %r10, %rax
         ret
 
-use_proto:  # 0 params, 20 stack bytes
-.Luse_proto_entry:
-        movl    $1, (%rsp)
-        movl    (%rsp), %r10d
-        call    foo  # (%r10d)
-        movl    %eax, %r10d
-        movl    %r10d, (%rsp)
-        movl    $2, 4(%rsp)
+address_deref:  # 1 params, 16 stack bytes
+        movl    %edi, %r11d
+.Laddress_deref_entry:
+        movl    %r11d, 12(%rsp)
+        movq    %r10, (%rsp)
+        movq    (%rsp), %r10
+        movl    (%r10), %r11d
+        movl    %r11d, 4(%rsp)
         movl    4(%rsp), %r10d
-        call    bar  # (%r10d)
-        movl    %eax, %r10d
         movl    %r10d, 8(%rsp)
-        movl    (%rsp), %r10d
-        movl    8(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
-        movl    %edi, (%rsp)
-        movl    (%rsp), %r10d
-        movl    %r10d, 12(%rsp)
-.Luse_proto_13:
-        movl    12(%rsp), %r10d
+.Laddress_deref_8:
+        movl    8(%rsp), %r10d
         movl    %r10d, %eax
         ret
 
-main:  # 0 params, 8 stack bytes
+address_deref_many:  # 1 params, 44 stack bytes
+        movl    %edi, %esi
+.Laddress_deref_many_entry:
+        movl    %esi, 40(%rsp)
+        movq    %r10, 4(%rsp)
+        movq    4(%rsp), %r10
+        movq    %r10, (%rsp)
+        movq    %r11, 12(%rsp)
+        movq    12(%rsp), %r10
+        movq    %r10, 8(%rsp)
+        movq    %rdi, 20(%rsp)
+        movq    20(%rsp), %r10
+        movq    %r10, 16(%rsp)
+        movq    16(%rsp), %r11
+        movq    (%r11), %r10
+        movq    %r10, 24(%rsp)
+        movq    24(%rsp), %r11
+        movq    (%r11), %r10
+        movq    %r10, 28(%rsp)
+        movq    28(%rsp), %r11
+        movl    (%r11), %r10d
+        movl    %r10d, 32(%rsp)
+        movl    32(%rsp), %r10d
+        movl    %r10d, 36(%rsp)
+.Laddress_deref_many_22:
+        movl    36(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+
+return_ptr:  # 0 params, 12 stack bytes
+.Lreturn_ptr_entry:
+        movl    $1, (%rsp)
+        movq    %r10, (%rsp)
+        movq    (%rsp), %r10
+        movq    %r10, 4(%rsp)
+.Lreturn_ptr_4:
+        movq    4(%rsp), %r10
+        movq    %r10, %rax
+        ret
+
+use_proto:  # 0 params, 16 stack bytes
+.Luse_proto_entry:
+        call    foo  # ($1)
+        movl    %eax, %r10d
+        movl    %r10d, (%rsp)
+        call    bar  # ($2)
+        movl    %eax, %r10d
+        movl    %r10d, (%rsp)
+        movl    (%rsp), %r11d
+        movl    (%rsp), %edi
+        leal    (%r11d,%edi), %r10d
+        movl    %r10d, 4(%rsp)
+        movl    4(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+.Luse_proto_10:
+        movl    8(%rsp), %r10d
+        movl    %r10d, %eax
+        ret
+
+main:  # 0 params, 4 stack bytes
 .Lmain_entry:
         movl    $0, (%rsp)
-        movl    (%rsp), %r10d
-        movl    %r10d, (%rsp)
-.Lmain_3:
+.Lmain_1:
         movl    (%rsp), %r10d
         movl    %r10d, %eax
         ret

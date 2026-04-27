@@ -1,95 +1,52 @@
 int scope() {
     __entry:
     int before_1;
-    int __v;
-    __v = 0;
-    before_1 = __v;
+    before_1 = 0;
     int before_2;
-    int __v1;
-    __v1 = 1;
-    before_2 = __v1;
+    before_2 = 1;
     int before_3;
-    int __v2;
-    __v2 = 2;
-    before_3 = __v2;
+    before_3 = 2;
     int in_4;
-    int __v3;
-    __v3 = before_3;
-    int __v4;
-    __v4 = 3;
-    __v3 = __v3 + __v4;
-    in_4 = __v3;
+    int __v;
+    __v = before_3 + 3;
+    in_4 = __v;
     int after_3;
-    int __v5;
-    __v5 = 4;
-    after_3 = __v5;
+    after_3 = 4;
     int after_2;
-    int __v6;
-    __v6 = 5;
-    after_2 = __v6;
-    int __v7;
-    __v7 = after_2;
-    int __v8;
-    __v8 = before_2;
-    __v7 = __v7 + __v8;
-    after_2 = __v7;
+    after_2 = 5;
+    int __v1;
+    __v1 = after_2 + before_2;
+    after_2 = __v1;
     int after_1;
-    int __v9;
-    __v9 = 6;
-    after_1 = __v9;
-    int __v10;
-    __v10 = 0;
-    return __v10;
+    after_1 = 6;
+    return 0;
 }
 
 int scope_reassign_variable() {
     __entry:
     int cond_1;
+    cond_1 = 1;
     int __v;
-    __v = 1;
+    __v = cond_1 + 1;
     cond_1 = __v;
-    int __v1;
-    __v1 = cond_1;
-    int __v2;
-    __v2 = 1;
-    __v1 = __v1 + __v2;
-    cond_1 = __v1;
     int cond_2;
-    int __v3;
-    __v3 = 3;
-    cond_2 = __v3;
-    int __v4;
-    __v4 = cond_2;
-    int __v5;
-    __v5 = 4;
-    __v4 = __v4 + __v5;
-    cond_2 = __v4;
-    int __v6;
-    __v6 = cond_1;
-    int __v7;
-    __v7 = 5;
-    __v6 = __v6 + __v7;
-    cond_1 = __v6;
-    int __v8;
-    __v8 = cond_1;
-    return __v8;
+    cond_2 = 3;
+    int __v1;
+    __v1 = cond_2 + 4;
+    cond_2 = __v1;
+    int __v2;
+    __v2 = cond_1 + 5;
+    cond_1 = __v2;
+    return cond_1;
 }
 
 int scope_reassign_in_parallel_scopes() {
     __entry:
     int typed_1;
-    int __v;
-    __v = 1;
-    typed_1 = __v;
+    typed_1 = 1;
     int typed_2;
-    int __v1;
-    __v1 = 2;
-    typed_2 = __v1;
+    typed_2 = 2;
     int typed_2;
-    int __v2;
-    __v2 = 3;
-    typed_2 = __v2;
-    int __v3;
-    __v3 = typed_1;
-    return __v3;
+    typed_2 = 3;
+    return typed_1;
 }

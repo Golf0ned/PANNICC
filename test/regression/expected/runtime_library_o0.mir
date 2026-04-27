@@ -7,35 +7,23 @@ declare i32 @print(i32)
 define i32 @main() {
 entry:
   %0 = alloca i32
-  %1 = alloca i32
+  %1 = alloca ptr
   %2 = alloca ptr
   %3 = alloca i32
-  %4 = alloca ptr
-  %5 = alloca ptr
-  %6 = alloca i32
-  %7 = alloca i32
-  %8 = alloca i32
-  store i32 67, ptr %0
-  %9 = load ptr %0
-  %10 = call i32 @print(i32 %9)
-  store i32 %10, ptr %1
-  store i32 4, ptr %3
-  %11 = load ptr %3
-  %12 = call ptr @alloc(i32 %11)
-  store ptr %12, ptr %4
-  %13 = load ptr %4
-  store ptr %13, ptr %2
-  %14 = load ptr %2
-  store ptr %14, ptr %5
-  %15 = load ptr %5
-  %16 = call i32 @dealloc(ptr %15)
-  store i32 %16, ptr %6
-  store i32 0, ptr %7
-  %17 = load ptr %7
-  store i32 %17, ptr %8
-  br label 18
+  %4 = alloca i32
+  %5 = call i32 @print(i32 67)
+  store i32 %5, ptr %0
+  %6 = call ptr @alloc(i32 4)
+  store ptr %6, ptr %2
+  %7 = load ptr %2
+  store ptr %7, ptr %1
+  %8 = load ptr %1
+  %9 = call i32 @dealloc(ptr %8)
+  store i32 %9, ptr %3
+  store i32 0, ptr %4
+  br label 10
 
-18:
-  %19 = load ptr %8
-  ret i32 %19
+10:
+  %11 = load ptr %4
+  ret i32 %11
 }

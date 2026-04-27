@@ -1,0 +1,4 @@
+int foo() {
+    __entry:
+    return 0;
+}
