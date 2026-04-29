@@ -1,5 +1,6 @@
 # Build directories
 build/
+install/
 
 # Clangd
 .clangd/

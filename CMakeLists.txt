@@ -1,10 +1,8 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.13)
 project(PANNICC)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -14,6 +12,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(pegtl)
 
+include(GNUInstallDirs)
 
 add_subdirectory(src)
 
