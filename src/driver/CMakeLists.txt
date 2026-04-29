@@ -4,9 +4,11 @@ target_link_libraries(pannicc PUBLIC
     middleend
     backend
 )
-target_compile_definitions(pannicc PRIVATE LIB_DIR="${CMAKE_INSTALL_LIBDIR}")
+target_compile_definitions(pannicc PRIVATE
+    LIB_DIR="${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}"
+)
 set_target_properties(pannicc PROPERTIES
-    INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}"
+    INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}"
 )
 install(TARGETS pannicc)
 
