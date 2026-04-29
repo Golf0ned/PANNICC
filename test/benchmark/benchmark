@@ -5,7 +5,7 @@
 # TODO: unhardcode PANNICC_DIR
 PANNICC_DIR="${HOME}/code/projects/PANNICC"
 
-PANNICC="${PANNICC_DIR}/build/bin/pannicc"
+PANNICC="${PANNICC_DIR}/install/bin/pannicc"
 INPUT_DIR="${PANNICC_DIR}/test/benchmark/input"
 EXPECTED_DIR="${PANNICC_DIR}/test/benchmark/expected"
 TMP_DIR="${PANNICC_DIR}/test/benchmark/tmp"
