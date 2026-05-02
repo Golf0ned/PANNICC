@@ -5,8 +5,6 @@
 
 using namespace frontend;
 
-namespace pegtl = tao::pegtl;
-
 std::vector<std::filesystem::path> current_file;
 std::vector<std::string> parsed_clauses;
 std::unordered_map<std::string, std::string> define_map;
