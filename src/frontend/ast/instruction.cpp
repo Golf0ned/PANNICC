@@ -1,119 +1,70 @@
 #include "frontend/ast/instruction.h"
 
-namespace frontend::ast {
-    void Scope::addInstruction(std::unique_ptr<Instruction> i) {
-        instructions.push_back(std::move(i));
-    }
+using namespace frontend;
+using namespace frontend::ast;
 
-    std::vector<std::unique_ptr<Instruction>> &Scope::getInstructions() {
-        return instructions;
-    }
+void Scope::addInstruction(std::unique_ptr<Instruction> i) {
+    instructions.push_back(std::move(i));
+}
 
-    void Scope::accept(InstructionVisitor *v) { v->visit(this); }
+std::vector<std::unique_ptr<Instruction>> &Scope::getInstructions() {
+    return instructions;
+}
 
-    InstructionExpr::InstructionExpr(std::unique_ptr<Expr> expr)
-        : expr(std::move(expr)) {}
+void Scope::accept(InstructionVisitor *v) { v->visit(this); }
 
-    std::unique_ptr<Expr> &InstructionExpr::getExpr() { return expr; }
+InstructionExpr::InstructionExpr(std::unique_ptr<Expr> expr)
+    : expr(std::move(expr)) {}
 
-    void InstructionExpr::accept(InstructionVisitor *v) { v->visit(this); }
+Expr *InstructionExpr::getExpr() { return expr.get(); }
 
-    InstructionDeclaration::InstructionDeclaration(
-        std::unique_ptr<Type> type, std::unique_ptr<AtomIdentifier> variable)
-        : type(std::move(type)), variable(std::move(variable)) {}
+void InstructionExpr::accept(InstructionVisitor *v) { v->visit(this); }
 
-    std::unique_ptr<Type> &InstructionDeclaration::getType() { return type; }
+InstructionDeclaration::InstructionDeclaration(
+    std::unique_ptr<Type> type, std::unique_ptr<AtomIdentifier> variable)
+    : type(std::move(type)), variable(std::move(variable)), value(nullptr) {}
 
-    std::unique_ptr<AtomIdentifier> &InstructionDeclaration::getVariable() {
-        return variable;
-    }
+InstructionDeclaration::InstructionDeclaration(
+    std::unique_ptr<Type> type, std::unique_ptr<AtomIdentifier> variable,
+    std::unique_ptr<Expr> value)
+    : type(std::move(type)), variable(std::move(variable)),
+      value(std::move(value)) {}
 
-    void InstructionDeclaration::accept(InstructionVisitor *v) {
-        v->visit(this);
-    }
+Type *InstructionDeclaration::getType() { return type.get(); }
 
-    InstructionDeclarationAssign::InstructionDeclarationAssign(
-        std::unique_ptr<Type> type, std::unique_ptr<AtomIdentifier> variable,
-        std::unique_ptr<Expr> value)
-        : type(std::move(type)), variable(std::move(variable)),
-          value(std::move(value)) {}
+AtomIdentifier *InstructionDeclaration::getVariable() { return variable.get(); }
 
-    std::unique_ptr<Type> &InstructionDeclarationAssign::getType() {
-        return type;
-    }
+void InstructionDeclaration::accept(InstructionVisitor *v) { v->visit(this); }
 
-    std::unique_ptr<AtomIdentifier> &
-    InstructionDeclarationAssign::getVariable() {
-        return variable;
-    }
+InstructionReturn::InstructionReturn(std::unique_ptr<Expr> value)
+    : value(std::move(value)) {}
 
-    std::unique_ptr<Expr> &InstructionDeclarationAssign::getValue() {
-        return value;
-    }
+Expr *InstructionReturn::getValue() { return value.get(); }
 
-    void InstructionDeclarationAssign::accept(InstructionVisitor *v) {
-        v->visit(this);
-    }
+void InstructionReturn::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionAssign::InstructionAssign(std::unique_ptr<Expr> variable,
-                                         std::unique_ptr<Expr> value)
-        : variable(std::move(variable)), value(std::move(value)) {}
+InstructionIf::InstructionIf(std::unique_ptr<Expr> cond,
+                             std::unique_ptr<Instruction> t_branch,
+                             std::unique_ptr<Instruction> f_branch)
+    : cond(std::move(cond)), t_branch(std::move(t_branch)),
+      f_branch(std::move(f_branch)) {}
 
-    std::unique_ptr<Expr> &InstructionAssign::getVariable() { return variable; }
+Expr *InstructionIf::getCond() { return cond.get(); }
 
-    std::unique_ptr<Expr> &InstructionAssign::getValue() { return value; }
+Instruction *InstructionIf::getTBranch() { return t_branch.get(); }
 
-    void InstructionAssign::accept(InstructionVisitor *v) { v->visit(this); }
+Instruction *InstructionIf::getFBranch() { return f_branch.get(); }
 
-    InstructionOpAssign::InstructionOpAssign(std::unique_ptr<Expr> variable,
-                                             BinaryOp op,
-                                             std::unique_ptr<Expr> value)
-        : variable(std::move(variable)), op(op), value(std::move(value)) {}
+bool InstructionIf::hasFBranch() { return f_branch != nullptr; }
 
-    std::unique_ptr<Expr> &InstructionOpAssign::getVariable() {
-        return variable;
-    }
+void InstructionIf::accept(InstructionVisitor *v) { v->visit(this); }
 
-    BinaryOp InstructionOpAssign::getOp() { return op; }
+InstructionWhile::InstructionWhile(std::unique_ptr<Expr> cond,
+                                   std::unique_ptr<Instruction> body)
+    : cond(std::move(cond)), body(std::move(body)) {}
 
-    std::unique_ptr<Expr> &InstructionOpAssign::getValue() { return value; }
+Expr *InstructionWhile::getCond() { return cond.get(); }
 
-    void InstructionOpAssign::accept(InstructionVisitor *v) { v->visit(this); }
+Instruction *InstructionWhile::getBody() { return body.get(); }
 
-    InstructionReturn::InstructionReturn(std::unique_ptr<Expr> value)
-        : value(std::move(value)) {}
-
-    std::unique_ptr<Expr> &InstructionReturn::getValue() { return value; }
-
-    void InstructionReturn::accept(InstructionVisitor *v) { v->visit(this); }
-
-    InstructionIf::InstructionIf(std::unique_ptr<Expr> cond,
-                                 std::unique_ptr<Instruction> t_branch,
-                                 std::unique_ptr<Instruction> f_branch)
-        : cond(std::move(cond)), t_branch(std::move(t_branch)),
-          f_branch(std::move(f_branch)) {}
-
-    std::unique_ptr<Expr> &InstructionIf::getCond() { return cond; }
-
-    std::unique_ptr<Instruction> &InstructionIf::getTBranch() {
-        return t_branch;
-    }
-
-    std::unique_ptr<Instruction> &InstructionIf::getFBranch() {
-        return f_branch;
-    }
-
-    bool InstructionIf::hasFBranch() { return f_branch != nullptr; }
-
-    void InstructionIf::accept(InstructionVisitor *v) { v->visit(this); }
-
-    InstructionWhile::InstructionWhile(std::unique_ptr<Expr> cond,
-                                       std::unique_ptr<Instruction> body)
-        : cond(std::move(cond)), body(std::move(body)) {}
-
-    std::unique_ptr<Expr> &InstructionWhile::getCond() { return cond; }
-
-    std::unique_ptr<Instruction> &InstructionWhile::getBody() { return body; }
-
-    void InstructionWhile::accept(InstructionVisitor *v) { v->visit(this); }
-} // namespace frontend::ast
+void InstructionWhile::accept(InstructionVisitor *v) { v->visit(this); }

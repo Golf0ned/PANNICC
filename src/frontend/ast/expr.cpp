@@ -1,49 +1,50 @@
 #include "frontend/ast/expr.h"
 
-namespace frontend::ast {
-    TerminalExpr::TerminalExpr(std::unique_ptr<Atom> atom)
-        : atom(std::move(atom)) {}
+using namespace frontend;
+using namespace frontend::ast;
 
-    std::unique_ptr<Atom> &TerminalExpr::getAtom() { return atom; }
+TerminalExpr::TerminalExpr(std::unique_ptr<Atom> atom)
+    : atom(std::move(atom)) {}
 
-    void TerminalExpr::accept(ExprVisitor *v) { v->visit(this); }
+Atom *TerminalExpr::getAtom() { return atom.get(); }
 
-    ParenExpr::ParenExpr(std::unique_ptr<Expr> body) : body(std::move(body)) {}
+void TerminalExpr::accept(ExprVisitor *v) { v->visit(this); }
 
-    std::unique_ptr<Expr> &ParenExpr::getBody() { return body; }
+ParenExpr::ParenExpr(std::unique_ptr<Expr> body) : body(std::move(body)) {}
 
-    void ParenExpr::accept(ExprVisitor *v) { v->visit(this); }
+Expr *ParenExpr::getBody() { return body.get(); }
 
-    CallExpr::CallExpr(std::unique_ptr<AtomIdentifier> callee,
-                       std::vector<std::unique_ptr<Expr>> arguments)
-        : callee(std::move(callee)), arguments(std::move(arguments)) {}
+void ParenExpr::accept(ExprVisitor *v) { v->visit(this); }
 
-    std::unique_ptr<AtomIdentifier> &CallExpr::getCallee() { return callee; }
+CallExpr::CallExpr(std::unique_ptr<AtomIdentifier> callee,
+                   std::vector<std::unique_ptr<Expr>> arguments)
+    : callee(std::move(callee)), arguments(std::move(arguments)) {}
 
-    std::vector<std::unique_ptr<Expr>> &CallExpr::getArguments() {
-        return arguments;
-    }
+AtomIdentifier *CallExpr::getCallee() { return callee.get(); }
 
-    void CallExpr::accept(ExprVisitor *v) { v->visit(this); }
+std::vector<std::unique_ptr<Expr>> &CallExpr::getArguments() {
+    return arguments;
+}
 
-    UnaryOpExpr::UnaryOpExpr(UnaryOp op, std::unique_ptr<Expr> value)
-        : op(op), value(std::move(value)) {}
+void CallExpr::accept(ExprVisitor *v) { v->visit(this); }
 
-    UnaryOp UnaryOpExpr::getOp() { return op; }
+UnaryOpExpr::UnaryOpExpr(UnaryOp op, std::unique_ptr<Expr> value)
+    : op(op), value(std::move(value)) {}
 
-    std::unique_ptr<Expr> &UnaryOpExpr::getValue() { return value; }
+UnaryOp UnaryOpExpr::getOp() { return op; }
 
-    void UnaryOpExpr::accept(ExprVisitor *v) { v->visit(this); }
+Expr *UnaryOpExpr::getValue() { return value.get(); }
 
-    BinaryOpExpr::BinaryOpExpr(BinaryOp op, std::unique_ptr<Expr> left,
-                               std::unique_ptr<Expr> right)
-        : op(op), left(std::move(left)), right(std::move(right)) {}
+void UnaryOpExpr::accept(ExprVisitor *v) { v->visit(this); }
 
-    BinaryOp BinaryOpExpr::getOp() { return op; }
+BinaryOpExpr::BinaryOpExpr(BinaryOp op, std::unique_ptr<Expr> left,
+                           std::unique_ptr<Expr> right)
+    : op(op), left(std::move(left)), right(std::move(right)) {}
 
-    std::unique_ptr<Expr> &BinaryOpExpr::getLeft() { return left; }
+BinaryOp BinaryOpExpr::getOp() { return op; }
 
-    std::unique_ptr<Expr> &BinaryOpExpr::getRight() { return right; }
+Expr *BinaryOpExpr::getLeft() { return left.get(); }
 
-    void BinaryOpExpr::accept(ExprVisitor *v) { v->visit(this); }
-} // namespace frontend::ast
+Expr *BinaryOpExpr::getRight() { return right.get(); }
+
+void BinaryOpExpr::accept(ExprVisitor *v) { v->visit(this); }

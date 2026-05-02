@@ -1,11 +1,11 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include "frontend/ast/expr.h"
 #include "frontend/utils/atom.h"
 #include "frontend/utils/type.h"
+
+#include <memory>
+#include <vector>
 
 namespace frontend::ast {
     class InstructionVisitor;
@@ -29,7 +29,7 @@ namespace frontend::ast {
     class InstructionExpr : public Instruction {
     public:
         InstructionExpr(std::unique_ptr<Expr> expr);
-        std::unique_ptr<Expr> &getExpr();
+        Expr *getExpr();
         void accept(InstructionVisitor *v) override;
 
     private:
@@ -40,63 +40,24 @@ namespace frontend::ast {
     public:
         InstructionDeclaration(std::unique_ptr<Type> type,
                                std::unique_ptr<AtomIdentifier> variable);
-        std::unique_ptr<Type> &getType();
-        std::unique_ptr<AtomIdentifier> &getVariable();
+        InstructionDeclaration(std::unique_ptr<Type> type,
+                               std::unique_ptr<AtomIdentifier> variable,
+                               std::unique_ptr<Expr> value);
+        Type *getType();
+        AtomIdentifier *getVariable();
+        Expr *getValue();
         void accept(InstructionVisitor *v) override;
 
     private:
         std::unique_ptr<Type> type;
         std::unique_ptr<AtomIdentifier> variable;
-    };
-
-    class InstructionDeclarationAssign : public Instruction {
-    public:
-        InstructionDeclarationAssign(std::unique_ptr<Type> type,
-                                     std::unique_ptr<AtomIdentifier> variable,
-                                     std::unique_ptr<Expr> value);
-        std::unique_ptr<Type> &getType();
-        std::unique_ptr<AtomIdentifier> &getVariable();
-        std::unique_ptr<Expr> &getValue();
-        void accept(InstructionVisitor *v) override;
-
-    private:
-        std::unique_ptr<Type> type;
-        std::unique_ptr<AtomIdentifier> variable;
-        std::unique_ptr<Expr> value;
-    };
-
-    class InstructionAssign : public Instruction {
-    public:
-        InstructionAssign(std::unique_ptr<Expr> variable,
-                          std::unique_ptr<Expr> value);
-        std::unique_ptr<Expr> &getVariable();
-        std::unique_ptr<Expr> &getValue();
-        void accept(InstructionVisitor *v) override;
-
-    private:
-        std::unique_ptr<Expr> variable;
-        std::unique_ptr<Expr> value;
-    };
-
-    class InstructionOpAssign : public Instruction {
-    public:
-        InstructionOpAssign(std::unique_ptr<Expr> variable, BinaryOp op,
-                            std::unique_ptr<Expr> value);
-        std::unique_ptr<Expr> &getVariable();
-        BinaryOp getOp();
-        std::unique_ptr<Expr> &getValue();
-        void accept(InstructionVisitor *v) override;
-
-    private:
-        std::unique_ptr<Expr> variable;
-        BinaryOp op;
         std::unique_ptr<Expr> value;
     };
 
     class InstructionReturn : public Instruction {
     public:
         InstructionReturn(std::unique_ptr<Expr> value);
-        std::unique_ptr<Expr> &getValue();
+        Expr *getValue();
         void accept(InstructionVisitor *v) override;
 
     private:
@@ -108,9 +69,9 @@ namespace frontend::ast {
         InstructionIf(std::unique_ptr<Expr> cond,
                       std::unique_ptr<Instruction> t_branch,
                       std::unique_ptr<Instruction> f_branch);
-        std::unique_ptr<Expr> &getCond();
-        std::unique_ptr<Instruction> &getTBranch();
-        std::unique_ptr<Instruction> &getFBranch();
+        Expr *getCond();
+        Instruction *getTBranch();
+        Instruction *getFBranch();
         bool hasFBranch();
         void accept(InstructionVisitor *v) override;
 
@@ -124,8 +85,8 @@ namespace frontend::ast {
     public:
         InstructionWhile(std::unique_ptr<Expr> cond,
                          std::unique_ptr<Instruction> body);
-        std::unique_ptr<Expr> &getCond();
-        std::unique_ptr<Instruction> &getBody();
+        Expr *getCond();
+        Instruction *getBody();
         void accept(InstructionVisitor *v) override;
 
     private:
@@ -139,9 +100,6 @@ namespace frontend::ast {
         virtual void visit(Scope *s) = 0;
         virtual void visit(InstructionExpr *i) = 0;
         virtual void visit(InstructionDeclaration *i) = 0;
-        virtual void visit(InstructionDeclarationAssign *i) = 0;
-        virtual void visit(InstructionAssign *i) = 0;
-        virtual void visit(InstructionOpAssign *i) = 0;
         virtual void visit(InstructionReturn *i) = 0;
         virtual void visit(InstructionIf *i) = 0;
         virtual void visit(InstructionWhile *i) = 0;

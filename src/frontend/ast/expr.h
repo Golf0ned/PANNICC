@@ -1,10 +1,10 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include "frontend/utils/atom.h"
 #include "frontend/utils/operator.h"
+
+#include <memory>
+#include <vector>
 
 namespace frontend::ast {
     class ExprVisitor;
@@ -18,7 +18,7 @@ namespace frontend::ast {
     class TerminalExpr : public Expr {
     public:
         TerminalExpr(std::unique_ptr<Atom> atom);
-        std::unique_ptr<Atom> &getAtom();
+        Atom *getAtom();
         void accept(ExprVisitor *v) override;
 
     private:
@@ -28,7 +28,7 @@ namespace frontend::ast {
     class ParenExpr : public Expr {
     public:
         ParenExpr(std::unique_ptr<Expr> body);
-        std::unique_ptr<Expr> &getBody();
+        Expr *getBody();
         void accept(ExprVisitor *v) override;
 
     private:
@@ -39,7 +39,7 @@ namespace frontend::ast {
     public:
         CallExpr(std::unique_ptr<AtomIdentifier> callee,
                  std::vector<std::unique_ptr<Expr>> arguments);
-        std::unique_ptr<AtomIdentifier> &getCallee();
+        AtomIdentifier *getCallee();
         std::vector<std::unique_ptr<Expr>> &getArguments();
         void accept(ExprVisitor *v) override;
 
@@ -52,7 +52,7 @@ namespace frontend::ast {
     public:
         UnaryOpExpr(UnaryOp op, std::unique_ptr<Expr> value);
         UnaryOp getOp();
-        std::unique_ptr<Expr> &getValue();
+        Expr *getValue();
         void accept(ExprVisitor *v) override;
 
     private:
@@ -65,8 +65,8 @@ namespace frontend::ast {
         BinaryOpExpr(BinaryOp op, std::unique_ptr<Expr> left,
                      std::unique_ptr<Expr> right);
         BinaryOp getOp();
-        std::unique_ptr<Expr> &getLeft();
-        std::unique_ptr<Expr> &getRight();
+        Expr *getLeft();
+        Expr *getRight();
         void accept(ExprVisitor *v) override;
 
     private:
