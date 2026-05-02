@@ -2,7 +2,6 @@
 
 using namespace frontend;
 
-BinaryOp frontend::last_op_equals;
 std::vector<std::unique_ptr<ast::Scope>> frontend::active_scopes;
 
 std::unique_ptr<ast::Instruction> popInstruction() {
