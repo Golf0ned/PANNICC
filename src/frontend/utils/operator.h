@@ -1,9 +1,8 @@
 #pragma once
 
-#include <string>
-#include <unordered_map>
-
 #include "middleend/mir/operator.h"
+
+#include <string>
 
 namespace frontend {
     enum class BinaryOp {
@@ -18,6 +17,10 @@ namespace frontend {
         RSHIFT,
     };
 
+    BinaryOp strToBinaryOp(std::string str);
+    std::string toString(BinaryOp op);
+    middleend::mir::BinaryOp toMir(BinaryOp op);
+
     enum class UnaryOp {
         PLUS,
         MINUS,
@@ -26,27 +29,7 @@ namespace frontend {
         ADDRESS,
     };
 
-    // clang-format off
-    const std::unordered_map<std::string, BinaryOp> strToBinaryOp = {
-        {"+", BinaryOp::ADD},
-        {"-", BinaryOp::SUB},
-        {"*", BinaryOp::MUL},
-        {"/", BinaryOp::DIV},
-        {"&", BinaryOp::AND},
-        {"|", BinaryOp::OR},
-        {"^", BinaryOp::XOR},
-        {"<<", BinaryOp::LSHIFT},
-        {">>", BinaryOp::RSHIFT},
-    };
-    // clang-format on
-
-    const std::unordered_map<std::string, UnaryOp> strToUnaryOp = {
-        {"+", UnaryOp::PLUS},  {"-", UnaryOp::MINUS},   {"~", UnaryOp::NOT},
-        {"*", UnaryOp::DEREF}, {"&", UnaryOp::ADDRESS},
-    };
-
-    std::string toString(BinaryOp op);
+    UnaryOp strToUnaryOp(std::string str);
     std::string toString(UnaryOp op);
 
-    middleend::mir::BinaryOp toMir(BinaryOp op);
 } // namespace frontend

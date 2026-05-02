@@ -1,9 +1,9 @@
 #pragma once
 
+#include "middleend/mir/type.h"
+
 #include <memory>
 #include <string>
-
-#include "middleend/mir/type.h"
 
 namespace frontend {
     class Type {
@@ -24,7 +24,7 @@ namespace frontend {
     class Ptr : public Type {
     public:
         Ptr(std::unique_ptr<Type> base);
-        std::unique_ptr<Type> &getBase();
+        Type *getBase();
         std::string toString() override;
         middleend::mir::Type toMir() override;
         std::unique_ptr<Type> clone() override;

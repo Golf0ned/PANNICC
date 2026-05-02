@@ -1,27 +1,26 @@
-#include <utility>
-
 #include "frontend/utils/type.h"
 
-namespace frontend {
+#include <utility>
 
-    std::string Int::toString() { return "int"; }
+using namespace frontend;
 
-    middleend::mir::Type Int::toMir() { return middleend::mir::Type::I32; }
+std::string Int::toString() { return "int"; }
 
-    std::unique_ptr<Type> Int::clone() { return std::make_unique<Int>(); }
+middleend::mir::Type Int::toMir() { return middleend::mir::Type::I32; }
 
-    Ptr::Ptr(std::unique_ptr<Type> base) : base(std::move(base)) {}
+std::unique_ptr<Type> Int::clone() { return std::make_unique<Int>(); }
 
-    std::unique_ptr<Type> &Ptr::getBase() { return base; }
+Ptr::Ptr(std::unique_ptr<Type> base) : base(std::move(base)) {}
 
-    std::string Ptr::toString() {
-        auto base_ptr = dynamic_cast<Ptr *>(base.get());
-        return base->toString() + (base_ptr ? "" : " ") + "*";
-    }
+Type *Ptr::getBase() { return base.get(); }
 
-    middleend::mir::Type Ptr::toMir() { return middleend::mir::Type::PTR; }
+std::string Ptr::toString() {
+    auto base_ptr = dynamic_cast<Ptr *>(base.get());
+    return base->toString() + (base_ptr ? "" : " ") + "*";
+}
 
-    std::unique_ptr<Type> Ptr::clone() {
-        return std::make_unique<Ptr>(base->clone());
-    }
-} // namespace frontend
+middleend::mir::Type Ptr::toMir() { return middleend::mir::Type::PTR; }
+
+std::unique_ptr<Type> Ptr::clone() {
+    return std::make_unique<Ptr>(base->clone());
+}
