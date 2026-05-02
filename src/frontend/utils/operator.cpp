@@ -16,6 +16,16 @@ BinaryOp strToBinaryOp(std::string str) {
         {"^", BinaryOp::XOR},
         {"<<", BinaryOp::LSHIFT},
         {">>", BinaryOp::RSHIFT},
+        {"=", BinaryOp::ASSIGN},
+        {"+=", BinaryOp::ADD},
+        {"-=", BinaryOp::SUB},
+        {"*=", BinaryOp::MUL},
+        {"/=", BinaryOp::DIV},
+        {"&=", BinaryOp::AND},
+        {"|=", BinaryOp::OR},
+        {"^=", BinaryOp::XOR},
+        {"<<=", BinaryOp::LSHIFT},
+        {">>=", BinaryOp::RSHIFT},
         // clang-format on
     };
 
@@ -42,6 +52,26 @@ std::string toString(BinaryOp op) {
         return "<<";
     case BinaryOp::RSHIFT:
         return ">>";
+    case BinaryOp::ASSIGN:
+        return "=";
+    case BinaryOp::ADD_ASSIGN:
+        return "+=";
+    case BinaryOp::SUB_ASSIGN:
+        return "-=";
+    case BinaryOp::MUL_ASSIGN:
+        return "*=";
+    case BinaryOp::DIV_ASSIGN:
+        return "/=";
+    case BinaryOp::AND_ASSIGN:
+        return "&=";
+    case BinaryOp::OR_ASSIGN:
+        return "|=";
+    case BinaryOp::XOR_ASSIGN:
+        return "^=";
+    case BinaryOp::LSHIFT_ASSIGN:
+        return "<<=";
+    case BinaryOp::RSHIFT_ASSIGN:
+        return ">>=";
     }
     std::unreachable();
 }
@@ -49,23 +79,34 @@ std::string toString(BinaryOp op) {
 middleend::mir::BinaryOp toMir(BinaryOp op) {
     switch (op) {
     case BinaryOp::ADD:
+    case BinaryOp::ADD_ASSIGN:
         return middleend::mir::BinaryOp::ADD;
     case BinaryOp::SUB:
+    case BinaryOp::SUB_ASSIGN:
         return middleend::mir::BinaryOp::SUB;
     case BinaryOp::MUL:
+    case BinaryOp::MUL_ASSIGN:
         return middleend::mir::BinaryOp::MUL;
     case BinaryOp::DIV:
+    case BinaryOp::DIV_ASSIGN:
         return middleend::mir::BinaryOp::SDIV;
     case BinaryOp::AND:
+    case BinaryOp::AND_ASSIGN:
         return middleend::mir::BinaryOp::AND;
     case BinaryOp::OR:
+    case BinaryOp::OR_ASSIGN:
         return middleend::mir::BinaryOp::OR;
     case BinaryOp::XOR:
+    case BinaryOp::XOR_ASSIGN:
         return middleend::mir::BinaryOp::XOR;
     case BinaryOp::LSHIFT:
+    case BinaryOp::LSHIFT_ASSIGN:
         return middleend::mir::BinaryOp::SHL;
     case BinaryOp::RSHIFT:
+    case BinaryOp::RSHIFT_ASSIGN:
         return middleend::mir::BinaryOp::ASHR;
+    case BinaryOp::ASSIGN:
+        std::unreachable();
     }
     std::unreachable();
 }

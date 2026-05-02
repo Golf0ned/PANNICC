@@ -15,6 +15,16 @@ namespace frontend {
         XOR,
         LSHIFT,
         RSHIFT,
+        ASSIGN,
+        ADD_ASSIGN,
+        SUB_ASSIGN,
+        MUL_ASSIGN,
+        DIV_ASSIGN,
+        AND_ASSIGN,
+        OR_ASSIGN,
+        XOR_ASSIGN,
+        LSHIFT_ASSIGN,
+        RSHIFT_ASSIGN,
     };
 
     BinaryOp strToBinaryOp(std::string str);
