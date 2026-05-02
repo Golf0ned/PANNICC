@@ -5,26 +5,9 @@
 #include "frontend/parser/type.h"
 
 namespace frontend {
-    extern BinaryOp last_op_equals;
     extern std::vector<std::unique_ptr<ast::Scope>> active_scopes;
     std::unique_ptr<ast::Instruction> popInstruction();
     std::unique_ptr<ast::Scope> popScope();
-
-    //
-    // Op equals
-    //
-    struct add_equals : pegtl::seq<plus, equal> {};
-    struct sub_equals : pegtl::seq<minus, equal> {};
-    struct mul_equals : pegtl::seq<asterisk, equal> {};
-    struct div_equals : pegtl::seq<slash, equal> {};
-    struct lshift_equals : pegtl::seq<less, less, equal> {};
-    struct rshift_equals : pegtl::seq<greater, greater, equal> {};
-    struct and_equals : pegtl::seq<ampersand, equal> {};
-    struct or_equals : pegtl::seq<pipe, equal> {};
-    struct xor_equals : pegtl::seq<caret, equal> {};
-    struct op_equals : pegtl::sor<add_equals, sub_equals, mul_equals,
-                                  div_equals, lshift_equals, rshift_equals,
-                                  and_equals, or_equals, xor_equals> {};
 
     //
     // Instructions
@@ -40,13 +23,6 @@ namespace frontend {
     struct instruction_declaration_assign
         : pegtl::seq<type, ignorable, identifier, ignorable, equal, ignorable,
                      expr, ignorable, semicolon> {};
-
-    struct instruction_assign : pegtl::seq<expr, ignorable, equal, ignorable,
-                                           expr, ignorable, semicolon> {};
-
-    struct instruction_op_assign
-        : pegtl::seq<expr, ignorable, op_equals, ignorable, expr, ignorable,
-                     semicolon> {};
 
     struct instruction_return
         : pegtl::seq<keyword_return, ignorable, expr, ignorable, semicolon> {};
@@ -70,8 +46,6 @@ namespace frontend {
                      pegtl_try<instruction_return>,
                      pegtl_try<instruction_declaration_assign>,
                      pegtl_try<instruction_declaration>,
-                     pegtl_try<instruction_op_assign>,
-                     pegtl_try<instruction_assign>,
                      pegtl_try<instruction_expr>> {};
 
     struct scope
@@ -82,79 +56,6 @@ namespace frontend {
     //
     // Actions
     //
-    template <> struct action<add_equals> {
-        template <typename Input>
-        static void apply(const Input &in,
-                          std::vector<std::unique_ptr<ast::Function>> &res) {
-            last_op_equals = BinaryOp::ADD;
-        }
-    };
-
-    template <> struct action<sub_equals> {
-        template <typename Input>
-        static void apply(const Input &in,
-                          std::vector<std::unique_ptr<ast::Function>> &res) {
-            last_op_equals = BinaryOp::SUB;
-        }
-    };
-
-    template <> struct action<mul_equals> {
-        template <typename Input>
-        static void apply(const Input &in,
-                          std::vector<std::unique_ptr<ast::Function>> &res) {
-            last_op_equals = BinaryOp::MUL;
-        }
-    };
-
-    template <> struct action<div_equals> {
-        template <typename Input>
-        static void apply(const Input &in,
-                          std::vector<std::unique_ptr<ast::Function>> &res) {
-            last_op_equals = BinaryOp::DIV;
-        }
-    };
-
-    template <> struct action<lshift_equals> {
-        template <typename Input>
-        static void apply(const Input &in,
-                          std::vector<std::unique_ptr<ast::Function>> &res) {
-            last_op_equals = BinaryOp::LSHIFT;
-        }
-    };
-
-    template <> struct action<rshift_equals> {
-        template <typename Input>
-        static void apply(const Input &in,
-                          std::vector<std::unique_ptr<ast::Function>> &res) {
-            last_op_equals = BinaryOp::RSHIFT;
-        }
-    };
-
-    template <> struct action<and_equals> {
-        template <typename Input>
-        static void apply(const Input &in,
-                          std::vector<std::unique_ptr<ast::Function>> &res) {
-            last_op_equals = BinaryOp::AND;
-        }
-    };
-
-    template <> struct action<or_equals> {
-        template <typename Input>
-        static void apply(const Input &in,
-                          std::vector<std::unique_ptr<ast::Function>> &res) {
-            last_op_equals = BinaryOp::OR;
-        }
-    };
-
-    template <> struct action<xor_equals> {
-        template <typename Input>
-        static void apply(const Input &in,
-                          std::vector<std::unique_ptr<ast::Function>> &res) {
-            last_op_equals = BinaryOp::XOR;
-        }
-    };
-
-    // Instruction actions
     template <> struct action<left_brace> {
         template <typename Input>
         static void apply(const Input &in,
@@ -209,38 +110,8 @@ namespace frontend {
             auto variable = popIdentifier();
             auto type = popType();
 
-            auto i = std::make_unique<ast::InstructionDeclarationAssign>(
+            auto i = std::make_unique<ast::InstructionDeclaration>(
                 std::move(type), std::move(variable), std::move(value));
-            active_scopes.back()->addInstruction(std::move(i));
-        }
-    };
-
-    template <> struct action<instruction_assign> {
-        template <typename Input>
-        static void apply(const Input &in,
-                          std::vector<std::unique_ptr<ast::Function>> &res) {
-            auto value = popExpr();
-            auto variable = popExpr();
-
-            // TODO: check variable for lvalue
-
-            auto i = std::make_unique<ast::InstructionAssign>(
-                std::move(variable), std::move(value));
-            active_scopes.back()->addInstruction(std::move(i));
-        }
-    };
-
-    template <> struct action<instruction_op_assign> {
-        template <typename Input>
-        static void apply(const Input &in,
-                          std::vector<std::unique_ptr<ast::Function>> &res) {
-            auto value = popExpr();
-            auto variable = popExpr();
-
-            // TODO: check variable for lvalue
-
-            auto i = std::make_unique<ast::InstructionOpAssign>(
-                std::move(variable), last_op_equals, std::move(value));
             active_scopes.back()->addInstruction(std::move(i));
         }
     };
