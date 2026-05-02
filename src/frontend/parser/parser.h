@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "frontend/ast/ast.h"
 
 namespace frontend {

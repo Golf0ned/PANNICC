@@ -5,11 +5,11 @@
 #include "frontend/parser/core.h"
 
 namespace frontend {
-    enum class TokenType {
+    enum class TokenKind {
         NUMBER,
         IDENTIFIER,
     };
-    using Token = std::pair<std::string, TokenType>;
+    using Token = std::pair<std::string, TokenKind>;
 
     extern std::vector<std::unique_ptr<ast::Expr>> active_args;
     extern std::vector<Token> parsed_tokens;
@@ -123,7 +123,7 @@ namespace frontend {
         template <typename Input>
         static void apply(const Input &in,
                           std::vector<std::unique_ptr<ast::Function>> &res) {
-            parsed_tokens.push_back({in.string(), TokenType::NUMBER});
+            parsed_tokens.push_back({in.string(), TokenKind::NUMBER});
         }
     };
 
@@ -131,7 +131,7 @@ namespace frontend {
         template <typename Input>
         static void apply(const Input &in,
                           std::vector<std::unique_ptr<ast::Function>> &res) {
-            parsed_tokens.push_back({in.string(), TokenType::IDENTIFIER});
+            parsed_tokens.push_back({in.string(), TokenKind::IDENTIFIER});
         }
     };
 
