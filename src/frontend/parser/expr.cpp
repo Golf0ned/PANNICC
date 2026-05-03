@@ -15,14 +15,13 @@ std::unique_ptr<Atom> popAtom() {
         uint64_t val = static_cast<uint64_t>(static_cast<int64_t>(truncated));
         return std::make_unique<AtomLiteral>(val);
     } else
-        return std::make_unique<AtomIdentifier>(
-            symbol_table->addSymbol(token_val));
+        return std::make_unique<AtomIdentifier>(st.addSymbol(token_val));
 }
 
 std::unique_ptr<AtomIdentifier> popIdentifier() {
     auto [token_val, token_type] = parsed_tokens.back();
     parsed_tokens.pop_back();
-    return std::make_unique<AtomIdentifier>(symbol_table->addSymbol(token_val));
+    return std::make_unique<AtomIdentifier>(st.addSymbol(token_val));
 }
 
 std::unique_ptr<ast::Expr> popExpr() {
