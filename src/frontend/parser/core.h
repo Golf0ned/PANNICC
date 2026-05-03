@@ -7,7 +7,7 @@ namespace frontend {
     //
     // Symbol Table
     //
-    extern std::unique_ptr<SymbolTable> symbol_table;
+    extern SymbolTable st;
 
     //
     // Keywords

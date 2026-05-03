@@ -25,26 +25,27 @@ std::vector<Parameter> &FunctionDefinition::getParameters() {
 
 Scope *FunctionDefinition::getBody() { return body.get(); }
 
-std::string FunctionDefinition::toString(SymbolTable *symbol_table) {
+std::string FunctionDefinition::toString(SymbolTable &st) {
     std::string type_str = type->toString();
-    std::string name_str = name->toString(*symbol_table);
+    std::string name_str = name->toString(st);
 
     std::string res = type_str + " " + name_str + '(';
     for (auto iter = parameters.begin(); iter != parameters.end(); iter++) {
         if (iter != parameters.begin())
             res += ", ";
         auto &[param_type, param_name] = *iter;
-        res +=
-            param_type->toString() + ' ' + param_name->toString(*symbol_table);
+        res += param_type->toString() + ' ' + param_name->toString(st);
     }
     res += ')';
 
-    ToStringVisitor tsv(symbol_table);
+    ToStringVisitor tsv(st);
     body->accept(&tsv);
     res += " " + tsv.getResult();
 
     return res;
 }
+
+void FunctionDefinition::accept(FunctionVisitor *v) { v->visit(this); }
 
 FunctionPrototype::FunctionPrototype(std::unique_ptr<Type> type,
                                      std::unique_ptr<AtomIdentifier> name,
@@ -60,32 +61,33 @@ std::vector<Parameter> &FunctionPrototype::getParameters() {
     return parameters;
 }
 
-std::string FunctionPrototype::toString(SymbolTable *symbol_table) {
+std::string FunctionPrototype::toString(SymbolTable &st) {
     std::string type_str = type->toString();
-    std::string name_str = name->toString(*symbol_table);
+    std::string name_str = name->toString(st);
 
     std::string res = type_str + " " + name_str + '(';
     for (auto iter = parameters.begin(); iter != parameters.end(); iter++) {
         if (iter != parameters.begin())
             res += ", ";
         auto &[param_type, param_name] = *iter;
-        res +=
-            param_type->toString() + ' ' + param_name->toString(*symbol_table);
+        res += param_type->toString() + ' ' + param_name->toString(st);
     }
     res += ");";
 
     return res;
 }
 
+void FunctionPrototype::accept(FunctionVisitor *v) { v->visit(this); }
+
 Program::Program(std::vector<std::unique_ptr<Function>> functions,
-                 std::unique_ptr<SymbolTable> st)
+                 SymbolTable st)
     : functions(std::move(functions)), st(std::move(st)) {}
 
 std::vector<std::unique_ptr<Function>> &Program::getFunctions() {
     return functions;
 }
 
-SymbolTable *Program::getSymbolTable() { return st.get(); }
+SymbolTable &Program::getSymbolTable() { return st; }
 
 std::string Program::toString() {
     std::string res = "";
@@ -93,13 +95,13 @@ std::string Program::toString() {
     for (auto iter = functions.begin(); iter != functions.end(); iter++) {
         if (iter != functions.begin())
             res += "\n\n";
-        res += (*iter)->toString(st.get());
+        res += (*iter)->toString(st);
     }
 
     return res;
 }
 
-ToStringVisitor::ToStringVisitor(SymbolTable *st)
+ToStringVisitor::ToStringVisitor(SymbolTable &st)
     : st(st), prefix(""), res("") {}
 
 std::string ToStringVisitor::getResult() { return res; }
@@ -151,7 +153,7 @@ void ToStringVisitor::visit(InstructionExpr *i) {
 
 void ToStringVisitor::visit(InstructionDeclaration *i) {
     const std::string type = i->getType()->toString();
-    const std::string variable = i->getVariable()->toString(*st);
+    const std::string variable = i->getVariable()->toString(st);
 
     std::string declare_res = prefix + type;
     if (!type.ends_with('*'))
@@ -209,7 +211,7 @@ void ToStringVisitor::visit(InstructionWhile *i) {
 void ToStringVisitor::visit(Expr *e) { res = "[UNKNOWN EXPRESSION]"; }
 
 void ToStringVisitor::visit(TerminalExpr *e) {
-    res = e->getAtom()->toString(*st);
+    res = e->getAtom()->toString(st);
 }
 
 void ToStringVisitor::visit(ParenExpr *e) {
@@ -218,7 +220,7 @@ void ToStringVisitor::visit(ParenExpr *e) {
 }
 
 void ToStringVisitor::visit(CallExpr *e) {
-    std::string expr_res = e->getCallee()->toString(*st) + '(';
+    std::string expr_res = e->getCallee()->toString(st) + '(';
     auto &args = e->getArguments();
     for (auto iter = args.begin(); iter != args.end(); iter++) {
         if (iter != args.begin())

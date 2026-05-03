@@ -9,14 +9,17 @@
 #include <vector>
 
 namespace frontend::ast {
-    using Parameter =
-        std::pair<std::unique_ptr<Type>, std::unique_ptr<AtomIdentifier>>;
+    class FunctionVisitor;
 
     class Function {
     public:
-        virtual std::string toString(SymbolTable *st) = 0;
+        virtual std::string toString(SymbolTable &st) = 0;
+        virtual void accept(FunctionVisitor *v) = 0;
         virtual ~Function() = default;
     };
+
+    using Parameter =
+        std::pair<std::unique_ptr<Type>, std::unique_ptr<AtomIdentifier>>;
 
     class FunctionDefinition : public Function {
     public:
@@ -28,7 +31,8 @@ namespace frontend::ast {
         AtomIdentifier *getName();
         std::vector<Parameter> &getParameters();
         Scope *getBody();
-        std::string toString(SymbolTable *st) override;
+        std::string toString(SymbolTable &st) override;
+        void accept(FunctionVisitor *v) override;
 
     private:
         std::unique_ptr<Type> type;
@@ -45,7 +49,8 @@ namespace frontend::ast {
         Type *getType();
         AtomIdentifier *getName();
         std::vector<Parameter> &getParameters();
-        std::string toString(SymbolTable *st) override;
+        std::string toString(SymbolTable &st) override;
+        void accept(FunctionVisitor *v) override;
 
     private:
         std::unique_ptr<Type> type;
@@ -53,22 +58,29 @@ namespace frontend::ast {
         std::vector<Parameter> parameters;
     };
 
+    class FunctionVisitor {
+    public:
+        virtual void visit(FunctionDefinition *f) = 0;
+        virtual void visit(FunctionPrototype *f) = 0;
+    };
+
     class Program {
     public:
         Program(std::vector<std::unique_ptr<Function>> functions,
-                std::unique_ptr<SymbolTable> st);
+                SymbolTable st);
         std::vector<std::unique_ptr<Function>> &getFunctions();
-        SymbolTable *getSymbolTable();
+        SymbolTable &getSymbolTable();
         std::string toString();
 
     private:
         std::vector<std::unique_ptr<Function>> functions;
-        std::unique_ptr<SymbolTable> st;
+        SymbolTable st;
     };
 
     class ToStringVisitor : public InstructionVisitor, public ExprVisitor {
     public:
-        ToStringVisitor(SymbolTable *st);
+        ToStringVisitor(SymbolTable &st);
+
         std::string getResult();
 
         void convertSubexpression(Instruction *i);
@@ -89,7 +101,7 @@ namespace frontend::ast {
         void visit(BinaryOpExpr *e) override;
 
     private:
-        SymbolTable *st;
+        SymbolTable &st;
         std::string prefix;
         std::string res;
     };
