@@ -14,8 +14,13 @@ namespace frontend {
 
         std::unique_ptr<middleend::mir::Function> getResult();
 
+        middleend::mir::InstructionAlloca *
+        makeAlloca(middleend::mir::Type type);
+        middleend::mir::Literal *getLiteral(uint64_t value,
+                                            middleend::mir::Type type);
+        middleend::mir::Value *getUse(uint64_t id);
         std::vector<std::unique_ptr<middleend::mir::Value>>
-        convertParams(std::vector<ast::Parameter> &params);
+        makeParams(std::vector<ast::Parameter> &params);
         void resolveBBEdges();
         middleend::mir::BasicBlock *createEntryBlock();
         void resolveFunctions();
@@ -40,11 +45,18 @@ namespace frontend {
 
     private:
         std::unique_ptr<middleend::mir::Function> res;
+
         SymbolTable &st;
         middleend::mir::LiteralMap &lm;
-        uint64_t cur_scope;
-        std::unique_ptr<Atom> prev_expr;
+        middleend::mir::InstructionAlloca *ret_alloca;
+        std::list<std::unique_ptr<middleend::mir::Instruction>> allocas;
+        std::list<std::unique_ptr<middleend::mir::Instruction>> instructions;
         std::list<std::unique_ptr<middleend::mir::BasicBlock>> basic_blocks;
+
+        uint64_t cur_scope;
+        std::vector<std::unordered_map<uint64_t, middleend::mir::Value *>>
+            scope_bindings;
+        middleend::mir::Value *prev_expr;
         std::unordered_map<uint64_t, Type *> var_type_mappings;
         std::unordered_map<uint64_t, Type *> function_type_mappings;
     };
