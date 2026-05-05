@@ -16,6 +16,8 @@ mir::Program lower(ast::Program &ast) {
         functions.push_back(tmv.getResult()); // might need to move?
     }
 
+    tmv.resolveFunctions();
+
     return mir::Program(std::move(functions), std::move(lm));
 }
 
@@ -33,13 +35,27 @@ mir::InstructionAlloca *ToMIRVisitor::makeAlloca(mir::Type type) {
     return alloca_ptr;
 }
 
+mir::Value *ToMIRVisitor::usePrevExpr() {
+    auto literal = dynamic_cast<mir::Literal *>(prev_expr);
+    if (literal)
+        return literal;
+
+    auto ptr = static_cast<mir::InstructionAlloca *>(prev_expr);
+    auto type = ptr->getAllocType();
+
+    auto load = std::make_unique<middleend::mir::InstructionLoad>(type, ptr);
+    auto load_ptr = load.get();
+    instructions.push_back(std::move(load));
+    return load_ptr;
+}
+
 mir::Literal *ToMIRVisitor::getLiteral(uint64_t value, mir::Type type) {
     auto &typed_map = lm[type];
 
     if (typed_map.contains(value))
         return typed_map.at(value).get();
 
-    auto literal = std::make_unique<middleend::mir::Literal>(type, value);
+    auto literal = std::make_unique<mir::Literal>(type, value);
     auto literal_ptr = literal.get();
     typed_map[value] = std::move(literal);
     return literal_ptr;
@@ -74,7 +90,7 @@ void ToMIRVisitor::resolveBBEdges() {
     // TODO
 }
 
-middleend::mir::BasicBlock *ToMIRVisitor::createEntryBlock() {
+mir::BasicBlock *ToMIRVisitor::createEntryBlock() {
     auto &front_body = basic_blocks.front()->getInstructions();
     front_body.splice(front_body.begin(), allocas);
 
@@ -178,7 +194,25 @@ void ToMIRVisitor::visit(ast::TerminalExpr *e) {
 
 void ToMIRVisitor::visit(ast::ParenExpr *e) { e->getBody()->accept(this); }
 
-void ToMIRVisitor::visit(ast::CallExpr *e) {}
+void ToMIRVisitor::visit(ast::CallExpr *e) {
+    auto callee_id = e->getCallee()->getValue();
+    auto type = function_types[callee_id]->toMir();
+
+    std::vector<mir::Value *> args;
+    for (auto &arg : e->getArguments()) {
+        arg->accept(this);
+        args.push_back(usePrevExpr());
+    }
+
+    auto call =
+        std::make_unique<mir::InstructionCall>(type, nullptr, std::move(args));
+    function_calls[callee_id].push_back(call.get());
+    instructions.push_back(std::move(call));
+
+    auto alloca = makeAlloca(type);
+    auto store = std::make_unique<mir::InstructionStore>(call.get(), alloca);
+    instructions.push_back(std::move(store));
+}
 
 void ToMIRVisitor::visit(ast::UnaryOpExpr *e) {
     // TODO: review it all
@@ -187,11 +221,11 @@ void ToMIRVisitor::visit(ast::UnaryOpExpr *e) {
     auto type = mir::Type::I32;
 
     e->getValue()->accept(this);
-    auto val = prev_expr;
+    auto val = usePrevExpr();
     auto res_ptr = makeAlloca(type);
 
-    middleend::mir::Value *un_op_res, *literal;
-    std::unique_ptr<middleend::mir::Instruction> bin_op;
+    mir::Value *un_op_res, *literal;
+    std::unique_ptr<mir::Instruction> bin_op;
     switch (e->getOp()) {
     case UnaryOp::PLUS:
         // Do nothing

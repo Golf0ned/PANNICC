@@ -16,6 +16,7 @@ namespace frontend {
 
         middleend::mir::InstructionAlloca *
         makeAlloca(middleend::mir::Type type);
+        middleend::mir::Value *usePrevExpr();
         middleend::mir::Literal *getLiteral(uint64_t value,
                                             middleend::mir::Type type);
         middleend::mir::Value *getUse(uint64_t id);
@@ -57,8 +58,10 @@ namespace frontend {
         std::vector<std::unordered_map<uint64_t, middleend::mir::Value *>>
             scope_bindings;
         middleend::mir::Value *prev_expr;
-        std::unordered_map<uint64_t, Type *> var_type_mappings;
-        std::unordered_map<uint64_t, Type *> function_type_mappings;
+        std::unordered_map<uint64_t, Type *> function_types;
+        std::unordered_map<uint64_t,
+                           std::vector<middleend::mir::InstructionCall *>>
+            function_calls;
     };
 
 } // namespace frontend
