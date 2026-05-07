@@ -20,6 +20,7 @@ namespace frontend {
         middleend::mir::Literal *getLiteral(uint64_t value,
                                             middleend::mir::Type type);
         middleend::mir::Value *getUse(uint64_t id);
+        Type *getType(uint64_t id);
         std::vector<std::unique_ptr<middleend::mir::Value>>
         makeParams(std::vector<ast::Parameter> &params);
         void resolveBBEdges();
@@ -57,7 +58,9 @@ namespace frontend {
         uint64_t cur_scope;
         std::vector<std::unordered_map<uint64_t, middleend::mir::Value *>>
             scope_bindings;
+        std::vector<std::unordered_map<uint64_t, Type *>> scope_binding_types;
         middleend::mir::Value *prev_expr;
+        std::unordered_map<ast::Expr *, std::unique_ptr<Type>> expr_types;
         std::unordered_map<uint64_t, Type *> function_types;
         std::unordered_map<uint64_t,
                            std::vector<middleend::mir::InstructionCall *>>

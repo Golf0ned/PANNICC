@@ -72,6 +72,18 @@ mir::Value *ToMIRVisitor::getUse(uint64_t id) {
     std::unreachable();
 }
 
+Type *ToMIRVisitor::getType(uint64_t id) {
+    for (auto it = scope_binding_types.rbegin();
+         it != scope_binding_types.rend(); it++) {
+        auto bindings = *it;
+
+        auto binding = bindings.find(id);
+        if (binding != bindings.end())
+            return binding->second;
+    }
+    std::unreachable();
+}
+
 std::vector<std::unique_ptr<mir::Value>>
 makeParams(std::vector<ast::Parameter> &params) {
     std::vector<std::unique_ptr<mir::Value>> res;
@@ -187,12 +199,20 @@ void ToMIRVisitor::visit(ast::InstructionWhile *i) {}
 void ToMIRVisitor::visit(ast::Expr *e) {}
 
 void ToMIRVisitor::visit(ast::TerminalExpr *e) {
-    prev_expr = e->getAtom()->isIdentifier()
-                    ? getUse(e->getAtom()->getValue())
-                    : getLiteral(e->getAtom()->getValue(), mir::Type::I32);
+    if (e->getAtom()->isIdentifier()) {
+        auto val = e->getAtom()->getValue();
+        prev_expr = getUse(val);
+        expr_types[e] = getType(val)->clone();
+    } else {
+        prev_expr = getLiteral(e->getAtom()->getValue(), mir::Type::I32);
+        expr_types[e] = std::make_unique<Int>();
+    }
 }
 
-void ToMIRVisitor::visit(ast::ParenExpr *e) { e->getBody()->accept(this); }
+void ToMIRVisitor::visit(ast::ParenExpr *e) {
+    e->getBody()->accept(this);
+    expr_types[e] = expr_types[e->getBody()]->clone();
+}
 
 void ToMIRVisitor::visit(ast::CallExpr *e) {
     auto callee_id = e->getCallee()->getValue();
@@ -212,39 +232,72 @@ void ToMIRVisitor::visit(ast::CallExpr *e) {
     auto alloca = makeAlloca(type);
     auto store = std::make_unique<mir::InstructionStore>(call.get(), alloca);
     instructions.push_back(std::move(store));
+
+    expr_types[e] = function_types[callee_id]->clone();
 }
 
 void ToMIRVisitor::visit(ast::UnaryOpExpr *e) {
-    // TODO: review it all
+    // TODO: please bleach this
 
-    // TODO: figure out type
     auto type = mir::Type::I32;
-
     e->getValue()->accept(this);
     auto val = usePrevExpr();
-    auto res_ptr = makeAlloca(type);
 
     mir::Value *un_op_res, *literal;
     std::unique_ptr<mir::Instruction> bin_op;
+    Type *ptr_type;
     switch (e->getOp()) {
     case UnaryOp::PLUS:
         // Do nothing
-        // TODO: cast to int?
         un_op_res = val;
+        expr_types[e] = std::make_unique<Int>();
         break;
     case UnaryOp::MINUS:
         // Subtract from zero
         literal = getLiteral(0, mir::Type::I32);
         bin_op = std::make_unique<mir::InstructionBinaryOp>(
             type, mir::BinaryOp::SUB, literal, val);
-        un_op_res = static_cast<mir::Value *>(
-            static_cast<mir::InstructionBinaryOp *>(bin_op.get()));
+
+        un_op_res = static_cast<mir::InstructionBinaryOp *>(bin_op.get());
         instructions.push_back(std::move(bin_op));
+        expr_types[e] = std::make_unique<Int>();
         break;
     case UnaryOp::NOT:
-    case UnaryOp::ADDRESS:
+        // XOR with -1
+        literal = getLiteral(-1, mir::Type::I32);
+        bin_op = std::make_unique<mir::InstructionBinaryOp>(
+            type, mir::BinaryOp::XOR, val, literal);
+
+        un_op_res = static_cast<mir::InstructionBinaryOp *>(bin_op.get());
+        instructions.push_back(std::move(bin_op));
+        expr_types[e] = std::make_unique<Int>();
+        break;
     case UnaryOp::DEREF:
+        // Load from val
+        ptr_type =
+            dynamic_cast<Ptr *>(expr_types[e->getValue()].get())->getBase();
+        type = ptr_type->toMir();
+        bin_op = std::make_unique<mir::InstructionLoad>(type, val);
+
+        un_op_res = static_cast<mir::InstructionLoad *>(bin_op.get());
+        instructions.push_back(std::move(bin_op));
+        expr_types[e] = ptr_type->clone();
+        break;
+    case UnaryOp::ADDRESS:
+        type = mir::Type::PTR;
+
+        un_op_res = prev_expr;
+        expr_types[e] =
+            std::make_unique<Ptr>(expr_types[e->getValue()]->clone());
+        break;
     }
+
+    auto res_ptr = makeAlloca(type);
+    prev_expr = res_ptr;
+
+    auto store =
+        std::make_unique<middleend::mir::InstructionStore>(un_op_res, res_ptr);
+    instructions.push_back(std::move(store));
 }
 
 void ToMIRVisitor::visit(ast::BinaryOpExpr *e) {}
