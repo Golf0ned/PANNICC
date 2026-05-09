@@ -160,7 +160,7 @@ void ToStringVisitor::visit(InstructionDeclaration *i) {
         declare_res += " ";
     declare_res += variable;
 
-    auto value = i->getValue();
+    auto *value = i->getValue();
     if (value) {
         value->accept(this);
         declare_res += " = " + res;
