@@ -98,6 +98,16 @@ makeParams(std::vector<ast::Parameter> &params) {
     return res;
 }
 
+void ToMIRVisitor::makeBB(
+    std::unique_ptr<middleend::mir::Terminator> terminator) {
+    auto bb = std::make_unique<mir::BasicBlock>(std::move(instructions),
+                                                std::move(terminator));
+    // TODO: add BB to mapping
+
+    basic_blocks.push_back(std::move(bb));
+    instructions.clear();
+}
+
 void ToMIRVisitor::resolveBBEdges() {
     // TODO
 }
@@ -110,18 +120,17 @@ mir::BasicBlock *ToMIRVisitor::createEntryBlock() {
 }
 
 void ToMIRVisitor::resolveFunctions() {
-    // TODO
+    for (auto &[id, fun] : function_ids)
+        for (auto *call : function_calls[id])
+            call->setCallee(fun);
 }
 
 void ToMIRVisitor::visit(ast::FunctionDefinition *f) {
     auto type = f->getType()->toMir();
+    function_types[f->getName()->getValue()] = f->getType();
     auto name = f->getName()->toString(st);
     auto params = makeParams(f->getParameters());
-
     ret_alloca = makeAlloca(type);
-
-    // TODO: map function type?
-    // TODO: map function in preparation for resolveFunctions
 
     // Lower body
     visit(f->getBody());
@@ -130,10 +139,13 @@ void ToMIRVisitor::visit(ast::FunctionDefinition *f) {
 
     res = std::make_unique<mir::FunctionDefinition>(
         type, name, std::move(params), std::move(basic_blocks), entry);
+    // TODO: handle overloading
+    function_ids[f->getName()->getValue()] = res.get();
 }
 
 void ToMIRVisitor::visit(ast::FunctionPrototype *f) {
     auto type = f->getType()->toMir();
+    function_types[f->getName()->getValue()] = f->getType();
     auto name = f->getName()->toString(st);
     auto params = makeParams(f->getParameters());
 
@@ -142,6 +154,8 @@ void ToMIRVisitor::visit(ast::FunctionPrototype *f) {
 
     res = std::make_unique<mir::FunctionDeclaration>(type, name,
                                                      std::move(params));
+    // TODO: handle overloading
+    function_ids[f->getName()->getValue()] = res.get();
 }
 
 void ToMIRVisitor::visit(ast::Instruction *i) {}
@@ -149,11 +163,13 @@ void ToMIRVisitor::visit(ast::Instruction *i) {}
 void ToMIRVisitor::visit(ast::Scope *s) {
     cur_scope++;
     scope_bindings.emplace_back();
+    scope_binding_types.emplace_back();
 
     for (auto &i : s->getInstructions())
         i->accept(this);
 
     scope_bindings.pop_back();
+    scope_binding_types.pop_back();
     cur_scope--;
 }
 
@@ -163,9 +179,10 @@ void ToMIRVisitor::visit(ast::InstructionExpr *i) {
 
 void ToMIRVisitor::visit(ast::InstructionDeclaration *i) {
     auto type = i->getType()->toMir();
-    auto *alloca = makeAlloca(type);
+    scope_binding_types.back()[i->getVariable()->getValue()] = i->getType();
 
-    // TODO: map value and type?
+    auto *alloca = makeAlloca(type);
+    scope_bindings.back()[i->getVariable()->getValue()] = alloca;
 
     if (i->getValue()) {
         i->getValue()->accept(this);
@@ -182,19 +199,53 @@ void ToMIRVisitor::visit(ast::InstructionReturn *i) {
     auto store = std::make_unique<mir::InstructionStore>(ret_val, ret_alloca);
     instructions.push_back(std::move(store));
 
-    // TODO: set branch up for connecting BBs
+    // TODO: associate branch with return BB
     auto branch = std::make_unique<mir::TerminatorBranch>(nullptr);
-    auto bb = std::make_unique<mir::BasicBlock>(std::move(instructions),
-                                                std::move(branch));
-    basic_blocks.push_back(std::move(bb));
-    instructions.clear();
-
-    // TODO: map branch
+    makeBB(std::move(branch));
 }
 
-void ToMIRVisitor::visit(ast::InstructionIf *i) {}
+void ToMIRVisitor::visit(ast::InstructionIf *i) {
+    i->getCond()->accept(this);
+    auto *cond = usePrevExpr();
 
-void ToMIRVisitor::visit(ast::InstructionWhile *i) {}
+    // TODO: associate branch with true and [false or cont] BB
+    auto cond_br =
+        std::make_unique<mir::TerminatorCondBranch>(cond, nullptr, nullptr);
+    makeBB(std::move(cond_br));
+
+    // True branch
+    i->getTBranch()->accept(this);
+    // TODO: associate branch with cont BB
+    auto t_to_cont = std::make_unique<mir::TerminatorBranch>(nullptr);
+    makeBB(std::move(t_to_cont));
+
+    // False branch
+    if (i->getFBranch()) {
+        i->getFBranch()->accept(this);
+        // TODO: associate branch with cont BB
+        auto f_to_cont = std::make_unique<mir::TerminatorBranch>(nullptr);
+        makeBB(std::move(f_to_cont));
+    }
+}
+
+void ToMIRVisitor::visit(ast::InstructionWhile *i) {
+    // TODO: associate branch with cond BB
+    auto prev_to_cond = std::make_unique<mir::TerminatorBranch>(nullptr);
+    makeBB(std::move(prev_to_cond));
+
+    i->getCond()->accept(this);
+    auto *cond = usePrevExpr();
+
+    // TODO: associate branch with body and cont BB
+    auto cond_br =
+        std::make_unique<mir::TerminatorCondBranch>(cond, nullptr, nullptr);
+    makeBB(std::move(cond_br));
+
+    i->getBody()->accept(this);
+    // TODO: associate branch with cond BB
+    auto body_to_cond = std::make_unique<mir::TerminatorBranch>(nullptr);
+    makeBB(std::move(body_to_cond));
+}
 
 void ToMIRVisitor::visit(ast::Expr *e) {}
 
