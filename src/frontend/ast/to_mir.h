@@ -23,6 +23,7 @@ namespace frontend {
         Type *getType(uint64_t id);
         std::vector<std::unique_ptr<middleend::mir::Value>>
         makeParams(std::vector<ast::Parameter> &params);
+        void makeBB(std::unique_ptr<middleend::mir::Terminator> terminator);
         void resolveBBEdges();
         middleend::mir::BasicBlock *createEntryBlock();
         void resolveFunctions();
@@ -61,6 +62,7 @@ namespace frontend {
         std::vector<std::unordered_map<uint64_t, Type *>> scope_binding_types;
         middleend::mir::Value *prev_expr;
         std::unordered_map<ast::Expr *, std::unique_ptr<Type>> expr_types;
+        std::unordered_map<uint64_t, middleend::mir::Function *> function_ids;
         std::unordered_map<uint64_t, Type *> function_types;
         std::unordered_map<uint64_t,
                            std::vector<middleend::mir::InstructionCall *>>
