@@ -27,6 +27,7 @@ namespace frontend {
         RSHIFT_ASSIGN,
     };
 
+    bool isAssignment(BinaryOp op);
     BinaryOp strToBinaryOp(std::string str);
     std::string toString(BinaryOp op);
     middleend::mir::BinaryOp toMir(BinaryOp op);

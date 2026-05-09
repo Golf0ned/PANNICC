@@ -4,6 +4,25 @@
 
 using namespace frontend;
 
+bool isAssignment(BinaryOp op) {
+    switch (op) {
+    case BinaryOp::ASSIGN:
+    case BinaryOp::ADD_ASSIGN:
+    case BinaryOp::SUB_ASSIGN:
+    case BinaryOp::MUL_ASSIGN:
+    case BinaryOp::DIV_ASSIGN:
+    case BinaryOp::AND_ASSIGN:
+    case BinaryOp::OR_ASSIGN:
+    case BinaryOp::XOR_ASSIGN:
+    case BinaryOp::LSHIFT_ASSIGN:
+    case BinaryOp::RSHIFT_ASSIGN:
+        return false;
+    default:
+        return true;
+    }
+    std::unreachable();
+}
+
 BinaryOp strToBinaryOp(std::string str) {
     static const std::unordered_map<std::string, BinaryOp> fromStr = {
         // clang-format off
