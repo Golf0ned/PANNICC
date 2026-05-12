@@ -8,8 +8,7 @@
 #include "backend/codegen.h"
 #include "backend/mir_to_lir.h"
 #include "backend/regalloc.h"
-#include "frontend/ast_to_hir.h"
-#include "frontend/hir_to_mir.h"
+#include "frontend/ast/to_mir.h"
 #include "frontend/parser/parser.h"
 #include "frontend/preprocessor/preprocess.h"
 #include "middleend/pass_manager.h"
@@ -63,19 +62,11 @@ void testAst(std::string input_path, std::string expected_path) {
     compareIfFileExists(ast.toString(), expected_path);
 }
 
-void testHir(std::string input_path, std::string expected_path) {
-    auto preprocessed = preprocess(input_path);
-    auto ast = parse_string(preprocessed);
-    auto hir = astToHir(ast);
-    compareIfFileExists(hir.toString(), expected_path);
-}
-
 void testMir(std::string input_path, std::string expected_path,
              PassManager *pm) {
     auto preprocessed = preprocess(input_path);
     auto ast = parse_string(preprocessed);
-    auto hir = astToHir(ast);
-    auto mir = hirToMir(hir);
+    auto mir = lower(ast);
     if (!pm)
         GTEST_SKIP();
     pm->runPasses(mir);
@@ -86,8 +77,7 @@ void testLirIsel(std::string input_path, std::string expected_path,
                  PassManager *pm) {
     auto preprocessed = preprocess(input_path);
     auto ast = parse_string(preprocessed);
-    auto hir = astToHir(ast);
-    auto mir = hirToMir(hir);
+    auto mir = lower(ast);
     if (!pm)
         GTEST_SKIP();
     pm->runPasses(mir);
@@ -99,8 +89,7 @@ void testLirRegalloc(std::string input_path, std::string expected_path,
                      PassManager *pm) {
     auto preprocessed = preprocess(input_path);
     auto ast = parse_string(preprocessed);
-    auto hir = astToHir(ast);
-    auto mir = hirToMir(hir);
+    auto mir = lower(ast);
     if (!pm)
         GTEST_SKIP();
     pm->runPasses(mir);
@@ -113,8 +102,7 @@ void testAsm(std::string input_path, std::string expected_path,
              PassManager *pm) {
     auto preprocessed = preprocess(input_path);
     auto ast = parse_string(preprocessed);
-    auto hir = astToHir(ast);
-    auto mir = hirToMir(hir);
+    auto mir = lower(ast);
     if (!pm)
         GTEST_SKIP();
     pm->runPasses(mir);
@@ -147,11 +135,6 @@ TEST_P(RegressionTest, Preprocessor) {
 TEST_P(RegressionTest, AST) {
     auto expected_path = test_dir + "/expected/" + test_name + ".ast";
     testAst(input_path, expected_path);
-}
-
-TEST_P(RegressionTest, HIR) {
-    auto expected_path = test_dir + "/expected/" + test_name + ".hir";
-    testHir(input_path, expected_path);
 }
 
 TEST_P(RegressionTest, MIR_O0) {
