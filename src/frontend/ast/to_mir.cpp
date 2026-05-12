@@ -85,14 +85,24 @@ Type *ToMIRVisitor::getType(uint64_t id) {
 }
 
 std::vector<std::unique_ptr<mir::Value>>
-makeParams(std::vector<ast::Parameter> &params) {
+ToMIRVisitor::makeParams(std::vector<ast::Parameter> &params) {
     std::vector<std::unique_ptr<mir::Value>> res;
 
     for (auto &[param_type, param_name] : params) {
-        // TODO: make variable (with scope?)
-        // TODO: make alloca + store, map to param name
-        // TODO: map variable type?
-        // TODO: add variable to res
+        auto type = param_type->toMir();
+        auto param = std::make_unique<middleend::mir::Value>(type);
+
+        auto alloca = std::make_unique<middleend::mir::InstructionAlloca>(type);
+        auto store = std::make_unique<middleend::mir::InstructionStore>(
+            param.get(), alloca.get());
+
+        scope_bindings.back()[param_name->getValue()] = alloca.get();
+        scope_binding_types.back()[param_name->getValue()] = param_type.get();
+
+        instructions.push_back(std::move(alloca));
+        instructions.push_back(std::move(store));
+
+        res.push_back(std::move(param));
     }
 
     return res;
