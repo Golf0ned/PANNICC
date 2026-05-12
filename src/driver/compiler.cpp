@@ -1,16 +1,15 @@
+#include "backend/codegen.h"
+#include "backend/mir_to_lir.h"
+#include "backend/regalloc.h"
+#include "frontend/ast/to_mir.h"
+#include "frontend/parser/parser.h"
+#include "frontend/preprocessor/preprocess.h"
+#include "middleend/pass_manager.h"
+
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-
-#include "backend/codegen.h"
-#include "backend/mir_to_lir.h"
-#include "backend/regalloc.h"
-#include "frontend/ast_to_hir.h"
-#include "frontend/hir_to_mir.h"
-#include "frontend/parser/parser.h"
-#include "frontend/preprocessor/preprocess.h"
-#include "middleend/pass_manager.h"
 
 #define PRINT(str) (std::cerr << str << std::endl)
 #define ERROR(str) (std::cerr << "ERROR: " << str << std::endl)
@@ -18,7 +17,6 @@
 enum class OutputLevel {
     PREPROCESS,
     AST,
-    HIR,
     MIR,
     LIR_ISEL,
     LIR_REGALLOC,
@@ -37,7 +35,6 @@ void printHelp(const std::string &program_name) {
     PRINT("  -E, --preprocess       Only run preprocessor (WIP)");
     PRINT("");
     PRINT("  --emit-ast             Output AST to file");
-    PRINT("  --emit-hir             Output HIR to file");
     PRINT("");
     PRINT("  --emit-mir             Output MIR to file");
     PRINT("  -O0|1                  Opt level (default O1)");
@@ -93,8 +90,6 @@ int main(int argc, char *argv[]) {
             output_level = OutputLevel::PREPROCESS;
         } else if (arg == "--emit-ast") {
             output_level = OutputLevel::AST;
-        } else if (arg == "--emit-hir") {
-            output_level = OutputLevel::HIR;
         } else if (arg == "--emit-mir") {
             output_level = OutputLevel::MIR;
         } else if (arg == "--emit-lir-isel") {
@@ -144,9 +139,6 @@ int main(int argc, char *argv[]) {
         case OutputLevel::AST:
             output_file.replace_extension(".ast");
             break;
-        case OutputLevel::HIR:
-            output_file.replace_extension(".hir");
-            break;
         case OutputLevel::MIR:
             output_file.replace_extension(".mir");
             break;
@@ -180,13 +172,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    frontend::hir::Program hir = frontend::astToHir(ast);
-    if (output_level == OutputLevel::HIR) {
-        output(hir.toString(), output_file);
-        return 0;
-    }
-
-    middleend::mir::Program mir = frontend::hirToMir(hir);
+    middleend::mir::Program mir = frontend::lower(ast);
 
     pm->runPasses(mir);
     if (output_level == OutputLevel::MIR) {
