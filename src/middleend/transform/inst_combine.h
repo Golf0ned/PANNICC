@@ -3,8 +3,8 @@
 #include "middleend/pass.h"
 
 namespace middleend {
-    class InstCombine : public TransformPass {
-    public:
-        void run(mir::Program &p) override;
-    };
+class InstCombine : public TransformPass {
+public:
+    void run(mir::Program &p) override;
+};
 } // namespace middleend

@@ -3,12 +3,12 @@
 #include <string>
 
 namespace backend::lir {
-    enum class ConditionCode {
-        EQ,
-        NEQ,
-    };
+enum class ConditionCode {
+    EQ,
+    NEQ,
+};
 
-    ConditionCode invert(ConditionCode cc);
+ConditionCode invert(ConditionCode cc);
 
-    std::string toString(ConditionCode cc);
+std::string toString(ConditionCode cc);
 } // namespace backend::lir

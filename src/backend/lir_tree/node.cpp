@@ -1,189 +1,185 @@
 #include "backend/lir_tree/node.h"
 
 namespace backend::lir_tree {
-    lir::DataSize Node::getSize() { return lir::DataSize::QUADWORD; }
+lir::DataSize Node::getSize() { return lir::DataSize::QUADWORD; }
 
-    RegisterNode::RegisterNode(lir::Register *reg, std::unique_ptr<Node> source)
-        : reg(reg), source(std::move(source)) {}
+RegisterNode::RegisterNode(lir::Register *reg, std::unique_ptr<Node> source)
+    : reg(reg), source(std::move(source)) {}
 
-    std::string RegisterNode::getName() {
-        auto reg_num = reg->getRegNum();
-        if (reg_num == lir::RegisterNum::VIRTUAL) {
-            auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
-            return virtual_reg->getName();
-        }
-        return toString(reg_num);
+std::string RegisterNode::getName() {
+    auto reg_num = reg->getRegNum();
+    if (reg_num == lir::RegisterNum::VIRTUAL) {
+        auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
+        return virtual_reg->getName();
+    }
+    return toString(reg_num);
+}
+
+lir::Register *RegisterNode::getReg() { return reg; }
+
+std::unique_ptr<Node> &RegisterNode::getSource() { return source; }
+
+lir::DataSize RegisterNode::getSize() { return reg->getSize(); }
+
+bool RegisterNode::sameReg(RegisterNode *other) { return reg == other->reg; }
+
+void RegisterNode::consume(RegisterNode *other) {
+    source = std::move(other->source);
+}
+
+void RegisterNode::accept(NodeVisitor *v) { v->visit(this); }
+
+ImmediateNode::ImmediateNode(uint64_t value) : value(value) {}
+
+uint64_t ImmediateNode::getValue() { return value; }
+
+void ImmediateNode::accept(NodeVisitor *v) { v->visit(this); }
+
+AddressNode::AddressNode(std::unique_ptr<RegisterNode> base,
+                         std::unique_ptr<RegisterNode> index, uint64_t scale,
+                         uint64_t displacement)
+    : base(std::move(base)), index(std::move(index)), scale(scale),
+      displacement(displacement) {}
+
+std::unique_ptr<RegisterNode> &AddressNode::getBase() { return base; }
+
+std::unique_ptr<RegisterNode> &AddressNode::getIndex() { return index; }
+
+uint64_t AddressNode::getScale() { return scale; }
+
+uint64_t AddressNode::getDisplacement() { return displacement; }
+
+void AddressNode::accept(NodeVisitor *v) { v->visit(this); }
+
+OpNode::OpNode(middleend::mir::BinaryOp op, std::unique_ptr<Node> left,
+               std::unique_ptr<Node> right)
+    : op(op), left(std::move(left)), right(std::move(right)) {}
+
+middleend::mir::BinaryOp OpNode::getOp() { return op; }
+
+std::unique_ptr<Node> &OpNode::getLeft() { return left; }
+
+std::unique_ptr<Node> &OpNode::getRight() { return right; }
+
+void OpNode::accept(NodeVisitor *v) { v->visit(this); }
+
+LoadNode::LoadNode(std::unique_ptr<Node> ptr, lir::DataSize size)
+    : ptr(std::move(ptr)), size(size) {}
+
+std::unique_ptr<Node> &LoadNode::getPtr() { return ptr; }
+
+lir::DataSize LoadNode::getSize() { return size; }
+
+void LoadNode::accept(NodeVisitor *v) { v->visit(this); }
+
+StoreNode::StoreNode(std::unique_ptr<Node> source, std::unique_ptr<Node> ptr,
+                     lir::DataSize size)
+    : source(std::move(source)), ptr(std::move(ptr)), size(size) {}
+
+std::unique_ptr<Node> &StoreNode::getSource() { return source; }
+
+std::unique_ptr<Node> &StoreNode::getPtr() { return ptr; }
+
+lir::DataSize StoreNode::getSize() { return size; }
+
+void StoreNode::accept(NodeVisitor *v) { v->visit(this); }
+
+AsmNode::AsmNode(std::list<std::unique_ptr<lir::Instruction>> assembly)
+    : assembly(std::move(assembly)) {}
+
+std::list<std::unique_ptr<lir::Instruction>> &AsmNode::getAssembly() {
+    return assembly;
+}
+
+void AsmNode::accept(NodeVisitor *v) { v->visit(this); }
+
+ToStringVisitor::ToStringVisitor(lir::OperandManager *om) : om(om) {}
+
+std::string ToStringVisitor::getResult() { return result; }
+
+void ToStringVisitor::visit(Node *n) {}
+
+void ToStringVisitor::visit(RegisterNode *n) {
+    if (!n->getSource()) {
+        result = "%" + n->getName();
+        return;
     }
 
-    lir::Register *RegisterNode::getReg() { return reg; }
+    n->getSource()->accept(this);
+    result = "%" + n->getName() + "(" + result + ")";
+}
 
-    std::unique_ptr<Node> &RegisterNode::getSource() { return source; }
+void ToStringVisitor::visit(ImmediateNode *n) {
+    result = "imm(" + std::to_string(n->getValue()) + ")";
+}
 
-    lir::DataSize RegisterNode::getSize() { return reg->getSize(); }
-
-    bool RegisterNode::sameReg(RegisterNode *other) {
-        return reg == other->reg;
+void ToStringVisitor::visit(AddressNode *n) {
+    auto &base_node = n->getBase();
+    std::string base = "null";
+    if (base_node) {
+        base_node->accept(this);
+        base = result;
     }
 
-    void RegisterNode::consume(RegisterNode *other) {
-        source = std::move(other->source);
+    auto &index_node = n->getIndex();
+    std::string index = "null";
+    if (index_node) {
+        index_node->accept(this);
+        index = result;
     }
 
-    void RegisterNode::accept(NodeVisitor *v) { v->visit(this); }
+    std::string scale = std::to_string(n->getScale());
+    std::string displacement = std::to_string(n->getDisplacement());
 
-    ImmediateNode::ImmediateNode(uint64_t value) : value(value) {}
+    result = "addr(" + base + ", " + index + ", " + scale + ", " +
+             displacement + ")";
+}
 
-    uint64_t ImmediateNode::getValue() { return value; }
+void ToStringVisitor::visit(OpNode *n) {
+    std::string op = middleend::mir::toString(n->getOp());
 
-    void ImmediateNode::accept(NodeVisitor *v) { v->visit(this); }
+    n->getLeft()->accept(this);
+    std::string left = result;
 
-    AddressNode::AddressNode(std::unique_ptr<RegisterNode> base,
-                             std::unique_ptr<RegisterNode> index,
-                             uint64_t scale, uint64_t displacement)
-        : base(std::move(base)), index(std::move(index)), scale(scale),
-          displacement(displacement) {}
+    n->getRight()->accept(this);
+    std::string right = result;
 
-    std::unique_ptr<RegisterNode> &AddressNode::getBase() { return base; }
+    result = op + "(" + left + ", " + right + ")";
+}
 
-    std::unique_ptr<RegisterNode> &AddressNode::getIndex() { return index; }
+void ToStringVisitor::visit(LoadNode *n) {
+    n->getPtr()->accept(this);
+    std::string ptr = result;
 
-    uint64_t AddressNode::getScale() { return scale; }
+    result = "load(" + ptr + ")";
+}
 
-    uint64_t AddressNode::getDisplacement() { return displacement; }
+void ToStringVisitor::visit(StoreNode *n) {
+    n->getSource()->accept(this);
+    std::string source = result;
 
-    void AddressNode::accept(NodeVisitor *v) { v->visit(this); }
+    n->getPtr()->accept(this);
+    std::string ptr = result;
 
-    OpNode::OpNode(middleend::mir::BinaryOp op, std::unique_ptr<Node> left,
-                   std::unique_ptr<Node> right)
-        : op(op), left(std::move(left)), right(std::move(right)) {}
+    result = "store(" + source + ", " + ptr + ")";
+}
 
-    middleend::mir::BinaryOp OpNode::getOp() { return op; }
+void ToStringVisitor::visit(AsmNode *n) { result = "AsmNode"; }
 
-    std::unique_ptr<Node> &OpNode::getLeft() { return left; }
-
-    std::unique_ptr<Node> &OpNode::getRight() { return right; }
-
-    void OpNode::accept(NodeVisitor *v) { v->visit(this); }
-
-    LoadNode::LoadNode(std::unique_ptr<Node> ptr, lir::DataSize size)
-        : ptr(std::move(ptr)), size(size) {}
-
-    std::unique_ptr<Node> &LoadNode::getPtr() { return ptr; }
-
-    lir::DataSize LoadNode::getSize() { return size; }
-
-    void LoadNode::accept(NodeVisitor *v) { v->visit(this); }
-
-    StoreNode::StoreNode(std::unique_ptr<Node> source,
-                         std::unique_ptr<Node> ptr, lir::DataSize size)
-        : source(std::move(source)), ptr(std::move(ptr)), size(size) {}
-
-    std::unique_ptr<Node> &StoreNode::getSource() { return source; }
-
-    std::unique_ptr<Node> &StoreNode::getPtr() { return ptr; }
-
-    lir::DataSize StoreNode::getSize() { return size; }
-
-    void StoreNode::accept(NodeVisitor *v) { v->visit(this); }
-
-    AsmNode::AsmNode(std::list<std::unique_ptr<lir::Instruction>> assembly)
-        : assembly(std::move(assembly)) {}
-
-    std::list<std::unique_ptr<lir::Instruction>> &AsmNode::getAssembly() {
-        return assembly;
-    }
-
-    void AsmNode::accept(NodeVisitor *v) { v->visit(this); }
-
-    ToStringVisitor::ToStringVisitor(lir::OperandManager *om) : om(om) {}
-
-    std::string ToStringVisitor::getResult() { return result; }
-
-    void ToStringVisitor::visit(Node *n) {}
-
-    void ToStringVisitor::visit(RegisterNode *n) {
-        if (!n->getSource()) {
-            result = "%" + n->getName();
-            return;
-        }
-
-        n->getSource()->accept(this);
-        result = "%" + n->getName() + "(" + result + ")";
-    }
-
-    void ToStringVisitor::visit(ImmediateNode *n) {
-        result = "imm(" + std::to_string(n->getValue()) + ")";
-    }
-
-    void ToStringVisitor::visit(AddressNode *n) {
-        auto &base_node = n->getBase();
-        std::string base = "null";
-        if (base_node) {
-            base_node->accept(this);
-            base = result;
-        }
-
-        auto &index_node = n->getIndex();
-        std::string index = "null";
-        if (index_node) {
-            index_node->accept(this);
-            index = result;
-        }
-
-        std::string scale = std::to_string(n->getScale());
-        std::string displacement = std::to_string(n->getDisplacement());
-
-        result = "addr(" + base + ", " + index + ", " + scale + ", " +
-                 displacement + ")";
-    }
-
-    void ToStringVisitor::visit(OpNode *n) {
-        std::string op = middleend::mir::toString(n->getOp());
-
-        n->getLeft()->accept(this);
-        std::string left = result;
-
-        n->getRight()->accept(this);
-        std::string right = result;
-
-        result = op + "(" + left + ", " + right + ")";
-    }
-
-    void ToStringVisitor::visit(LoadNode *n) {
-        n->getPtr()->accept(this);
-        std::string ptr = result;
-
-        result = "load(" + ptr + ")";
-    }
-
-    void ToStringVisitor::visit(StoreNode *n) {
-        n->getSource()->accept(this);
-        std::string source = result;
-
-        n->getPtr()->accept(this);
-        std::string ptr = result;
-
-        result = "store(" + source + ", " + ptr + ")";
-    }
-
-    void ToStringVisitor::visit(AsmNode *n) { result = "AsmNode"; }
-
-    void TreeInfo::insertTree(Node *tree, std::list<Node *> leaves,
-                              bool has_memory_instruction) {
-        tree_leaves[tree] = std::move(leaves);
-        if (has_memory_instruction)
-            trees_with_memory_instruction.insert(tree);
-    }
-
-    std::list<Node *> &TreeInfo::getLeaves(Node *tree) {
-        return tree_leaves[tree];
-    }
-
-    bool TreeInfo::hasMemInst(Node *tree) {
-        return trees_with_memory_instruction.contains(tree);
-    }
-
-    void TreeInfo::setMemInst(Node *tree) {
+void TreeInfo::insertTree(Node *tree, std::list<Node *> leaves,
+                          bool has_memory_instruction) {
+    tree_leaves[tree] = std::move(leaves);
+    if (has_memory_instruction)
         trees_with_memory_instruction.insert(tree);
-    }
+}
+
+std::list<Node *> &TreeInfo::getLeaves(Node *tree) { return tree_leaves[tree]; }
+
+bool TreeInfo::hasMemInst(Node *tree) {
+    return trees_with_memory_instruction.contains(tree);
+}
+
+void TreeInfo::setMemInst(Node *tree) {
+    trees_with_memory_instruction.insert(tree);
+}
 } // namespace backend::lir_tree

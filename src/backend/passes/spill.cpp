@@ -2,149 +2,145 @@
 #include "backend/passes/interference.h"
 
 namespace backend {
-    static constexpr uint64_t def_weight = 5;
-    static constexpr uint64_t use_weight = 10;
-    static constexpr uint64_t max_weight = -1;
+static constexpr uint64_t def_weight = 5;
+static constexpr uint64_t use_weight = 10;
+static constexpr uint64_t max_weight = -1;
 
-    RegisterSet getRestrictedRegisters(lir::Function *f, const Liveness &l,
-                                       lir::OperandManager *om) {
-        RegisterSet load_only;
-        RegisterSet not_load_only;
+RegisterSet getRestrictedRegisters(lir::Function *f, const Liveness &l,
+                                   lir::OperandManager *om) {
+    RegisterSet load_only;
+    RegisterSet not_load_only;
 
-        size_t i_index = 0;
-        const auto &gen = l.getGen();
-        // TODO: what in the world
-        for (auto &i : f->getInstructions()) {
-            auto &gen_i = gen[i_index++];
-            auto mov = dynamic_cast<lir::InstructionMov *>(i.get());
-            if (mov) {
-                auto src = dynamic_cast<lir::Address *>(mov->getSrc());
-                auto dst = dynamic_cast<lir::Register *>(mov->getDst());
-                if (!src || !dst ||
-                    dst->getRegNum() != lir::RegisterNum::VIRTUAL)
-                    continue;
+    size_t i_index = 0;
+    const auto &gen = l.getGen();
+    // TODO: what in the world
+    for (auto &i : f->getInstructions()) {
+        auto &gen_i = gen[i_index++];
+        auto mov = dynamic_cast<lir::InstructionMov *>(i.get());
+        if (mov) {
+            auto src = dynamic_cast<lir::Address *>(mov->getSrc());
+            auto dst = dynamic_cast<lir::Register *>(mov->getDst());
+            if (!src || !dst || dst->getRegNum() != lir::RegisterNum::VIRTUAL)
+                continue;
 
-                auto virtual_reg = static_cast<lir::VirtualRegister *>(dst);
-                auto flattened_reg =
-                    om->getRegister(virtual_reg->getName(), flat_size);
-                if (!not_load_only.contains(flattened_reg)) {
-                    load_only.insert(flattened_reg);
-                    continue;
-                }
-            }
-
-            for (auto &reg : gen_i) {
-                if (reg->getRegNum() != lir::RegisterNum::VIRTUAL)
-                    continue;
-                auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
-                auto flattened_reg =
-                    om->getRegister(virtual_reg->getName(), flat_size);
-                if (load_only.contains(flattened_reg)) {
-                    load_only.erase(flattened_reg);
-                }
+            auto virtual_reg = static_cast<lir::VirtualRegister *>(dst);
+            auto flattened_reg =
+                om->getRegister(virtual_reg->getName(), flat_size);
+            if (!not_load_only.contains(flattened_reg)) {
+                load_only.insert(flattened_reg);
+                continue;
             }
         }
 
-        return load_only;
-    }
-
-    SpillCosts computeSpillCosts(lir::Function *f, const Liveness &l,
-                                 lir::OperandManager *om) {
-        SpillCosts spill_costs;
-        auto restrictions = getRestrictedRegisters(f, l, om);
-
-        auto add_to_cost = [&](lir::Register *reg, uint64_t amount) {
+        for (auto &reg : gen_i) {
             if (reg->getRegNum() != lir::RegisterNum::VIRTUAL)
-                return;
-
+                continue;
             auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
             auto flattened_reg =
                 om->getRegister(virtual_reg->getName(), flat_size);
-
-            // TODO: regret this choice
-            auto &cur_cost = spill_costs[flattened_reg];
-            cur_cost = restrictions.contains(flattened_reg) ? -1
-                       : cur_cost + amount < cur_cost       ? max_weight
-                                                            : cur_cost + amount;
-        };
-
-        const auto &gen = l.getGen(), &kill = l.getKill();
-        for (size_t i = 0; i < gen.size(); i++) {
-            for (auto &reg : gen[i]) {
-                add_to_cost(reg, def_weight);
+            if (load_only.contains(flattened_reg)) {
+                load_only.erase(flattened_reg);
             }
-
-            for (auto &reg : kill[i]) {
-                add_to_cost(reg, use_weight);
-            }
-        }
-
-        return spill_costs;
-    }
-
-    void spill(lir::Function *f, lir::VirtualRegister *reg, Liveness &l,
-               lir::OperandManager *om) {
-        // TODO: generalize across register sizes
-        // - unhardcode size
-        // - check against all sizes of register (64, 32)
-        auto offset = f->getStackBytes();
-        f->setStackBytes(offset + 4);
-
-        auto base = om->getRegister(lir::RegisterNum::RSP);
-        auto index = static_cast<lir::Register *>(nullptr);
-        auto scale = om->getImmediate(0);
-        auto displacement = om->getImmediate(offset);
-        auto stack_var = om->getAddress(base, index, scale, displacement);
-
-        auto size = lir::DataSize::DOUBLEWORD;
-
-        auto reg_64 = om->getRegister(reg->getName(), lir::DataSize::QUADWORD),
-             reg_32 =
-                 om->getRegister(reg->getName(), lir::DataSize::DOUBLEWORD);
-        const auto &gen = l.getGen(), &kill = l.getKill();
-
-        size_t i_index = 0;
-        auto &instructions = f->getInstructions();
-        for (auto iter = instructions.begin(); iter != instructions.end();
-             iter++) {
-            auto &gen_i = gen[i_index], &kill_i = kill[i_index];
-
-            if (gen_i.contains(reg_32)) {
-                auto load = std::make_unique<lir::InstructionMov>(
-                    size, stack_var, reg_32);
-                instructions.insert(iter, std::move(load));
-            }
-
-            if (kill_i.contains(reg_32)) {
-                auto store = std::make_unique<lir::InstructionMov>(size, reg_32,
-                                                                   stack_var);
-                iter = instructions.insert(std::next(iter), std::move(store));
-            }
-
-            i_index++;
         }
     }
 
-    void spillLowestCost(lir::Function *f, const SpillCosts &sc, Liveness &l,
-                         lir::OperandManager *om) {
-        uint64_t min_cost = -1;
-        auto min_reg = sc.begin()->first;
+    return load_only;
+}
 
-        for (auto &[reg, cost] : sc) {
-            if (cost > min_cost)
-                continue;
+SpillCosts computeSpillCosts(lir::Function *f, const Liveness &l,
+                             lir::OperandManager *om) {
+    SpillCosts spill_costs;
+    auto restrictions = getRestrictedRegisters(f, l, om);
 
-            if (cost == min_cost && min_reg->getId() >= reg->getId())
-                continue;
-
-            min_cost = cost;
-            min_reg = reg;
-        }
-
-        if (min_reg->getRegNum() != lir::RegisterNum::VIRTUAL)
+    auto add_to_cost = [&](lir::Register *reg, uint64_t amount) {
+        if (reg->getRegNum() != lir::RegisterNum::VIRTUAL)
             return;
 
-        auto virtual_reg = static_cast<lir::VirtualRegister *>(min_reg);
-        spill(f, virtual_reg, l, om);
+        auto virtual_reg = static_cast<lir::VirtualRegister *>(reg);
+        auto flattened_reg = om->getRegister(virtual_reg->getName(), flat_size);
+
+        // TODO: regret this choice
+        auto &cur_cost = spill_costs[flattened_reg];
+        cur_cost = restrictions.contains(flattened_reg) ? -1
+                   : cur_cost + amount < cur_cost       ? max_weight
+                                                        : cur_cost + amount;
+    };
+
+    const auto &gen = l.getGen(), &kill = l.getKill();
+    for (size_t i = 0; i < gen.size(); i++) {
+        for (auto &reg : gen[i]) {
+            add_to_cost(reg, def_weight);
+        }
+
+        for (auto &reg : kill[i]) {
+            add_to_cost(reg, use_weight);
+        }
     }
+
+    return spill_costs;
+}
+
+void spill(lir::Function *f, lir::VirtualRegister *reg, Liveness &l,
+           lir::OperandManager *om) {
+    // TODO: generalize across register sizes
+    // - unhardcode size
+    // - check against all sizes of register (64, 32)
+    auto offset = f->getStackBytes();
+    f->setStackBytes(offset + 4);
+
+    auto base = om->getRegister(lir::RegisterNum::RSP);
+    auto index = static_cast<lir::Register *>(nullptr);
+    auto scale = om->getImmediate(0);
+    auto displacement = om->getImmediate(offset);
+    auto stack_var = om->getAddress(base, index, scale, displacement);
+
+    auto size = lir::DataSize::DOUBLEWORD;
+
+    auto reg_64 = om->getRegister(reg->getName(), lir::DataSize::QUADWORD),
+         reg_32 = om->getRegister(reg->getName(), lir::DataSize::DOUBLEWORD);
+    const auto &gen = l.getGen(), &kill = l.getKill();
+
+    size_t i_index = 0;
+    auto &instructions = f->getInstructions();
+    for (auto iter = instructions.begin(); iter != instructions.end(); iter++) {
+        auto &gen_i = gen[i_index], &kill_i = kill[i_index];
+
+        if (gen_i.contains(reg_32)) {
+            auto load =
+                std::make_unique<lir::InstructionMov>(size, stack_var, reg_32);
+            instructions.insert(iter, std::move(load));
+        }
+
+        if (kill_i.contains(reg_32)) {
+            auto store =
+                std::make_unique<lir::InstructionMov>(size, reg_32, stack_var);
+            iter = instructions.insert(std::next(iter), std::move(store));
+        }
+
+        i_index++;
+    }
+}
+
+void spillLowestCost(lir::Function *f, const SpillCosts &sc, Liveness &l,
+                     lir::OperandManager *om) {
+    uint64_t min_cost = -1;
+    auto min_reg = sc.begin()->first;
+
+    for (auto &[reg, cost] : sc) {
+        if (cost > min_cost)
+            continue;
+
+        if (cost == min_cost && min_reg->getId() >= reg->getId())
+            continue;
+
+        min_cost = cost;
+        min_reg = reg;
+    }
+
+    if (min_reg->getRegNum() != lir::RegisterNum::VIRTUAL)
+        return;
+
+    auto virtual_reg = static_cast<lir::VirtualRegister *>(min_reg);
+    spill(f, virtual_reg, l, om);
+}
 } // namespace backend

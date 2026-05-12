@@ -3,210 +3,207 @@
 #include "backend/lir/instruction.h"
 
 namespace backend::lir {
-    Label::Label(std::string name) : name(name) {}
+Label::Label(std::string name) : name(name) {}
 
-    std::string Label::getName() { return name; }
+std::string Label::getName() { return name; }
 
-    void Label::accept(InstructionVisitor *v) { v->visit(this); }
+void Label::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionMov::InstructionMov(DataSize size, Operand *src, Operand *dst)
-        : extend(lir::Extend::NONE), src_size(size), dst_size(size), src(src),
-          dst(dst) {}
+InstructionMov::InstructionMov(DataSize size, Operand *src, Operand *dst)
+    : extend(lir::Extend::NONE), src_size(size), dst_size(size), src(src),
+      dst(dst) {}
 
-    InstructionMov::InstructionMov(Extend extend, DataSize src_size,
-                                   DataSize dst_size, Operand *src,
-                                   Operand *dst)
-        : extend(extend), src_size(src_size), dst_size(dst_size), src(src),
-          dst(dst) {}
+InstructionMov::InstructionMov(Extend extend, DataSize src_size,
+                               DataSize dst_size, Operand *src, Operand *dst)
+    : extend(extend), src_size(src_size), dst_size(dst_size), src(src),
+      dst(dst) {}
 
-    Extend InstructionMov::getExtend() { return extend; }
+Extend InstructionMov::getExtend() { return extend; }
 
-    DataSize InstructionMov::getSrcSize() { return src_size; }
+DataSize InstructionMov::getSrcSize() { return src_size; }
 
-    DataSize InstructionMov::getDstSize() { return dst_size; }
+DataSize InstructionMov::getDstSize() { return dst_size; }
 
-    Operand *InstructionMov::getSrc() { return src; }
+Operand *InstructionMov::getSrc() { return src; }
 
-    Operand *InstructionMov::getDst() { return dst; }
+Operand *InstructionMov::getDst() { return dst; }
 
-    void InstructionMov::setSrc(lir::Operand *new_src) { src = new_src; }
+void InstructionMov::setSrc(lir::Operand *new_src) { src = new_src; }
 
-    void InstructionMov::setDst(lir::Operand *new_dst) { dst = new_dst; }
+void InstructionMov::setDst(lir::Operand *new_dst) { dst = new_dst; }
 
-    void InstructionMov::accept(InstructionVisitor *v) { v->visit(this); }
+void InstructionMov::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionPush::InstructionPush(DataSize size, Operand *src)
-        : size(size), src(src) {}
+InstructionPush::InstructionPush(DataSize size, Operand *src)
+    : size(size), src(src) {}
 
-    DataSize InstructionPush::getSize() { return size; }
+DataSize InstructionPush::getSize() { return size; }
 
-    Operand *InstructionPush::getSrc() { return src; }
+Operand *InstructionPush::getSrc() { return src; }
 
-    void InstructionPush::setSrc(lir::Operand *new_src) { src = new_src; }
+void InstructionPush::setSrc(lir::Operand *new_src) { src = new_src; }
 
-    void InstructionPush::accept(InstructionVisitor *v) { v->visit(this); }
+void InstructionPush::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionPop::InstructionPop(DataSize size, Operand *dst)
-        : size(size), dst(dst) {}
+InstructionPop::InstructionPop(DataSize size, Operand *dst)
+    : size(size), dst(dst) {}
 
-    DataSize InstructionPop::getSize() { return size; }
+DataSize InstructionPop::getSize() { return size; }
 
-    Operand *InstructionPop::getDst() { return dst; }
+Operand *InstructionPop::getDst() { return dst; }
 
-    void InstructionPop::setDst(lir::Operand *new_dst) { dst = new_dst; }
+void InstructionPop::setDst(lir::Operand *new_dst) { dst = new_dst; }
 
-    void InstructionPop::accept(InstructionVisitor *v) { v->visit(this); }
+void InstructionPop::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionConvert::InstructionConvert(DataSize from, DataSize to)
-        : from(from), to(to) {}
+InstructionConvert::InstructionConvert(DataSize from, DataSize to)
+    : from(from), to(to) {}
 
-    DataSize InstructionConvert::getFrom() { return from; }
+DataSize InstructionConvert::getFrom() { return from; }
 
-    DataSize InstructionConvert::getTo() { return to; }
+DataSize InstructionConvert::getTo() { return to; }
 
-    void InstructionConvert::accept(InstructionVisitor *v) { v->visit(this); }
+void InstructionConvert::accept(InstructionVisitor *v) { v->visit(this); }
 
-    BinaryOp fromMir(middleend::mir::BinaryOp op) {
-        switch (op) {
-        case middleend::mir::BinaryOp::ADD:
-            return BinaryOp::ADD;
-        case middleend::mir::BinaryOp::SUB:
-            return BinaryOp::SUB;
-        case middleend::mir::BinaryOp::MUL:
-            return BinaryOp::IMUL;
-        case middleend::mir::BinaryOp::SDIV:
-            return BinaryOp::IDIV;
-        case middleend::mir::BinaryOp::AND:
-            return BinaryOp::AND;
-        case middleend::mir::BinaryOp::OR:
-            return BinaryOp::OR;
-        case middleend::mir::BinaryOp::XOR:
-            return BinaryOp::XOR;
-        case middleend::mir::BinaryOp::SHL:
-            return BinaryOp::SHL;
-        case middleend::mir::BinaryOp::ASHR:
-            return BinaryOp::SAR;
-        }
-        std::unreachable();
+BinaryOp fromMir(middleend::mir::BinaryOp op) {
+    switch (op) {
+    case middleend::mir::BinaryOp::ADD:
+        return BinaryOp::ADD;
+    case middleend::mir::BinaryOp::SUB:
+        return BinaryOp::SUB;
+    case middleend::mir::BinaryOp::MUL:
+        return BinaryOp::IMUL;
+    case middleend::mir::BinaryOp::SDIV:
+        return BinaryOp::IDIV;
+    case middleend::mir::BinaryOp::AND:
+        return BinaryOp::AND;
+    case middleend::mir::BinaryOp::OR:
+        return BinaryOp::OR;
+    case middleend::mir::BinaryOp::XOR:
+        return BinaryOp::XOR;
+    case middleend::mir::BinaryOp::SHL:
+        return BinaryOp::SHL;
+    case middleend::mir::BinaryOp::ASHR:
+        return BinaryOp::SAR;
     }
+    std::unreachable();
+}
 
-    std::string toString(BinaryOp op) {
-        switch (op) {
-        case BinaryOp::ADD:
-            return "add";
-        case BinaryOp::SUB:
-            return "sub";
-        case BinaryOp::IMUL:
-            return "imul";
-        case BinaryOp::IDIV:
-            return "idiv";
-        case BinaryOp::AND:
-            return "and";
-        case BinaryOp::OR:
-            return "or";
-        case BinaryOp::XOR:
-            return "xor";
-        case BinaryOp::SHL:
-            return "shl";
-        case BinaryOp::SAR:
-            return "sar";
-        }
-        std::unreachable();
+std::string toString(BinaryOp op) {
+    switch (op) {
+    case BinaryOp::ADD:
+        return "add";
+    case BinaryOp::SUB:
+        return "sub";
+    case BinaryOp::IMUL:
+        return "imul";
+    case BinaryOp::IDIV:
+        return "idiv";
+    case BinaryOp::AND:
+        return "and";
+    case BinaryOp::OR:
+        return "or";
+    case BinaryOp::XOR:
+        return "xor";
+    case BinaryOp::SHL:
+        return "shl";
+    case BinaryOp::SAR:
+        return "sar";
     }
+    std::unreachable();
+}
 
-    InstructionBinaryOp::InstructionBinaryOp(BinaryOp op, DataSize size,
-                                             Operand *src, Operand *dst)
-        : op(op), size(size), src(src), dst(dst) {}
+InstructionBinaryOp::InstructionBinaryOp(BinaryOp op, DataSize size,
+                                         Operand *src, Operand *dst)
+    : op(op), size(size), src(src), dst(dst) {}
 
-    BinaryOp InstructionBinaryOp::getOp() { return op; }
+BinaryOp InstructionBinaryOp::getOp() { return op; }
 
-    DataSize InstructionBinaryOp::getSize() { return size; }
+DataSize InstructionBinaryOp::getSize() { return size; }
 
-    Operand *InstructionBinaryOp::getSrc() { return src; }
+Operand *InstructionBinaryOp::getSrc() { return src; }
 
-    Operand *InstructionBinaryOp::getDst() { return dst; }
+Operand *InstructionBinaryOp::getDst() { return dst; }
 
-    void InstructionBinaryOp::setSrc(lir::Operand *new_src) { src = new_src; }
+void InstructionBinaryOp::setSrc(lir::Operand *new_src) { src = new_src; }
 
-    void InstructionBinaryOp::setDst(lir::Operand *new_dst) { dst = new_dst; }
+void InstructionBinaryOp::setDst(lir::Operand *new_dst) { dst = new_dst; }
 
-    void InstructionBinaryOp::accept(InstructionVisitor *v) { v->visit(this); }
+void InstructionBinaryOp::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionSpecialOp::InstructionSpecialOp(BinaryOp op, DataSize size,
-                                               Operand *src)
-        : op(op), size(size), src(src) {}
+InstructionSpecialOp::InstructionSpecialOp(BinaryOp op, DataSize size,
+                                           Operand *src)
+    : op(op), size(size), src(src) {}
 
-    BinaryOp InstructionSpecialOp::getOp() { return op; }
+BinaryOp InstructionSpecialOp::getOp() { return op; }
 
-    DataSize InstructionSpecialOp::getSize() { return size; }
+DataSize InstructionSpecialOp::getSize() { return size; }
 
-    Operand *InstructionSpecialOp::getSrc() { return src; }
+Operand *InstructionSpecialOp::getSrc() { return src; }
 
-    void InstructionSpecialOp::setSrc(lir::Operand *new_src) { src = new_src; }
+void InstructionSpecialOp::setSrc(lir::Operand *new_src) { src = new_src; }
 
-    void InstructionSpecialOp::accept(InstructionVisitor *v) { v->visit(this); }
+void InstructionSpecialOp::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionLea::InstructionLea(DataSize size, Address *src, Operand *dst)
-        : size(size), src(src), dst(dst) {}
+InstructionLea::InstructionLea(DataSize size, Address *src, Operand *dst)
+    : size(size), src(src), dst(dst) {}
 
-    DataSize InstructionLea::getSize() { return size; }
+DataSize InstructionLea::getSize() { return size; }
 
-    Address *InstructionLea::getSrc() { return src; }
+Address *InstructionLea::getSrc() { return src; }
 
-    Operand *InstructionLea::getDst() { return dst; }
+Operand *InstructionLea::getDst() { return dst; }
 
-    void InstructionLea::setSrc(lir::Address *new_src) { src = new_src; }
+void InstructionLea::setSrc(lir::Address *new_src) { src = new_src; }
 
-    void InstructionLea::setDst(lir::Operand *new_dst) { dst = new_dst; }
+void InstructionLea::setDst(lir::Operand *new_dst) { dst = new_dst; }
 
-    void InstructionLea::accept(InstructionVisitor *v) { v->visit(this); }
+void InstructionLea::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionCmp::InstructionCmp(DataSize size, Operand *src_1,
-                                   Operand *src_2)
-        : size(size), src_1(src_1), src_2(src_2) {}
+InstructionCmp::InstructionCmp(DataSize size, Operand *src_1, Operand *src_2)
+    : size(size), src_1(src_1), src_2(src_2) {}
 
-    DataSize InstructionCmp::getSize() { return size; }
+DataSize InstructionCmp::getSize() { return size; }
 
-    Operand *InstructionCmp::getSrc1() { return src_1; }
+Operand *InstructionCmp::getSrc1() { return src_1; }
 
-    Operand *InstructionCmp::getSrc2() { return src_2; }
+Operand *InstructionCmp::getSrc2() { return src_2; }
 
-    void InstructionCmp::setSrc1(lir::Operand *new_src_1) { src_1 = new_src_1; }
+void InstructionCmp::setSrc1(lir::Operand *new_src_1) { src_1 = new_src_1; }
 
-    void InstructionCmp::setSrc2(lir::Operand *new_src_2) { src_2 = new_src_2; }
+void InstructionCmp::setSrc2(lir::Operand *new_src_2) { src_2 = new_src_2; }
 
-    void InstructionCmp::accept(InstructionVisitor *v) { v->visit(this); }
+void InstructionCmp::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionJmp::InstructionJmp(std::string label) : label(label) {}
+InstructionJmp::InstructionJmp(std::string label) : label(label) {}
 
-    std::string InstructionJmp::getLabel() { return label; }
+std::string InstructionJmp::getLabel() { return label; }
 
-    void InstructionJmp::accept(InstructionVisitor *v) { v->visit(this); }
+void InstructionJmp::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionCJmp::InstructionCJmp(ConditionCode cmp, std::string label)
-        : cmp(cmp), label(label) {}
+InstructionCJmp::InstructionCJmp(ConditionCode cmp, std::string label)
+    : cmp(cmp), label(label) {}
 
-    ConditionCode InstructionCJmp::getCmp() { return cmp; }
+ConditionCode InstructionCJmp::getCmp() { return cmp; }
 
-    std::string InstructionCJmp::getLabel() { return label; }
+std::string InstructionCJmp::getLabel() { return label; }
 
-    void InstructionCJmp::accept(InstructionVisitor *v) { v->visit(this); }
+void InstructionCJmp::accept(InstructionVisitor *v) { v->visit(this); }
 
-    InstructionCall::InstructionCall(std::string label,
-                                     std::vector<Operand *> args)
-        : label(label), args(args) {}
+InstructionCall::InstructionCall(std::string label, std::vector<Operand *> args)
+    : label(label), args(args) {}
 
-    std::string InstructionCall::getLabel() { return label; }
+std::string InstructionCall::getLabel() { return label; }
 
-    const std::vector<Operand *> &InstructionCall::getArgs() { return args; }
+const std::vector<Operand *> &InstructionCall::getArgs() { return args; }
 
-    void InstructionCall::setArgs(std::vector<Operand *> new_args) {
-        args = new_args;
-    }
+void InstructionCall::setArgs(std::vector<Operand *> new_args) {
+    args = new_args;
+}
 
-    void InstructionCall::accept(InstructionVisitor *v) { v->visit(this); }
+void InstructionCall::accept(InstructionVisitor *v) { v->visit(this); }
 
-    void InstructionRet::accept(InstructionVisitor *v) { v->visit(this); }
+void InstructionRet::accept(InstructionVisitor *v) { v->visit(this); }
 
-    void InstructionUnknown::accept(InstructionVisitor *v) { v->visit(this); }
+void InstructionUnknown::accept(InstructionVisitor *v) { v->visit(this); }
 } // namespace backend::lir

@@ -3,8 +3,8 @@
 #include "middleend/pass.h"
 
 namespace middleend {
-    class InsertParallelCopies : public TransformPass {
-    public:
-        void run(mir::Program &p) override;
-    };
+class InsertParallelCopies : public TransformPass {
+public:
+    void run(mir::Program &p) override;
+};
 } // namespace middleend
