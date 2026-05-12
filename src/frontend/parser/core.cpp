@@ -1,5 +1,7 @@
 #include "frontend/parser/core.h"
 
-using namespace frontend;
+namespace frontend {
 
-SymbolTable frontend::st;
+SymbolTable st;
+
+}

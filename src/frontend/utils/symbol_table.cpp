@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 
-using namespace frontend;
+namespace frontend {
 
 uint64_t SymbolTable::addSymbol(std::string symbol) {
     if (hasSymbol(symbol)) {
@@ -21,3 +21,5 @@ std::string SymbolTable::getSymbol(uint64_t id) { return id_to_symbol.at(id); }
 bool SymbolTable::hasSymbol(std::string symbol) {
     return symbol_to_id.contains(symbol);
 }
+
+} // namespace frontend

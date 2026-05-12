@@ -1,7 +1,6 @@
 #include "frontend/ast/instruction.h"
 
-using namespace frontend;
-using namespace frontend::ast;
+namespace frontend::ast {
 
 void Scope::addInstruction(std::unique_ptr<Instruction> i) {
     instructions.push_back(std::move(i));
@@ -33,6 +32,8 @@ InstructionDeclaration::InstructionDeclaration(
 Type *InstructionDeclaration::getType() { return type.get(); }
 
 AtomIdentifier *InstructionDeclaration::getVariable() { return variable.get(); }
+
+Expr *InstructionDeclaration::getValue() { return value.get(); }
 
 void InstructionDeclaration::accept(InstructionVisitor *v) { v->visit(this); }
 
@@ -68,3 +69,5 @@ Expr *InstructionWhile::getCond() { return cond.get(); }
 Instruction *InstructionWhile::getBody() { return body.get(); }
 
 void InstructionWhile::accept(InstructionVisitor *v) { v->visit(this); }
+
+} // namespace frontend::ast

@@ -1,6 +1,6 @@
 #include "frontend/utils/atom.h"
 
-using namespace frontend;
+namespace frontend {
 
 AtomIdentifier::AtomIdentifier(uint64_t value) : value(value) {}
 
@@ -21,3 +21,5 @@ uint64_t AtomLiteral::getValue() { return value; }
 std::string AtomLiteral::toString(SymbolTable &st) {
     return std::to_string(value);
 }
+
+} // namespace frontend

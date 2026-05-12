@@ -5,8 +5,7 @@
 
 #include <string>
 
-using namespace frontend;
-using namespace frontend::ast;
+namespace frontend::ast {
 
 FunctionDefinition::FunctionDefinition(std::unique_ptr<Type> type,
                                        std::unique_ptr<AtomIdentifier> name,
@@ -249,3 +248,5 @@ void ToStringVisitor::visit(BinaryOpExpr *e) {
 
     res = left + ' ' + op + ' ' + right;
 }
+
+} // namespace frontend::ast

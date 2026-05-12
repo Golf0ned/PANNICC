@@ -1,8 +1,8 @@
 #include "frontend/parser/instruction.h"
 
-using namespace frontend;
+namespace frontend {
 
-std::vector<std::unique_ptr<ast::Scope>> frontend::active_scopes;
+std::vector<std::unique_ptr<ast::Scope>> active_scopes;
 
 std::unique_ptr<ast::Instruction> popInstruction() {
     auto i = std::move(active_scopes.back()->getInstructions().back());
@@ -15,3 +15,5 @@ std::unique_ptr<ast::Scope> popScope() {
     active_scopes.pop_back();
     return scope;
 }
+
+} // namespace frontend

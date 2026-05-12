@@ -2,9 +2,9 @@
 
 #include <utility>
 
-using namespace frontend;
-
 namespace mir = middleend::mir;
+
+namespace frontend {
 
 mir::Program lower(ast::Program &ast) {
     std::list<std::unique_ptr<mir::Function>> functions;
@@ -458,3 +458,5 @@ void ToMIRVisitor::visit(ast::BinaryOpExpr *e) {
     instructions.push_back(std::move(store));
     expr_types[e] = expr_types[e->getLeft()]->clone();
 }
+
+} // namespace frontend

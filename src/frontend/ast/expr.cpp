@@ -1,7 +1,6 @@
 #include "frontend/ast/expr.h"
 
-using namespace frontend;
-using namespace frontend::ast;
+namespace frontend::ast {
 
 TerminalExpr::TerminalExpr(std::unique_ptr<Atom> atom)
     : atom(std::move(atom)) {}
@@ -48,3 +47,5 @@ Expr *BinaryOpExpr::getLeft() { return left.get(); }
 Expr *BinaryOpExpr::getRight() { return right.get(); }
 
 void BinaryOpExpr::accept(ExprVisitor *v) { v->visit(this); }
+
+} // namespace frontend::ast
