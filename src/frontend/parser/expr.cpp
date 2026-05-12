@@ -1,10 +1,10 @@
 #include "frontend/parser/expr.h"
 
-using namespace frontend;
+namespace frontend {
 
-std::vector<Token> frontend::parsed_tokens;
-std::vector<std::unique_ptr<ast::Expr>> frontend::parsed_exprs;
-std::vector<std::unique_ptr<ast::Expr>> frontend::active_args;
+std::vector<Token> parsed_tokens;
+std::vector<std::unique_ptr<ast::Expr>> parsed_exprs;
+std::vector<std::unique_ptr<ast::Expr>> active_args;
 
 std::unique_ptr<Atom> popAtom() {
     auto [token_val, token_type] = parsed_tokens.back();
@@ -29,3 +29,5 @@ std::unique_ptr<ast::Expr> popExpr() {
     parsed_exprs.pop_back();
     return expr;
 }
+
+} // namespace frontend

@@ -9,100 +9,101 @@
 #include <vector>
 
 namespace frontend::ast {
-    class FunctionVisitor;
 
-    class Function {
-    public:
-        virtual std::string toString(SymbolTable &st) = 0;
-        virtual void accept(FunctionVisitor *v) = 0;
-        virtual ~Function() = default;
-    };
+class FunctionVisitor;
 
-    using Parameter =
-        std::pair<std::unique_ptr<Type>, std::unique_ptr<AtomIdentifier>>;
+class Function {
+public:
+    virtual std::string toString(SymbolTable &st) = 0;
+    virtual void accept(FunctionVisitor *v) = 0;
+    virtual ~Function() = default;
+};
 
-    class FunctionDefinition : public Function {
-    public:
-        FunctionDefinition(std::unique_ptr<Type> type,
-                           std::unique_ptr<AtomIdentifier> name,
-                           std::vector<Parameter> parameters,
-                           std::unique_ptr<Scope> body);
-        Type *getType();
-        AtomIdentifier *getName();
-        std::vector<Parameter> &getParameters();
-        Scope *getBody();
-        std::string toString(SymbolTable &st) override;
-        void accept(FunctionVisitor *v) override;
+using Parameter =
+    std::pair<std::unique_ptr<Type>, std::unique_ptr<AtomIdentifier>>;
 
-    private:
-        std::unique_ptr<Type> type;
-        std::unique_ptr<AtomIdentifier> name;
-        std::vector<Parameter> parameters;
-        std::unique_ptr<Scope> body;
-    };
+class FunctionDefinition : public Function {
+public:
+    FunctionDefinition(std::unique_ptr<Type> type,
+                       std::unique_ptr<AtomIdentifier> name,
+                       std::vector<Parameter> parameters,
+                       std::unique_ptr<Scope> body);
+    Type *getType();
+    AtomIdentifier *getName();
+    std::vector<Parameter> &getParameters();
+    Scope *getBody();
+    std::string toString(SymbolTable &st) override;
+    void accept(FunctionVisitor *v) override;
 
-    class FunctionPrototype : public Function {
-    public:
-        FunctionPrototype(std::unique_ptr<Type> type,
-                          std::unique_ptr<AtomIdentifier> name,
-                          std::vector<Parameter> parameters);
-        Type *getType();
-        AtomIdentifier *getName();
-        std::vector<Parameter> &getParameters();
-        std::string toString(SymbolTable &st) override;
-        void accept(FunctionVisitor *v) override;
+private:
+    std::unique_ptr<Type> type;
+    std::unique_ptr<AtomIdentifier> name;
+    std::vector<Parameter> parameters;
+    std::unique_ptr<Scope> body;
+};
 
-    private:
-        std::unique_ptr<Type> type;
-        std::unique_ptr<AtomIdentifier> name;
-        std::vector<Parameter> parameters;
-    };
+class FunctionPrototype : public Function {
+public:
+    FunctionPrototype(std::unique_ptr<Type> type,
+                      std::unique_ptr<AtomIdentifier> name,
+                      std::vector<Parameter> parameters);
+    Type *getType();
+    AtomIdentifier *getName();
+    std::vector<Parameter> &getParameters();
+    std::string toString(SymbolTable &st) override;
+    void accept(FunctionVisitor *v) override;
 
-    class FunctionVisitor {
-    public:
-        virtual void visit(FunctionDefinition *f) = 0;
-        virtual void visit(FunctionPrototype *f) = 0;
-    };
+private:
+    std::unique_ptr<Type> type;
+    std::unique_ptr<AtomIdentifier> name;
+    std::vector<Parameter> parameters;
+};
 
-    class Program {
-    public:
-        Program(std::vector<std::unique_ptr<Function>> functions,
-                SymbolTable st);
-        std::vector<std::unique_ptr<Function>> &getFunctions();
-        SymbolTable &getSymbolTable();
-        std::string toString();
+class FunctionVisitor {
+public:
+    virtual void visit(FunctionDefinition *f) = 0;
+    virtual void visit(FunctionPrototype *f) = 0;
+};
 
-    private:
-        std::vector<std::unique_ptr<Function>> functions;
-        SymbolTable st;
-    };
+class Program {
+public:
+    Program(std::vector<std::unique_ptr<Function>> functions, SymbolTable st);
+    std::vector<std::unique_ptr<Function>> &getFunctions();
+    SymbolTable &getSymbolTable();
+    std::string toString();
 
-    class ToStringVisitor : public InstructionVisitor, public ExprVisitor {
-    public:
-        ToStringVisitor(SymbolTable &st);
+private:
+    std::vector<std::unique_ptr<Function>> functions;
+    SymbolTable st;
+};
 
-        std::string getResult();
+class ToStringVisitor : public InstructionVisitor, public ExprVisitor {
+public:
+    ToStringVisitor(SymbolTable &st);
 
-        void convertSubexpression(Instruction *i);
+    std::string getResult();
 
-        void visit(Instruction *i) override;
-        void visit(Scope *s) override;
-        void visit(InstructionExpr *i) override;
-        void visit(InstructionDeclaration *i) override;
-        void visit(InstructionReturn *i) override;
-        void visit(InstructionIf *i) override;
-        void visit(InstructionWhile *i) override;
+    void convertSubexpression(Instruction *i);
 
-        void visit(Expr *e) override;
-        void visit(TerminalExpr *e) override;
-        void visit(ParenExpr *e) override;
-        void visit(CallExpr *e) override;
-        void visit(UnaryOpExpr *e) override;
-        void visit(BinaryOpExpr *e) override;
+    void visit(Instruction *i) override;
+    void visit(Scope *s) override;
+    void visit(InstructionExpr *i) override;
+    void visit(InstructionDeclaration *i) override;
+    void visit(InstructionReturn *i) override;
+    void visit(InstructionIf *i) override;
+    void visit(InstructionWhile *i) override;
 
-    private:
-        SymbolTable &st;
-        std::string prefix;
-        std::string res;
-    };
+    void visit(Expr *e) override;
+    void visit(TerminalExpr *e) override;
+    void visit(ParenExpr *e) override;
+    void visit(CallExpr *e) override;
+    void visit(UnaryOpExpr *e) override;
+    void visit(BinaryOpExpr *e) override;
+
+private:
+    SymbolTable &st;
+    std::string prefix;
+    std::string res;
+};
+
 } // namespace frontend::ast

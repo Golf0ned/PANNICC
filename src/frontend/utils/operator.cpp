@@ -2,7 +2,7 @@
 
 #include <utility>
 
-using namespace frontend;
+namespace frontend {
 
 bool isAssignment(BinaryOp op) {
     switch (op) {
@@ -159,3 +159,5 @@ std::string toString(UnaryOp op) {
     }
     std::unreachable();
 }
+
+} // namespace frontend

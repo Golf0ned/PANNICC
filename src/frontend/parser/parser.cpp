@@ -3,7 +3,7 @@
 
 #include <tao/pegtl/contrib/analyze.hpp>
 
-using namespace frontend;
+namespace frontend {
 
 struct grammar
     : pegtl::must<
@@ -40,3 +40,5 @@ ast::Program parse_string(const std::string &input) {
     ast::Program ast(std::move(parsed_functions), std::move(st));
     return ast;
 }
+
+} // namespace frontend

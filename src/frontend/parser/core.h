@@ -4,69 +4,71 @@
 #include "frontend/utils/symbol_table.h"
 
 namespace frontend {
-    //
-    // Symbol Table
-    //
-    extern SymbolTable st;
 
-    //
-    // Keywords
-    //
-    struct keyword_return : TAO_PEGTL_STRING("return") {};
-    struct keyword_if : TAO_PEGTL_STRING("if") {};
-    struct keyword_else : TAO_PEGTL_STRING("else") {};
-    struct keyword_while : TAO_PEGTL_STRING("while") {};
+//
+// Symbol Table
+//
+extern SymbolTable st;
 
-    //
-    // Types
-    //
-    struct keyword_short : TAO_PEGTL_STRING("short") {};
-    struct keyword_int : TAO_PEGTL_STRING("int") {};
-    struct keyword_long : TAO_PEGTL_STRING("long") {};
-    struct keyword_long_long : TAO_PEGTL_STRING("long long") {};
+//
+// Keywords
+//
+struct keyword_return : TAO_PEGTL_STRING("return") {};
+struct keyword_if : TAO_PEGTL_STRING("if") {};
+struct keyword_else : TAO_PEGTL_STRING("else") {};
+struct keyword_while : TAO_PEGTL_STRING("while") {};
 
-    //
-    // Characters
-    //
-    struct left_paren : pegtl::one<'('> {};
-    struct right_paren : pegtl::one<')'> {};
-    struct left_brace : pegtl::one<'{'> {};
-    struct right_brace : pegtl::one<'}'> {};
-    struct comma : pegtl::one<','> {};
-    struct semicolon : pegtl::one<';'> {};
-    struct plus : pegtl::one<'+'> {};
-    struct minus : pegtl::one<'-'> {};
-    struct asterisk : pegtl::one<'*'> {};
-    struct slash : pegtl::one<'/'> {};
-    struct ampersand : pegtl::one<'&'> {};
-    struct pipe : pegtl::one<'|'> {};
-    struct caret : pegtl::one<'^'> {};
-    struct tilde : pegtl::one<'~'> {};
-    struct bang : pegtl::one<'!'> {};
-    struct equal : pegtl::one<'='> {};
-    struct greater : pegtl::one<'>'> {};
-    struct less : pegtl::one<'<'> {};
+//
+// Types
+//
+struct keyword_short : TAO_PEGTL_STRING("short") {};
+struct keyword_int : TAO_PEGTL_STRING("int") {};
+struct keyword_long : TAO_PEGTL_STRING("long") {};
+struct keyword_long_long : TAO_PEGTL_STRING("long long") {};
 
-    //
-    // Ignorables
-    //
-    struct comment
-        : pegtl::disable<TAO_PEGTL_STRING("//"), pegtl::until<pegtl::eolf>> {};
+//
+// Characters
+//
+struct left_paren : pegtl::one<'('> {};
+struct right_paren : pegtl::one<')'> {};
+struct left_brace : pegtl::one<'{'> {};
+struct right_brace : pegtl::one<'}'> {};
+struct comma : pegtl::one<','> {};
+struct semicolon : pegtl::one<';'> {};
+struct plus : pegtl::one<'+'> {};
+struct minus : pegtl::one<'-'> {};
+struct asterisk : pegtl::one<'*'> {};
+struct slash : pegtl::one<'/'> {};
+struct ampersand : pegtl::one<'&'> {};
+struct pipe : pegtl::one<'|'> {};
+struct caret : pegtl::one<'^'> {};
+struct tilde : pegtl::one<'~'> {};
+struct bang : pegtl::one<'!'> {};
+struct equal : pegtl::one<'='> {};
+struct greater : pegtl::one<'>'> {};
+struct less : pegtl::one<'<'> {};
 
-    struct whitespace_char : pegtl::sor<pegtl::space> {};
+//
+// Ignorables
+//
+struct comment
+    : pegtl::disable<TAO_PEGTL_STRING("//"), pegtl::until<pegtl::eolf>> {};
 
-    struct whitespace : pegtl::plus<whitespace_char> {};
+struct whitespace_char : pegtl::sor<pegtl::space> {};
 
-    struct ignorable : pegtl::star<pegtl::sor<whitespace_char, comment>> {};
+struct whitespace : pegtl::plus<whitespace_char> {};
 
-    //
-    // Comma List
-    //
-    template <typename Rule>
-    using pegtl_comma_list = pegtl::list<Rule, pegtl::seq<comma, ignorable>>;
+struct ignorable : pegtl::star<pegtl::sor<whitespace_char, comment>> {};
 
-    //
-    // Actions
-    //
-    template <typename Rule> struct action {};
+//
+// Comma List
+//
+template <typename Rule>
+using pegtl_comma_list = pegtl::list<Rule, pegtl::seq<comma, ignorable>>;
+
+//
+// Actions
+//
+template <typename Rule> struct action {};
+
 } // namespace frontend

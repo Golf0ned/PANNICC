@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <unordered_map>
 
-using namespace frontend;
+namespace frontend {
 
 std::vector<std::filesystem::path> current_file;
 std::vector<std::string> parsed_clauses;
@@ -160,3 +160,5 @@ std::string preprocess(const std::string &input_file) {
 
     return preprocessed;
 }
+
+} // namespace frontend

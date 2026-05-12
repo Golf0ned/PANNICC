@@ -2,7 +2,7 @@
 
 #include <utility>
 
-using namespace frontend;
+namespace frontend {
 
 std::string Int::toString() { return "int"; }
 
@@ -24,3 +24,5 @@ middleend::mir::Type Ptr::toMir() { return middleend::mir::Type::PTR; }
 std::unique_ptr<Type> Ptr::clone() {
     return std::make_unique<Ptr>(base->clone());
 }
+
+} // namespace frontend

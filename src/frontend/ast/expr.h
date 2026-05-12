@@ -7,81 +7,83 @@
 #include <vector>
 
 namespace frontend::ast {
-    class ExprVisitor;
 
-    class Expr {
-    public:
-        virtual void accept(ExprVisitor *v) = 0;
-        virtual ~Expr() = default;
-    };
+class ExprVisitor;
 
-    class TerminalExpr : public Expr {
-    public:
-        TerminalExpr(std::unique_ptr<Atom> atom);
-        Atom *getAtom();
-        void accept(ExprVisitor *v) override;
+class Expr {
+public:
+    virtual void accept(ExprVisitor *v) = 0;
+    virtual ~Expr() = default;
+};
 
-    private:
-        std::unique_ptr<Atom> atom;
-    };
+class TerminalExpr : public Expr {
+public:
+    TerminalExpr(std::unique_ptr<Atom> atom);
+    Atom *getAtom();
+    void accept(ExprVisitor *v) override;
 
-    class ParenExpr : public Expr {
-    public:
-        ParenExpr(std::unique_ptr<Expr> body);
-        Expr *getBody();
-        void accept(ExprVisitor *v) override;
+private:
+    std::unique_ptr<Atom> atom;
+};
 
-    private:
-        std::unique_ptr<Expr> body;
-    };
+class ParenExpr : public Expr {
+public:
+    ParenExpr(std::unique_ptr<Expr> body);
+    Expr *getBody();
+    void accept(ExprVisitor *v) override;
 
-    class CallExpr : public Expr {
-    public:
-        CallExpr(std::unique_ptr<AtomIdentifier> callee,
-                 std::vector<std::unique_ptr<Expr>> arguments);
-        AtomIdentifier *getCallee();
-        std::vector<std::unique_ptr<Expr>> &getArguments();
-        void accept(ExprVisitor *v) override;
+private:
+    std::unique_ptr<Expr> body;
+};
 
-    private:
-        std::unique_ptr<AtomIdentifier> callee;
-        std::vector<std::unique_ptr<Expr>> arguments;
-    };
+class CallExpr : public Expr {
+public:
+    CallExpr(std::unique_ptr<AtomIdentifier> callee,
+             std::vector<std::unique_ptr<Expr>> arguments);
+    AtomIdentifier *getCallee();
+    std::vector<std::unique_ptr<Expr>> &getArguments();
+    void accept(ExprVisitor *v) override;
 
-    class UnaryOpExpr : public Expr {
-    public:
-        UnaryOpExpr(UnaryOp op, std::unique_ptr<Expr> value);
-        UnaryOp getOp();
-        Expr *getValue();
-        void accept(ExprVisitor *v) override;
+private:
+    std::unique_ptr<AtomIdentifier> callee;
+    std::vector<std::unique_ptr<Expr>> arguments;
+};
 
-    private:
-        UnaryOp op;
-        std::unique_ptr<Expr> value;
-    };
+class UnaryOpExpr : public Expr {
+public:
+    UnaryOpExpr(UnaryOp op, std::unique_ptr<Expr> value);
+    UnaryOp getOp();
+    Expr *getValue();
+    void accept(ExprVisitor *v) override;
 
-    class BinaryOpExpr : public Expr {
-    public:
-        BinaryOpExpr(BinaryOp op, std::unique_ptr<Expr> left,
-                     std::unique_ptr<Expr> right);
-        BinaryOp getOp();
-        Expr *getLeft();
-        Expr *getRight();
-        void accept(ExprVisitor *v) override;
+private:
+    UnaryOp op;
+    std::unique_ptr<Expr> value;
+};
 
-    private:
-        BinaryOp op;
-        std::unique_ptr<Expr> left;
-        std::unique_ptr<Expr> right;
-    };
+class BinaryOpExpr : public Expr {
+public:
+    BinaryOpExpr(BinaryOp op, std::unique_ptr<Expr> left,
+                 std::unique_ptr<Expr> right);
+    BinaryOp getOp();
+    Expr *getLeft();
+    Expr *getRight();
+    void accept(ExprVisitor *v) override;
 
-    class ExprVisitor {
-    public:
-        virtual void visit(Expr *e) = 0;
-        virtual void visit(TerminalExpr *e) = 0;
-        virtual void visit(ParenExpr *e) = 0;
-        virtual void visit(CallExpr *e) = 0;
-        virtual void visit(UnaryOpExpr *e) = 0;
-        virtual void visit(BinaryOpExpr *e) = 0;
-    };
+private:
+    BinaryOp op;
+    std::unique_ptr<Expr> left;
+    std::unique_ptr<Expr> right;
+};
+
+class ExprVisitor {
+public:
+    virtual void visit(Expr *e) = 0;
+    virtual void visit(TerminalExpr *e) = 0;
+    virtual void visit(ParenExpr *e) = 0;
+    virtual void visit(CallExpr *e) = 0;
+    virtual void visit(UnaryOpExpr *e) = 0;
+    virtual void visit(BinaryOpExpr *e) = 0;
+};
+
 } // namespace frontend::ast
