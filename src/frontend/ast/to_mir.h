@@ -60,8 +60,15 @@ namespace frontend {
         std::vector<std::unordered_map<uint64_t, middleend::mir::Value *>>
             scope_bindings;
         std::vector<std::unordered_map<uint64_t, Type *>> scope_binding_types;
+
         middleend::mir::Value *prev_expr;
         std::unordered_map<ast::Expr *, std::unique_ptr<Type>> expr_types;
+
+        uint64_t cur_bb_id;
+        std::unordered_map<uint64_t, middleend::mir::BasicBlock *> bb_ids;
+        std::unordered_map<middleend::mir::Terminator *, std::vector<uint64_t>>
+            bb_edges;
+
         std::unordered_map<uint64_t, middleend::mir::Function *> function_ids;
         std::unordered_map<uint64_t, Type *> function_types;
         std::unordered_map<uint64_t,

@@ -22,7 +22,7 @@ mir::Program lower(ast::Program &ast) {
 }
 
 ToMIRVisitor::ToMIRVisitor(SymbolTable &st, mir::LiteralMap &lm)
-    : st(st), lm(lm), cur_scope(0) {};
+    : st(st), lm(lm), cur_scope(0), cur_bb_id(1) {};
 
 std::unique_ptr<mir::Function> ToMIRVisitor::getResult() {
     return std::move(res);
@@ -112,14 +112,38 @@ void ToMIRVisitor::makeBB(
     std::unique_ptr<middleend::mir::Terminator> terminator) {
     auto bb = std::make_unique<mir::BasicBlock>(std::move(instructions),
                                                 std::move(terminator));
-    // TODO: add BB to mapping
+
+    bb_ids[cur_bb_id++] = bb.get();
 
     basic_blocks.push_back(std::move(bb));
     instructions.clear();
 }
 
 void ToMIRVisitor::resolveBBEdges() {
-    // TODO
+    for (auto &bb : basic_blocks) {
+        auto *t = bb->getTerminator().get();
+
+        auto br = dynamic_cast<mir::TerminatorBranch *>(t);
+        if (br) {
+            auto *succ = bb_ids.at(bb_edges[t][0]);
+            br->setSuccessor(succ);
+            bb->getSuccessors().addEdge(succ);
+            succ->getPredecessors().addEdge(bb.get());
+        }
+
+        auto cond_br = dynamic_cast<mir::TerminatorCondBranch *>(t);
+        if (cond_br) {
+            auto *t_succ = bb_ids.at(bb_edges[t][0]);
+            cond_br->setTSuccessor(t_succ);
+            bb->getSuccessors().addEdge(t_succ);
+            t_succ->getPredecessors().addEdge(bb.get());
+
+            auto *f_succ = bb_ids.at(bb_edges[t][1]);
+            cond_br->setFSuccessor(f_succ);
+            bb->getSuccessors().addEdge(f_succ);
+            f_succ->getPredecessors().addEdge(bb.get());
+        }
+    }
 }
 
 mir::BasicBlock *ToMIRVisitor::createEntryBlock() {
@@ -142,8 +166,20 @@ void ToMIRVisitor::visit(ast::FunctionDefinition *f) {
     auto params = makeParams(f->getParameters());
     ret_alloca = makeAlloca(type);
 
-    // Lower body
-    visit(f->getBody());
+    cur_scope++;
+    scope_bindings.emplace_back();
+    scope_binding_types.emplace_back();
+    for (auto &i : f->getBody()->getInstructions())
+        i->accept(this);
+    if (!instructions.empty()) {
+        auto br = std::make_unique<mir::TerminatorBranch>(nullptr);
+        bb_edges[br.get()] = {0};
+        makeBB(std::move(br));
+    }
+    scope_bindings.pop_back();
+    scope_binding_types.pop_back();
+    cur_scope--;
+
     resolveBBEdges();
     auto *entry = createEntryBlock();
 
@@ -158,9 +194,6 @@ void ToMIRVisitor::visit(ast::FunctionPrototype *f) {
     function_types[f->getName()->getValue()] = f->getType();
     auto name = f->getName()->toString(st);
     auto params = makeParams(f->getParameters());
-
-    // TODO: map function type?
-    // TODO: map function in preparation for resolveFunctions
 
     res = std::make_unique<mir::FunctionDeclaration>(type, name,
                                                      std::move(params));
@@ -209,52 +242,73 @@ void ToMIRVisitor::visit(ast::InstructionReturn *i) {
     auto store = std::make_unique<mir::InstructionStore>(ret_val, ret_alloca);
     instructions.push_back(std::move(store));
 
-    // TODO: associate branch with return BB
-    auto branch = std::make_unique<mir::TerminatorBranch>(nullptr);
-    makeBB(std::move(branch));
+    auto br = std::make_unique<mir::TerminatorBranch>(nullptr);
+    bb_edges[br.get()] = {0};
+    makeBB(std::move(br));
 }
 
 void ToMIRVisitor::visit(ast::InstructionIf *i) {
     i->getCond()->accept(this);
     auto *cond = usePrevExpr();
 
-    // TODO: associate branch with true and [false or cont] BB
     auto cond_br =
         std::make_unique<mir::TerminatorCondBranch>(cond, nullptr, nullptr);
+    auto *cond_br_ptr = cond_br.get();
     makeBB(std::move(cond_br));
+
+    // Cond -> True
+    bb_edges[cond_br_ptr] = {cur_bb_id};
 
     // True branch
     i->getTBranch()->accept(this);
-    // TODO: associate branch with cont BB
-    auto t_to_cont = std::make_unique<mir::TerminatorBranch>(nullptr);
-    makeBB(std::move(t_to_cont));
+    auto t_br = std::make_unique<mir::TerminatorBranch>(nullptr);
+    auto *t_br_ptr = t_br.get();
+    makeBB(std::move(t_br));
+
+    // Cond -> [False or Cont]
+    bb_edges[cond_br_ptr].push_back(cur_bb_id);
 
     // False branch
     if (i->getFBranch()) {
         i->getFBranch()->accept(this);
-        // TODO: associate branch with cont BB
-        auto f_to_cont = std::make_unique<mir::TerminatorBranch>(nullptr);
-        makeBB(std::move(f_to_cont));
+        auto f_br = std::make_unique<mir::TerminatorBranch>(nullptr);
+        auto *f_br_ptr = f_br.get();
+        makeBB(std::move(f_br));
+
+        // False -> Cont
+        bb_edges[f_br_ptr] = {cur_bb_id};
     }
+
+    // True -> Cont
+    bb_edges[t_br_ptr] = {cur_bb_id};
 }
 
 void ToMIRVisitor::visit(ast::InstructionWhile *i) {
-    // TODO: associate branch with cond BB
-    auto prev_to_cond = std::make_unique<mir::TerminatorBranch>(nullptr);
-    makeBB(std::move(prev_to_cond));
+    auto prev_br = std::make_unique<mir::TerminatorBranch>(nullptr);
+    auto *prev_br_ptr = prev_br.get();
+    makeBB(std::move(prev_br));
+    // Prev -> Cond
+    bb_edges[prev_br_ptr] = {cur_bb_id};
 
+    auto cond_bb_id = cur_bb_id;
     i->getCond()->accept(this);
     auto *cond = usePrevExpr();
-
-    // TODO: associate branch with body and cont BB
     auto cond_br =
         std::make_unique<mir::TerminatorCondBranch>(cond, nullptr, nullptr);
+    auto *cond_br_ptr = cond_br.get();
     makeBB(std::move(cond_br));
+    // Cond -> Body
+    bb_edges[cond_br_ptr] = {cur_bb_id};
 
     i->getBody()->accept(this);
-    // TODO: associate branch with cond BB
-    auto body_to_cond = std::make_unique<mir::TerminatorBranch>(nullptr);
-    makeBB(std::move(body_to_cond));
+    auto body_br = std::make_unique<mir::TerminatorBranch>(nullptr);
+    auto *body_br_ptr = cond_br.get();
+    makeBB(std::move(body_br));
+    // Body -> Cond
+    bb_edges[body_br_ptr] = {cond_bb_id};
+
+    // Cond -> Cont
+    bb_edges[cond_br_ptr].push_back(cur_bb_id);
 }
 
 void ToMIRVisitor::visit(ast::Expr *e) {}
