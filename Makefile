@@ -6,12 +6,12 @@ all: install test
 
 build:
 	mkdir -p $(BUILD_DIR)
-	cmake $(CMAKE_FLAGS) -DCMAKE_INSTALL_PREFIX=$(INSTALL_DIR) -S . -B $(BUILD_DIR)
+	cmake $(CMAKE_FLAGS) -S . -B $(BUILD_DIR)
 	cmake --build $(BUILD_DIR) -j 32
 
 install: build
 	mkdir -p $(INSTALL_DIR)
-	cmake --install $(BUILD_DIR) -j 32
+	cmake --install $(BUILD_DIR) --prefix $(INSTALL_DIR) -j 32
 
 test:
 	cd $(BUILD_DIR) && ./test/regression/regression_tests | grep -e "\["
