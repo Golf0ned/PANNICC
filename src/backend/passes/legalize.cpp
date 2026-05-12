@@ -5,313 +5,307 @@
 #include "backend/passes/liveness.h"
 
 namespace backend {
-    // TODO: unhardcode
-    constexpr auto reg_size = lir::DataSize::QUADWORD;
+// TODO: unhardcode
+constexpr auto reg_size = lir::DataSize::QUADWORD;
 
-    ReplaceStackArgVisitor::ReplaceStackArgVisitor(uint64_t stack_bytes,
-                                                   lir::OperandManager *om)
-        : stack_bytes(stack_bytes), om(om) {}
+ReplaceStackArgVisitor::ReplaceStackArgVisitor(uint64_t stack_bytes,
+                                               lir::OperandManager *om)
+    : stack_bytes(stack_bytes), om(om) {}
 
-    lir::Operand *ReplaceStackArgVisitor::tryReplace(lir::Operand *operand) {
-        auto stack_arg = dynamic_cast<lir::StackArg *>(operand);
-        if (!stack_arg)
-            return nullptr;
+lir::Operand *ReplaceStackArgVisitor::tryReplace(lir::Operand *operand) {
+    auto stack_arg = dynamic_cast<lir::StackArg *>(operand);
+    if (!stack_arg)
+        return nullptr;
 
-        auto stack_addr = stack_bytes + stack_arg->getArgNum() * 8;
-        auto displacement = om->getImmediate(stack_addr);
-        auto rsp = om->getRegister(lir::RegisterNum::RSP);
-        return om->getAddress(rsp, nullptr, nullptr, displacement);
+    auto stack_addr = stack_bytes + stack_arg->getArgNum() * 8;
+    auto displacement = om->getImmediate(stack_addr);
+    auto rsp = om->getRegister(lir::RegisterNum::RSP);
+    return om->getAddress(rsp, nullptr, nullptr, displacement);
+}
+
+void ReplaceStackArgVisitor::visit(lir::Instruction *i) {}
+
+void ReplaceStackArgVisitor::visit(lir::Label *l) {}
+
+void ReplaceStackArgVisitor::visit(lir::InstructionMov *i) {
+    auto src = tryReplace(i->getSrc());
+    if (src)
+        i->setSrc(src);
+
+    auto dst = tryReplace(i->getDst());
+    if (dst)
+        i->setDst(dst);
+}
+
+void ReplaceStackArgVisitor::visit(lir::InstructionPush *i) {
+    auto src = tryReplace(i->getSrc());
+    if (src)
+        i->setSrc(src);
+}
+
+void ReplaceStackArgVisitor::visit(lir::InstructionPop *i) {
+    auto dst = tryReplace(i->getDst());
+    if (dst)
+        i->setDst(dst);
+}
+
+void ReplaceStackArgVisitor::visit(lir::InstructionConvert *i) {}
+
+void ReplaceStackArgVisitor::visit(lir::InstructionBinaryOp *i) {
+    auto src = tryReplace(i->getSrc());
+    if (src)
+        i->setSrc(src);
+
+    auto dst = tryReplace(i->getDst());
+    if (dst)
+        i->setDst(dst);
+}
+
+void ReplaceStackArgVisitor::visit(lir::InstructionSpecialOp *i) {
+    auto src = tryReplace(i->getSrc());
+    if (src)
+        i->setSrc(src);
+}
+
+void ReplaceStackArgVisitor::visit(lir::InstructionLea *i) {
+    auto src = tryReplace(i->getSrc());
+    if (src)
+        i->setSrc(static_cast<lir::Address *>(src));
+
+    auto dst = tryReplace(i->getDst());
+    if (dst)
+        i->setDst(dst);
+}
+
+void ReplaceStackArgVisitor::visit(lir::InstructionCmp *i) {
+    auto src1 = tryReplace(i->getSrc1());
+    if (src1)
+        i->setSrc1(src1);
+
+    auto src2 = tryReplace(i->getSrc2());
+    if (src2)
+        i->setSrc2(src2);
+}
+
+void ReplaceStackArgVisitor::visit(lir::InstructionJmp *i) {}
+
+void ReplaceStackArgVisitor::visit(lir::InstructionCJmp *i) {}
+
+void ReplaceStackArgVisitor::visit(lir::InstructionCall *i) {
+    auto args = i->getArgs();
+
+    for (auto &arg : args) {
+        auto stack_arg = tryReplace(arg);
+        if (stack_arg)
+            arg = stack_arg;
     }
 
-    void ReplaceStackArgVisitor::visit(lir::Instruction *i) {}
+    i->setArgs(args);
+}
 
-    void ReplaceStackArgVisitor::visit(lir::Label *l) {}
+void ReplaceStackArgVisitor::visit(lir::InstructionRet *i) {}
 
-    void ReplaceStackArgVisitor::visit(lir::InstructionMov *i) {
-        auto src = tryReplace(i->getSrc());
-        if (src)
-            i->setSrc(src);
+void ReplaceStackArgVisitor::visit(lir::InstructionUnknown *i) {}
 
-        auto dst = tryReplace(i->getDst());
-        if (dst)
-            i->setDst(dst);
-    }
+std::vector<lir::RegisterNum> getUsedRegisters(Liveness &l) {
+    const auto &gen = l.getGen(), &kill = l.getKill();
 
-    void ReplaceStackArgVisitor::visit(lir::InstructionPush *i) {
-        auto src = tryReplace(i->getSrc());
-        if (src)
-            i->setSrc(src);
-    }
+    // TODO: do this in a less awful way
+    std::unordered_set<lir::RegisterNum> registers_used;
 
-    void ReplaceStackArgVisitor::visit(lir::InstructionPop *i) {
-        auto dst = tryReplace(i->getDst());
-        if (dst)
-            i->setDst(dst);
-    }
-
-    void ReplaceStackArgVisitor::visit(lir::InstructionConvert *i) {}
-
-    void ReplaceStackArgVisitor::visit(lir::InstructionBinaryOp *i) {
-        auto src = tryReplace(i->getSrc());
-        if (src)
-            i->setSrc(src);
-
-        auto dst = tryReplace(i->getDst());
-        if (dst)
-            i->setDst(dst);
-    }
-
-    void ReplaceStackArgVisitor::visit(lir::InstructionSpecialOp *i) {
-        auto src = tryReplace(i->getSrc());
-        if (src)
-            i->setSrc(src);
-    }
-
-    void ReplaceStackArgVisitor::visit(lir::InstructionLea *i) {
-        auto src = tryReplace(i->getSrc());
-        if (src)
-            i->setSrc(static_cast<lir::Address *>(src));
-
-        auto dst = tryReplace(i->getDst());
-        if (dst)
-            i->setDst(dst);
-    }
-
-    void ReplaceStackArgVisitor::visit(lir::InstructionCmp *i) {
-        auto src1 = tryReplace(i->getSrc1());
-        if (src1)
-            i->setSrc1(src1);
-
-        auto src2 = tryReplace(i->getSrc2());
-        if (src2)
-            i->setSrc2(src2);
-    }
-
-    void ReplaceStackArgVisitor::visit(lir::InstructionJmp *i) {}
-
-    void ReplaceStackArgVisitor::visit(lir::InstructionCJmp *i) {}
-
-    void ReplaceStackArgVisitor::visit(lir::InstructionCall *i) {
-        auto args = i->getArgs();
-
-        for (auto &arg : args) {
-            auto stack_arg = tryReplace(arg);
-            if (stack_arg)
-                arg = stack_arg;
+    for (size_t i = 0; i < gen.size(); i++) {
+        auto &gen_i = gen[i], &kill_i = kill[i];
+        for (auto reg : gen_i) {
+            auto sized_reg_num = lir::toSized(reg->getRegNum(), reg_size);
+            registers_used.insert(sized_reg_num);
         }
-
-        i->setArgs(args);
-    }
-
-    void ReplaceStackArgVisitor::visit(lir::InstructionRet *i) {}
-
-    void ReplaceStackArgVisitor::visit(lir::InstructionUnknown *i) {}
-
-    std::vector<lir::RegisterNum> getUsedRegisters(Liveness &l) {
-        const auto &gen = l.getGen(), &kill = l.getKill();
-
-        // TODO: do this in a less awful way
-        std::unordered_set<lir::RegisterNum> registers_used;
-
-        for (size_t i = 0; i < gen.size(); i++) {
-            auto &gen_i = gen[i], &kill_i = kill[i];
-            for (auto reg : gen_i) {
-                auto sized_reg_num = lir::toSized(reg->getRegNum(), reg_size);
-                registers_used.insert(sized_reg_num);
-            }
-            for (auto reg : kill_i) {
-                auto sized_reg_num = lir::toSized(reg->getRegNum(), reg_size);
-                registers_used.insert(sized_reg_num);
-            }
+        for (auto reg : kill_i) {
+            auto sized_reg_num = lir::toSized(reg->getRegNum(), reg_size);
+            registers_used.insert(sized_reg_num);
         }
-
-        std::vector<lir::RegisterNum> res(registers_used.begin(),
-                                          registers_used.end());
-        std::sort(res.begin(), res.end());
-        return res;
     }
 
-    void legalize(lir::Program &lir) {
-        auto om = lir.getOm();
-        auto rsp = om->getRegister(lir::RegisterNum::RSP);
+    std::vector<lir::RegisterNum> res(registers_used.begin(),
+                                      registers_used.end());
+    std::sort(res.begin(), res.end());
+    return res;
+}
 
-        for (auto &f : lir.getFunctions()) {
-            auto liveness = computeLiveness(f.get(), om);
-            const auto &in = liveness.getIn(), &out = liveness.getOut();
-            auto registers_used = getUsedRegisters(liveness);
-            auto function_stack_bytes = f->getStackBytes();
+void legalize(lir::Program &lir) {
+    auto om = lir.getOm();
+    auto rsp = om->getRegister(lir::RegisterNum::RSP);
 
-            auto &instructions = f->getInstructions();
-            auto ret_iter = std::prev(instructions.end());
+    for (auto &f : lir.getFunctions()) {
+        auto liveness = computeLiveness(f.get(), om);
+        const auto &in = liveness.getIn(), &out = liveness.getOut();
+        auto registers_used = getUsedRegisters(liveness);
+        auto function_stack_bytes = f->getStackBytes();
 
-            //
-            // Preserve caller-saved registers, manage function args, and
-            // allocate space around calls
-            //
-            auto has_call = false;
-            size_t i_index = 0;
-            for (auto i_iter = instructions.begin();
-                 i_iter != instructions.end(); i_iter++) {
-                auto call = dynamic_cast<lir::InstructionCall *>(i_iter->get());
-                if (!call) {
-                    i_index++;
+        auto &instructions = f->getInstructions();
+        auto ret_iter = std::prev(instructions.end());
+
+        //
+        // Preserve caller-saved registers, manage function args, and
+        // allocate space around calls
+        //
+        auto has_call = false;
+        size_t i_index = 0;
+        for (auto i_iter = instructions.begin(); i_iter != instructions.end();
+             i_iter++) {
+            auto call = dynamic_cast<lir::InstructionCall *>(i_iter->get());
+            if (!call) {
+                i_index++;
+                continue;
+            }
+
+            has_call = true;
+
+            auto next_iter = std::next(i_iter);
+
+            // TODO: do we need to save from in at all? we currently save it
+            // for potential arg collision issues
+            auto &in_i = in[i_index];
+            auto &out_i = out[i_index];
+            std::vector<lir::Register *> save;
+            std::unordered_set<lir::Register *> restore;
+            for (auto reg_num : lir::getCallerSavedRegisters()) {
+                // TODO: skip the 32 bit step once liveness is rewritten
+                auto sized_reg_num =
+                    lir::toSized(reg_num, lir::DataSize::DOUBLEWORD);
+                if (sized_reg_num == lir::RegisterNum::EAX)
                     continue;
+
+                auto reg_64 = om->getRegister(reg_num);
+                auto reg_32 = om->getRegister(sized_reg_num);
+                if (in_i.contains(reg_32)) {
+                    save.push_back(reg_64);
                 }
+                if (out_i.contains(reg_32))
+                    restore.insert(reg_64);
+            }
 
-                has_call = true;
+            // Allocate/deallocate stack space
+            auto num_params = call->getArgs().size();
+            auto call_stack_bytes =
+                (save.size() + (num_params > 6 ? num_params - 6 : 0)) * 8;
+            if (call_stack_bytes) {
+                call_stack_bytes = (call_stack_bytes + 15) & -16;
 
-                auto next_iter = std::next(i_iter);
+                auto stack_bytes = om->getImmediate(call_stack_bytes);
 
-                // TODO: do we need to save from in at all? we currently save it
-                // for potential arg collision issues
-                auto &in_i = in[i_index];
-                auto &out_i = out[i_index];
-                std::vector<lir::Register *> save;
-                std::unordered_set<lir::Register *> restore;
-                for (auto reg_num : lir::getCallerSavedRegisters()) {
-                    // TODO: skip the 32 bit step once liveness is rewritten
-                    auto sized_reg_num =
-                        lir::toSized(reg_num, lir::DataSize::DOUBLEWORD);
-                    if (sized_reg_num == lir::RegisterNum::EAX)
-                        continue;
+                auto allocate = std::make_unique<lir::InstructionBinaryOp>(
+                    lir::BinaryOp::SUB, reg_size, stack_bytes, rsp);
+                instructions.insert(i_iter, std::move(allocate));
 
-                    auto reg_64 = om->getRegister(reg_num);
-                    auto reg_32 = om->getRegister(sized_reg_num);
-                    if (in_i.contains(reg_32)) {
-                        save.push_back(reg_64);
-                    }
-                    if (out_i.contains(reg_32))
-                        restore.insert(reg_64);
-                }
+                auto deallocate = std::make_unique<lir::InstructionBinaryOp>(
+                    lir::BinaryOp::ADD, reg_size, stack_bytes, rsp);
+                instructions.insert(std::next(i_iter), std::move(deallocate));
+            }
 
-                // Allocate/deallocate stack space
-                auto num_params = call->getArgs().size();
-                auto call_stack_bytes =
-                    (save.size() + (num_params > 6 ? num_params - 6 : 0)) * 8;
-                if (call_stack_bytes) {
-                    call_stack_bytes = (call_stack_bytes + 15) & -16;
+            // Save/restore registers
+            std::unordered_map<lir::Register *, lir::Address *> saved_values;
+            for (auto reg : save) {
+                call_stack_bytes -= 8;
 
-                    auto stack_bytes = om->getImmediate(call_stack_bytes);
+                auto stack_slot = om->getAddress(
+                    rsp, nullptr, nullptr, om->getImmediate(call_stack_bytes));
+                auto push = std::make_unique<lir::InstructionMov>(reg_size, reg,
+                                                                  stack_slot);
+                instructions.insert(i_iter, std::move(push));
 
-                    auto allocate = std::make_unique<lir::InstructionBinaryOp>(
-                        lir::BinaryOp::SUB, reg_size, stack_bytes, rsp);
-                    instructions.insert(i_iter, std::move(allocate));
+                saved_values[reg] = stack_slot;
 
-                    auto deallocate =
-                        std::make_unique<lir::InstructionBinaryOp>(
-                            lir::BinaryOp::ADD, reg_size, stack_bytes, rsp);
-                    instructions.insert(std::next(i_iter),
-                                        std::move(deallocate));
-                }
+                if (!restore.contains(reg))
+                    continue;
 
-                // Save/restore registers
-                std::unordered_map<lir::Register *, lir::Address *>
-                    saved_values;
-                for (auto reg : save) {
-                    call_stack_bytes -= 8;
+                auto pop = std::make_unique<lir::InstructionMov>(
+                    reg_size, stack_slot, reg);
+                instructions.insert(std::next(i_iter), std::move(pop));
+            }
 
-                    auto stack_slot =
-                        om->getAddress(rsp, nullptr, nullptr,
-                                       om->getImmediate(call_stack_bytes));
-                    auto push = std::make_unique<lir::InstructionMov>(
-                        reg_size, reg, stack_slot);
-                    instructions.insert(i_iter, std::move(push));
+            // Store args
+            auto &arg_regs = lir::getArgRegisters();
+            auto &arg_vals = call->getArgs();
+            for (size_t idx = 0; idx < num_params; idx++) {
+                auto val = arg_vals[idx];
+                auto val_reg = dynamic_cast<lir::Register *>(val);
+                if (val_reg && saved_values.contains(val_reg))
+                    val = saved_values[val_reg];
 
-                    saved_values[reg] = stack_slot;
-
-                    if (!restore.contains(reg))
-                        continue;
-
-                    auto pop = std::make_unique<lir::InstructionMov>(
-                        reg_size, stack_slot, reg);
-                    instructions.insert(std::next(i_iter), std::move(pop));
-                }
-
-                // Store args
-                auto &arg_regs = lir::getArgRegisters();
-                auto &arg_vals = call->getArgs();
-                for (size_t idx = 0; idx < num_params; idx++) {
-                    auto val = arg_vals[idx];
-                    auto val_reg = dynamic_cast<lir::Register *>(val);
-                    if (val_reg && saved_values.contains(val_reg))
-                        val = saved_values[val_reg];
-
-                    // TODO: check non-reg size
-                    auto size = val_reg ? val_reg->getSize()
-                                        : lir::DataSize::DOUBLEWORD;
-                    auto param =
-                        idx < 6
-                            ? om->getRegister(lir::toSized(arg_regs[idx], size))
+                // TODO: check non-reg size
+                auto size =
+                    val_reg ? val_reg->getSize() : lir::DataSize::DOUBLEWORD;
+                auto param =
+                    idx < 6 ? om->getRegister(lir::toSized(arg_regs[idx], size))
                             : static_cast<lir::Operand *>(om->getAddress(
                                   rsp, nullptr, nullptr,
                                   om->getImmediate((idx - 6) * 8)));
 
-                    auto mov =
-                        std::make_unique<lir::InstructionMov>(size, val, param);
-                    instructions.insert(i_iter, std::move(mov));
-                }
-
-                i_iter = std::prev(next_iter);
-                i_index++;
+                auto mov =
+                    std::make_unique<lir::InstructionMov>(size, val, param);
+                instructions.insert(i_iter, std::move(mov));
             }
 
-            //
-            // Preserve callee-saved registers
-            //
-            auto &callee_saved_vector = lir::getCalleeSavedRegisters();
-            auto callee_saved = std::unordered_set(callee_saved_vector.begin(),
-                                                   callee_saved_vector.end());
+            i_iter = std::prev(next_iter);
+            i_index++;
+        }
 
-            for (auto reg_num : registers_used) {
-                if (!callee_saved.contains(reg_num) ||
-                    reg_num == lir::RegisterNum::RSP)
-                    continue;
+        //
+        // Preserve callee-saved registers
+        //
+        auto &callee_saved_vector = lir::getCalleeSavedRegisters();
+        auto callee_saved = std::unordered_set(callee_saved_vector.begin(),
+                                               callee_saved_vector.end());
 
-                auto reg_to_save = om->getRegister(reg_num);
-                auto stack_slot =
-                    om->getAddress(rsp, nullptr, nullptr,
-                                   om->getImmediate(function_stack_bytes));
-
-                auto push = std::make_unique<lir::InstructionMov>(
-                    reg_size, reg_to_save, stack_slot);
-                instructions.push_front(std::move(push));
-
-                auto pop = std::make_unique<lir::InstructionMov>(
-                    reg_size, stack_slot, reg_to_save);
-                instructions.insert(ret_iter, std::move(pop));
-
-                function_stack_bytes += 8;
-            }
-
-            //
-            // Pad bytes to 16 byte alignment if containing call
-            //
-            if (has_call)
-                function_stack_bytes = (function_stack_bytes + 15) & -16;
-
-            //
-            // Replace stack arg operands
-            //
-            ReplaceStackArgVisitor rsav(function_stack_bytes, om);
-            for (auto &i : instructions)
-                i->accept(&rsav);
-
-            //
-            // Manage stack space
-            //
-            if (!function_stack_bytes)
+        for (auto reg_num : registers_used) {
+            if (!callee_saved.contains(reg_num) ||
+                reg_num == lir::RegisterNum::RSP)
                 continue;
 
-            auto stack_bytes = om->getImmediate(function_stack_bytes);
+            auto reg_to_save = om->getRegister(reg_num);
+            auto stack_slot = om->getAddress(
+                rsp, nullptr, nullptr, om->getImmediate(function_stack_bytes));
 
-            auto allocate = std::make_unique<lir::InstructionBinaryOp>(
-                lir::BinaryOp::SUB, reg_size, stack_bytes, rsp);
-            instructions.push_front(std::move(allocate));
+            auto push = std::make_unique<lir::InstructionMov>(
+                reg_size, reg_to_save, stack_slot);
+            instructions.push_front(std::move(push));
 
-            auto deallocate = std::make_unique<lir::InstructionBinaryOp>(
-                lir::BinaryOp::ADD, reg_size, stack_bytes, rsp);
-            instructions.insert(ret_iter, std::move(deallocate));
+            auto pop = std::make_unique<lir::InstructionMov>(
+                reg_size, stack_slot, reg_to_save);
+            instructions.insert(ret_iter, std::move(pop));
+
+            function_stack_bytes += 8;
         }
+
+        //
+        // Pad bytes to 16 byte alignment if containing call
+        //
+        if (has_call)
+            function_stack_bytes = (function_stack_bytes + 15) & -16;
+
+        //
+        // Replace stack arg operands
+        //
+        ReplaceStackArgVisitor rsav(function_stack_bytes, om);
+        for (auto &i : instructions)
+            i->accept(&rsav);
+
+        //
+        // Manage stack space
+        //
+        if (!function_stack_bytes)
+            continue;
+
+        auto stack_bytes = om->getImmediate(function_stack_bytes);
+
+        auto allocate = std::make_unique<lir::InstructionBinaryOp>(
+            lir::BinaryOp::SUB, reg_size, stack_bytes, rsp);
+        instructions.push_front(std::move(allocate));
+
+        auto deallocate = std::make_unique<lir::InstructionBinaryOp>(
+            lir::BinaryOp::ADD, reg_size, stack_bytes, rsp);
+        instructions.insert(ret_iter, std::move(deallocate));
     }
+}
 } // namespace backend
 ;

@@ -3,15 +3,15 @@
 #include "backend/lir/lir.h"
 
 namespace backend {
-    class CodeGenVisitor : public lir::ToStringVisitor {
-    public:
-        void generateFilePreamble();
-        void generateFilePostamble();
-        void generateFunctionPreamble(lir::Function *f);
-        void generateFunctionPostamble(lir::Function *f);
+class CodeGenVisitor : public lir::ToStringVisitor {
+public:
+    void generateFilePreamble();
+    void generateFilePostamble();
+    void generateFunctionPreamble(lir::Function *f);
+    void generateFunctionPostamble(lir::Function *f);
 
-        void visit(lir::InstructionCall *i) override;
-    };
+    void visit(lir::InstructionCall *i) override;
+};
 
-    std::string generateCode(lir::Program &lir);
+std::string generateCode(lir::Program &lir);
 } // namespace backend

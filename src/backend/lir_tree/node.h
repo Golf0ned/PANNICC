@@ -7,168 +7,168 @@
 #include "middleend/mir/operator.h"
 
 namespace backend::lir_tree {
-    class NodeVisitor;
+class NodeVisitor;
 
-    enum class NodeType {
-        NONE,
-        REGISTER,
-        IMMEDIATE,
-        ADDRESS,
-        OP,
-        LOAD,
-        STORE,
-        ASM,
-    };
+enum class NodeType {
+    NONE,
+    REGISTER,
+    IMMEDIATE,
+    ADDRESS,
+    OP,
+    LOAD,
+    STORE,
+    ASM,
+};
 
-    class Node {
-    public:
-        // TODO: is this a good design choice?
-        //       we don't use it for half the nodes
-        virtual lir::DataSize getSize();
-        virtual void accept(NodeVisitor *v) = 0;
-        virtual ~Node() = default;
-    };
+class Node {
+public:
+    // TODO: is this a good design choice?
+    //       we don't use it for half the nodes
+    virtual lir::DataSize getSize();
+    virtual void accept(NodeVisitor *v) = 0;
+    virtual ~Node() = default;
+};
 
-    class RegisterNode : public Node {
-    public:
-        RegisterNode(lir::Register *reg, std::unique_ptr<Node> source);
-        std::string getName();
-        lir::Register *getReg();
-        std::unique_ptr<Node> &getSource();
-        lir::DataSize getSize() override;
-        bool sameReg(RegisterNode *other);
-        void consume(RegisterNode *other);
-        void accept(NodeVisitor *v) override;
+class RegisterNode : public Node {
+public:
+    RegisterNode(lir::Register *reg, std::unique_ptr<Node> source);
+    std::string getName();
+    lir::Register *getReg();
+    std::unique_ptr<Node> &getSource();
+    lir::DataSize getSize() override;
+    bool sameReg(RegisterNode *other);
+    void consume(RegisterNode *other);
+    void accept(NodeVisitor *v) override;
 
-    private:
-        lir::Register *reg;
-        std::unique_ptr<Node> source;
-    };
+private:
+    lir::Register *reg;
+    std::unique_ptr<Node> source;
+};
 
-    class ImmediateNode : public Node {
-    public:
-        ImmediateNode(uint64_t value);
-        uint64_t getValue();
-        void accept(NodeVisitor *v) override;
+class ImmediateNode : public Node {
+public:
+    ImmediateNode(uint64_t value);
+    uint64_t getValue();
+    void accept(NodeVisitor *v) override;
 
-    private:
-        uint64_t value;
-    };
+private:
+    uint64_t value;
+};
 
-    class AddressNode : public Node {
-    public:
-        AddressNode(std::unique_ptr<RegisterNode> base,
-                    std::unique_ptr<RegisterNode> index, uint64_t scale,
-                    uint64_t displacement);
-        std::unique_ptr<RegisterNode> &getBase();
-        std::unique_ptr<RegisterNode> &getIndex();
-        uint64_t getScale();
-        uint64_t getDisplacement();
-        void accept(NodeVisitor *v) override;
+class AddressNode : public Node {
+public:
+    AddressNode(std::unique_ptr<RegisterNode> base,
+                std::unique_ptr<RegisterNode> index, uint64_t scale,
+                uint64_t displacement);
+    std::unique_ptr<RegisterNode> &getBase();
+    std::unique_ptr<RegisterNode> &getIndex();
+    uint64_t getScale();
+    uint64_t getDisplacement();
+    void accept(NodeVisitor *v) override;
 
-    private:
-        std::unique_ptr<RegisterNode> base;
-        std::unique_ptr<RegisterNode> index;
-        uint64_t scale;
-        uint64_t displacement;
-    };
+private:
+    std::unique_ptr<RegisterNode> base;
+    std::unique_ptr<RegisterNode> index;
+    uint64_t scale;
+    uint64_t displacement;
+};
 
-    class OpNode : public Node {
-    public:
-        OpNode(middleend::mir::BinaryOp op, std::unique_ptr<Node> left,
-               std::unique_ptr<Node> right);
-        middleend::mir::BinaryOp getOp();
-        std::unique_ptr<Node> &getLeft();
-        std::unique_ptr<Node> &getRight();
-        void accept(NodeVisitor *v) override;
+class OpNode : public Node {
+public:
+    OpNode(middleend::mir::BinaryOp op, std::unique_ptr<Node> left,
+           std::unique_ptr<Node> right);
+    middleend::mir::BinaryOp getOp();
+    std::unique_ptr<Node> &getLeft();
+    std::unique_ptr<Node> &getRight();
+    void accept(NodeVisitor *v) override;
 
-    private:
-        middleend::mir::BinaryOp op;
-        std::unique_ptr<Node> left;
-        std::unique_ptr<Node> right;
-    };
+private:
+    middleend::mir::BinaryOp op;
+    std::unique_ptr<Node> left;
+    std::unique_ptr<Node> right;
+};
 
-    class LoadNode : public Node {
-    public:
-        LoadNode(std::unique_ptr<Node> ptr, lir::DataSize size);
-        std::unique_ptr<Node> &getPtr();
-        lir::DataSize getSize() override;
-        void accept(NodeVisitor *v) override;
+class LoadNode : public Node {
+public:
+    LoadNode(std::unique_ptr<Node> ptr, lir::DataSize size);
+    std::unique_ptr<Node> &getPtr();
+    lir::DataSize getSize() override;
+    void accept(NodeVisitor *v) override;
 
-    private:
-        lir::DataSize size;
-        std::unique_ptr<Node> ptr;
-    };
+private:
+    lir::DataSize size;
+    std::unique_ptr<Node> ptr;
+};
 
-    class StoreNode : public Node {
-    public:
-        StoreNode(std::unique_ptr<Node> source, std::unique_ptr<Node> ptr,
-                  lir::DataSize size);
-        std::unique_ptr<Node> &getSource();
-        std::unique_ptr<Node> &getPtr();
-        lir::DataSize getSize() override;
-        void accept(NodeVisitor *v) override;
+class StoreNode : public Node {
+public:
+    StoreNode(std::unique_ptr<Node> source, std::unique_ptr<Node> ptr,
+              lir::DataSize size);
+    std::unique_ptr<Node> &getSource();
+    std::unique_ptr<Node> &getPtr();
+    lir::DataSize getSize() override;
+    void accept(NodeVisitor *v) override;
 
-    private:
-        std::unique_ptr<Node> source;
-        std::unique_ptr<Node> ptr;
-        lir::DataSize size;
-    };
+private:
+    std::unique_ptr<Node> source;
+    std::unique_ptr<Node> ptr;
+    lir::DataSize size;
+};
 
-    class AsmNode : public Node {
-    public:
-        AsmNode(std::list<std::unique_ptr<lir::Instruction>> assembly);
-        std::list<std::unique_ptr<lir::Instruction>> &getAssembly();
-        void accept(NodeVisitor *v) override;
+class AsmNode : public Node {
+public:
+    AsmNode(std::list<std::unique_ptr<lir::Instruction>> assembly);
+    std::list<std::unique_ptr<lir::Instruction>> &getAssembly();
+    void accept(NodeVisitor *v) override;
 
-    private:
-        std::list<std::unique_ptr<lir::Instruction>> assembly;
-    };
+private:
+    std::list<std::unique_ptr<lir::Instruction>> assembly;
+};
 
-    class NodeVisitor {
-    public:
-        virtual void visit(Node *n) = 0;
-        virtual void visit(RegisterNode *n) = 0;
-        virtual void visit(AddressNode *n) = 0;
-        virtual void visit(ImmediateNode *n) = 0;
-        virtual void visit(OpNode *n) = 0;
-        virtual void visit(LoadNode *n) = 0;
-        virtual void visit(StoreNode *n) = 0;
-        virtual void visit(AsmNode *n) = 0;
-    };
+class NodeVisitor {
+public:
+    virtual void visit(Node *n) = 0;
+    virtual void visit(RegisterNode *n) = 0;
+    virtual void visit(AddressNode *n) = 0;
+    virtual void visit(ImmediateNode *n) = 0;
+    virtual void visit(OpNode *n) = 0;
+    virtual void visit(LoadNode *n) = 0;
+    virtual void visit(StoreNode *n) = 0;
+    virtual void visit(AsmNode *n) = 0;
+};
 
-    class ToStringVisitor : public NodeVisitor {
-    public:
-        ToStringVisitor(lir::OperandManager *om);
+class ToStringVisitor : public NodeVisitor {
+public:
+    ToStringVisitor(lir::OperandManager *om);
 
-        std::string getResult();
+    std::string getResult();
 
-        void visit(Node *n) override;
-        void visit(RegisterNode *n) override;
-        void visit(ImmediateNode *n) override;
-        void visit(AddressNode *n) override;
-        void visit(OpNode *n) override;
-        void visit(LoadNode *n) override;
-        void visit(StoreNode *n) override;
-        void visit(AsmNode *n) override;
+    void visit(Node *n) override;
+    void visit(RegisterNode *n) override;
+    void visit(ImmediateNode *n) override;
+    void visit(AddressNode *n) override;
+    void visit(OpNode *n) override;
+    void visit(LoadNode *n) override;
+    void visit(StoreNode *n) override;
+    void visit(AsmNode *n) override;
 
-    private:
-        lir::OperandManager *om;
-        std::string result;
-    };
+private:
+    lir::OperandManager *om;
+    std::string result;
+};
 
-    using FunctionTrees = std::list<std::unique_ptr<lir_tree::Node>>;
+using FunctionTrees = std::list<std::unique_ptr<lir_tree::Node>>;
 
-    class TreeInfo {
-    public:
-        void insertTree(Node *tree, std::list<Node *> leaves,
-                        bool has_memory_instruction);
-        std::list<Node *> &getLeaves(Node *tree);
-        bool hasMemInst(Node *tree);
-        void setMemInst(Node *tree);
+class TreeInfo {
+public:
+    void insertTree(Node *tree, std::list<Node *> leaves,
+                    bool has_memory_instruction);
+    std::list<Node *> &getLeaves(Node *tree);
+    bool hasMemInst(Node *tree);
+    void setMemInst(Node *tree);
 
-    private:
-        std::unordered_map<Node *, std::list<Node *>> tree_leaves;
-        std::unordered_set<Node *> trees_with_memory_instruction;
-    };
+private:
+    std::unordered_map<Node *, std::list<Node *>> tree_leaves;
+    std::unordered_set<Node *> trees_with_memory_instruction;
+};
 } // namespace backend::lir_tree

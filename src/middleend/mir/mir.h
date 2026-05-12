@@ -9,125 +9,125 @@
 #include "middleend/mir/type.h"
 
 namespace middleend {
-    class NumberIR;
+class NumberIR;
 }
 
 namespace middleend::mir {
-    using LiteralMap = std::unordered_map<
-        Type, std::unordered_map<uint64_t, std::unique_ptr<Literal>>>;
+using LiteralMap =
+    std::unordered_map<Type,
+                       std::unordered_map<uint64_t, std::unique_ptr<Literal>>>;
 
-    class BasicBlockEdges {
-    public:
-        BasicBlockEdges();
-        const std::vector<BasicBlock *> getEdges(); // TODO: iterator
-        const std::unordered_set<BasicBlock *>
-        getUniqueEdges(); // TODO: iterator
-        void addEdge(BasicBlock *bb);
-        void removeEdge(BasicBlock *bb);
-        uint64_t getSize();
+class BasicBlockEdges {
+public:
+    BasicBlockEdges();
+    const std::vector<BasicBlock *> getEdges();              // TODO: iterator
+    const std::unordered_set<BasicBlock *> getUniqueEdges(); // TODO: iterator
+    void addEdge(BasicBlock *bb);
+    void removeEdge(BasicBlock *bb);
+    uint64_t getSize();
 
-    private:
-        std::unordered_map<BasicBlock *, uint64_t> edges;
-        uint64_t size;
-    };
+private:
+    std::unordered_map<BasicBlock *, uint64_t> edges;
+    uint64_t size;
+};
 
-    class BasicBlock {
-    public:
-        BasicBlock(std::list<std::unique_ptr<Instruction>> body,
-                   std::unique_ptr<Terminator> terminator);
-        std::list<std::unique_ptr<Instruction>> &getInstructions();
-        std::unique_ptr<Terminator> &getTerminator();
-        BasicBlockEdges &getPredecessors();
-        BasicBlockEdges &getSuccessors();
-        std::string toString(NumberIR *nir);
+class BasicBlock {
+public:
+    BasicBlock(std::list<std::unique_ptr<Instruction>> body,
+               std::unique_ptr<Terminator> terminator);
+    std::list<std::unique_ptr<Instruction>> &getInstructions();
+    std::unique_ptr<Terminator> &getTerminator();
+    BasicBlockEdges &getPredecessors();
+    BasicBlockEdges &getSuccessors();
+    std::string toString(NumberIR *nir);
 
-    private:
-        std::list<std::unique_ptr<Instruction>> body;
-        std::unique_ptr<Terminator> terminator;
-        BasicBlockEdges predecessors;
-        BasicBlockEdges successors;
-    };
+private:
+    std::list<std::unique_ptr<Instruction>> body;
+    std::unique_ptr<Terminator> terminator;
+    BasicBlockEdges predecessors;
+    BasicBlockEdges successors;
+};
 
-    class Function {
-    public:
-        virtual Type getType() = 0;
-        virtual std::string getName() = 0;
-        virtual std::string toString() = 0;
-        virtual ~Function() = default;
-    };
+class Function {
+public:
+    virtual Type getType() = 0;
+    virtual std::string getName() = 0;
+    virtual std::string toString() = 0;
+    virtual ~Function() = default;
+};
 
-    class FunctionDefinition : public Function {
-    public:
-        FunctionDefinition(Type type, std::string name,
-                           std::vector<std::unique_ptr<Value>> parameters,
-                           std::list<std::unique_ptr<BasicBlock>> basic_blocks,
-                           BasicBlock *entry_block);
-        Type getType() override;
-        std::string getName() override;
-        std::vector<std::unique_ptr<Value>> &getParameters();
-        std::list<std::unique_ptr<BasicBlock>> &getBasicBlocks();
-        BasicBlock *getEntryBlock();
-        void setEntryBlock(BasicBlock *new_block);
-        std::string toString() override;
+class FunctionDefinition : public Function {
+public:
+    FunctionDefinition(Type type, std::string name,
+                       std::vector<std::unique_ptr<Value>> parameters,
+                       std::list<std::unique_ptr<BasicBlock>> basic_blocks,
+                       BasicBlock *entry_block);
+    Type getType() override;
+    std::string getName() override;
+    std::vector<std::unique_ptr<Value>> &getParameters();
+    std::list<std::unique_ptr<BasicBlock>> &getBasicBlocks();
+    BasicBlock *getEntryBlock();
+    void setEntryBlock(BasicBlock *new_block);
+    std::string toString() override;
 
-    private:
-        Type type;
-        std::string name;
-        std::vector<std::unique_ptr<Value>> parameters;
-        std::list<std::unique_ptr<BasicBlock>> basic_blocks;
-        BasicBlock *entry_block;
-    };
+private:
+    Type type;
+    std::string name;
+    std::vector<std::unique_ptr<Value>> parameters;
+    std::list<std::unique_ptr<BasicBlock>> basic_blocks;
+    BasicBlock *entry_block;
+};
 
-    class FunctionDeclaration : public Function {
-    public:
-        FunctionDeclaration(Type type, std::string name,
-                            std::vector<std::unique_ptr<Value>> parameters);
-        Type getType() override;
-        std::string getName() override;
-        std::vector<std::unique_ptr<Value>> &getParameters();
-        std::string toString() override;
+class FunctionDeclaration : public Function {
+public:
+    FunctionDeclaration(Type type, std::string name,
+                        std::vector<std::unique_ptr<Value>> parameters);
+    Type getType() override;
+    std::string getName() override;
+    std::vector<std::unique_ptr<Value>> &getParameters();
+    std::string toString() override;
 
-    private:
-        Type type;
-        std::string name;
-        std::vector<std::unique_ptr<Value>> parameters;
-    };
+private:
+    Type type;
+    std::string name;
+    std::vector<std::unique_ptr<Value>> parameters;
+};
 
-    class Program {
-    public:
-        Program(std::list<std::unique_ptr<Function>> functions,
-                LiteralMap literals);
-        std::list<std::unique_ptr<Function>> &getFunctions();
-        Literal *getLiteral(Type type, uint64_t value);
-        std::string toString();
+class Program {
+public:
+    Program(std::list<std::unique_ptr<Function>> functions,
+            LiteralMap literals);
+    std::list<std::unique_ptr<Function>> &getFunctions();
+    Literal *getLiteral(Type type, uint64_t value);
+    std::string toString();
 
-    private:
-        std::list<std::unique_ptr<Function>> functions;
-        LiteralMap literals;
-    };
+private:
+    std::list<std::unique_ptr<Function>> functions;
+    LiteralMap literals;
+};
 
-    class ToStringVisitor : public InstructionVisitor {
-    public:
-        ToStringVisitor(NumberIR *nir);
-        std::string getResult();
+class ToStringVisitor : public InstructionVisitor {
+public:
+    ToStringVisitor(NumberIR *nir);
+    std::string getResult();
 
-        std::string valueToString(Value *v);
-        std::string valueToTypedString(Value *v);
+    std::string valueToString(Value *v);
+    std::string valueToTypedString(Value *v);
 
-        void visit(InstructionBinaryOp *i) override;
-        void visit(InstructionCall *i) override;
-        void visit(InstructionAlloca *i) override;
-        void visit(InstructionLoad *i) override;
-        void visit(InstructionStore *i) override;
-        void visit(InstructionPhi *i) override;
-        void visit(InstructionParallelCopy *i) override;
+    void visit(InstructionBinaryOp *i) override;
+    void visit(InstructionCall *i) override;
+    void visit(InstructionAlloca *i) override;
+    void visit(InstructionLoad *i) override;
+    void visit(InstructionStore *i) override;
+    void visit(InstructionPhi *i) override;
+    void visit(InstructionParallelCopy *i) override;
 
-        void visit(TerminatorReturn *t) override;
-        void visit(TerminatorBranch *t) override;
-        void visit(TerminatorCondBranch *t) override;
+    void visit(TerminatorReturn *t) override;
+    void visit(TerminatorBranch *t) override;
+    void visit(TerminatorCondBranch *t) override;
 
-    private:
-        std::string result;
-        NumberIR *nir;
-    };
+private:
+    std::string result;
+    NumberIR *nir;
+};
 } // namespace middleend::mir

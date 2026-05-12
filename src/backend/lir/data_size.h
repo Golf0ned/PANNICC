@@ -3,22 +3,22 @@
 #include "middleend/mir/type.h"
 
 namespace backend::lir {
-    enum class Extend {
-        NONE,
-        ZERO,
-        SIGN,
-    };
+enum class Extend {
+    NONE,
+    ZERO,
+    SIGN,
+};
 
-    char toChar(Extend extend);
+char toChar(Extend extend);
 
-    enum class DataSize {
-        BYTE,
-        WORD,
-        DOUBLEWORD,
-        QUADWORD,
-    };
+enum class DataSize {
+    BYTE,
+    WORD,
+    DOUBLEWORD,
+    QUADWORD,
+};
 
-    DataSize fromMir(middleend::mir::Type type);
+DataSize fromMir(middleend::mir::Type type);
 
-    char toChar(DataSize size);
+char toChar(DataSize size);
 } // namespace backend::lir

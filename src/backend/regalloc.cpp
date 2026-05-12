@@ -6,35 +6,35 @@
 #include "backend/passes/spill.h"
 
 namespace backend {
-    void allocateRegisters(lir::Program &lir) {
-        auto om = lir.getOm();
+void allocateRegisters(lir::Program &lir) {
+    auto om = lir.getOm();
 
-        for (auto &unique_f : lir.getFunctions()) {
-            auto f = unique_f.get();
+    for (auto &unique_f : lir.getFunctions()) {
+        auto f = unique_f.get();
 
-            Liveness liveness({}, {}, {}, {});
-            Interference interference;
+        Liveness liveness({}, {}, {}, {});
+        Interference interference;
 
-            while (true) {
-                bool changed = true;
-                while (changed) {
-                    liveness = computeLiveness(f, om);
-                    interference = computeInterference(f, liveness, om);
+        while (true) {
+            bool changed = true;
+            while (changed) {
+                liveness = computeLiveness(f, om);
+                interference = computeInterference(f, liveness, om);
 
-                    changed = tryCoalesce(f, interference);
-                }
-
-                auto spill_costs = computeSpillCosts(f, liveness, om);
-
-                auto [can_color, coloring] =
-                    tryColor(f, interference, spill_costs, om);
-                if (can_color) {
-                    assignRegisters(f, coloring, om);
-                    break;
-                }
-
-                spillLowestCost(f, spill_costs, liveness, om);
+                changed = tryCoalesce(f, interference);
             }
+
+            auto spill_costs = computeSpillCosts(f, liveness, om);
+
+            auto [can_color, coloring] =
+                tryColor(f, interference, spill_costs, om);
+            if (can_color) {
+                assignRegisters(f, coloring, om);
+                break;
+            }
+
+            spillLowestCost(f, spill_costs, liveness, om);
         }
     }
+}
 } // namespace backend

@@ -3,5 +3,5 @@
 #include "backend/passes/interference.h"
 
 namespace backend {
-    bool tryCoalesce(lir::Function *f, Interference &interference);
+bool tryCoalesce(lir::Function *f, Interference &interference);
 } // namespace backend
