@@ -56,8 +56,8 @@ struct unary_minus : pegtl_try<pegtl::seq<minus, ignorable, expr_2>> {};
 struct unary_bitwise_not : pegtl_try<pegtl::seq<tilde, ignorable, expr_2>> {};
 struct deref : pegtl_try<pegtl::seq<asterisk, ignorable, expr_2>> {};
 struct address : pegtl_try<pegtl::seq<ampersand, ignorable, expr_2>> {};
-struct expr_2 : pegtl::sor<unary_plus, unary_minus, unary_bitwise_not, deref,
-                           address, expr_1> {};
+struct expr_2 : pegtl::sor<expr_1, unary_plus, unary_minus, unary_bitwise_not,
+                           deref, address> {};
 
 //
 // 3
