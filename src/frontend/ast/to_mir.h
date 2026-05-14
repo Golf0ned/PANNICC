@@ -24,6 +24,7 @@ public:
     std::vector<std::unique_ptr<middleend::mir::Value>>
     makeParams(std::vector<ast::Parameter> &params);
     void makeBB(std::unique_ptr<middleend::mir::Terminator> terminator);
+    void makeReturnBB(middleend::mir::Type return_type);
     void resolveBBEdges();
     middleend::mir::BasicBlock *createEntryBlock();
     void resolveFunctions();
