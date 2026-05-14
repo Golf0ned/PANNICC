@@ -16,9 +16,9 @@ bool isAssignment(BinaryOp op) {
     case BinaryOp::XOR_ASSIGN:
     case BinaryOp::LSHIFT_ASSIGN:
     case BinaryOp::RSHIFT_ASSIGN:
-        return false;
-    default:
         return true;
+    default:
+        return false;
     }
     std::unreachable();
 }
