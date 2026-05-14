@@ -119,6 +119,20 @@ void ToMIRVisitor::makeBB(
     instructions.clear();
 }
 
+void ToMIRVisitor::makeReturnBB(mir::Type return_type) {
+    auto load = std::make_unique<mir::InstructionLoad>(return_type, ret_alloca);
+    auto ret = std::make_unique<mir::TerminatorReturn>(load.get());
+
+    std::list<std::unique_ptr<mir::Instruction>> instructions;
+    instructions.push_back(std::move(load));
+
+    auto bb = std::make_unique<mir::BasicBlock>(std::move(instructions),
+                                                std::move(ret));
+
+    bb_ids[0] = bb.get();
+    basic_blocks.push_back(std::move(bb));
+}
+
 void ToMIRVisitor::resolveBBEdges() {
     for (auto &bb : basic_blocks) {
         auto *t = bb->getTerminator().get();
@@ -180,6 +194,7 @@ void ToMIRVisitor::visit(ast::FunctionDefinition *f) {
     scope_binding_types.pop_back();
     cur_scope--;
 
+    makeReturnBB(type);
     resolveBBEdges();
     auto *entry = createEntryBlock();
 
@@ -342,10 +357,11 @@ void ToMIRVisitor::visit(ast::CallExpr *e) {
     auto call =
         std::make_unique<mir::InstructionCall>(type, nullptr, std::move(args));
     function_calls[callee_id].push_back(call.get());
-    instructions.push_back(std::move(call));
 
     auto *alloca = makeAlloca(type);
     auto store = std::make_unique<mir::InstructionStore>(call.get(), alloca);
+
+    instructions.push_back(std::move(call));
     instructions.push_back(std::move(store));
 
     expr_types[e] = function_types[callee_id]->clone();
