@@ -174,6 +174,9 @@ void ToMIRVisitor::resolveFunctions() {
 }
 
 void ToMIRVisitor::visit(ast::FunctionDefinition *f) {
+    scope_bindings.emplace_back();
+    scope_binding_types.emplace_back();
+
     auto type = f->getType()->toMir();
     function_types[f->getName()->getValue()] = f->getType();
     auto name = f->getName()->toString(st);
@@ -202,9 +205,15 @@ void ToMIRVisitor::visit(ast::FunctionDefinition *f) {
         type, name, std::move(params), std::move(basic_blocks), entry);
     // TODO: handle overloading
     function_ids[f->getName()->getValue()] = res.get();
+
+    scope_bindings.pop_back();
+    scope_binding_types.pop_back();
 }
 
 void ToMIRVisitor::visit(ast::FunctionPrototype *f) {
+    scope_bindings.emplace_back();
+    scope_binding_types.emplace_back();
+
     auto type = f->getType()->toMir();
     function_types[f->getName()->getValue()] = f->getType();
     auto name = f->getName()->toString(st);
@@ -214,6 +223,9 @@ void ToMIRVisitor::visit(ast::FunctionPrototype *f) {
                                                      std::move(params));
     // TODO: handle overloading
     function_ids[f->getName()->getValue()] = res.get();
+
+    scope_bindings.pop_back();
+    scope_binding_types.pop_back();
 }
 
 void ToMIRVisitor::visit(ast::Instruction *i) {}
@@ -244,7 +256,7 @@ void ToMIRVisitor::visit(ast::InstructionDeclaration *i) {
 
     if (i->getValue()) {
         i->getValue()->accept(this);
-        auto *assign_val = prev_expr;
+        auto *assign_val = usePrevExpr();
         auto store =
             std::make_unique<mir::InstructionStore>(assign_val, alloca);
         instructions.push_back(std::move(store));
@@ -253,7 +265,7 @@ void ToMIRVisitor::visit(ast::InstructionDeclaration *i) {
 
 void ToMIRVisitor::visit(ast::InstructionReturn *i) {
     i->getValue()->accept(this);
-    auto *ret_val = prev_expr;
+    auto *ret_val = usePrevExpr();
     auto store = std::make_unique<mir::InstructionStore>(ret_val, ret_alloca);
     instructions.push_back(std::move(store));
 
@@ -317,7 +329,7 @@ void ToMIRVisitor::visit(ast::InstructionWhile *i) {
 
     i->getBody()->accept(this);
     auto body_br = std::make_unique<mir::TerminatorBranch>(nullptr);
-    auto *body_br_ptr = cond_br.get();
+    auto *body_br_ptr = body_br.get();
     makeBB(std::move(body_br));
     // Body -> Cond
     bb_edges[body_br_ptr] = {cond_bb_id};
