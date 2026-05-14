@@ -188,7 +188,7 @@ void ToMIRVisitor::visit(ast::FunctionDefinition *f) {
     scope_binding_types.emplace_back();
     for (auto &i : f->getBody()->getInstructions())
         i->accept(this);
-    if (name == "main") {
+    if (name == "main" && (basic_blocks.size() == 0 || !instructions.empty())) {
         auto zero = getLiteral(0, mir::Type::I32);
         auto store = std::make_unique<mir::InstructionStore>(zero, ret_alloca);
         instructions.push_back(std::move(store));
