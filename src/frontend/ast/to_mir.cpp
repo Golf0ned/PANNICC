@@ -440,7 +440,7 @@ void ToMIRVisitor::visit(ast::BinaryOpExpr *e) {
 
     mir::Value *bin_op_res;
     Type *ptr_type;
-    if (isAssignment(e->getOp())) {
+    if (!isAssignment(e->getOp())) {
         // Standard binary op
         auto *left = usePrevExpr();
         auto bin_op = std::make_unique<mir::InstructionBinaryOp>(
