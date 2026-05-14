@@ -364,6 +364,7 @@ void ToMIRVisitor::visit(ast::CallExpr *e) {
     instructions.push_back(std::move(call));
     instructions.push_back(std::move(store));
 
+    prev_expr = alloca;
     expr_types[e] = function_types[callee_id]->clone();
 }
 
