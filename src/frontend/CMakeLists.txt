@@ -5,4 +5,3 @@ add_library(frontend SHARED ${headers} ${sources})
 
 target_link_libraries(frontend PUBLIC taocpp::pegtl)
 target_include_directories(frontend PUBLIC ..)
-install(TARGETS frontend)
