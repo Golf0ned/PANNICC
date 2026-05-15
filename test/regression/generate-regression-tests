@@ -3,7 +3,7 @@
 # TODO: unhardcode PANNICC_DIR
 PANNICC_DIR="${HOME}/code/projects/PANNICC"
 
-PANNICC="${PANNICC_DIR}/install/bin/pannicc"
+PANNICC="${PANNICC_DIR}/build/src/driver/pannicc"
 INPUT_DIR="${PANNICC_DIR}/test/regression/input"
 OUTPUT_DIR="${PANNICC_DIR}/test/regression/expected"
 
@@ -15,7 +15,6 @@ for test in ${INPUT_DIR}/*.c; do
 
     ${PANNICC} -O0 -E ${test} -o ${OUTPUT_DIR}/${input}_p.c
     ${PANNICC} -O0 --emit-ast ${test} -o ${OUTPUT_DIR}/${input}.ast
-    ${PANNICC} -O0 --emit-hir ${test} -o ${OUTPUT_DIR}/${input}.hir
 
     for opt in "0" "1"; do
         output_base=${OUTPUT_DIR}/${input}_o${opt}
