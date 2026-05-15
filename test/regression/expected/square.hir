@@ -1,6 +1,0 @@
-int square(int i_0) {
-    __entry:
-    int __v;
-    __v = i_0 * i_0;
-    return __v;
-}
