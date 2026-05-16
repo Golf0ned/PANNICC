@@ -15,9 +15,11 @@ using Token = std::pair<std::string, TokenKind>;
 extern std::vector<std::unique_ptr<ast::Expr>> active_args;
 extern std::vector<Token> parsed_tokens;
 extern std::vector<std::unique_ptr<ast::Expr>> parsed_exprs;
+extern std::vector<BinaryOp> parsed_assign_ops;
 std::unique_ptr<Atom> popAtom();
 std::unique_ptr<AtomIdentifier> popIdentifier();
 std::unique_ptr<ast::Expr> popExpr();
+BinaryOp popAssignOp();
 
 //
 // Refer to operator precedence:
@@ -113,37 +115,26 @@ struct expr_10 : pegtl::seq<expr_9, pegtl::star<bitwise_or>> {};
 // 14
 //
 struct expr_14;
-struct assign
-    : pegtl_try<pegtl::seq<expr_10, ignorable, equal, ignorable, expr_14>> {};
-struct add_assign
-    : pegtl_try<
-          pegtl::seq<expr_10, ignorable, plus, equal, ignorable, expr_14>> {};
-struct sub_assign
-    : pegtl_try<
-          pegtl::seq<expr_10, ignorable, minus, equal, ignorable, expr_14>> {};
-struct mul_assign
-    : pegtl_try<
-          pegtl::seq<expr_10, ignorable, asterisk, equal, ignorable, expr_14>> {
-};
-struct div_assign
-    : pegtl_try<
-          pegtl::seq<expr_10, ignorable, slash, equal, ignorable, expr_14>> {};
-struct lshift_assign : pegtl_try<pegtl::seq<expr_10, ignorable, less, less,
-                                            equal, ignorable, expr_14>> {};
-struct rshift_assign
-    : pegtl_try<pegtl::seq<expr_10, ignorable, greater, greater, equal,
-                           ignorable, expr_14>> {};
-struct and_assign : pegtl_try<pegtl::seq<expr_10, ignorable, ampersand, equal,
-                                         ignorable, expr_14>> {};
-struct or_assign
-    : pegtl_try<
-          pegtl::seq<expr_10, ignorable, pipe, equal, ignorable, expr_14>> {};
-struct xor_assign
-    : pegtl_try<
-          pegtl::seq<expr_10, ignorable, caret, equal, ignorable, expr_14>> {};
-struct expr_14 : pegtl::sor<add_assign, sub_assign, mul_assign, div_assign,
-                            lshift_assign, rshift_assign, and_assign, or_assign,
-                            xor_assign, assign, expr_10> {};
+struct assign : equal {};
+struct add_assign : pegtl::seq<plus, equal> {};
+struct sub_assign : pegtl::seq<minus, equal> {};
+struct mul_assign : pegtl::seq<asterisk, equal> {};
+struct div_assign : pegtl::seq<slash, equal> {};
+struct lshift_assign : pegtl::seq<less, less, equal> {};
+struct rshift_assign : pegtl::seq<greater, greater, equal> {};
+struct and_assign : pegtl::seq<ampersand, equal> {};
+struct or_assign : pegtl::seq<pipe, equal> {};
+struct xor_assign : pegtl::seq<caret, equal> {};
+struct any_assign
+    : pegtl_try<pegtl::seq<
+          expr_10, ignorable,
+          pegtl::sor<pegtl_try<add_assign>, pegtl_try<sub_assign>,
+                     pegtl_try<mul_assign>, pegtl_try<div_assign>,
+                     pegtl_try<lshift_assign>, pegtl_try<rshift_assign>,
+                     pegtl_try<and_assign>, pegtl_try<or_assign>,
+                     pegtl_try<xor_assign>, pegtl_try<assign>>,
+          ignorable, expr_14>> {};
+struct expr_14 : pegtl::sor<any_assign, expr_10> {};
 
 struct expr : expr_14 {};
 
@@ -374,11 +365,7 @@ template <> struct action<assign> {
     template <typename Input>
     static void apply(const Input &in,
                       std::vector<std::unique_ptr<ast::Function>> &res) {
-        auto right = popExpr();
-        auto left = popExpr();
-        auto expr = std::make_unique<ast::BinaryOpExpr>(
-            BinaryOp::ASSIGN, std::move(left), std::move(right));
-        parsed_exprs.push_back(std::move(expr));
+        parsed_assign_ops.push_back(BinaryOp::ASSIGN);
     }
 };
 
@@ -386,11 +373,7 @@ template <> struct action<add_assign> {
     template <typename Input>
     static void apply(const Input &in,
                       std::vector<std::unique_ptr<ast::Function>> &res) {
-        auto right = popExpr();
-        auto left = popExpr();
-        auto expr = std::make_unique<ast::BinaryOpExpr>(
-            BinaryOp::ADD_ASSIGN, std::move(left), std::move(right));
-        parsed_exprs.push_back(std::move(expr));
+        parsed_assign_ops.push_back(BinaryOp::ADD_ASSIGN);
     }
 };
 
@@ -398,11 +381,7 @@ template <> struct action<sub_assign> {
     template <typename Input>
     static void apply(const Input &in,
                       std::vector<std::unique_ptr<ast::Function>> &res) {
-        auto right = popExpr();
-        auto left = popExpr();
-        auto expr = std::make_unique<ast::BinaryOpExpr>(
-            BinaryOp::SUB_ASSIGN, std::move(left), std::move(right));
-        parsed_exprs.push_back(std::move(expr));
+        parsed_assign_ops.push_back(BinaryOp::SUB_ASSIGN);
     }
 };
 
@@ -410,11 +389,7 @@ template <> struct action<mul_assign> {
     template <typename Input>
     static void apply(const Input &in,
                       std::vector<std::unique_ptr<ast::Function>> &res) {
-        auto right = popExpr();
-        auto left = popExpr();
-        auto expr = std::make_unique<ast::BinaryOpExpr>(
-            BinaryOp::MUL_ASSIGN, std::move(left), std::move(right));
-        parsed_exprs.push_back(std::move(expr));
+        parsed_assign_ops.push_back(BinaryOp::MUL_ASSIGN);
     }
 };
 
@@ -422,11 +397,7 @@ template <> struct action<div_assign> {
     template <typename Input>
     static void apply(const Input &in,
                       std::vector<std::unique_ptr<ast::Function>> &res) {
-        auto right = popExpr();
-        auto left = popExpr();
-        auto expr = std::make_unique<ast::BinaryOpExpr>(
-            BinaryOp::DIV_ASSIGN, std::move(left), std::move(right));
-        parsed_exprs.push_back(std::move(expr));
+        parsed_assign_ops.push_back(BinaryOp::DIV_ASSIGN);
     }
 };
 
@@ -434,11 +405,7 @@ template <> struct action<lshift_assign> {
     template <typename Input>
     static void apply(const Input &in,
                       std::vector<std::unique_ptr<ast::Function>> &res) {
-        auto right = popExpr();
-        auto left = popExpr();
-        auto expr = std::make_unique<ast::BinaryOpExpr>(
-            BinaryOp::LSHIFT_ASSIGN, std::move(left), std::move(right));
-        parsed_exprs.push_back(std::move(expr));
+        parsed_assign_ops.push_back(BinaryOp::LSHIFT_ASSIGN);
     }
 };
 
@@ -446,11 +413,7 @@ template <> struct action<rshift_assign> {
     template <typename Input>
     static void apply(const Input &in,
                       std::vector<std::unique_ptr<ast::Function>> &res) {
-        auto right = popExpr();
-        auto left = popExpr();
-        auto expr = std::make_unique<ast::BinaryOpExpr>(
-            BinaryOp::RSHIFT_ASSIGN, std::move(left), std::move(right));
-        parsed_exprs.push_back(std::move(expr));
+        parsed_assign_ops.push_back(BinaryOp::RSHIFT_ASSIGN);
     }
 };
 
@@ -458,11 +421,7 @@ template <> struct action<and_assign> {
     template <typename Input>
     static void apply(const Input &in,
                       std::vector<std::unique_ptr<ast::Function>> &res) {
-        auto right = popExpr();
-        auto left = popExpr();
-        auto expr = std::make_unique<ast::BinaryOpExpr>(
-            BinaryOp::AND_ASSIGN, std::move(left), std::move(right));
-        parsed_exprs.push_back(std::move(expr));
+        parsed_assign_ops.push_back(BinaryOp::AND_ASSIGN);
     }
 };
 
@@ -470,11 +429,7 @@ template <> struct action<or_assign> {
     template <typename Input>
     static void apply(const Input &in,
                       std::vector<std::unique_ptr<ast::Function>> &res) {
-        auto right = popExpr();
-        auto left = popExpr();
-        auto expr = std::make_unique<ast::BinaryOpExpr>(
-            BinaryOp::OR_ASSIGN, std::move(left), std::move(right));
-        parsed_exprs.push_back(std::move(expr));
+        parsed_assign_ops.push_back(BinaryOp::OR_ASSIGN);
     }
 };
 
@@ -482,10 +437,19 @@ template <> struct action<xor_assign> {
     template <typename Input>
     static void apply(const Input &in,
                       std::vector<std::unique_ptr<ast::Function>> &res) {
+        parsed_assign_ops.push_back(BinaryOp::XOR_ASSIGN);
+    }
+};
+
+template <> struct action<any_assign> {
+    template <typename Input>
+    static void apply(const Input &in,
+                      std::vector<std::unique_ptr<ast::Function>> &res) {
         auto right = popExpr();
         auto left = popExpr();
-        auto expr = std::make_unique<ast::BinaryOpExpr>(
-            BinaryOp::XOR_ASSIGN, std::move(left), std::move(right));
+        auto op = popAssignOp();
+        auto expr = std::make_unique<ast::BinaryOpExpr>(op, std::move(left),
+                                                        std::move(right));
         parsed_exprs.push_back(std::move(expr));
     }
 };

@@ -5,6 +5,7 @@ namespace frontend {
 std::vector<Token> parsed_tokens;
 std::vector<std::unique_ptr<ast::Expr>> parsed_exprs;
 std::vector<std::unique_ptr<ast::Expr>> active_args;
+std::vector<BinaryOp> parsed_assign_ops;
 
 std::unique_ptr<Atom> popAtom() {
     auto [token_val, token_type] = parsed_tokens.back();
@@ -28,6 +29,12 @@ std::unique_ptr<ast::Expr> popExpr() {
     auto expr = std::move(parsed_exprs.back());
     parsed_exprs.pop_back();
     return expr;
+}
+
+BinaryOp popAssignOp() {
+    auto op = parsed_assign_ops.back();
+    parsed_assign_ops.pop_back();
+    return op;
 }
 
 } // namespace frontend
