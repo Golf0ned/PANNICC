@@ -2,7 +2,7 @@ BUILD_DIR := build
 INSTALL_DIR := install
 CMAKE_FLAGS := -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
-all: install test
+all: build test
 
 build:
 	mkdir -p $(BUILD_DIR)
