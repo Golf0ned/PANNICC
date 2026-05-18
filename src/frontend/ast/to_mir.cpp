@@ -180,8 +180,13 @@ void ToMIRVisitor::visit(ast::FunctionDefinition *f) {
     auto type = f->getType()->toMir();
     function_types[f->getName()->getValue()] = f->getType();
     auto name = f->getName()->toString(st);
+
+    // TODO: use makeAlloca and reorder
+    auto alloca = std::make_unique<mir::InstructionAlloca>(type);
+    ret_alloca = alloca.get();
+    instructions.push_back(std::move(alloca));
+
     auto params = makeParams(f->getParameters());
-    ret_alloca = makeAlloca(type);
 
     cur_scope++;
     scope_bindings.emplace_back();
