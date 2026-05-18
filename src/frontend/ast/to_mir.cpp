@@ -450,9 +450,13 @@ void ToMIRVisitor::visit(ast::UnaryOpExpr *e) {
 }
 
 void ToMIRVisitor::visit(ast::BinaryOpExpr *e) {
+    // Stupid temp ordering to minimize test disturbance during port
+    e->getLeft()->accept(this);
+    auto *left_buf = prev_expr;
     e->getRight()->accept(this);
     auto *right = usePrevExpr();
-    e->getLeft()->accept(this);
+    prev_expr = left_buf;
+
     // TODO: figure type inference out
     auto type = expr_types[e->getLeft()]->toMir();
 
