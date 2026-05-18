@@ -511,13 +511,12 @@ void ToMIRVisitor::visit(ast::BinaryOpExpr *e) {
         bin_op_res = right;
     }
 
-    auto *res_ptr =
-        e->getOp() == BinaryOp::ASSIGN ? prev_expr : makeAlloca(type);
-    prev_expr = res_ptr;
-
+    auto *res_ptr = isAssignment(e->getOp()) ? prev_expr : makeAlloca(type);
     auto store = std::make_unique<mir::InstructionStore>(bin_op_res, res_ptr);
     instructions.push_back(std::move(store));
+
     expr_types[e] = expr_types[e->getLeft()]->clone();
+    prev_expr = res_ptr;
 }
 
 } // namespace frontend
