@@ -43,7 +43,7 @@ mir::Value *ToMIRVisitor::usePrevExpr() {
     auto *ptr = static_cast<mir::InstructionAlloca *>(prev_expr);
     auto type = ptr->getAllocType();
 
-    auto load = std::make_unique<middleend::mir::InstructionLoad>(type, ptr);
+    auto load = std::make_unique<mir::InstructionLoad>(type, ptr);
     auto *load_ptr = load.get();
     instructions.push_back(std::move(load));
     return load_ptr;
@@ -90,11 +90,12 @@ ToMIRVisitor::makeParams(std::vector<ast::Parameter> &params) {
 
     for (auto &[param_type, param_name] : params) {
         auto type = param_type->toMir();
-        auto param = std::make_unique<middleend::mir::Value>(type);
+        auto param = std::make_unique<mir::Value>(type);
 
-        auto alloca = std::make_unique<middleend::mir::InstructionAlloca>(type);
-        auto store = std::make_unique<middleend::mir::InstructionStore>(
-            param.get(), alloca.get());
+        // TODO: replace with makeAlloca
+        auto alloca = std::make_unique<mir::InstructionAlloca>(type);
+        auto store =
+            std::make_unique<mir::InstructionStore>(param.get(), alloca.get());
 
         scope_bindings.back()[param_name->getValue()] = alloca.get();
         scope_binding_types.back()[param_name->getValue()] = param_type.get();
@@ -108,8 +109,7 @@ ToMIRVisitor::makeParams(std::vector<ast::Parameter> &params) {
     return res;
 }
 
-void ToMIRVisitor::makeBB(
-    std::unique_ptr<middleend::mir::Terminator> terminator) {
+void ToMIRVisitor::makeBB(std::unique_ptr<mir::Terminator> terminator) {
     auto bb = std::make_unique<mir::BasicBlock>(std::move(instructions),
                                                 std::move(terminator));
 
@@ -445,8 +445,7 @@ void ToMIRVisitor::visit(ast::UnaryOpExpr *e) {
     auto *res_ptr = makeAlloca(type);
     prev_expr = res_ptr;
 
-    auto store =
-        std::make_unique<middleend::mir::InstructionStore>(un_op_res, res_ptr);
+    auto store = std::make_unique<mir::InstructionStore>(un_op_res, res_ptr);
     instructions.push_back(std::move(store));
 }
 
@@ -469,8 +468,7 @@ void ToMIRVisitor::visit(ast::BinaryOpExpr *e) {
         instructions.push_back(std::move(bin_op));
     } else if (e->getOp() != BinaryOp::ASSIGN) {
         // Op assign
-        auto load =
-            std::make_unique<middleend::mir::InstructionLoad>(type, prev_expr);
+        auto load = std::make_unique<mir::InstructionLoad>(type, prev_expr);
         auto *left = load.get();
         instructions.push_back(std::move(load));
 
@@ -488,8 +486,7 @@ void ToMIRVisitor::visit(ast::BinaryOpExpr *e) {
         e->getOp() == BinaryOp::ASSIGN ? prev_expr : makeAlloca(type);
     prev_expr = res_ptr;
 
-    auto store =
-        std::make_unique<middleend::mir::InstructionStore>(bin_op_res, res_ptr);
+    auto store = std::make_unique<mir::InstructionStore>(bin_op_res, res_ptr);
     instructions.push_back(std::move(store));
     expr_types[e] = expr_types[e->getLeft()]->clone();
 }
