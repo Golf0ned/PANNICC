@@ -455,21 +455,41 @@ void ToMIRVisitor::visit(ast::UnaryOpExpr *e) {
 }
 
 void ToMIRVisitor::visit(ast::BinaryOpExpr *e) {
-    // Stupid temp ordering to minimize test disturbance during port
+    // TODO: clean this up
+    // ---- DELETE ----
     e->getLeft()->accept(this);
-    auto *left_buf = prev_expr;
+    auto *prev_expr_buf = prev_expr;
+    auto *left = prev_expr;
     e->getRight()->accept(this);
-    auto *right = usePrevExpr();
-    prev_expr = left_buf;
-
-    // TODO: figure type inference out
+    auto *right = prev_expr;
     auto type = expr_types[e->getLeft()]->toMir();
+
+    prev_expr = left;
+    if (!isAssignment(e->getOp())) {
+        left = usePrevExpr();
+    } else if (e->getOp() != BinaryOp::ASSIGN) {
+        auto load = std::make_unique<mir::InstructionLoad>(type, prev_expr);
+        left = load.get();
+        instructions.push_back(std::move(load));
+    }
+    prev_expr = right;
+    right = usePrevExpr();
+
+    prev_expr = prev_expr_buf;
+    // ---- END OF DELETE ----
+
+    // e->getRight()->accept(this);
+    // auto *right = usePrevExpr();
+    // e->getLeft()->accept(this);
+    //
+    // TODO: figure type inference out
+    // auto type = expr_types[e->getLeft()]->toMir();
 
     mir::Value *bin_op_res;
     Type *ptr_type;
     if (!isAssignment(e->getOp())) {
         // Standard binary op
-        auto *left = usePrevExpr();
+        // auto *left = usePrevExpr();
         auto bin_op = std::make_unique<mir::InstructionBinaryOp>(
             type, toMir(e->getOp()), left, right);
 
@@ -477,9 +497,9 @@ void ToMIRVisitor::visit(ast::BinaryOpExpr *e) {
         instructions.push_back(std::move(bin_op));
     } else if (e->getOp() != BinaryOp::ASSIGN) {
         // Op assign
-        auto load = std::make_unique<mir::InstructionLoad>(type, prev_expr);
-        auto *left = load.get();
-        instructions.push_back(std::move(load));
+        // auto load = std::make_unique<mir::InstructionLoad>(type, prev_expr);
+        // auto *left = load.get();
+        // instructions.push_back(std::move(load));
 
         auto bin_op = std::make_unique<mir::InstructionBinaryOp>(
             type, toMir(e->getOp()), left, right);
