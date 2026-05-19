@@ -37,10 +37,10 @@ address_deref_many:
         subq    $12, %rsp
         movl    %edi, %edi
 .Laddress_deref_many_entry:
-        movl    %edi, 8(%rsp)
-        movq    %r10, (%rsp)
-        movq    %r11, 4(%rsp)
-        movq    4(%rsp), %r10
+        movl    %edi, (%rsp)
+        movq    %r10, 4(%rsp)
+        movq    %r11, 8(%rsp)
+        movq    8(%rsp), %r10
         movq    (%r10), %r11
         movl    (%r11), %r10d
         movl    %r10d, %eax

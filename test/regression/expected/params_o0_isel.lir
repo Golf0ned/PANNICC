@@ -1,16 +1,16 @@
 fun1:  # 1 params, 12 stack bytes
         movl    %edi, %0
 .Lfun1_entry:
-        movl    %0, 8(%rsp)
-        movl    8(%rsp), %4
-        movl    8(%rsp), %5
+        movl    %0, (%rsp)
+        movl    (%rsp), %4
+        movl    (%rsp), %5
         movl    %4, %6
         imull   %5, %6
-        movl    %6, (%rsp)
-        movl    (%rsp), %7
-        movl    %7, 4(%rsp)
+        movl    %6, 4(%rsp)
+        movl    4(%rsp), %7
+        movl    %7, 8(%rsp)
 .Lfun1_8:
-        movl    4(%rsp), %9
+        movl    8(%rsp), %9
         movl    %9, %eax
         ret
 
@@ -18,36 +18,36 @@ fun2:  # 2 params, 36 stack bytes
         movl    %edi, %0
         movl    %esi, %1
 .Lfun2_entry:
-        movl    %0, 28(%rsp)
-        movl    %1, 32(%rsp)
-        movl    28(%rsp), %11
+        movl    %0, 4(%rsp)
+        movl    %1, 8(%rsp)
+        movl    4(%rsp), %11
         call    fun1  # (%11)
         movl    %eax, %12
-        movl    %12, 4(%rsp)
-        movl    28(%rsp), %13
+        movl    %12, 8(%rsp)
+        movl    4(%rsp), %13
         leal    (,%13,2), %14
-        movl    %14, 8(%rsp)
-        movl    8(%rsp), %15
-        movl    32(%rsp), %16
+        movl    %14, 12(%rsp)
+        movl    12(%rsp), %15
+        movl    8(%rsp), %16
         movl    %15, %17
         imull   %16, %17
-        movl    %17, 8(%rsp)
-        movl    4(%rsp), %18
-        movl    8(%rsp), %19
+        movl    %17, 16(%rsp)
+        movl    8(%rsp), %18
+        movl    16(%rsp), %19
         leal    (%18,%19), %20
-        movl    %20, 12(%rsp)
-        movl    32(%rsp), %21
+        movl    %20, 20(%rsp)
+        movl    8(%rsp), %21
         call    fun1  # (%21)
         movl    %eax, %22
-        movl    %22, 16(%rsp)
-        movl    12(%rsp), %23
-        movl    16(%rsp), %24
+        movl    %22, 24(%rsp)
+        movl    20(%rsp), %23
+        movl    24(%rsp), %24
         leal    (%23,%24), %25
-        movl    %25, 20(%rsp)
-        movl    20(%rsp), %26
-        movl    %26, 24(%rsp)
+        movl    %25, 28(%rsp)
+        movl    28(%rsp), %26
+        movl    %26, 32(%rsp)
 .Lfun2_27:
-        movl    24(%rsp), %28
+        movl    32(%rsp), %28
         movl    %28, %eax
         ret
 
@@ -57,36 +57,36 @@ fun3:  # 4 params, 40 stack bytes
         movl    %edx, %2
         movl    %ecx, %3
 .Lfun3_entry:
-        movl    %0, 32(%rsp)
-        movl    %1, 28(%rsp)
-        movl    %2, 32(%rsp)
-        movl    %3, 36(%rsp)
-        movl    36(%rsp), %14
+        movl    %0, 8(%rsp)
+        movl    %1, 12(%rsp)
+        movl    %2, 16(%rsp)
+        movl    %3, 20(%rsp)
+        movl    20(%rsp), %14
         call    fun1  # (%14)
         movl    %eax, %15
-        movl    %15, 8(%rsp)
-        movl    32(%rsp), %16
-        movl    8(%rsp), %17
+        movl    %15, 24(%rsp)
+        movl    8(%rsp), %16
+        movl    24(%rsp), %17
         movl    %16, %18
         imull   %17, %18
-        movl    %18, 12(%rsp)
-        movl    28(%rsp), %19
-        movl    36(%rsp), %20
+        movl    %18, 28(%rsp)
+        movl    12(%rsp), %19
+        movl    20(%rsp), %20
         movl    %19, %21
         imull   %20, %21
-        movl    %21, 16(%rsp)
-        movl    12(%rsp), %22
-        movl    16(%rsp), %23
+        movl    %21, 32(%rsp)
+        movl    28(%rsp), %22
+        movl    32(%rsp), %23
         leal    (%22,%23), %24
-        movl    %24, 20(%rsp)
-        movl    20(%rsp), %25
-        movl    32(%rsp), %26
+        movl    %24, 28(%rsp)
+        movl    28(%rsp), %25
+        movl    16(%rsp), %26
         leal    (%25,%26), %27
-        movl    %27, 24(%rsp)
-        movl    24(%rsp), %28
-        movl    %28, 28(%rsp)
+        movl    %27, 32(%rsp)
+        movl    32(%rsp), %28
+        movl    %28, 36(%rsp)
 .Lfun3_29:
-        movl    28(%rsp), %30
+        movl    36(%rsp), %30
         movl    %30, %eax
         ret
 
@@ -106,17 +106,17 @@ call2:  # 2 params, 16 stack bytes
         movl    %edi, %0
         movl    %esi, %1
 .Lcall2_entry:
-        movl    %0, 8(%rsp)
-        movl    %1, 12(%rsp)
-        movl    8(%rsp), %6
-        movl    12(%rsp), %7
+        movl    %0, 4(%rsp)
+        movl    %1, 8(%rsp)
+        movl    4(%rsp), %6
+        movl    8(%rsp), %7
         call    fun2  # (%6, %7)
         movl    %eax, %8
-        movl    %8, 4(%rsp)
-        movl    4(%rsp), %9
-        movl    %9, 8(%rsp)
+        movl    %8, 8(%rsp)
+        movl    8(%rsp), %9
+        movl    %9, 12(%rsp)
 .Lcall2_10:
-        movl    8(%rsp), %11
+        movl    12(%rsp), %11
         movl    %11, %eax
         ret
 
@@ -124,17 +124,17 @@ call3:  # 2 params, 16 stack bytes
         movl    %edi, %0
         movl    %esi, %1
 .Lcall3_entry:
-        movl    %0, 8(%rsp)
-        movl    %1, 12(%rsp)
-        movl    8(%rsp), %6
-        movl    12(%rsp), %7
+        movl    %0, 4(%rsp)
+        movl    %1, 8(%rsp)
+        movl    4(%rsp), %6
+        movl    8(%rsp), %7
         call    fun3  # (%6, %7, $1, $0)
         movl    %eax, %8
-        movl    %8, 4(%rsp)
-        movl    4(%rsp), %9
-        movl    %9, 8(%rsp)
+        movl    %8, 8(%rsp)
+        movl    8(%rsp), %9
+        movl    %9, 12(%rsp)
 .Lcall3_10:
-        movl    8(%rsp), %11
+        movl    12(%rsp), %11
         movl    %11, %eax
         ret
 
@@ -164,46 +164,46 @@ super_fun:  # 8 params, 64 stack bytes
         movl    (stack 0), %6
         movl    (stack 1), %7
 .Lsuper_fun_entry:
-        movl    %0, 32(%rsp)
-        movl    %1, 36(%rsp)
-        movl    %2, 40(%rsp)
-        movl    %3, 44(%rsp)
-        movl    %4, 48(%rsp)
-        movl    %5, 52(%rsp)
-        movl    %6, 56(%rsp)
-        movl    %7, 60(%rsp)
-        movl    32(%rsp), %24
-        movl    36(%rsp), %25
+        movl    %0, 24(%rsp)
+        movl    %1, 28(%rsp)
+        movl    %2, 32(%rsp)
+        movl    %3, 28(%rsp)
+        movl    %4, 32(%rsp)
+        movl    %5, 36(%rsp)
+        movl    %6, 24(%rsp)
+        movl    %7, 28(%rsp)
+        movl    24(%rsp), %24
+        movl    28(%rsp), %25
         leal    (%24,%25), %26
-        movl    %26, 24(%rsp)
-        movl    24(%rsp), %27
-        movl    40(%rsp), %28
+        movl    %26, 32(%rsp)
+        movl    32(%rsp), %27
+        movl    32(%rsp), %28
         leal    (%27,%28), %29
-        movl    %29, 28(%rsp)
-        movl    28(%rsp), %30
-        movl    44(%rsp), %31
+        movl    %29, 36(%rsp)
+        movl    36(%rsp), %30
+        movl    28(%rsp), %31
         leal    (%30,%31), %32
-        movl    %32, 32(%rsp)
-        movl    32(%rsp), %33
-        movl    48(%rsp), %34
+        movl    %32, 40(%rsp)
+        movl    40(%rsp), %33
+        movl    32(%rsp), %34
         leal    (%33,%34), %35
-        movl    %35, 28(%rsp)
-        movl    28(%rsp), %36
-        movl    52(%rsp), %37
+        movl    %35, 44(%rsp)
+        movl    44(%rsp), %36
+        movl    36(%rsp), %37
         leal    (%36,%37), %38
-        movl    %38, 32(%rsp)
-        movl    32(%rsp), %39
-        movl    56(%rsp), %40
+        movl    %38, 48(%rsp)
+        movl    48(%rsp), %39
+        movl    24(%rsp), %40
         leal    (%39,%40), %41
-        movl    %41, 36(%rsp)
-        movl    36(%rsp), %42
-        movl    60(%rsp), %43
+        movl    %41, 52(%rsp)
+        movl    52(%rsp), %42
+        movl    28(%rsp), %43
         leal    (%42,%43), %44
-        movl    %44, 24(%rsp)
-        movl    24(%rsp), %45
-        movl    %45, 28(%rsp)
+        movl    %44, 56(%rsp)
+        movl    56(%rsp), %45
+        movl    %45, 60(%rsp)
 .Lsuper_fun_46:
-        movl    28(%rsp), %47
+        movl    60(%rsp), %47
         movl    %47, %eax
         ret
 
@@ -211,17 +211,17 @@ call_super_fun:  # 2 params, 16 stack bytes
         movl    %edi, %0
         movl    %esi, %1
 .Lcall_super_fun_entry:
-        movl    %0, 8(%rsp)
-        movl    %1, 12(%rsp)
-        movl    8(%rsp), %6
-        movl    12(%rsp), %7
+        movl    %0, 4(%rsp)
+        movl    %1, 8(%rsp)
+        movl    4(%rsp), %6
+        movl    8(%rsp), %7
         call    super_fun  # ($1, $2, $3, $4, $5, $6, %6, %7)
         movl    %eax, %8
-        movl    %8, 4(%rsp)
-        movl    4(%rsp), %9
-        movl    %9, 8(%rsp)
+        movl    %8, 8(%rsp)
+        movl    8(%rsp), %9
+        movl    %9, 12(%rsp)
 .Lcall_super_fun_10:
-        movl    8(%rsp), %11
+        movl    12(%rsp), %11
         movl    %11, %eax
         ret
 
@@ -229,138 +229,138 @@ caller_saved:  # 2 params, 156 stack bytes
         movl    %edi, %0
         movl    %esi, %1
 .Lcaller_saved_entry:
-        movl    %0, 148(%rsp)
-        movl    %1, 152(%rsp)
-        movl    148(%rsp), %41
+        movl    %0, 4(%rsp)
+        movl    %1, 8(%rsp)
+        movl    4(%rsp), %41
         movl    %41, %42
         addl    $1, %42
-        movl    %42, 8(%rsp)
-        movl    8(%rsp), %43
-        movl    %43, 4(%rsp)
-        movl    148(%rsp), %44
+        movl    %42, 12(%rsp)
+        movl    12(%rsp), %43
+        movl    %43, 8(%rsp)
+        movl    4(%rsp), %44
         movl    %44, %45
         addl    $2, %45
-        movl    %45, 12(%rsp)
-        movl    12(%rsp), %46
-        movl    %46, 8(%rsp)
-        movl    148(%rsp), %47
+        movl    %45, 20(%rsp)
+        movl    20(%rsp), %46
+        movl    %46, 16(%rsp)
+        movl    4(%rsp), %47
         movl    %47, %48
         addl    $3, %48
-        movl    %48, 20(%rsp)
-        movl    20(%rsp), %49
-        movl    %49, 16(%rsp)
-        movl    148(%rsp), %50
+        movl    %48, 28(%rsp)
+        movl    28(%rsp), %49
+        movl    %49, 24(%rsp)
+        movl    4(%rsp), %50
         movl    %50, %51
         addl    $4, %51
         movl    %51, 28(%rsp)
         movl    28(%rsp), %52
-        movl    %52, 24(%rsp)
-        movl    148(%rsp), %53
+        movl    %52, 32(%rsp)
+        movl    4(%rsp), %53
         movl    %53, %54
         addl    $5, %54
-        movl    %54, 28(%rsp)
-        movl    28(%rsp), %55
+        movl    %54, 36(%rsp)
+        movl    36(%rsp), %55
         movl    %55, 32(%rsp)
-        movl    148(%rsp), %56
+        movl    4(%rsp), %56
         movl    %56, %57
         addl    $6, %57
-        movl    %57, 36(%rsp)
-        movl    36(%rsp), %58
-        movl    %58, 32(%rsp)
-        movl    148(%rsp), %59
+        movl    %57, 28(%rsp)
+        movl    28(%rsp), %58
+        movl    %58, 24(%rsp)
+        movl    4(%rsp), %59
         movl    %59, %60
         addl    $7, %60
-        movl    %60, 28(%rsp)
-        movl    28(%rsp), %61
-        movl    %61, 24(%rsp)
-        movl    148(%rsp), %62
+        movl    %60, 36(%rsp)
+        movl    36(%rsp), %61
+        movl    %61, 32(%rsp)
+        movl    4(%rsp), %62
         movl    %62, %63
         addl    $8, %63
-        movl    %63, 36(%rsp)
-        movl    36(%rsp), %64
-        movl    %64, 32(%rsp)
-        movl    148(%rsp), %65
+        movl    %63, 44(%rsp)
+        movl    44(%rsp), %64
+        movl    %64, 40(%rsp)
+        movl    4(%rsp), %65
         movl    %65, %66
         addl    $9, %66
-        movl    %66, 44(%rsp)
-        movl    44(%rsp), %67
-        movl    %67, 40(%rsp)
-        movl    148(%rsp), %68
+        movl    %66, 52(%rsp)
+        movl    52(%rsp), %67
+        movl    %67, 48(%rsp)
+        movl    4(%rsp), %68
         movl    %68, %69
         addl    $10, %69
-        movl    %69, 52(%rsp)
-        movl    52(%rsp), %70
-        movl    %70, 48(%rsp)
-        movl    148(%rsp), %71
+        movl    %69, 60(%rsp)
+        movl    60(%rsp), %70
+        movl    %70, 56(%rsp)
+        movl    4(%rsp), %71
         movl    %71, %72
         addl    $11, %72
-        movl    %72, 60(%rsp)
-        movl    60(%rsp), %73
-        movl    %73, 56(%rsp)
-        movl    4(%rsp), %74
-        movl    8(%rsp), %75
-        movl    16(%rsp), %76
-        movl    24(%rsp), %77
+        movl    %72, 92(%rsp)
+        movl    92(%rsp), %73
+        movl    %73, 88(%rsp)
+        movl    8(%rsp), %74
+        movl    16(%rsp), %75
+        movl    24(%rsp), %76
+        movl    32(%rsp), %77
         movl    32(%rsp), %78
-        movl    32(%rsp), %79
-        movl    24(%rsp), %80
-        movl    32(%rsp), %81
+        movl    24(%rsp), %79
+        movl    32(%rsp), %80
+        movl    40(%rsp), %81
         call    super_fun  # (%74, %75, %76, %77, %78, %79, %80, %81)
         movl    %eax, %82
-        movl    %82, 92(%rsp)
-        movl    92(%rsp), %83
-        movl    %83, 88(%rsp)
-        movl    4(%rsp), %84
-        movl    8(%rsp), %85
+        movl    %82, 100(%rsp)
+        movl    100(%rsp), %83
+        movl    %83, 96(%rsp)
+        movl    8(%rsp), %84
+        movl    16(%rsp), %85
         leal    (%84,%85), %86
-        movl    %86, 96(%rsp)
-        movl    96(%rsp), %87
-        movl    16(%rsp), %88
+        movl    %86, 104(%rsp)
+        movl    104(%rsp), %87
+        movl    24(%rsp), %88
         leal    (%87,%88), %89
-        movl    %89, 100(%rsp)
-        movl    100(%rsp), %90
-        movl    24(%rsp), %91
+        movl    %89, 108(%rsp)
+        movl    108(%rsp), %90
+        movl    32(%rsp), %91
         leal    (%90,%91), %92
-        movl    %92, 104(%rsp)
-        movl    104(%rsp), %93
+        movl    %92, 112(%rsp)
+        movl    112(%rsp), %93
         movl    32(%rsp), %94
         leal    (%93,%94), %95
-        movl    %95, 108(%rsp)
-        movl    108(%rsp), %96
-        movl    32(%rsp), %97
+        movl    %95, 116(%rsp)
+        movl    116(%rsp), %96
+        movl    24(%rsp), %97
         leal    (%96,%97), %98
-        movl    %98, 112(%rsp)
-        movl    112(%rsp), %99
-        movl    24(%rsp), %100
+        movl    %98, 120(%rsp)
+        movl    120(%rsp), %99
+        movl    32(%rsp), %100
         leal    (%99,%100), %101
-        movl    %101, 116(%rsp)
-        movl    116(%rsp), %102
-        movl    32(%rsp), %103
+        movl    %101, 124(%rsp)
+        movl    124(%rsp), %102
+        movl    40(%rsp), %103
         leal    (%102,%103), %104
-        movl    %104, 120(%rsp)
-        movl    120(%rsp), %105
-        movl    40(%rsp), %106
+        movl    %104, 128(%rsp)
+        movl    128(%rsp), %105
+        movl    48(%rsp), %106
         leal    (%105,%106), %107
-        movl    %107, 124(%rsp)
-        movl    124(%rsp), %108
-        movl    48(%rsp), %109
+        movl    %107, 132(%rsp)
+        movl    132(%rsp), %108
+        movl    56(%rsp), %109
         leal    (%108,%109), %110
-        movl    %110, 128(%rsp)
-        movl    128(%rsp), %111
-        movl    56(%rsp), %112
+        movl    %110, 136(%rsp)
+        movl    136(%rsp), %111
+        movl    88(%rsp), %112
         leal    (%111,%112), %113
-        movl    %113, 132(%rsp)
-        movl    132(%rsp), %114
-        movl    88(%rsp), %115
+        movl    %113, 140(%rsp)
+        movl    140(%rsp), %114
+        movl    96(%rsp), %115
         leal    (%114,%115), %116
-        movl    %116, 136(%rsp)
-        movl    136(%rsp), %117
-        movl    152(%rsp), %118
+        movl    %116, 144(%rsp)
+        movl    144(%rsp), %117
+        movl    8(%rsp), %118
         leal    (%117,%118), %119
-        movl    %119, 140(%rsp)
-        movl    140(%rsp), %120
-        movl    %120, 144(%rsp)
+        movl    %119, 148(%rsp)
+        movl    148(%rsp), %120
+        movl    %120, 152(%rsp)
 .Lcaller_saved_121:
-        movl    144(%rsp), %122
+        movl    152(%rsp), %122
         movl    %122, %eax
         ret

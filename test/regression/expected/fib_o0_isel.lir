@@ -1,89 +1,89 @@
 fib_rec:  # 1 params, 32 stack bytes
         movl    %edi, %0
 .Lfib_rec_entry:
-        movl    %0, 28(%rsp)
-        movl    28(%rsp), %9
+        movl    %0, (%rsp)
+        movl    (%rsp), %9
         cmpl    $0, %9
         jne     .Lfib_rec_33
 .Lfib_rec_10:
 .Lfib_rec_11:
-        movl    28(%rsp), %12
+        movl    (%rsp), %12
         movl    %12, %13
         subl    $1, %13
-        movl    %13, (%rsp)
-        movl    (%rsp), %14
+        movl    %13, 4(%rsp)
+        movl    4(%rsp), %14
         cmpl    $0, %14
         jne     .Lfib_rec_30
 .Lfib_rec_15:
 .Lfib_rec_16:
-        movl    28(%rsp), %17
+        movl    (%rsp), %17
         movl    %17, %18
         subl    $1, %18
-        movl    %18, 4(%rsp)
-        movl    4(%rsp), %19
+        movl    %18, 8(%rsp)
+        movl    8(%rsp), %19
         call    fib_rec  # (%19)
         movl    %eax, %20
-        movl    %20, 8(%rsp)
-        movl    28(%rsp), %21
+        movl    %20, 12(%rsp)
+        movl    (%rsp), %21
         movl    %21, %22
         subl    $2, %22
-        movl    %22, 12(%rsp)
-        movl    12(%rsp), %23
+        movl    %22, 16(%rsp)
+        movl    16(%rsp), %23
         call    fib_rec  # (%23)
         movl    %eax, %24
-        movl    %24, 16(%rsp)
-        movl    8(%rsp), %25
-        movl    16(%rsp), %26
+        movl    %24, 20(%rsp)
+        movl    12(%rsp), %25
+        movl    20(%rsp), %26
         leal    (%25,%26), %27
-        movl    %27, 20(%rsp)
-        movl    20(%rsp), %28
-        movl    %28, 24(%rsp)
+        movl    %27, 24(%rsp)
+        movl    24(%rsp), %28
+        movl    %28, 28(%rsp)
 .Lfib_rec_35:
-        movl    24(%rsp), %36
+        movl    28(%rsp), %36
         movl    %36, %eax
         ret
 .Lfib_rec_33:
 .Lfib_rec_34:
-        movl    $0, 24(%rsp)
+        movl    $0, 28(%rsp)
         jmp     .Lfib_rec_35
 .Lfib_rec_30:
 .Lfib_rec_31:
-        movl    $1, 24(%rsp)
+        movl    $1, 28(%rsp)
         jmp     .Lfib_rec_35
 
 fib_it:  # 1 params, 24 stack bytes
         movl    %edi, %0
 .Lfib_it_entry:
-        movl    %0, 20(%rsp)
-        movl    $0, (%rsp)
-        movl    $1, 4(%rsp)
+        movl    %0, (%rsp)
+        movl    $0, 4(%rsp)
+        movl    $1, 8(%rsp)
 .Lfib_it_7:
-        movl    20(%rsp), %8
+        movl    (%rsp), %8
         cmpl    $0, %8
         jne     .Lfib_it_19
 .Lfib_it_9:
 .Lfib_it_10:
-        movl    (%rsp), %11
-        movl    4(%rsp), %12
+        movl    4(%rsp), %11
+        movl    8(%rsp), %12
         leal    (%11,%12), %13
-        movl    %13, 12(%rsp)
-        movl    12(%rsp), %14
-        movl    %14, 8(%rsp)
-        movl    4(%rsp), %15
-        movl    %15, (%rsp)
-        movl    8(%rsp), %16
-        movl    %16, 4(%rsp)
-        movl    20(%rsp), %17
+        movl    %13, 16(%rsp)
+        movl    16(%rsp), %14
+        movl    %14, 12(%rsp)
+        movl    8(%rsp), %15
+        movl    %15, 4(%rsp)
+        movl    12(%rsp), %16
+        movl    %16, 8(%rsp)
+        movl    (%rsp), %17
         movl    %17, %18
         subl    $1, %18
-        movl    %18, 20(%rsp)
+        movl    %18, (%rsp)
         jmp     .Lfib_it_7
 .Lfib_it_19:
 .Lfib_it_20:
-        movl    (%rsp), %21
-        movl    %21, 16(%rsp)
+        movl    4(%rsp), %21
+        movl    %21, 20(%rsp)
 .Lfib_it_22:
-        movl    16(%rsp), %23
+        movl    20(%rsp), %23
         movl    %23, %eax
         ret
 

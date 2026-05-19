@@ -3,16 +3,16 @@ entry:
   %1 = alloca i32
   %2 = alloca i32
   %3 = alloca i32
-  store i32 %0, ptr %3
-  %4 = load ptr %3
-  %5 = load ptr %3
+  store i32 %0, ptr %1
+  %4 = load ptr %1
+  %5 = load ptr %1
   %6 = mul i32 %4, i32 %5
-  store i32 %6, ptr %1
-  %7 = load ptr %1
-  store i32 %7, ptr %2
+  store i32 %6, ptr %2
+  %7 = load ptr %2
+  store i32 %7, ptr %3
   br label 8
 
 8:
-  %9 = load ptr %2
+  %9 = load ptr %3
   ret i32 %9
 }

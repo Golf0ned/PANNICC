@@ -23,10 +23,10 @@ address_deref:  # 1 params, 4 stack bytes
 address_deref_many:  # 1 params, 12 stack bytes
         movl    %edi, %0
 .Laddress_deref_many_entry:
-        movl    %0, 8(%rsp)
-        movq    %3, (%rsp)
+        movl    %0, (%rsp)
         movq    %1, 4(%rsp)
-        movq    4(%rsp), %4
+        movq    %2, 8(%rsp)
+        movq    8(%rsp), %4
         movq    (%4), %5
         movl    (%5), %6
         movl    %6, %eax
