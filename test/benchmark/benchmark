@@ -10,6 +10,8 @@ INPUT_DIR="${PANNICC_DIR}/test/benchmark/input"
 EXPECTED_DIR="${PANNICC_DIR}/test/benchmark/expected"
 TMP_DIR="${PANNICC_DIR}/test/benchmark/tmp"
 
+export LIBRARY_PATH=/home/golf0ned/code/projects/PANNICC/build/src/driver:${LIBRARY_PATH}
+
 require() {
     command -v "$1" >/dev/null 2>&1 || { echo "missing: $1"; exit 1; }
 }
