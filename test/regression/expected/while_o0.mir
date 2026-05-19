@@ -93,27 +93,30 @@ entry:
   br label 2
 
 2:
-  br i32 1, label 3, label 8
+  br i32 1, label 3, label 9
 
 3:
   %4 = load ptr %0
   br i32 %4, label 5, label 6
 
 5:
-  br label 7
+  br label 8
 
 6:
   store i32 500, ptr %1
-  br label 9
+  br label 10
 
 7:
-  br label 2
+  br label 8
 
 8:
-  store i32 0, ptr %1
-  br label 9
+  br label 2
 
 9:
-  %10 = load ptr %1
-  ret i32 %10
+  store i32 0, ptr %1
+  br label 10
+
+10:
+  %11 = load ptr %1
+  ret i32 %11
 }

@@ -94,7 +94,7 @@ while_if:
 .Lwhile_if_2:
         movq    $1, %r10
         cmpq    $0, %r10
-        jne     .Lwhile_if_11
+        jne     .Lwhile_if_12
 .Lwhile_if_3:
 .Lwhile_if_4:
         movl    (%rsp), %r10d
@@ -102,12 +102,12 @@ while_if:
         jne     .Lwhile_if_8
 .Lwhile_if_6:
 .Lwhile_if_7:
-.Lwhile_if_10:
-        jmp     .Lwhile_if_2
 .Lwhile_if_11:
+        jmp     .Lwhile_if_2
 .Lwhile_if_12:
-        movl    $0, 4(%rsp)
 .Lwhile_if_13:
+        movl    $0, 4(%rsp)
+.Lwhile_if_14:
         movl    4(%rsp), %r10d
         movl    %r10d, %eax
         ret
@@ -115,7 +115,7 @@ while_if:
 .Lwhile_if_9:
         movl    $500, 4(%rsp)
         addq    $8, %rsp
-        jmp     .Lwhile_if_13
+        jmp     .Lwhile_if_14
 .Lwhile_if_end:
     .section    .note.GNU-stack,"",@progbits
     .ident  "PANNICC (https://github.com/Golf0ned/PANNICC)"
