@@ -8,7 +8,7 @@ fib_rec:
         movl    %r10d, 28(%rsp)
         movl    28(%rsp), %r10d
         cmpl    $0, %r10d
-        jne     .Lfib_rec_31
+        jne     .Lfib_rec_33
 .Lfib_rec_10:
 .Lfib_rec_11:
         movl    28(%rsp), %r11d
@@ -17,7 +17,7 @@ fib_rec:
         movl    %r10d, (%rsp)
         movl    (%rsp), %r10d
         cmpl    $0, %r10d
-        jne     .Lfib_rec_29
+        jne     .Lfib_rec_30
 .Lfib_rec_15:
 .Lfib_rec_16:
         movl    28(%rsp), %r11d
@@ -50,19 +50,19 @@ fib_rec:
         movl    %edi, 20(%rsp)
         movl    20(%rsp), %r10d
         movl    %r10d, 24(%rsp)
-.Lfib_rec_33:
+.Lfib_rec_35:
         movl    24(%rsp), %r10d
         movl    %r10d, %eax
         ret
-.Lfib_rec_31:
-.Lfib_rec_32:
+.Lfib_rec_33:
+.Lfib_rec_34:
         movl    $0, 24(%rsp)
-        jmp     .Lfib_rec_33
-.Lfib_rec_29:
+        jmp     .Lfib_rec_35
 .Lfib_rec_30:
+.Lfib_rec_31:
         movl    $1, 24(%rsp)
         addq    $32, %rsp
-        jmp     .Lfib_rec_33
+        jmp     .Lfib_rec_35
 .Lfib_rec_end:
     .globl  fib_it
     .type   fib_it, @function

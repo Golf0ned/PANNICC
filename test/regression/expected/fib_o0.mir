@@ -10,14 +10,14 @@ entry:
   %8 = alloca i32
   store i32 %0, ptr %8
   %9 = load ptr %8
-  br i32 %9, label 10, label 28
+  br i32 %9, label 10, label 30
 
 10:
   %11 = load ptr %8
   %12 = sub i32 %11, i32 1
   store i32 %12, ptr %1
   %13 = load ptr %1
-  br i32 %13, label 14, label 27
+  br i32 %13, label 14, label 28
 
 14:
   %15 = load ptr %8
@@ -38,19 +38,25 @@ entry:
   store i32 %25, ptr %6
   %26 = load ptr %6
   store i32 %26, ptr %7
-  br label 29
+  br label 31
 
 27:
-  store i32 1, ptr %7
-  br label 29
+  br label 28
 
 28:
-  store i32 0, ptr %7
-  br label 29
+  store i32 1, ptr %7
+  br label 31
 
 29:
-  %30 = load ptr %7
-  ret i32 %30
+  br label 30
+
+30:
+  store i32 0, ptr %7
+  br label 31
+
+31:
+  %32 = load ptr %7
+  ret i32 %32
 }
 
 define i32 @fib_it(i32 %0) {

@@ -70,21 +70,21 @@ if_no_braces:
         movl    $1, (%rsp)
         movl    (%rsp), %r10d
         cmpl    $0, %r10d
-        jne     .Lif_no_braces_6
+        jne     .Lif_no_braces_7
 .Lif_no_braces_3:
 .Lif_no_braces_4:
         movl    (%rsp), %r10d
         movl    %r10d, 4(%rsp)
-.Lif_no_braces_10:
+.Lif_no_braces_11:
         movl    4(%rsp), %r10d
         movl    %r10d, %eax
         ret
-.Lif_no_braces_6:
 .Lif_no_braces_7:
+.Lif_no_braces_8:
         movl    (%rsp), %r10d
         movl    %r10d, 4(%rsp)
         addq    $8, %rsp
-        jmp     .Lif_no_braces_10
+        jmp     .Lif_no_braces_11
 .Lif_no_braces_end:
     .globl  if_chain
     .type   if_chain, @function
@@ -95,27 +95,27 @@ if_chain:
         movl    $2, 4(%rsp)
         movl    (%rsp), %r10d
         cmpl    $0, %r10d
-        jne     .Lif_chain_11
+        jne     .Lif_chain_12
 .Lif_chain_4:
 .Lif_chain_5:
         movl    4(%rsp), %r10d
         cmpl    $0, %r10d
-        jne     .Lif_chain_9
+        jne     .Lif_chain_10
 .Lif_chain_7:
 .Lif_chain_8:
         movl    $0, 8(%rsp)
-.Lif_chain_13:
+.Lif_chain_14:
         movl    8(%rsp), %r10d
         movl    %r10d, %eax
         ret
-.Lif_chain_11:
 .Lif_chain_12:
+.Lif_chain_13:
         movl    $1, 8(%rsp)
-        jmp     .Lif_chain_13
-.Lif_chain_9:
+        jmp     .Lif_chain_14
 .Lif_chain_10:
+.Lif_chain_11:
         addq    $12, %rsp
-        jmp     .Lif_chain_12
+        jmp     .Lif_chain_13
 .Lif_chain_end:
     .globl  if_chain_many
     .type   if_chain_many, @function
@@ -127,36 +127,36 @@ if_chain_many:
         movl    $0, 8(%rsp)
         movl    (%rsp), %r10d
         cmpl    $0, %r10d
-        jne     .Lif_chain_many_18
+        jne     .Lif_chain_many_20
 .Lif_chain_many_5:
 .Lif_chain_many_6:
         movl    4(%rsp), %r10d
         cmpl    $0, %r10d
-        jne     .Lif_chain_many_16
+        jne     .Lif_chain_many_18
 .Lif_chain_many_8:
 .Lif_chain_many_9:
         movl    8(%rsp), %r10d
         cmpl    $0, %r10d
-        jne     .Lif_chain_many_13
+        jne     .Lif_chain_many_14
 .Lif_chain_many_11:
 .Lif_chain_many_12:
         movl    $0, 12(%rsp)
-.Lif_chain_many_20:
+.Lif_chain_many_22:
         movl    12(%rsp), %r10d
         movl    %r10d, %eax
         ret
+.Lif_chain_many_20:
+.Lif_chain_many_21:
+        movl    $1, 12(%rsp)
+        jmp     .Lif_chain_many_22
 .Lif_chain_many_18:
 .Lif_chain_many_19:
-        movl    $1, 12(%rsp)
-        jmp     .Lif_chain_many_20
-.Lif_chain_many_16:
-.Lif_chain_many_17:
-        jmp     .Lif_chain_many_19
-.Lif_chain_many_13:
+        jmp     .Lif_chain_many_21
 .Lif_chain_many_14:
+.Lif_chain_many_15:
         movl    $3, 12(%rsp)
         addq    $16, %rsp
-        jmp     .Lif_chain_many_20
+        jmp     .Lif_chain_many_22
 .Lif_chain_many_end:
     .globl  if_else_if
     .type   if_else_if, @function
@@ -165,28 +165,28 @@ if_else_if:
 .Lif_else_if_entry:
         movq    $1, %r10
         cmpq    $0, %r10
-        jne     .Lif_else_if_3
+        jne     .Lif_else_if_4
 .Lif_else_if_1:
 .Lif_else_if_2:
         movl    $2, (%rsp)
-.Lif_else_if_11:
+.Lif_else_if_13:
         movl    (%rsp), %r10d
         movl    %r10d, %eax
         ret
-.Lif_else_if_3:
 .Lif_else_if_4:
+.Lif_else_if_5:
         movq    $3, %r10
         cmpq    $0, %r10
-        jne     .Lif_else_if_7
-.Lif_else_if_5:
+        jne     .Lif_else_if_9
 .Lif_else_if_6:
-        movl    $4, (%rsp)
-        jmp     .Lif_else_if_11
 .Lif_else_if_7:
-.Lif_else_if_8:
+        movl    $4, (%rsp)
+        jmp     .Lif_else_if_13
+.Lif_else_if_9:
+.Lif_else_if_10:
         movl    $5, (%rsp)
         addq    $4, %rsp
-        jmp     .Lif_else_if_11
+        jmp     .Lif_else_if_13
 .Lif_else_if_end:
     .section    .note.GNU-stack,"",@progbits
     .ident  "PANNICC (https://github.com/Golf0ned/PANNICC)"
