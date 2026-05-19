@@ -10,15 +10,15 @@ second:  # 0 params, 12 stack bytes
 .Lsecond_entry:
         call    first  # ()
         movl    %eax, %3
-        movl    %3, (%rsp)
-        movl    (%rsp), %4
+        movl    %3, 4(%rsp)
+        movl    4(%rsp), %4
         movl    %4, %5
         addl    $1, %5
-        movl    %5, 4(%rsp)
-        movl    4(%rsp), %6
-        movl    %6, 8(%rsp)
+        movl    %5, 8(%rsp)
+        movl    8(%rsp), %6
+        movl    %6, (%rsp)
 .Lsecond_7:
-        movl    8(%rsp), %8
+        movl    (%rsp), %8
         movl    %8, %eax
         ret
 
@@ -26,15 +26,15 @@ third:  # 0 params, 12 stack bytes
 .Lthird_entry:
         call    second  # ()
         movl    %eax, %3
-        movl    %3, (%rsp)
-        movl    (%rsp), %4
+        movl    %3, 4(%rsp)
+        movl    4(%rsp), %4
         movl    %4, %5
         addl    $2, %5
-        movl    %5, 4(%rsp)
-        movl    4(%rsp), %6
-        movl    %6, 8(%rsp)
+        movl    %5, 8(%rsp)
+        movl    8(%rsp), %6
+        movl    %6, (%rsp)
 .Lthird_7:
-        movl    8(%rsp), %8
+        movl    (%rsp), %8
         movl    %8, %eax
         ret
 
@@ -42,15 +42,15 @@ fourth:  # 0 params, 12 stack bytes
 .Lfourth_entry:
         call    third  # ()
         movl    %eax, %3
-        movl    %3, (%rsp)
-        movl    (%rsp), %4
+        movl    %3, 4(%rsp)
+        movl    4(%rsp), %4
         movl    %4, %5
         addl    $3, %5
-        movl    %5, 4(%rsp)
-        movl    4(%rsp), %6
-        movl    %6, 8(%rsp)
+        movl    %5, 8(%rsp)
+        movl    8(%rsp), %6
+        movl    %6, (%rsp)
 .Lfourth_7:
-        movl    8(%rsp), %8
+        movl    (%rsp), %8
         movl    %8, %eax
         ret
 
@@ -58,15 +58,15 @@ fifth:  # 0 params, 12 stack bytes
 .Lfifth_entry:
         call    fourth  # ()
         movl    %eax, %3
-        movl    %3, (%rsp)
-        movl    (%rsp), %4
+        movl    %3, 4(%rsp)
+        movl    4(%rsp), %4
         movl    %4, %5
         addl    $4, %5
-        movl    %5, 4(%rsp)
-        movl    4(%rsp), %6
-        movl    %6, 8(%rsp)
+        movl    %5, 8(%rsp)
+        movl    8(%rsp), %6
+        movl    %6, (%rsp)
 .Lfifth_7:
-        movl    8(%rsp), %8
+        movl    (%rsp), %8
         movl    %8, %eax
         ret
 
@@ -74,15 +74,15 @@ sixth:  # 0 params, 12 stack bytes
 .Lsixth_entry:
         call    fifth  # ()
         movl    %eax, %3
-        movl    %3, (%rsp)
-        movl    (%rsp), %4
+        movl    %3, 4(%rsp)
+        movl    4(%rsp), %4
         movl    %4, %5
         addl    $5, %5
-        movl    %5, 4(%rsp)
-        movl    4(%rsp), %6
-        movl    %6, 8(%rsp)
+        movl    %5, 8(%rsp)
+        movl    8(%rsp), %6
+        movl    %6, (%rsp)
 .Lsixth_7:
-        movl    8(%rsp), %8
+        movl    (%rsp), %8
         movl    %8, %eax
         ret
 
@@ -90,109 +90,109 @@ main:  # 0 params, 108 stack bytes
 .Lmain_entry:
         call    sixth  # ()
         movl    %eax, %27
-        movl    %27, (%rsp)
-        movl    $0, 4(%rsp)
+        movl    %27, 4(%rsp)
+        movl    $0, 8(%rsp)
         call    first  # ()
         movl    %eax, %28
-        movl    %28, 8(%rsp)
-        movl    4(%rsp), %29
-        movl    8(%rsp), %30
+        movl    %28, 12(%rsp)
+        movl    8(%rsp), %29
+        movl    12(%rsp), %30
         leal    (%29,%30), %31
-        movl    %31, 12(%rsp)
-        movl    12(%rsp), %32
-        movl    %32, 4(%rsp)
+        movl    %31, 16(%rsp)
+        movl    16(%rsp), %32
+        movl    %32, 8(%rsp)
         call    second  # ()
         movl    %eax, %33
-        movl    %33, 16(%rsp)
-        movl    4(%rsp), %34
-        movl    16(%rsp), %35
+        movl    %33, 20(%rsp)
+        movl    8(%rsp), %34
+        movl    20(%rsp), %35
         leal    (%34,%35), %36
-        movl    %36, 20(%rsp)
-        movl    20(%rsp), %37
-        movl    %37, 4(%rsp)
+        movl    %36, 24(%rsp)
+        movl    24(%rsp), %37
+        movl    %37, 8(%rsp)
         call    third  # ()
         movl    %eax, %38
-        movl    %38, 24(%rsp)
-        movl    4(%rsp), %39
-        movl    24(%rsp), %40
+        movl    %38, 28(%rsp)
+        movl    8(%rsp), %39
+        movl    28(%rsp), %40
         leal    (%39,%40), %41
-        movl    %41, 28(%rsp)
-        movl    28(%rsp), %42
-        movl    %42, 4(%rsp)
+        movl    %41, 32(%rsp)
+        movl    32(%rsp), %42
+        movl    %42, 8(%rsp)
         call    fourth  # ()
         movl    %eax, %43
-        movl    %43, 32(%rsp)
-        movl    4(%rsp), %44
-        movl    32(%rsp), %45
+        movl    %43, 36(%rsp)
+        movl    8(%rsp), %44
+        movl    36(%rsp), %45
         leal    (%44,%45), %46
-        movl    %46, 36(%rsp)
-        movl    36(%rsp), %47
-        movl    %47, 4(%rsp)
+        movl    %46, 40(%rsp)
+        movl    40(%rsp), %47
+        movl    %47, 8(%rsp)
         call    fifth  # ()
         movl    %eax, %48
-        movl    %48, 40(%rsp)
-        movl    4(%rsp), %49
-        movl    40(%rsp), %50
+        movl    %48, 44(%rsp)
+        movl    8(%rsp), %49
+        movl    44(%rsp), %50
         leal    (%49,%50), %51
-        movl    %51, 44(%rsp)
-        movl    44(%rsp), %52
-        movl    %52, 4(%rsp)
+        movl    %51, 48(%rsp)
+        movl    48(%rsp), %52
+        movl    %52, 8(%rsp)
         call    sixth  # ()
         movl    %eax, %53
-        movl    %53, 48(%rsp)
-        movl    4(%rsp), %54
-        movl    48(%rsp), %55
+        movl    %53, 52(%rsp)
+        movl    8(%rsp), %54
+        movl    52(%rsp), %55
         leal    (%54,%55), %56
-        movl    %56, 52(%rsp)
-        movl    52(%rsp), %57
-        movl    %57, 4(%rsp)
+        movl    %56, 56(%rsp)
+        movl    56(%rsp), %57
+        movl    %57, 8(%rsp)
         call    first  # ()
         movl    %eax, %58
-        movl    %58, 56(%rsp)
-        movl    4(%rsp), %59
-        movl    56(%rsp), %60
+        movl    %58, 60(%rsp)
+        movl    8(%rsp), %59
+        movl    60(%rsp), %60
         leal    (%59,%60), %61
-        movl    %61, 60(%rsp)
+        movl    %61, 64(%rsp)
         call    second  # ()
         movl    %eax, %62
-        movl    %62, 64(%rsp)
-        movl    60(%rsp), %63
-        movl    64(%rsp), %64
+        movl    %62, 68(%rsp)
+        movl    64(%rsp), %63
+        movl    68(%rsp), %64
         leal    (%63,%64), %65
-        movl    %65, 68(%rsp)
+        movl    %65, 72(%rsp)
         call    third  # ()
         movl    %eax, %66
-        movl    %66, 72(%rsp)
-        movl    68(%rsp), %67
-        movl    72(%rsp), %68
+        movl    %66, 76(%rsp)
+        movl    72(%rsp), %67
+        movl    76(%rsp), %68
         leal    (%67,%68), %69
-        movl    %69, 76(%rsp)
+        movl    %69, 80(%rsp)
         call    fourth  # ()
         movl    %eax, %70
-        movl    %70, 80(%rsp)
-        movl    76(%rsp), %71
-        movl    80(%rsp), %72
+        movl    %70, 84(%rsp)
+        movl    80(%rsp), %71
+        movl    84(%rsp), %72
         leal    (%71,%72), %73
-        movl    %73, 84(%rsp)
+        movl    %73, 88(%rsp)
         call    fifth  # ()
         movl    %eax, %74
-        movl    %74, 88(%rsp)
-        movl    84(%rsp), %75
-        movl    88(%rsp), %76
+        movl    %74, 92(%rsp)
+        movl    88(%rsp), %75
+        movl    92(%rsp), %76
         leal    (%75,%76), %77
-        movl    %77, 92(%rsp)
+        movl    %77, 96(%rsp)
         call    sixth  # ()
         movl    %eax, %78
-        movl    %78, 96(%rsp)
-        movl    92(%rsp), %79
-        movl    96(%rsp), %80
+        movl    %78, 100(%rsp)
+        movl    96(%rsp), %79
+        movl    100(%rsp), %80
         leal    (%79,%80), %81
-        movl    %81, 100(%rsp)
-        movl    100(%rsp), %82
-        movl    %82, 4(%rsp)
-        movl    4(%rsp), %83
-        movl    %83, 104(%rsp)
+        movl    %81, 104(%rsp)
+        movl    104(%rsp), %82
+        movl    %82, 8(%rsp)
+        movl    8(%rsp), %83
+        movl    %83, (%rsp)
 .Lmain_84:
-        movl    104(%rsp), %85
+        movl    (%rsp), %85
         movl    %85, %eax
         ret

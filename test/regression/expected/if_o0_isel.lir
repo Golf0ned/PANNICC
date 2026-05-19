@@ -1,22 +1,22 @@
 if_basic:  # 0 params, 12 stack bytes
 .Lif_basic_entry:
-        movl    $1, (%rsp)
-        movl    (%rsp), %3
+        movl    $1, 4(%rsp)
+        movl    4(%rsp), %3
         cmpl    $0, %3
         jne     .Lif_basic_9
 .Lif_basic_4:
 .Lif_basic_5:
-        movl    (%rsp), %6
+        movl    4(%rsp), %6
         movl    %6, %7
         addl    $100, %7
-        movl    %7, 4(%rsp)
-        movl    4(%rsp), %8
-        movl    %8, (%rsp)
+        movl    %7, 8(%rsp)
+        movl    8(%rsp), %8
+        movl    %8, 4(%rsp)
 .Lif_basic_10:
-        movl    (%rsp), %11
-        movl    %11, 8(%rsp)
+        movl    4(%rsp), %11
+        movl    %11, (%rsp)
 .Lif_basic_12:
-        movl    8(%rsp), %13
+        movl    (%rsp), %13
         movl    %13, %eax
         ret
 .Lif_basic_9:
@@ -24,77 +24,77 @@ if_basic:  # 0 params, 12 stack bytes
 
 if_basic_else:  # 0 params, 16 stack bytes
 .Lif_basic_else_entry:
-        movl    $1, (%rsp)
-        movl    (%rsp), %4
+        movl    $1, 4(%rsp)
+        movl    4(%rsp), %4
         cmpl    $0, %4
         jne     .Lif_basic_else_10
 .Lif_basic_else_5:
 .Lif_basic_else_6:
-        movl    (%rsp), %7
+        movl    4(%rsp), %7
         movl    %7, %8
         addl    $3, %8
-        movl    %8, 4(%rsp)
-        movl    4(%rsp), %9
-        movl    %9, (%rsp)
+        movl    %8, 8(%rsp)
+        movl    8(%rsp), %9
+        movl    %9, 4(%rsp)
 .Lif_basic_else_15:
-        movl    (%rsp), %16
-        movl    %16, 12(%rsp)
+        movl    4(%rsp), %16
+        movl    %16, (%rsp)
 .Lif_basic_else_17:
-        movl    12(%rsp), %18
+        movl    (%rsp), %18
         movl    %18, %eax
         ret
 .Lif_basic_else_10:
 .Lif_basic_else_11:
-        movl    (%rsp), %12
+        movl    4(%rsp), %12
         movl    %12, %13
         addl    $100, %13
-        movl    %13, 8(%rsp)
-        movl    8(%rsp), %14
-        movl    %14, (%rsp)
+        movl    %13, 12(%rsp)
+        movl    12(%rsp), %14
+        movl    %14, 4(%rsp)
         jmp     .Lif_basic_else_15
 
 if_no_braces:  # 0 params, 8 stack bytes
 .Lif_no_braces_entry:
-        movl    $1, (%rsp)
-        movl    (%rsp), %2
+        movl    $1, 4(%rsp)
+        movl    4(%rsp), %2
         cmpl    $0, %2
         jne     .Lif_no_braces_7
 .Lif_no_braces_3:
 .Lif_no_braces_4:
-        movl    (%rsp), %5
-        movl    %5, 4(%rsp)
+        movl    4(%rsp), %5
+        movl    %5, (%rsp)
 .Lif_no_braces_11:
-        movl    4(%rsp), %12
+        movl    (%rsp), %12
         movl    %12, %eax
         ret
 .Lif_no_braces_7:
 .Lif_no_braces_8:
-        movl    (%rsp), %9
-        movl    %9, 4(%rsp)
+        movl    4(%rsp), %9
+        movl    %9, (%rsp)
         jmp     .Lif_no_braces_11
 
 if_chain:  # 0 params, 12 stack bytes
 .Lif_chain_entry:
-        movl    $1, (%rsp)
-        movl    $2, 4(%rsp)
-        movl    (%rsp), %3
+        movl    $1, 4(%rsp)
+        movl    $2, 8(%rsp)
+        movl    4(%rsp), %3
         cmpl    $0, %3
         jne     .Lif_chain_12
 .Lif_chain_4:
 .Lif_chain_5:
-        movl    4(%rsp), %6
+        movl    8(%rsp), %6
         cmpl    $0, %6
         jne     .Lif_chain_10
 .Lif_chain_7:
 .Lif_chain_8:
-        movl    $0, 8(%rsp)
+        movl    $0, (%rsp)
 .Lif_chain_14:
-        movl    8(%rsp), %15
+        movl    (%rsp), %15
         movl    %15, %eax
         ret
 .Lif_chain_12:
 .Lif_chain_13:
-        movl    $1, 8(%rsp)
+        movl    $1, (%rsp)
         jmp     .Lif_chain_14
 .Lif_chain_10:
 .Lif_chain_11:
@@ -102,39 +102,39 @@ if_chain:  # 0 params, 12 stack bytes
 
 if_chain_many:  # 0 params, 16 stack bytes
 .Lif_chain_many_entry:
-        movl    $1, (%rsp)
-        movl    $2, 4(%rsp)
-        movl    $0, 8(%rsp)
-        movl    (%rsp), %4
+        movl    $1, 4(%rsp)
+        movl    $2, 8(%rsp)
+        movl    $0, 12(%rsp)
+        movl    4(%rsp), %4
         cmpl    $0, %4
         jne     .Lif_chain_many_20
 .Lif_chain_many_5:
 .Lif_chain_many_6:
-        movl    4(%rsp), %7
+        movl    8(%rsp), %7
         cmpl    $0, %7
         jne     .Lif_chain_many_18
 .Lif_chain_many_8:
 .Lif_chain_many_9:
-        movl    8(%rsp), %10
+        movl    12(%rsp), %10
         cmpl    $0, %10
         jne     .Lif_chain_many_14
 .Lif_chain_many_11:
 .Lif_chain_many_12:
-        movl    $0, 12(%rsp)
+        movl    $0, (%rsp)
 .Lif_chain_many_22:
-        movl    12(%rsp), %23
+        movl    (%rsp), %23
         movl    %23, %eax
         ret
 .Lif_chain_many_20:
 .Lif_chain_many_21:
-        movl    $1, 12(%rsp)
+        movl    $1, (%rsp)
         jmp     .Lif_chain_many_22
 .Lif_chain_many_18:
 .Lif_chain_many_19:
         jmp     .Lif_chain_many_21
 .Lif_chain_many_14:
 .Lif_chain_many_15:
-        movl    $3, 12(%rsp)
+        movl    $3, (%rsp)
         jmp     .Lif_chain_many_22
 
 if_else_if:  # 0 params, 4 stack bytes

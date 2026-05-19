@@ -30,41 +30,41 @@ entry:
   %0 = alloca i32
   %1 = alloca i32
   %2 = alloca i32
-  store i32 0, ptr %0
+  store i32 0, ptr %1
   br i32 1, label 3, label 10
 
 3:
   br i32 2, label 4, label 6
 
 4:
-  store i32 3, ptr %2
+  store i32 3, ptr %0
   br label 14
 
 5:
   br label 6
 
 6:
-  %7 = load ptr %0
+  %7 = load ptr %1
   %8 = add i32 %7, i32 4
-  store i32 %8, ptr %1
-  %9 = load ptr %1
-  store i32 %9, ptr %0
+  store i32 %8, ptr %2
+  %9 = load ptr %2
+  store i32 %9, ptr %1
   br label 12
 
 10:
-  store i32 5, ptr %2
+  store i32 5, ptr %0
   br label 14
 
 11:
   br label 12
 
 12:
-  %13 = load ptr %0
-  store i32 %13, ptr %2
+  %13 = load ptr %1
+  store i32 %13, ptr %0
   br label 14
 
 14:
-  %15 = load ptr %2
+  %15 = load ptr %0
   ret i32 %15
 }
 

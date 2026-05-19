@@ -17,7 +17,7 @@ simplify_cfg_delete_orphaned:  # 0 params, 4 stack bytes
 
 simplify_cfg_merge_straight_line:  # 0 params, 12 stack bytes
 .Lsimplify_cfg_merge_straight_line_entry:
-        movl    $0, (%rsp)
+        movl    $0, 4(%rsp)
         movq    $1, %cond
         cmpq    $0, %cond
         jne     .Lsimplify_cfg_merge_straight_line_13
@@ -28,25 +28,25 @@ simplify_cfg_merge_straight_line:  # 0 params, 12 stack bytes
         jne     .Lsimplify_cfg_merge_straight_line_7
 .Lsimplify_cfg_merge_straight_line_5:
 .Lsimplify_cfg_merge_straight_line_6:
-        movl    $3, 8(%rsp)
+        movl    $3, (%rsp)
 .Lsimplify_cfg_merge_straight_line_15:
-        movl    8(%rsp), %16
+        movl    (%rsp), %16
         movl    %16, %eax
         ret
 .Lsimplify_cfg_merge_straight_line_13:
 .Lsimplify_cfg_merge_straight_line_14:
-        movl    $5, 8(%rsp)
+        movl    $5, (%rsp)
         jmp     .Lsimplify_cfg_merge_straight_line_15
 .Lsimplify_cfg_merge_straight_line_7:
 .Lsimplify_cfg_merge_straight_line_8:
-        movl    (%rsp), %9
+        movl    4(%rsp), %9
         movl    %9, %10
         addl    $4, %10
-        movl    %10, 4(%rsp)
-        movl    4(%rsp), %11
-        movl    %11, (%rsp)
-        movl    (%rsp), %12
-        movl    %12, 8(%rsp)
+        movl    %10, 8(%rsp)
+        movl    8(%rsp), %11
+        movl    %11, 4(%rsp)
+        movl    4(%rsp), %12
+        movl    %12, (%rsp)
         jmp     .Lsimplify_cfg_merge_straight_line_15
 
 simplify_cfg_delete_empty:  # 0 params, 4 stack bytes

@@ -15,47 +15,47 @@ entry:
 10:
   %11 = load ptr %1
   %12 = sub i32 %11, i32 1
-  store i32 %12, ptr %2
-  %13 = load ptr %2
+  store i32 %12, ptr %3
+  %13 = load ptr %3
   br i32 %13, label 14, label 28
 
 14:
   %15 = load ptr %1
   %16 = sub i32 %15, i32 1
-  store i32 %16, ptr %3
-  %17 = load ptr %3
+  store i32 %16, ptr %4
+  %17 = load ptr %4
   %18 = call i32 @fib_rec(i32 %17)
-  store i32 %18, ptr %4
+  store i32 %18, ptr %5
   %19 = load ptr %1
   %20 = sub i32 %19, i32 2
-  store i32 %20, ptr %5
-  %21 = load ptr %5
+  store i32 %20, ptr %6
+  %21 = load ptr %6
   %22 = call i32 @fib_rec(i32 %21)
-  store i32 %22, ptr %6
-  %23 = load ptr %4
-  %24 = load ptr %6
+  store i32 %22, ptr %7
+  %23 = load ptr %5
+  %24 = load ptr %7
   %25 = add i32 %23, i32 %24
-  store i32 %25, ptr %7
-  %26 = load ptr %7
-  store i32 %26, ptr %8
+  store i32 %25, ptr %8
+  %26 = load ptr %8
+  store i32 %26, ptr %2
   br label 31
 
 27:
   br label 28
 
 28:
-  store i32 1, ptr %8
+  store i32 1, ptr %2
   br label 31
 
 29:
   br label 30
 
 30:
-  store i32 0, ptr %8
+  store i32 0, ptr %2
   br label 31
 
 31:
-  %32 = load ptr %8
+  %32 = load ptr %2
   ret i32 %32
 }
 
@@ -68,8 +68,8 @@ entry:
   %5 = alloca i32
   %6 = alloca i32
   store i32 %0, ptr %1
-  store i32 0, ptr %2
-  store i32 1, ptr %3
+  store i32 0, ptr %3
+  store i32 1, ptr %4
   br label 7
 
 7:
@@ -77,28 +77,28 @@ entry:
   br i32 %8, label 9, label 18
 
 9:
-  %10 = load ptr %2
-  %11 = load ptr %3
+  %10 = load ptr %3
+  %11 = load ptr %4
   %12 = add i32 %10, i32 %11
-  store i32 %12, ptr %5
-  %13 = load ptr %5
-  store i32 %13, ptr %4
-  %14 = load ptr %3
-  store i32 %14, ptr %2
-  %15 = load ptr %4
-  store i32 %15, ptr %3
+  store i32 %12, ptr %6
+  %13 = load ptr %6
+  store i32 %13, ptr %5
+  %14 = load ptr %4
+  store i32 %14, ptr %3
+  %15 = load ptr %5
+  store i32 %15, ptr %4
   %16 = load ptr %1
   %17 = sub i32 %16, i32 1
   store i32 %17, ptr %1
   br label 7
 
 18:
-  %19 = load ptr %2
-  store i32 %19, ptr %6
+  %19 = load ptr %3
+  store i32 %19, ptr %2
   br label 20
 
 20:
-  %21 = load ptr %6
+  %21 = load ptr %2
   ret i32 %21
 }
 
@@ -109,18 +109,18 @@ entry:
   %2 = alloca i32
   %3 = alloca i32
   %4 = call i32 @fib_rec(i32 10)
-  store i32 %4, ptr %0
+  store i32 %4, ptr %1
   %5 = call i32 @fib_it(i32 1000)
-  store i32 %5, ptr %1
-  %6 = load ptr %0
-  %7 = load ptr %1
+  store i32 %5, ptr %2
+  %6 = load ptr %1
+  %7 = load ptr %2
   %8 = add i32 %6, i32 %7
-  store i32 %8, ptr %2
-  %9 = load ptr %2
-  store i32 %9, ptr %3
+  store i32 %8, ptr %3
+  %9 = load ptr %3
+  store i32 %9, ptr %0
   br label 10
 
 10:
-  %11 = load ptr %3
+  %11 = load ptr %0
   ret i32 %11
 }

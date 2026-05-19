@@ -4,11 +4,11 @@ deref:  # 1 params, 12 stack bytes
         movq    %0, (%rsp)
         movq    (%rsp), %4
         movl    (%4), %5
-        movl    %5, 4(%rsp)
-        movl    4(%rsp), %6
-        movl    %6, 8(%rsp)
+        movl    %5, 8(%rsp)
+        movl    8(%rsp), %6
+        movl    %6, 4(%rsp)
 .Lderef_7:
-        movl    8(%rsp), %8
+        movl    4(%rsp), %8
         movl    %8, %eax
         ret
 
@@ -16,11 +16,11 @@ address:  # 1 params, 12 stack bytes
         movl    %edi, %0
 .Laddress_entry:
         movl    %0, (%rsp)
-        movq    %1, 4(%rsp)
-        movq    4(%rsp), %4
-        movq    %4, 8(%rsp)
+        movq    %1, 8(%rsp)
+        movq    8(%rsp), %4
+        movq    %4, 4(%rsp)
 .Laddress_5:
-        movq    8(%rsp), %6
+        movq    4(%rsp), %6
         movq    %6, %rax
         ret
 
@@ -28,14 +28,14 @@ address_deref:  # 1 params, 16 stack bytes
         movl    %edi, %0
 .Laddress_deref_entry:
         movl    %0, (%rsp)
-        movq    %1, 4(%rsp)
-        movq    4(%rsp), %5
+        movq    %1, 8(%rsp)
+        movq    8(%rsp), %5
         movl    (%5), %6
-        movl    %6, 8(%rsp)
-        movl    8(%rsp), %7
-        movl    %7, 12(%rsp)
+        movl    %6, 12(%rsp)
+        movl    12(%rsp), %7
+        movl    %7, 4(%rsp)
 .Laddress_deref_8:
-        movl    12(%rsp), %9
+        movl    4(%rsp), %9
         movl    %9, %eax
         ret
 
@@ -43,38 +43,38 @@ address_deref_many:  # 1 params, 44 stack bytes
         movl    %edi, %0
 .Laddress_deref_many_entry:
         movl    %0, (%rsp)
-        movq    %1, 8(%rsp)
-        movq    8(%rsp), %12
-        movq    %12, 4(%rsp)
-        movq    %2, 16(%rsp)
-        movq    16(%rsp), %13
-        movq    %13, 12(%rsp)
-        movq    %4, 24(%rsp)
-        movq    24(%rsp), %14
-        movq    %14, 20(%rsp)
-        movq    20(%rsp), %15
+        movq    %1, 12(%rsp)
+        movq    12(%rsp), %12
+        movq    %12, 8(%rsp)
+        movq    %3, 20(%rsp)
+        movq    20(%rsp), %13
+        movq    %13, 16(%rsp)
+        movq    %5, 28(%rsp)
+        movq    28(%rsp), %14
+        movq    %14, 24(%rsp)
+        movq    24(%rsp), %15
         movq    (%15), %16
-        movq    %16, 28(%rsp)
-        movq    28(%rsp), %17
+        movq    %16, 32(%rsp)
+        movq    32(%rsp), %17
         movq    (%17), %18
-        movq    %18, 32(%rsp)
-        movq    32(%rsp), %19
+        movq    %18, 36(%rsp)
+        movq    36(%rsp), %19
         movl    (%19), %20
-        movl    %20, 36(%rsp)
-        movl    36(%rsp), %21
-        movl    %21, 40(%rsp)
+        movl    %20, 40(%rsp)
+        movl    40(%rsp), %21
+        movl    %21, 4(%rsp)
 .Laddress_deref_many_22:
-        movl    40(%rsp), %23
+        movl    4(%rsp), %23
         movl    %23, %eax
         ret
 
 return_ptr:  # 0 params, 12 stack bytes
 .Lreturn_ptr_entry:
         movl    $1, (%rsp)
-        movq    %0, (%rsp)
-        movq    (%rsp), %3
-        movq    %3, 4(%rsp)
+        movq    %1, 4(%rsp)
+        movq    4(%rsp), %3
+        movq    %3, (%rsp)
 .Lreturn_ptr_4:
-        movq    4(%rsp), %5
+        movq    (%rsp), %5
         movq    %5, %rax
         ret

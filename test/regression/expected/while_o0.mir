@@ -3,27 +3,27 @@ entry:
   %0 = alloca i32
   %1 = alloca i32
   %2 = alloca i32
-  store i32 0, ptr %0
+  store i32 0, ptr %1
   br label 3
 
 3:
   br i32 1, label 4, label 8
 
 4:
-  %5 = load ptr %0
+  %5 = load ptr %1
   %6 = add i32 %5, i32 2
-  store i32 %6, ptr %1
-  %7 = load ptr %1
-  store i32 %7, ptr %0
+  store i32 %6, ptr %2
+  %7 = load ptr %2
+  store i32 %7, ptr %1
   br label 3
 
 8:
-  %9 = load ptr %0
-  store i32 %9, ptr %2
+  %9 = load ptr %1
+  store i32 %9, ptr %0
   br label 10
 
 10:
-  %11 = load ptr %2
+  %11 = load ptr %0
   ret i32 %11
 }
 
@@ -34,34 +34,34 @@ entry:
   %2 = alloca i32
   %3 = alloca i32
   %4 = alloca i32
-  store i32 0, ptr %0
-  store i32 100, ptr %1
+  store i32 0, ptr %1
+  store i32 100, ptr %2
   br label 5
 
 5:
-  %6 = load ptr %1
+  %6 = load ptr %2
   br i32 %6, label 7, label 14
 
 7:
-  %8 = load ptr %0
+  %8 = load ptr %1
   %9 = add i32 %8, i32 5
-  store i32 %9, ptr %2
-  %10 = load ptr %2
-  store i32 %10, ptr %0
-  %11 = load ptr %1
+  store i32 %9, ptr %3
+  %10 = load ptr %3
+  store i32 %10, ptr %1
+  %11 = load ptr %2
   %12 = sub i32 %11, i32 1
-  store i32 %12, ptr %3
-  %13 = load ptr %3
-  store i32 %13, ptr %1
+  store i32 %12, ptr %4
+  %13 = load ptr %4
+  store i32 %13, ptr %2
   br label 5
 
 14:
-  %15 = load ptr %0
-  store i32 %15, ptr %4
+  %15 = load ptr %1
+  store i32 %15, ptr %0
   br label 16
 
 16:
-  %17 = load ptr %4
+  %17 = load ptr %0
   ret i32 %17
 }
 
@@ -89,21 +89,21 @@ define i32 @while_if() {
 entry:
   %0 = alloca i32
   %1 = alloca i32
-  store i32 200, ptr %0
+  store i32 200, ptr %1
   br label 2
 
 2:
   br i32 1, label 3, label 9
 
 3:
-  %4 = load ptr %0
+  %4 = load ptr %1
   br i32 %4, label 5, label 6
 
 5:
   br label 8
 
 6:
-  store i32 500, ptr %1
+  store i32 500, ptr %0
   br label 10
 
 7:
@@ -113,10 +113,10 @@ entry:
   br label 2
 
 9:
-  store i32 0, ptr %1
+  store i32 0, ptr %0
   br label 10
 
 10:
-  %11 = load ptr %1
+  %11 = load ptr %0
   ret i32 %11
 }

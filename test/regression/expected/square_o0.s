@@ -10,11 +10,11 @@ square:
         movl    (%rsp), %edi
         movl    %r11d, %r10d
         imull   %edi, %r10d
-        movl    %r10d, 4(%rsp)
-        movl    4(%rsp), %r10d
         movl    %r10d, 8(%rsp)
-.Lsquare_8:
         movl    8(%rsp), %r10d
+        movl    %r10d, 4(%rsp)
+.Lsquare_8:
+        movl    4(%rsp), %r10d
         movl    %r10d, %eax
         addq    $12, %rsp
         ret

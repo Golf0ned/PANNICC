@@ -10,11 +10,11 @@ fun1:
         movl    (%rsp), %edi
         movl    %r11d, %r10d
         imull   %edi, %r10d
-        movl    %r10d, 4(%rsp)
-        movl    4(%rsp), %r10d
         movl    %r10d, 8(%rsp)
-.Lfun1_8:
         movl    8(%rsp), %r10d
+        movl    %r10d, 4(%rsp)
+.Lfun1_8:
+        movl    4(%rsp), %r10d
         movl    %r10d, %eax
         addq    $12, %rsp
         ret
@@ -35,19 +35,19 @@ fun2:
         call    fun1
         addq    $16, %rsp
         movl    %eax, %r10d
-        movl    %r10d, 8(%rsp)
+        movl    %r10d, 12(%rsp)
         movl    4(%rsp), %r11d
         leal    (,%r11d,2), %r10d
-        movl    %r10d, 12(%rsp)
-        movl    12(%rsp), %r11d
+        movl    %r10d, 16(%rsp)
+        movl    16(%rsp), %r11d
         movl    8(%rsp), %edi
         movl    %r11d, %r10d
         imull   %edi, %r10d
-        movl    %r10d, 16(%rsp)
-        movl    8(%rsp), %r10d
-        movl    16(%rsp), %r11d
+        movl    %r10d, 20(%rsp)
+        movl    12(%rsp), %r10d
+        movl    20(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, 20(%rsp)
+        movl    %edi, 24(%rsp)
         movl    8(%rsp), %r10d
         subq    $16, %rsp
         movq    %r10, 8(%rsp)
@@ -55,15 +55,15 @@ fun2:
         call    fun1
         addq    $16, %rsp
         movl    %eax, %r10d
-        movl    %r10d, 24(%rsp)
-        movl    20(%rsp), %r10d
-        movl    24(%rsp), %r11d
+        movl    %r10d, 28(%rsp)
+        movl    24(%rsp), %r10d
+        movl    28(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
-        movl    %edi, 28(%rsp)
-        movl    28(%rsp), %r10d
-        movl    %r10d, 32(%rsp)
-.Lfun2_27:
+        movl    %edi, 32(%rsp)
         movl    32(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+.Lfun2_27:
+        movl    8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $48, %rsp
         ret
@@ -88,29 +88,29 @@ fun3:
         call    fun1
         addq    $16, %rsp
         movl    %eax, %r10d
-        movl    %r10d, 24(%rsp)
+        movl    %r10d, 28(%rsp)
         movl    8(%rsp), %edi
-        movl    24(%rsp), %r11d
+        movl    28(%rsp), %r11d
         movl    %edi, %r10d
         imull   %r11d, %r10d
-        movl    %r10d, 28(%rsp)
+        movl    %r10d, 32(%rsp)
         movl    12(%rsp), %r11d
         movl    20(%rsp), %edi
         movl    %r11d, %r10d
         imull   %edi, %r10d
-        movl    %r10d, 32(%rsp)
-        movl    28(%rsp), %r10d
-        movl    32(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
-        movl    %edi, 28(%rsp)
-        movl    28(%rsp), %r10d
-        movl    16(%rsp), %r11d
+        movl    %r10d, 28(%rsp)
+        movl    32(%rsp), %r10d
+        movl    28(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 32(%rsp)
         movl    32(%rsp), %r10d
-        movl    %r10d, 36(%rsp)
-.Lfun3_29:
+        movl    16(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, 36(%rsp)
         movl    36(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+.Lfun3_29:
+        movl    24(%rsp), %r10d
         movl    %r10d, %eax
         addq    $48, %rsp
         ret
@@ -151,11 +151,11 @@ call2:
         call    fun2
         addq    $16, %rsp
         movl    %eax, %r10d
-        movl    %r10d, 8(%rsp)
-        movl    8(%rsp), %r10d
         movl    %r10d, 12(%rsp)
-.Lcall2_10:
         movl    12(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+.Lcall2_10:
+        movl    8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $16, %rsp
         ret
@@ -181,11 +181,11 @@ call3:
         call    fun3
         addq    $16, %rsp
         movl    %eax, %r10d
-        movl    %r10d, 8(%rsp)
-        movl    8(%rsp), %r10d
         movl    %r10d, 12(%rsp)
-.Lcall3_10:
         movl    12(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+.Lcall3_10:
+        movl    8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $16, %rsp
         ret
@@ -202,11 +202,11 @@ call4:
         movl    (%rsp), %r11d
         movl    %r11d, %r10d
         subl    $100, %r10d
-        movl    %r10d, (%rsp)
-        movl    (%rsp), %r10d
         movl    %r10d, 4(%rsp)
-.Lcall4_7:
         movl    4(%rsp), %r10d
+        movl    %r10d, (%rsp)
+.Lcall4_7:
+        movl    (%rsp), %r10d
         movl    %r10d, %eax
         addq    $16, %rsp
         ret
@@ -235,35 +235,35 @@ super_fun:
         movl    24(%rsp), %edi
         movl    28(%rsp), %r11d
         leal    (%edi,%r11d), %r10d
-        movl    %r10d, 32(%rsp)
-        movl    32(%rsp), %r11d
-        movl    32(%rsp), %edi
-        leal    (%r11d,%edi), %r10d
         movl    %r10d, 36(%rsp)
         movl    36(%rsp), %r11d
+        movl    32(%rsp), %edi
+        leal    (%r11d,%edi), %r10d
+        movl    %r10d, 40(%rsp)
+        movl    40(%rsp), %r11d
         movl    28(%rsp), %r10d
         leal    (%r11d,%r10d), %edi
-        movl    %edi, 40(%rsp)
-        movl    40(%rsp), %r10d
-        movl    32(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
         movl    %edi, 44(%rsp)
         movl    44(%rsp), %r10d
-        movl    36(%rsp), %r11d
+        movl    32(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 48(%rsp)
         movl    48(%rsp), %r10d
-        movl    24(%rsp), %r11d
+        movl    36(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 52(%rsp)
         movl    52(%rsp), %r10d
-        movl    28(%rsp), %r11d
+        movl    24(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 56(%rsp)
         movl    56(%rsp), %r10d
-        movl    %r10d, 60(%rsp)
-.Lsuper_fun_46:
+        movl    28(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, 60(%rsp)
         movl    60(%rsp), %r10d
+        movl    %r10d, 32(%rsp)
+.Lsuper_fun_46:
+        movl    32(%rsp), %r10d
         movl    %r10d, %eax
         addq    $64, %rsp
         ret
@@ -293,11 +293,11 @@ call_super_fun:
         call    super_fun
         addq    $32, %rsp
         movl    %eax, %r10d
-        movl    %r10d, 8(%rsp)
-        movl    8(%rsp), %r10d
         movl    %r10d, 12(%rsp)
-.Lcall_super_fun_10:
         movl    12(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+.Lcall_super_fun_10:
+        movl    8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $16, %rsp
         ret
@@ -314,77 +314,77 @@ caller_saved:
         movl    4(%rsp), %r11d
         movl    %r11d, %r10d
         addl    $1, %r10d
+        movl    %r10d, 16(%rsp)
+        movl    16(%rsp), %r10d
         movl    %r10d, 12(%rsp)
-        movl    12(%rsp), %r10d
-        movl    %r10d, 8(%rsp)
         movl    4(%rsp), %r11d
         movl    %r11d, %r10d
         addl    $2, %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r10d
         movl    %r10d, 20(%rsp)
-        movl    20(%rsp), %r10d
-        movl    %r10d, 16(%rsp)
         movl    4(%rsp), %r11d
         movl    %r11d, %r10d
         addl    $3, %r10d
+        movl    %r10d, 32(%rsp)
+        movl    32(%rsp), %r10d
         movl    %r10d, 28(%rsp)
-        movl    28(%rsp), %r10d
-        movl    %r10d, 24(%rsp)
         movl    4(%rsp), %r11d
         movl    %r11d, %r10d
         addl    $4, %r10d
-        movl    %r10d, 28(%rsp)
-        movl    28(%rsp), %r10d
         movl    %r10d, 32(%rsp)
+        movl    32(%rsp), %r10d
+        movl    %r10d, 28(%rsp)
         movl    4(%rsp), %r11d
         movl    %r11d, %r10d
         addl    $5, %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r10d
         movl    %r10d, 36(%rsp)
-        movl    36(%rsp), %r10d
-        movl    %r10d, 32(%rsp)
         movl    4(%rsp), %r11d
         movl    %r11d, %r10d
         addl    $6, %r10d
+        movl    %r10d, 32(%rsp)
+        movl    32(%rsp), %r10d
         movl    %r10d, 28(%rsp)
-        movl    28(%rsp), %r10d
-        movl    %r10d, 24(%rsp)
         movl    4(%rsp), %r11d
         movl    %r11d, %r10d
         addl    $7, %r10d
+        movl    %r10d, 40(%rsp)
+        movl    40(%rsp), %r10d
         movl    %r10d, 36(%rsp)
-        movl    36(%rsp), %r10d
-        movl    %r10d, 32(%rsp)
         movl    4(%rsp), %r11d
         movl    %r11d, %r10d
         addl    $8, %r10d
+        movl    %r10d, 48(%rsp)
+        movl    48(%rsp), %r10d
         movl    %r10d, 44(%rsp)
-        movl    44(%rsp), %r10d
-        movl    %r10d, 40(%rsp)
         movl    4(%rsp), %r11d
         movl    %r11d, %r10d
         addl    $9, %r10d
+        movl    %r10d, 56(%rsp)
+        movl    56(%rsp), %r10d
         movl    %r10d, 52(%rsp)
-        movl    52(%rsp), %r10d
-        movl    %r10d, 48(%rsp)
         movl    4(%rsp), %r11d
         movl    %r11d, %r10d
         addl    $10, %r10d
+        movl    %r10d, 88(%rsp)
+        movl    88(%rsp), %r10d
         movl    %r10d, 60(%rsp)
-        movl    60(%rsp), %r10d
-        movl    %r10d, 56(%rsp)
         movl    4(%rsp), %r11d
         movl    %r11d, %r10d
         addl    $11, %r10d
+        movl    %r10d, 96(%rsp)
+        movl    96(%rsp), %r10d
         movl    %r10d, 92(%rsp)
-        movl    92(%rsp), %r10d
-        movl    %r10d, 88(%rsp)
-        movl    8(%rsp), %r10d
-        movl    16(%rsp), %r11d
-        movl    24(%rsp), %edi
-        movl    32(%rsp), %esi
-        movl    32(%rsp), %edx
-        movl    24(%rsp), %ecx
-        movl    32(%rsp), %r8d
-        movl    40(%rsp), %r9d
+        movl    12(%rsp), %r10d
+        movl    20(%rsp), %r11d
+        movl    28(%rsp), %edi
+        movl    28(%rsp), %esi
+        movl    36(%rsp), %edx
+        movl    28(%rsp), %ecx
+        movl    36(%rsp), %r8d
+        movl    44(%rsp), %r9d
         subq    $80, %rsp
         movq    %rdi, 72(%rsp)
         movq    %rsi, 64(%rsp)
@@ -405,61 +405,61 @@ caller_saved:
         call    super_fun
         addq    $80, %rsp
         movl    %eax, %r10d
-        movl    %r10d, 100(%rsp)
-        movl    100(%rsp), %r10d
-        movl    %r10d, 96(%rsp)
-        movl    8(%rsp), %r10d
-        movl    16(%rsp), %r11d
-        leal    (%r10d,%r11d), %edi
-        movl    %edi, 104(%rsp)
+        movl    %r10d, 104(%rsp)
         movl    104(%rsp), %r10d
-        movl    24(%rsp), %r11d
+        movl    %r10d, 100(%rsp)
+        movl    12(%rsp), %r10d
+        movl    20(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 108(%rsp)
         movl    108(%rsp), %r10d
-        movl    32(%rsp), %r11d
+        movl    28(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 112(%rsp)
         movl    112(%rsp), %r10d
-        movl    32(%rsp), %r11d
+        movl    28(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 116(%rsp)
         movl    116(%rsp), %r10d
-        movl    24(%rsp), %r11d
+        movl    36(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 120(%rsp)
         movl    120(%rsp), %r10d
-        movl    32(%rsp), %r11d
+        movl    28(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 124(%rsp)
         movl    124(%rsp), %r10d
-        movl    40(%rsp), %r11d
+        movl    36(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 128(%rsp)
         movl    128(%rsp), %r10d
-        movl    48(%rsp), %r11d
+        movl    44(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 132(%rsp)
         movl    132(%rsp), %r10d
-        movl    56(%rsp), %r11d
+        movl    52(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 136(%rsp)
         movl    136(%rsp), %r10d
-        movl    88(%rsp), %r11d
+        movl    60(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 140(%rsp)
         movl    140(%rsp), %r10d
-        movl    96(%rsp), %r11d
+        movl    92(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 144(%rsp)
         movl    144(%rsp), %r10d
-        movl    8(%rsp), %r11d
+        movl    100(%rsp), %r11d
         leal    (%r10d,%r11d), %edi
         movl    %edi, 148(%rsp)
         movl    148(%rsp), %r10d
-        movl    %r10d, 152(%rsp)
-.Lcaller_saved_121:
+        movl    8(%rsp), %r11d
+        leal    (%r10d,%r11d), %edi
+        movl    %edi, 152(%rsp)
         movl    152(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+.Lcaller_saved_121:
+        movl    8(%rsp), %r10d
         movl    %r10d, %eax
         addq    $160, %rsp
         ret

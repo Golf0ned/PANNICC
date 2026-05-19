@@ -25,7 +25,7 @@ simplify_cfg_delete_orphaned:
 simplify_cfg_merge_straight_line:
         subq    $12, %rsp
 .Lsimplify_cfg_merge_straight_line_entry:
-        movl    $0, (%rsp)
+        movl    $0, 4(%rsp)
         movq    $1, %r10
         cmpq    $0, %r10
         jne     .Lsimplify_cfg_merge_straight_line_13
@@ -36,25 +36,25 @@ simplify_cfg_merge_straight_line:
         jne     .Lsimplify_cfg_merge_straight_line_7
 .Lsimplify_cfg_merge_straight_line_5:
 .Lsimplify_cfg_merge_straight_line_6:
-        movl    $3, 8(%rsp)
+        movl    $3, (%rsp)
 .Lsimplify_cfg_merge_straight_line_15:
-        movl    8(%rsp), %r10d
+        movl    (%rsp), %r10d
         movl    %r10d, %eax
         ret
 .Lsimplify_cfg_merge_straight_line_13:
 .Lsimplify_cfg_merge_straight_line_14:
-        movl    $5, 8(%rsp)
+        movl    $5, (%rsp)
         jmp     .Lsimplify_cfg_merge_straight_line_15
 .Lsimplify_cfg_merge_straight_line_7:
 .Lsimplify_cfg_merge_straight_line_8:
-        movl    (%rsp), %r10d
+        movl    4(%rsp), %r10d
         movl    %r10d, %r11d
         addl    $4, %r11d
-        movl    %r11d, 4(%rsp)
+        movl    %r11d, 8(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 4(%rsp)
         movl    4(%rsp), %r10d
         movl    %r10d, (%rsp)
-        movl    (%rsp), %r10d
-        movl    %r10d, 8(%rsp)
         addq    $12, %rsp
         jmp     .Lsimplify_cfg_merge_straight_line_15
 .Lsimplify_cfg_merge_straight_line_end:
