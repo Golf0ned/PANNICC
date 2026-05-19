@@ -12,9 +12,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(pegtl)
 
-include(GNUInstallDirs)
-
 add_subdirectory(src)
+add_subdirectory(test)
 
 enable_testing()
-add_subdirectory(test)
+
+install(SCRIPT "cmake/postinstall.cmake")
