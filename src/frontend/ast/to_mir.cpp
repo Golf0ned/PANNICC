@@ -392,65 +392,58 @@ void ToMIRVisitor::visit(ast::CallExpr *e) {
 }
 
 void ToMIRVisitor::visit(ast::UnaryOpExpr *e) {
-    // TODO: please bleach this
+    auto op = e->getOp();
+    e->getValue()->accept(this);
+    auto *val = op == UnaryOp::ADDRESS ? prev_expr : usePrevExpr();
 
     auto type = mir::Type::I32;
-    e->getValue()->accept(this);
-    auto *val = usePrevExpr();
-
-    mir::Value *un_op_res, *literal;
-    std::unique_ptr<mir::Instruction> bin_op;
-    Type *ptr_type;
-    switch (e->getOp()) {
-    case UnaryOp::PLUS:
-        // Do nothing
-        un_op_res = val;
+    auto *res = val;
+    if (op == UnaryOp::PLUS) {
+        // Do nothing (Cast to integer?)
         expr_types[e] = std::make_unique<Int>();
-        break;
-    case UnaryOp::MINUS:
+    } else if (op == UnaryOp::MINUS) {
         // Subtract from zero
-        literal = getLiteral(0, mir::Type::I32);
-        bin_op = std::make_unique<mir::InstructionBinaryOp>(
+        auto *literal = getLiteral(0, mir::Type::I32);
+        auto bin_op = std::make_unique<mir::InstructionBinaryOp>(
             type, mir::BinaryOp::SUB, literal, val);
 
-        un_op_res = static_cast<mir::InstructionBinaryOp *>(bin_op.get());
+        res = static_cast<mir::InstructionBinaryOp *>(bin_op.get());
         instructions.push_back(std::move(bin_op));
         expr_types[e] = std::make_unique<Int>();
-        break;
-    case UnaryOp::NOT:
+    } else if (op == UnaryOp::NOT) {
         // XOR with -1
-        literal = getLiteral(-1, mir::Type::I32);
-        bin_op = std::make_unique<mir::InstructionBinaryOp>(
+        auto *literal = getLiteral(-1, mir::Type::I32);
+        auto bin_op = std::make_unique<mir::InstructionBinaryOp>(
             type, mir::BinaryOp::XOR, val, literal);
 
-        un_op_res = static_cast<mir::InstructionBinaryOp *>(bin_op.get());
+        res = static_cast<mir::InstructionBinaryOp *>(bin_op.get());
         instructions.push_back(std::move(bin_op));
         expr_types[e] = std::make_unique<Int>();
-        break;
-    case UnaryOp::DEREF:
-        // Load from val
-        ptr_type =
-            dynamic_cast<Ptr *>(expr_types[e->getValue()].get())->getBase();
-        type = ptr_type->toMir();
-        bin_op = std::make_unique<mir::InstructionLoad>(type, val);
-
-        un_op_res = static_cast<mir::InstructionLoad *>(bin_op.get());
-        instructions.push_back(std::move(bin_op));
-        expr_types[e] = ptr_type->clone();
-        break;
-    case UnaryOp::ADDRESS:
+    } else if (op == UnaryOp::ADDRESS) {
+        // Address of val
         type = mir::Type::PTR;
 
-        un_op_res = prev_expr;
+        res = val;
         expr_types[e] =
             std::make_unique<Ptr>(expr_types[e->getValue()]->clone());
-        break;
+    } else if (op == UnaryOp::DEREF) {
+        // Load from val
+        auto *ptr_type =
+            dynamic_cast<Ptr *>(expr_types[e->getValue()].get())->getBase();
+        type = ptr_type->toMir();
+        auto bin_op = std::make_unique<mir::InstructionLoad>(type, val);
+
+        res = static_cast<mir::InstructionLoad *>(bin_op.get());
+        instructions.push_back(std::move(bin_op));
+        expr_types[e] = ptr_type->clone();
+    } else {
+        std::unreachable();
     }
 
     auto *res_ptr = makeAlloca(type);
     prev_expr = res_ptr;
 
-    auto store = std::make_unique<mir::InstructionStore>(un_op_res, res_ptr);
+    auto store = std::make_unique<mir::InstructionStore>(res, res_ptr);
     instructions.push_back(std::move(store));
 }
 
