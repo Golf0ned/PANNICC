@@ -139,7 +139,15 @@ void ToMIRVisitor::resolveBBEdges() {
 
         auto br = dynamic_cast<mir::TerminatorBranch *>(t);
         if (br) {
-            auto *succ = bb_ids.at(bb_edges[t][0]);
+            auto *succ = bb_ids[bb_edges[t][0]];
+            if (!succ) {
+                // Handle fallthrough
+                auto new_br = std::make_unique<mir::TerminatorBranch>(nullptr);
+                bb_edges[new_br.get()] = {0};
+                makeBB(std::move(new_br));
+                succ = bb_ids[bb_edges[t][0]];
+            }
+
             br->setSuccessor(succ);
             bb->getSuccessors().addEdge(succ);
             succ->getPredecessors().addEdge(bb.get());
@@ -200,9 +208,11 @@ void ToMIRVisitor::visit(ast::FunctionDefinition *f) {
         instructions.push_back(std::move(store));
     }
 
-    auto br = std::make_unique<mir::TerminatorBranch>(nullptr);
-    bb_edges[br.get()] = {0};
-    makeBB(std::move(br));
+    if (!instructions.empty()) {
+        auto br = std::make_unique<mir::TerminatorBranch>(nullptr);
+        bb_edges[br.get()] = {0};
+        makeBB(std::move(br));
+    }
 
     scope_bindings.pop_back();
     scope_binding_types.pop_back();
