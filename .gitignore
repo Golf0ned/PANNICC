@@ -1,6 +1,7 @@
-# Build directories
+# Build artifacts
 build/
 install/
+enable
 
 # Clangd
 .clangd/

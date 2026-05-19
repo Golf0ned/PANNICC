@@ -2,7 +2,7 @@ BUILD_DIR := build
 INSTALL_DIR := install
 CMAKE_FLAGS := -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
-all: build test
+all: install test
 
 build:
 	mkdir -p $(BUILD_DIR)
@@ -20,6 +20,6 @@ clean:
 	cmake --build $(BUILD_DIR) --target clean
 
 distclean:
-	rm -rf $(BUILD_DIR) $(INSTALL_DIR)
+	rm -rf $(BUILD_DIR) $(INSTALL_DIR) enable
 
 .PHONY: all build debug test clean distclean
