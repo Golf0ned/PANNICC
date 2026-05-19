@@ -453,68 +453,54 @@ void ToMIRVisitor::visit(ast::UnaryOpExpr *e) {
 }
 
 void ToMIRVisitor::visit(ast::BinaryOpExpr *e) {
-    // TODO: clean this up
-    // ---- DELETE ----
     e->getLeft()->accept(this);
-    auto *prev_expr_buf = prev_expr;
-    auto *left = prev_expr;
+    auto *left_prev = prev_expr;
     e->getRight()->accept(this);
-    auto *right = prev_expr;
+    auto *right_prev = prev_expr;
+
+    // TODO: figure type inference out
     auto type = expr_types[e->getLeft()]->toMir();
 
-    prev_expr = left;
-    if (!isAssignment(e->getOp())) {
-        left = usePrevExpr();
-    } else if (e->getOp() != BinaryOp::ASSIGN) {
-        auto load = std::make_unique<mir::InstructionLoad>(type, prev_expr);
-        left = load.get();
-        instructions.push_back(std::move(load));
-    }
-    prev_expr = right;
-    right = usePrevExpr();
-
-    prev_expr = prev_expr_buf;
-    // ---- END OF DELETE ----
-
-    // e->getRight()->accept(this);
-    // auto *right = usePrevExpr();
-    // e->getLeft()->accept(this);
-    //
-    // TODO: figure type inference out
-    // auto type = expr_types[e->getLeft()]->toMir();
-
-    mir::Value *bin_op_res;
-    Type *ptr_type;
+    mir::Value *res;
     if (!isAssignment(e->getOp())) {
         // Standard binary op
-        // auto *left = usePrevExpr();
+        prev_expr = left_prev;
+        auto *left = usePrevExpr();
+
+        prev_expr = right_prev;
+        auto *right = usePrevExpr();
+
         auto bin_op = std::make_unique<mir::InstructionBinaryOp>(
             type, toMir(e->getOp()), left, right);
 
-        bin_op_res = static_cast<mir::InstructionBinaryOp *>(bin_op.get());
+        res = static_cast<mir::InstructionBinaryOp *>(bin_op.get());
         instructions.push_back(std::move(bin_op));
     } else if (e->getOp() != BinaryOp::ASSIGN) {
         // Op assign
-        // auto load = std::make_unique<mir::InstructionLoad>(type, prev_expr);
-        // auto *left = load.get();
-        // instructions.push_back(std::move(load));
+        auto load = std::make_unique<mir::InstructionLoad>(type, left_prev);
+        auto *left = load.get();
+        instructions.push_back(std::move(load));
+
+        prev_expr = right_prev;
+        auto *right = usePrevExpr();
 
         auto bin_op = std::make_unique<mir::InstructionBinaryOp>(
             type, toMir(e->getOp()), left, right);
 
-        bin_op_res = static_cast<mir::InstructionBinaryOp *>(bin_op.get());
+        res = static_cast<mir::InstructionBinaryOp *>(bin_op.get());
         instructions.push_back(std::move(bin_op));
     } else {
-        // Just assign
-        bin_op_res = right;
+        // Simple assignment
+        prev_expr = right_prev;
+        res = usePrevExpr();
     }
-
-    auto *res_ptr = isAssignment(e->getOp()) ? prev_expr : makeAlloca(type);
-    auto store = std::make_unique<mir::InstructionStore>(bin_op_res, res_ptr);
-    instructions.push_back(std::move(store));
-
     expr_types[e] = expr_types[e->getLeft()]->clone();
+
+    auto *res_ptr = isAssignment(e->getOp()) ? left_prev : makeAlloca(type);
     prev_expr = res_ptr;
+
+    auto store = std::make_unique<mir::InstructionStore>(res, res_ptr);
+    instructions.push_back(std::move(store));
 }
 
 } // namespace frontend
