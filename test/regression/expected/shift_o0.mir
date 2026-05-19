@@ -6,23 +6,23 @@ entry:
   %3 = alloca i32
   %4 = alloca i32
   %5 = alloca i32
-  store i32 1, ptr %0
-  store i32 4, ptr %1
-  %6 = load ptr %0
+  store i32 1, ptr %1
+  store i32 4, ptr %2
+  %6 = load ptr %1
   %7 = shl i32 %6, i32 8
-  store i32 %7, ptr %3
-  %8 = load ptr %3
-  store i32 %8, ptr %2
-  %9 = load ptr %0
-  %10 = load ptr %1
+  store i32 %7, ptr %4
+  %8 = load ptr %4
+  store i32 %8, ptr %3
+  %9 = load ptr %1
+  %10 = load ptr %2
   %11 = shl i32 %9, i32 %10
-  store i32 %11, ptr %4
-  %12 = load ptr %4
-  store i32 %12, ptr %5
+  store i32 %11, ptr %5
+  %12 = load ptr %5
+  store i32 %12, ptr %0
   br label 13
 
 13:
-  %14 = load ptr %5
+  %14 = load ptr %0
   ret i32 %14
 }
 
@@ -34,22 +34,22 @@ entry:
   %3 = alloca i32
   %4 = alloca i32
   %5 = alloca i32
-  store i32 16, ptr %0
-  store i32 3, ptr %1
-  %6 = load ptr %0
+  store i32 16, ptr %1
+  store i32 3, ptr %2
+  %6 = load ptr %1
   %7 = ashr i32 %6, i32 8
-  store i32 %7, ptr %3
-  %8 = load ptr %3
-  store i32 %8, ptr %2
-  %9 = load ptr %0
-  %10 = load ptr %1
+  store i32 %7, ptr %4
+  %8 = load ptr %4
+  store i32 %8, ptr %3
+  %9 = load ptr %1
+  %10 = load ptr %2
   %11 = ashr i32 %9, i32 %10
-  store i32 %11, ptr %4
-  %12 = load ptr %4
-  store i32 %12, ptr %5
+  store i32 %11, ptr %5
+  %12 = load ptr %5
+  store i32 %12, ptr %0
   br label 13
 
 13:
-  %14 = load ptr %5
+  %14 = load ptr %0
   ret i32 %14
 }

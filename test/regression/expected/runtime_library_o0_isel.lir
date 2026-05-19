@@ -2,18 +2,18 @@ main:  # 0 params, 20 stack bytes
 .Lmain_entry:
         call    print  # ($67)
         movl    %eax, %5
-        movl    %5, (%rsp)
+        movl    %5, 4(%rsp)
         call    alloc  # ($4)
         movq    %rax, %6
-        movq    %6, 8(%rsp)
-        movq    8(%rsp), %7
-        movq    %7, 4(%rsp)
-        movq    4(%rsp), %8
+        movq    %6, 12(%rsp)
+        movq    12(%rsp), %7
+        movq    %7, 8(%rsp)
+        movq    8(%rsp), %8
         call    dealloc  # (%8)
         movl    %eax, %9
-        movl    %9, 12(%rsp)
-        movl    $0, 16(%rsp)
+        movl    %9, 16(%rsp)
+        movl    $0, (%rsp)
 .Lmain_10:
-        movl    16(%rsp), %11
+        movl    (%rsp), %11
         movl    %11, %eax
         ret

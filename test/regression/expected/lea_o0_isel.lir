@@ -7,12 +7,12 @@ leaBI:  # 2 params, 20 stack bytes
         movl    (%rsp), %7
         movl    4(%rsp), %8
         leal    (%7,%8), %9
-        movl    %9, 12(%rsp)
-        movl    12(%rsp), %10
-        movl    %10, 8(%rsp)
-        movl    $0, 16(%rsp)
+        movl    %9, 16(%rsp)
+        movl    16(%rsp), %10
+        movl    %10, 12(%rsp)
+        movl    $0, 8(%rsp)
 .LleaBI_11:
-        movl    16(%rsp), %12
+        movl    8(%rsp), %12
         movl    %12, %eax
         ret
 
@@ -22,47 +22,47 @@ leaIS:  # 1 params, 72 stack bytes
         movl    %0, (%rsp)
         movl    (%rsp), %19
         movl    %19, %20
-        movl    %20, 4(%rsp)
-        movl    4(%rsp), %21
-        movl    %21, (%rsp)
+        movl    %20, 8(%rsp)
+        movl    8(%rsp), %21
+        movl    %21, 4(%rsp)
         movl    (%rsp), %22
         leal    (,%22,2), %23
-        movl    %23, 12(%rsp)
-        movl    12(%rsp), %24
-        movl    %24, 8(%rsp)
+        movl    %23, 16(%rsp)
+        movl    16(%rsp), %24
+        movl    %24, 12(%rsp)
         movl    (%rsp), %25
         leal    (,%25,4), %26
-        movl    %26, 24(%rsp)
-        movl    24(%rsp), %27
-        movl    %27, 16(%rsp)
+        movl    %26, 28(%rsp)
+        movl    28(%rsp), %27
+        movl    %27, 24(%rsp)
         movl    (%rsp), %28
         leal    (,%28,8), %29
-        movl    %29, 32(%rsp)
-        movl    32(%rsp), %30
-        movl    %30, 28(%rsp)
+        movl    %29, 36(%rsp)
+        movl    36(%rsp), %30
+        movl    %30, 32(%rsp)
         movl    (%rsp), %31
         movl    %31, %32
-        movl    %32, 40(%rsp)
-        movl    40(%rsp), %33
-        movl    %33, 36(%rsp)
+        movl    %32, 44(%rsp)
+        movl    44(%rsp), %33
+        movl    %33, 40(%rsp)
         movl    (%rsp), %34
         leal    (,%34,2), %35
-        movl    %35, 48(%rsp)
-        movl    48(%rsp), %36
-        movl    %36, 44(%rsp)
+        movl    %35, 52(%rsp)
+        movl    52(%rsp), %36
+        movl    %36, 48(%rsp)
         movl    (%rsp), %37
         leal    (,%37,4), %38
-        movl    %38, 56(%rsp)
-        movl    56(%rsp), %39
-        movl    %39, 52(%rsp)
+        movl    %38, 60(%rsp)
+        movl    60(%rsp), %39
+        movl    %39, 56(%rsp)
         movl    (%rsp), %40
         leal    (,%40,8), %41
-        movl    %41, 64(%rsp)
-        movl    64(%rsp), %42
-        movl    %42, 60(%rsp)
-        movl    $0, 68(%rsp)
+        movl    %41, 68(%rsp)
+        movl    68(%rsp), %42
+        movl    %42, 64(%rsp)
+        movl    $0, (%rsp)
 .LleaIS_43:
-        movl    68(%rsp), %44
+        movl    (%rsp), %44
         movl    %44, %eax
         ret
 
@@ -72,54 +72,54 @@ leaBIS:  # 2 params, 64 stack bytes
 .LleaBIS_entry:
         movl    %0, (%rsp)
         movl    %1, 4(%rsp)
-        movl    $2, 8(%rsp)
+        movl    $2, 12(%rsp)
         movl    4(%rsp), %18
-        movl    8(%rsp), %19
+        movl    12(%rsp), %19
         movl    %18, %20
         imull   %19, %20
-        movl    %20, 16(%rsp)
+        movl    %20, 24(%rsp)
         movl    (%rsp), %21
-        movl    16(%rsp), %22
+        movl    24(%rsp), %22
         leal    (%21,%22), %23
-        movl    %23, 24(%rsp)
-        movl    24(%rsp), %24
-        movl    %24, 12(%rsp)
-        movl    8(%rsp), %25
+        movl    %23, 28(%rsp)
+        movl    28(%rsp), %24
+        movl    %24, 16(%rsp)
+        movl    12(%rsp), %25
         movl    4(%rsp), %26
         movl    %25, %27
         imull   %26, %27
-        movl    %27, 32(%rsp)
+        movl    %27, 36(%rsp)
         movl    (%rsp), %28
-        movl    32(%rsp), %29
+        movl    36(%rsp), %29
         leal    (%28,%29), %30
-        movl    %30, 36(%rsp)
-        movl    36(%rsp), %31
-        movl    %31, 28(%rsp)
+        movl    %30, 40(%rsp)
+        movl    40(%rsp), %31
+        movl    %31, 32(%rsp)
         movl    4(%rsp), %32
-        movl    8(%rsp), %33
+        movl    12(%rsp), %33
         movl    %32, %34
         imull   %33, %34
-        movl    %34, 44(%rsp)
-        movl    44(%rsp), %35
+        movl    %34, 48(%rsp)
+        movl    48(%rsp), %35
         movl    (%rsp), %36
         leal    (%35,%36), %37
-        movl    %37, 48(%rsp)
-        movl    48(%rsp), %38
-        movl    %38, 40(%rsp)
-        movl    8(%rsp), %39
+        movl    %37, 52(%rsp)
+        movl    52(%rsp), %38
+        movl    %38, 44(%rsp)
+        movl    12(%rsp), %39
         movl    4(%rsp), %40
         movl    %39, %41
         imull   %40, %41
-        movl    %41, 56(%rsp)
-        movl    56(%rsp), %42
+        movl    %41, 60(%rsp)
+        movl    60(%rsp), %42
         movl    (%rsp), %43
         leal    (%42,%43), %44
-        movl    %44, 60(%rsp)
-        movl    60(%rsp), %45
-        movl    %45, 52(%rsp)
-        movl    $0, 64(%rsp)
+        movl    %44, 64(%rsp)
+        movl    64(%rsp), %45
+        movl    %45, 56(%rsp)
+        movl    $0, 8(%rsp)
 .LleaBIS_46:
-        movl    64(%rsp), %47
+        movl    8(%rsp), %47
         movl    %47, %eax
         ret
 
@@ -129,70 +129,70 @@ leaBID:  # 2 params, 88 stack bytes
 .LleaBID_entry:
         movl    %0, (%rsp)
         movl    %1, 4(%rsp)
-        movl    $13, 8(%rsp)
+        movl    $13, 12(%rsp)
         movl    (%rsp), %24
         movl    4(%rsp), %25
         leal    (%24,%25), %26
-        movl    %26, 16(%rsp)
-        movl    16(%rsp), %27
-        movl    8(%rsp), %28
+        movl    %26, 24(%rsp)
+        movl    24(%rsp), %27
+        movl    12(%rsp), %28
         leal    (%27,%28), %29
-        movl    %29, 24(%rsp)
-        movl    24(%rsp), %30
-        movl    %30, 12(%rsp)
+        movl    %29, 28(%rsp)
+        movl    28(%rsp), %30
+        movl    %30, 16(%rsp)
         movl    (%rsp), %31
-        movl    8(%rsp), %32
+        movl    12(%rsp), %32
         leal    (%31,%32), %33
-        movl    %33, 32(%rsp)
-        movl    32(%rsp), %34
+        movl    %33, 36(%rsp)
+        movl    36(%rsp), %34
         movl    4(%rsp), %35
         leal    (%34,%35), %36
-        movl    %36, 36(%rsp)
-        movl    36(%rsp), %37
-        movl    %37, 28(%rsp)
-        movl    8(%rsp), %38
+        movl    %36, 40(%rsp)
+        movl    40(%rsp), %37
+        movl    %37, 32(%rsp)
+        movl    12(%rsp), %38
         movl    (%rsp), %39
         leal    (%38,%39), %40
-        movl    %40, 44(%rsp)
-        movl    44(%rsp), %41
+        movl    %40, 48(%rsp)
+        movl    48(%rsp), %41
         movl    4(%rsp), %42
         leal    (%41,%42), %43
-        movl    %43, 48(%rsp)
-        movl    48(%rsp), %44
-        movl    %44, 40(%rsp)
+        movl    %43, 52(%rsp)
+        movl    52(%rsp), %44
+        movl    %44, 44(%rsp)
         movl    4(%rsp), %45
-        movl    8(%rsp), %46
+        movl    12(%rsp), %46
         leal    (%45,%46), %47
-        movl    %47, 56(%rsp)
+        movl    %47, 60(%rsp)
         movl    (%rsp), %48
-        movl    56(%rsp), %49
+        movl    60(%rsp), %49
         leal    (%48,%49), %50
-        movl    %50, 60(%rsp)
-        movl    60(%rsp), %51
-        movl    %51, 52(%rsp)
-        movl    8(%rsp), %52
+        movl    %50, 64(%rsp)
+        movl    64(%rsp), %51
+        movl    %51, 56(%rsp)
+        movl    12(%rsp), %52
         movl    4(%rsp), %53
         leal    (%52,%53), %54
         movl    %54, 68(%rsp)
         movl    (%rsp), %55
         movl    68(%rsp), %56
         leal    (%55,%56), %57
-        movl    %57, 68(%rsp)
-        movl    68(%rsp), %58
-        movl    %58, 64(%rsp)
+        movl    %57, 72(%rsp)
+        movl    72(%rsp), %58
+        movl    %58, 68(%rsp)
         movl    (%rsp), %59
         movl    4(%rsp), %60
         leal    (%59,%60), %61
-        movl    %61, 76(%rsp)
-        movl    8(%rsp), %62
-        movl    76(%rsp), %63
+        movl    %61, 80(%rsp)
+        movl    12(%rsp), %62
+        movl    80(%rsp), %63
         leal    (%62,%63), %64
-        movl    %64, 80(%rsp)
-        movl    80(%rsp), %65
-        movl    %65, 72(%rsp)
-        movl    $0, 84(%rsp)
+        movl    %64, 84(%rsp)
+        movl    84(%rsp), %65
+        movl    %65, 76(%rsp)
+        movl    $0, 8(%rsp)
 .LleaBID_66:
-        movl    84(%rsp), %67
+        movl    8(%rsp), %67
         movl    %67, %eax
         ret
 
@@ -202,37 +202,37 @@ leaIIS:  # 1 params, 56 stack bytes
         movl    %0, (%rsp)
         movl    (%rsp), %15
         leal    (%15,%15,2), %16
-        movl    %16, 4(%rsp)
-        movl    4(%rsp), %17
-        movl    %17, (%rsp)
+        movl    %16, 8(%rsp)
+        movl    8(%rsp), %17
+        movl    %17, 4(%rsp)
         movl    (%rsp), %18
         leal    (%18,%18,4), %19
-        movl    %19, 12(%rsp)
-        movl    12(%rsp), %20
-        movl    %20, 8(%rsp)
+        movl    %19, 16(%rsp)
+        movl    16(%rsp), %20
+        movl    %20, 12(%rsp)
         movl    (%rsp), %21
         leal    (%21,%21,8), %22
-        movl    %22, 24(%rsp)
-        movl    24(%rsp), %23
-        movl    %23, 16(%rsp)
+        movl    %22, 28(%rsp)
+        movl    28(%rsp), %23
+        movl    %23, 24(%rsp)
         movl    (%rsp), %24
         leal    (%24,%24,2), %25
-        movl    %25, 32(%rsp)
-        movl    32(%rsp), %26
-        movl    %26, 28(%rsp)
+        movl    %25, 36(%rsp)
+        movl    36(%rsp), %26
+        movl    %26, 32(%rsp)
         movl    (%rsp), %27
         leal    (%27,%27,4), %28
-        movl    %28, 40(%rsp)
-        movl    40(%rsp), %29
-        movl    %29, 36(%rsp)
+        movl    %28, 44(%rsp)
+        movl    44(%rsp), %29
+        movl    %29, 40(%rsp)
         movl    (%rsp), %30
         leal    (%30,%30,8), %31
-        movl    %31, 48(%rsp)
-        movl    48(%rsp), %32
-        movl    %32, 44(%rsp)
-        movl    $0, 52(%rsp)
+        movl    %31, 52(%rsp)
+        movl    52(%rsp), %32
+        movl    %32, 48(%rsp)
+        movl    $0, (%rsp)
 .LleaIIS_33:
-        movl    52(%rsp), %34
+        movl    (%rsp), %34
         movl    %34, %eax
         ret
 
@@ -240,55 +240,55 @@ leaISD:  # 1 params, 64 stack bytes
         movl    %edi, %0
 .LleaISD_entry:
         movl    %0, (%rsp)
-        movl    $4, (%rsp)
-        movl    $60, 4(%rsp)
+        movl    $4, 4(%rsp)
+        movl    $60, 8(%rsp)
         movl    (%rsp), %17
-        movl    (%rsp), %18
+        movl    4(%rsp), %18
         movl    %17, %19
         imull   %18, %19
-        movl    %19, 12(%rsp)
-        movl    12(%rsp), %20
-        movl    4(%rsp), %21
+        movl    %19, 16(%rsp)
+        movl    16(%rsp), %20
+        movl    8(%rsp), %21
         leal    (%20,%21), %22
-        movl    %22, 16(%rsp)
-        movl    16(%rsp), %23
-        movl    %23, 8(%rsp)
-        movl    (%rsp), %24
+        movl    %22, 24(%rsp)
+        movl    24(%rsp), %23
+        movl    %23, 12(%rsp)
+        movl    4(%rsp), %24
         movl    (%rsp), %25
         movl    %24, %26
         imull   %25, %26
-        movl    %26, 28(%rsp)
-        movl    28(%rsp), %27
-        movl    4(%rsp), %28
+        movl    %26, 32(%rsp)
+        movl    32(%rsp), %27
+        movl    8(%rsp), %28
         leal    (%27,%28), %29
-        movl    %29, 32(%rsp)
-        movl    32(%rsp), %30
-        movl    %30, 24(%rsp)
+        movl    %29, 36(%rsp)
+        movl    36(%rsp), %30
+        movl    %30, 28(%rsp)
         movl    (%rsp), %31
-        movl    (%rsp), %32
+        movl    4(%rsp), %32
         movl    %31, %33
         imull   %32, %33
-        movl    %33, 40(%rsp)
-        movl    4(%rsp), %34
-        movl    40(%rsp), %35
+        movl    %33, 44(%rsp)
+        movl    8(%rsp), %34
+        movl    44(%rsp), %35
         leal    (%34,%35), %36
-        movl    %36, 44(%rsp)
-        movl    44(%rsp), %37
-        movl    %37, 36(%rsp)
-        movl    (%rsp), %38
+        movl    %36, 48(%rsp)
+        movl    48(%rsp), %37
+        movl    %37, 40(%rsp)
+        movl    4(%rsp), %38
         movl    (%rsp), %39
         movl    %38, %40
         imull   %39, %40
-        movl    %40, 52(%rsp)
-        movl    4(%rsp), %41
-        movl    52(%rsp), %42
+        movl    %40, 56(%rsp)
+        movl    8(%rsp), %41
+        movl    56(%rsp), %42
         leal    (%41,%42), %43
-        movl    %43, 56(%rsp)
-        movl    56(%rsp), %44
-        movl    %44, 48(%rsp)
-        movl    $0, 60(%rsp)
+        movl    %43, 60(%rsp)
+        movl    60(%rsp), %44
+        movl    %44, 52(%rsp)
+        movl    $0, (%rsp)
 .LleaISD_45:
-        movl    60(%rsp), %46
+        movl    (%rsp), %46
         movl    %46, %eax
         ret
 
@@ -296,46 +296,46 @@ leaIISD:  # 1 params, 60 stack bytes
         movl    %edi, %0
 .LleaIISD_entry:
         movl    %0, (%rsp)
-        movl    $60, (%rsp)
+        movl    $60, 4(%rsp)
         movl    (%rsp), %16
         leal    (%16,%16,2), %17
-        movl    %17, 8(%rsp)
-        movl    8(%rsp), %18
-        movl    (%rsp), %19
+        movl    %17, 12(%rsp)
+        movl    12(%rsp), %18
+        movl    4(%rsp), %19
         leal    (%18,%19), %20
-        movl    %20, 12(%rsp)
-        movl    12(%rsp), %21
-        movl    %21, 4(%rsp)
+        movl    %20, 16(%rsp)
+        movl    16(%rsp), %21
+        movl    %21, 8(%rsp)
         movl    (%rsp), %22
         leal    (%22,%22,4), %23
-        movl    %23, 24(%rsp)
-        movl    24(%rsp), %24
-        movl    (%rsp), %25
+        movl    %23, 28(%rsp)
+        movl    28(%rsp), %24
+        movl    4(%rsp), %25
         leal    (%24,%25), %26
-        movl    %26, 28(%rsp)
-        movl    28(%rsp), %27
-        movl    %27, 16(%rsp)
+        movl    %26, 32(%rsp)
+        movl    32(%rsp), %27
+        movl    %27, 24(%rsp)
         movl    (%rsp), %28
         leal    (%28,%28,8), %29
-        movl    %29, 36(%rsp)
-        movl    (%rsp), %30
-        movl    36(%rsp), %31
+        movl    %29, 40(%rsp)
+        movl    4(%rsp), %30
+        movl    40(%rsp), %31
         leal    (%30,%31), %32
-        movl    %32, 40(%rsp)
-        movl    40(%rsp), %33
-        movl    %33, 32(%rsp)
+        movl    %32, 44(%rsp)
+        movl    44(%rsp), %33
+        movl    %33, 36(%rsp)
         movl    (%rsp), %34
         leal    (%34,%34,2), %35
-        movl    %35, 48(%rsp)
-        movl    (%rsp), %36
-        movl    48(%rsp), %37
+        movl    %35, 52(%rsp)
+        movl    4(%rsp), %36
+        movl    52(%rsp), %37
         leal    (%36,%37), %38
-        movl    %38, 52(%rsp)
-        movl    52(%rsp), %39
-        movl    %39, 44(%rsp)
-        movl    $0, 56(%rsp)
+        movl    %38, 56(%rsp)
+        movl    56(%rsp), %39
+        movl    %39, 48(%rsp)
+        movl    $0, (%rsp)
 .LleaIISD_40:
-        movl    56(%rsp), %41
+        movl    (%rsp), %41
         movl    %41, %eax
         ret
 
@@ -345,370 +345,370 @@ leaBISD:  # 2 params, 404 stack bytes
 .LleaBISD_entry:
         movl    %0, (%rsp)
         movl    %1, 4(%rsp)
-        movl    $8, 8(%rsp)
-        movl    $40, 12(%rsp)
+        movl    $8, 12(%rsp)
+        movl    $40, 16(%rsp)
         movl    4(%rsp), %103
-        movl    8(%rsp), %104
+        movl    12(%rsp), %104
         movl    %103, %105
         imull   %104, %105
-        movl    %105, 24(%rsp)
+        movl    %105, 28(%rsp)
         movl    (%rsp), %106
-        movl    24(%rsp), %107
+        movl    28(%rsp), %107
         leal    (%106,%107), %108
-        movl    %108, 28(%rsp)
-        movl    28(%rsp), %109
-        movl    12(%rsp), %110
+        movl    %108, 32(%rsp)
+        movl    32(%rsp), %109
+        movl    16(%rsp), %110
         leal    (%109,%110), %111
-        movl    %111, 32(%rsp)
-        movl    32(%rsp), %112
-        movl    %112, 16(%rsp)
+        movl    %111, 36(%rsp)
+        movl    36(%rsp), %112
+        movl    %112, 24(%rsp)
         movl    4(%rsp), %113
-        movl    8(%rsp), %114
+        movl    12(%rsp), %114
         movl    %113, %115
         imull   %114, %115
-        movl    %115, 40(%rsp)
-        movl    12(%rsp), %116
-        movl    40(%rsp), %117
+        movl    %115, 44(%rsp)
+        movl    16(%rsp), %116
+        movl    44(%rsp), %117
         leal    (%116,%117), %118
-        movl    %118, 44(%rsp)
-        movl    44(%rsp), %119
+        movl    %118, 48(%rsp)
+        movl    48(%rsp), %119
         movl    (%rsp), %120
         leal    (%119,%120), %121
-        movl    %121, 48(%rsp)
-        movl    48(%rsp), %122
-        movl    %122, 36(%rsp)
+        movl    %121, 52(%rsp)
+        movl    52(%rsp), %122
+        movl    %122, 40(%rsp)
         movl    4(%rsp), %123
-        movl    8(%rsp), %124
+        movl    12(%rsp), %124
         movl    %123, %125
         imull   %124, %125
-        movl    %125, 56(%rsp)
-        movl    56(%rsp), %126
+        movl    %125, 60(%rsp)
+        movl    60(%rsp), %126
         movl    (%rsp), %127
         leal    (%126,%127), %128
-        movl    %128, 60(%rsp)
-        movl    60(%rsp), %129
-        movl    12(%rsp), %130
+        movl    %128, 64(%rsp)
+        movl    64(%rsp), %129
+        movl    16(%rsp), %130
         leal    (%129,%130), %131
-        movl    %131, 64(%rsp)
-        movl    64(%rsp), %132
-        movl    %132, 52(%rsp)
+        movl    %131, 68(%rsp)
+        movl    68(%rsp), %132
+        movl    %132, 56(%rsp)
         movl    4(%rsp), %133
-        movl    8(%rsp), %134
+        movl    12(%rsp), %134
         movl    %133, %135
         imull   %134, %135
-        movl    %135, 68(%rsp)
-        movl    68(%rsp), %136
-        movl    12(%rsp), %137
+        movl    %135, 72(%rsp)
+        movl    72(%rsp), %136
+        movl    16(%rsp), %137
         leal    (%136,%137), %138
-        movl    %138, 72(%rsp)
-        movl    72(%rsp), %139
+        movl    %138, 76(%rsp)
+        movl    76(%rsp), %139
         movl    (%rsp), %140
         leal    (%139,%140), %141
-        movl    %141, 76(%rsp)
-        movl    76(%rsp), %142
+        movl    %141, 80(%rsp)
+        movl    80(%rsp), %142
         movl    %142, 68(%rsp)
         movl    (%rsp), %143
-        movl    12(%rsp), %144
+        movl    16(%rsp), %144
         leal    (%143,%144), %145
-        movl    %145, 84(%rsp)
+        movl    %145, 88(%rsp)
         movl    4(%rsp), %146
-        movl    8(%rsp), %147
+        movl    12(%rsp), %147
         movl    %146, %148
         imull   %147, %148
-        movl    %148, 88(%rsp)
-        movl    84(%rsp), %149
-        movl    88(%rsp), %150
+        movl    %148, 92(%rsp)
+        movl    88(%rsp), %149
+        movl    92(%rsp), %150
         leal    (%149,%150), %151
-        movl    %151, 92(%rsp)
-        movl    92(%rsp), %152
-        movl    %152, 80(%rsp)
-        movl    12(%rsp), %153
+        movl    %151, 96(%rsp)
+        movl    96(%rsp), %152
+        movl    %152, 84(%rsp)
+        movl    16(%rsp), %153
         movl    (%rsp), %154
         leal    (%153,%154), %155
-        movl    %155, 100(%rsp)
+        movl    %155, 104(%rsp)
         movl    4(%rsp), %156
-        movl    8(%rsp), %157
+        movl    12(%rsp), %157
         movl    %156, %158
         imull   %157, %158
-        movl    %158, 104(%rsp)
-        movl    100(%rsp), %159
-        movl    104(%rsp), %160
+        movl    %158, 108(%rsp)
+        movl    104(%rsp), %159
+        movl    108(%rsp), %160
         leal    (%159,%160), %161
-        movl    %161, 108(%rsp)
-        movl    108(%rsp), %162
-        movl    %162, 96(%rsp)
-        movl    8(%rsp), %163
+        movl    %161, 112(%rsp)
+        movl    112(%rsp), %162
+        movl    %162, 100(%rsp)
+        movl    12(%rsp), %163
         movl    4(%rsp), %164
         movl    %163, %165
         imull   %164, %165
-        movl    %165, 116(%rsp)
+        movl    %165, 120(%rsp)
         movl    (%rsp), %166
-        movl    116(%rsp), %167
+        movl    120(%rsp), %167
         leal    (%166,%167), %168
-        movl    %168, 120(%rsp)
-        movl    120(%rsp), %169
-        movl    12(%rsp), %170
+        movl    %168, 124(%rsp)
+        movl    124(%rsp), %169
+        movl    16(%rsp), %170
         leal    (%169,%170), %171
-        movl    %171, 124(%rsp)
-        movl    124(%rsp), %172
-        movl    %172, 112(%rsp)
-        movl    8(%rsp), %173
+        movl    %171, 128(%rsp)
+        movl    128(%rsp), %172
+        movl    %172, 116(%rsp)
+        movl    12(%rsp), %173
         movl    4(%rsp), %174
         movl    %173, %175
         imull   %174, %175
-        movl    %175, 132(%rsp)
-        movl    12(%rsp), %176
-        movl    132(%rsp), %177
+        movl    %175, 136(%rsp)
+        movl    16(%rsp), %176
+        movl    136(%rsp), %177
         leal    (%176,%177), %178
-        movl    %178, 136(%rsp)
-        movl    136(%rsp), %179
+        movl    %178, 140(%rsp)
+        movl    140(%rsp), %179
         movl    (%rsp), %180
         leal    (%179,%180), %181
-        movl    %181, 140(%rsp)
-        movl    140(%rsp), %182
-        movl    %182, 128(%rsp)
-        movl    8(%rsp), %183
+        movl    %181, 144(%rsp)
+        movl    144(%rsp), %182
+        movl    %182, 132(%rsp)
+        movl    12(%rsp), %183
         movl    4(%rsp), %184
         movl    %183, %185
         imull   %184, %185
-        movl    %185, 148(%rsp)
-        movl    148(%rsp), %186
+        movl    %185, 152(%rsp)
+        movl    152(%rsp), %186
         movl    (%rsp), %187
         leal    (%186,%187), %188
-        movl    %188, 152(%rsp)
-        movl    152(%rsp), %189
-        movl    12(%rsp), %190
+        movl    %188, 156(%rsp)
+        movl    156(%rsp), %189
+        movl    16(%rsp), %190
         leal    (%189,%190), %191
-        movl    %191, 156(%rsp)
-        movl    156(%rsp), %192
-        movl    %192, 144(%rsp)
-        movl    8(%rsp), %193
+        movl    %191, 160(%rsp)
+        movl    160(%rsp), %192
+        movl    %192, 148(%rsp)
+        movl    12(%rsp), %193
         movl    4(%rsp), %194
         movl    %193, %195
         imull   %194, %195
-        movl    %195, 164(%rsp)
-        movl    164(%rsp), %196
-        movl    12(%rsp), %197
+        movl    %195, 168(%rsp)
+        movl    168(%rsp), %196
+        movl    16(%rsp), %197
         leal    (%196,%197), %198
-        movl    %198, 168(%rsp)
-        movl    168(%rsp), %199
+        movl    %198, 172(%rsp)
+        movl    172(%rsp), %199
         movl    (%rsp), %200
         leal    (%199,%200), %201
-        movl    %201, 172(%rsp)
-        movl    172(%rsp), %202
-        movl    %202, 160(%rsp)
+        movl    %201, 176(%rsp)
+        movl    176(%rsp), %202
+        movl    %202, 164(%rsp)
         movl    (%rsp), %203
-        movl    12(%rsp), %204
+        movl    16(%rsp), %204
         leal    (%203,%204), %205
-        movl    %205, 180(%rsp)
-        movl    8(%rsp), %206
+        movl    %205, 184(%rsp)
+        movl    12(%rsp), %206
         movl    4(%rsp), %207
         movl    %206, %208
         imull   %207, %208
-        movl    %208, 184(%rsp)
-        movl    180(%rsp), %209
-        movl    184(%rsp), %210
+        movl    %208, 188(%rsp)
+        movl    184(%rsp), %209
+        movl    188(%rsp), %210
         leal    (%209,%210), %211
-        movl    %211, 188(%rsp)
-        movl    188(%rsp), %212
-        movl    %212, 176(%rsp)
-        movl    12(%rsp), %213
+        movl    %211, 192(%rsp)
+        movl    192(%rsp), %212
+        movl    %212, 180(%rsp)
+        movl    16(%rsp), %213
         movl    (%rsp), %214
         leal    (%213,%214), %215
-        movl    %215, 196(%rsp)
-        movl    8(%rsp), %216
+        movl    %215, 200(%rsp)
+        movl    12(%rsp), %216
         movl    4(%rsp), %217
         movl    %216, %218
         imull   %217, %218
-        movl    %218, 200(%rsp)
-        movl    196(%rsp), %219
-        movl    200(%rsp), %220
+        movl    %218, 204(%rsp)
+        movl    200(%rsp), %219
+        movl    204(%rsp), %220
         leal    (%219,%220), %221
-        movl    %221, 204(%rsp)
-        movl    204(%rsp), %222
-        movl    %222, 192(%rsp)
+        movl    %221, 208(%rsp)
+        movl    208(%rsp), %222
+        movl    %222, 196(%rsp)
         movl    4(%rsp), %223
-        movl    8(%rsp), %224
+        movl    12(%rsp), %224
         movl    %223, %225
         imull   %224, %225
-        movl    %225, 212(%rsp)
-        movl    212(%rsp), %226
-        movl    12(%rsp), %227
+        movl    %225, 216(%rsp)
+        movl    216(%rsp), %226
+        movl    16(%rsp), %227
         leal    (%226,%227), %228
-        movl    %228, 216(%rsp)
+        movl    %228, 220(%rsp)
         movl    (%rsp), %229
-        movl    216(%rsp), %230
+        movl    220(%rsp), %230
         leal    (%229,%230), %231
-        movl    %231, 220(%rsp)
-        movl    220(%rsp), %232
-        movl    %232, 208(%rsp)
+        movl    %231, 224(%rsp)
+        movl    224(%rsp), %232
+        movl    %232, 212(%rsp)
         movl    4(%rsp), %233
-        movl    8(%rsp), %234
+        movl    12(%rsp), %234
         movl    %233, %235
         imull   %234, %235
-        movl    %235, 228(%rsp)
-        movl    228(%rsp), %236
+        movl    %235, 232(%rsp)
+        movl    232(%rsp), %236
         movl    (%rsp), %237
         leal    (%236,%237), %238
-        movl    %238, 232(%rsp)
-        movl    12(%rsp), %239
-        movl    232(%rsp), %240
+        movl    %238, 236(%rsp)
+        movl    16(%rsp), %239
+        movl    236(%rsp), %240
         leal    (%239,%240), %241
-        movl    %241, 236(%rsp)
-        movl    236(%rsp), %242
-        movl    %242, 224(%rsp)
+        movl    %241, 240(%rsp)
+        movl    240(%rsp), %242
+        movl    %242, 228(%rsp)
         movl    4(%rsp), %243
-        movl    8(%rsp), %244
+        movl    12(%rsp), %244
         movl    %243, %245
         imull   %244, %245
-        movl    %245, 244(%rsp)
+        movl    %245, 248(%rsp)
         movl    (%rsp), %246
-        movl    12(%rsp), %247
+        movl    16(%rsp), %247
         leal    (%246,%247), %248
-        movl    %248, 248(%rsp)
-        movl    244(%rsp), %249
-        movl    248(%rsp), %250
+        movl    %248, 252(%rsp)
+        movl    248(%rsp), %249
+        movl    252(%rsp), %250
         leal    (%249,%250), %251
-        movl    %251, 252(%rsp)
-        movl    252(%rsp), %252
-        movl    %252, 240(%rsp)
+        movl    %251, 256(%rsp)
+        movl    256(%rsp), %252
+        movl    %252, 244(%rsp)
         movl    4(%rsp), %253
-        movl    8(%rsp), %254
+        movl    12(%rsp), %254
         movl    %253, %255
         imull   %254, %255
-        movl    %255, 260(%rsp)
-        movl    12(%rsp), %256
+        movl    %255, 264(%rsp)
+        movl    16(%rsp), %256
         movl    (%rsp), %257
         leal    (%256,%257), %258
-        movl    %258, 264(%rsp)
-        movl    260(%rsp), %259
-        movl    264(%rsp), %260
+        movl    %258, 268(%rsp)
+        movl    264(%rsp), %259
+        movl    268(%rsp), %260
         leal    (%259,%260), %261
-        movl    %261, 268(%rsp)
-        movl    268(%rsp), %262
-        movl    %262, 256(%rsp)
+        movl    %261, 272(%rsp)
+        movl    272(%rsp), %262
+        movl    %262, 260(%rsp)
         movl    4(%rsp), %263
-        movl    8(%rsp), %264
+        movl    12(%rsp), %264
         movl    %263, %265
         imull   %264, %265
-        movl    %265, 276(%rsp)
-        movl    12(%rsp), %266
-        movl    276(%rsp), %267
+        movl    %265, 280(%rsp)
+        movl    16(%rsp), %266
+        movl    280(%rsp), %267
         leal    (%266,%267), %268
-        movl    %268, 280(%rsp)
+        movl    %268, 284(%rsp)
         movl    (%rsp), %269
-        movl    280(%rsp), %270
+        movl    284(%rsp), %270
         leal    (%269,%270), %271
-        movl    %271, 284(%rsp)
-        movl    284(%rsp), %272
-        movl    %272, 272(%rsp)
+        movl    %271, 288(%rsp)
+        movl    288(%rsp), %272
+        movl    %272, 276(%rsp)
         movl    4(%rsp), %273
-        movl    8(%rsp), %274
+        movl    12(%rsp), %274
         movl    %273, %275
         imull   %274, %275
-        movl    %275, 292(%rsp)
+        movl    %275, 296(%rsp)
         movl    (%rsp), %276
-        movl    292(%rsp), %277
+        movl    296(%rsp), %277
         leal    (%276,%277), %278
-        movl    %278, 296(%rsp)
-        movl    12(%rsp), %279
-        movl    296(%rsp), %280
+        movl    %278, 300(%rsp)
+        movl    16(%rsp), %279
+        movl    300(%rsp), %280
         leal    (%279,%280), %281
-        movl    %281, 300(%rsp)
-        movl    300(%rsp), %282
-        movl    %282, 288(%rsp)
-        movl    8(%rsp), %283
+        movl    %281, 304(%rsp)
+        movl    304(%rsp), %282
+        movl    %282, 292(%rsp)
+        movl    12(%rsp), %283
         movl    4(%rsp), %284
         movl    %283, %285
         imull   %284, %285
-        movl    %285, 308(%rsp)
-        movl    308(%rsp), %286
-        movl    12(%rsp), %287
+        movl    %285, 312(%rsp)
+        movl    312(%rsp), %286
+        movl    16(%rsp), %287
         leal    (%286,%287), %288
-        movl    %288, 312(%rsp)
+        movl    %288, 316(%rsp)
         movl    (%rsp), %289
-        movl    312(%rsp), %290
+        movl    316(%rsp), %290
         leal    (%289,%290), %291
-        movl    %291, 316(%rsp)
-        movl    316(%rsp), %292
-        movl    %292, 304(%rsp)
-        movl    8(%rsp), %293
+        movl    %291, 320(%rsp)
+        movl    320(%rsp), %292
+        movl    %292, 308(%rsp)
+        movl    12(%rsp), %293
         movl    4(%rsp), %294
         movl    %293, %295
         imull   %294, %295
-        movl    %295, 324(%rsp)
-        movl    324(%rsp), %296
+        movl    %295, 328(%rsp)
+        movl    328(%rsp), %296
         movl    (%rsp), %297
         leal    (%296,%297), %298
-        movl    %298, 328(%rsp)
-        movl    12(%rsp), %299
-        movl    328(%rsp), %300
+        movl    %298, 332(%rsp)
+        movl    16(%rsp), %299
+        movl    332(%rsp), %300
         leal    (%299,%300), %301
-        movl    %301, 332(%rsp)
-        movl    332(%rsp), %302
-        movl    %302, 320(%rsp)
-        movl    8(%rsp), %303
+        movl    %301, 336(%rsp)
+        movl    336(%rsp), %302
+        movl    %302, 324(%rsp)
+        movl    12(%rsp), %303
         movl    4(%rsp), %304
         movl    %303, %305
         imull   %304, %305
-        movl    %305, 340(%rsp)
+        movl    %305, 344(%rsp)
         movl    (%rsp), %306
-        movl    12(%rsp), %307
+        movl    16(%rsp), %307
         leal    (%306,%307), %308
-        movl    %308, 344(%rsp)
-        movl    340(%rsp), %309
-        movl    344(%rsp), %310
+        movl    %308, 348(%rsp)
+        movl    344(%rsp), %309
+        movl    348(%rsp), %310
         leal    (%309,%310), %311
-        movl    %311, 348(%rsp)
-        movl    348(%rsp), %312
-        movl    %312, 336(%rsp)
-        movl    8(%rsp), %313
+        movl    %311, 352(%rsp)
+        movl    352(%rsp), %312
+        movl    %312, 340(%rsp)
+        movl    12(%rsp), %313
         movl    4(%rsp), %314
         movl    %313, %315
         imull   %314, %315
-        movl    %315, 356(%rsp)
-        movl    12(%rsp), %316
+        movl    %315, 360(%rsp)
+        movl    16(%rsp), %316
         movl    (%rsp), %317
         leal    (%316,%317), %318
-        movl    %318, 360(%rsp)
-        movl    356(%rsp), %319
-        movl    360(%rsp), %320
+        movl    %318, 364(%rsp)
+        movl    360(%rsp), %319
+        movl    364(%rsp), %320
         leal    (%319,%320), %321
-        movl    %321, 364(%rsp)
-        movl    364(%rsp), %322
-        movl    %322, 352(%rsp)
-        movl    8(%rsp), %323
+        movl    %321, 368(%rsp)
+        movl    368(%rsp), %322
+        movl    %322, 356(%rsp)
+        movl    12(%rsp), %323
         movl    4(%rsp), %324
         movl    %323, %325
         imull   %324, %325
-        movl    %325, 372(%rsp)
-        movl    12(%rsp), %326
-        movl    372(%rsp), %327
+        movl    %325, 376(%rsp)
+        movl    16(%rsp), %326
+        movl    376(%rsp), %327
         leal    (%326,%327), %328
-        movl    %328, 376(%rsp)
+        movl    %328, 380(%rsp)
         movl    (%rsp), %329
-        movl    376(%rsp), %330
+        movl    380(%rsp), %330
         leal    (%329,%330), %331
-        movl    %331, 380(%rsp)
-        movl    380(%rsp), %332
-        movl    %332, 368(%rsp)
-        movl    8(%rsp), %333
+        movl    %331, 384(%rsp)
+        movl    384(%rsp), %332
+        movl    %332, 372(%rsp)
+        movl    12(%rsp), %333
         movl    4(%rsp), %334
         movl    %333, %335
         imull   %334, %335
-        movl    %335, 388(%rsp)
+        movl    %335, 392(%rsp)
         movl    (%rsp), %336
-        movl    388(%rsp), %337
+        movl    392(%rsp), %337
         leal    (%336,%337), %338
-        movl    %338, 392(%rsp)
-        movl    12(%rsp), %339
-        movl    392(%rsp), %340
+        movl    %338, 396(%rsp)
+        movl    16(%rsp), %339
+        movl    396(%rsp), %340
         leal    (%339,%340), %341
-        movl    %341, 396(%rsp)
-        movl    396(%rsp), %342
-        movl    %342, 384(%rsp)
-        movl    $0, 400(%rsp)
+        movl    %341, 400(%rsp)
+        movl    400(%rsp), %342
+        movl    %342, 388(%rsp)
+        movl    $0, 8(%rsp)
 .LleaBISD_343:
-        movl    400(%rsp), %344
+        movl    8(%rsp), %344
         movl    %344, %eax
         ret

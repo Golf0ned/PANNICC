@@ -10,62 +10,62 @@ compound:  # 0 params, 64 stack bytes
 .Lcompound_entry:
         movl    $9, %16
         imull   $123, %16
-        movl    %16, 4(%rsp)
-        movl    4(%rsp), %17
+        movl    %16, 8(%rsp)
+        movl    8(%rsp), %17
         movl    %17, %18
         addl    $3, %18
-        movl    %18, 8(%rsp)
+        movl    %18, 12(%rsp)
         movl    $123, %19
         subl    $122, %19
-        movl    %19, 12(%rsp)
-        movl    8(%rsp), %20
-        movl    12(%rsp), %21
+        movl    %19, 16(%rsp)
+        movl    12(%rsp), %20
+        movl    16(%rsp), %21
         movl    %20, %22
         andl    %21, %22
-        movl    %22, 16(%rsp)
-        movl    16(%rsp), %23
-        movl    %23, (%rsp)
+        movl    %22, 20(%rsp)
+        movl    20(%rsp), %23
+        movl    %23, 4(%rsp)
         movl    $2, %24
         imull   $3, %24
-        movl    %24, 24(%rsp)
-        movl    24(%rsp), %25
+        movl    %24, 28(%rsp)
+        movl    28(%rsp), %25
         movl    $1, %26
         addl    %25, %26
-        movl    %26, 28(%rsp)
-        movl    28(%rsp), %27
+        movl    %26, 32(%rsp)
+        movl    32(%rsp), %27
         movl    %27, %28
         subl    $4, %28
-        movl    %28, 32(%rsp)
-        movl    32(%rsp), %29
-        movl    %29, 20(%rsp)
-        movl    (%rsp), %30
+        movl    %28, 36(%rsp)
+        movl    36(%rsp), %29
+        movl    %29, 24(%rsp)
+        movl    4(%rsp), %30
         movl    %30, %31
         addl    $2, %31
-        movl    %31, 36(%rsp)
-        movl    36(%rsp), %32
+        movl    %31, 40(%rsp)
+        movl    40(%rsp), %32
         movl    %32, %33
         addl    $3, %33
-        movl    %33, 40(%rsp)
-        movl    40(%rsp), %34
+        movl    %33, 44(%rsp)
+        movl    44(%rsp), %34
         movl    %34, %35
         addl    $4, %35
-        movl    %35, 44(%rsp)
-        movl    44(%rsp), %36
+        movl    %35, 48(%rsp)
+        movl    48(%rsp), %36
         movl    %36, %37
         addl    $5, %37
-        movl    %37, 48(%rsp)
-        movl    48(%rsp), %38
+        movl    %37, 52(%rsp)
+        movl    52(%rsp), %38
         movl    %38, %39
         addl    $6, %39
-        movl    %39, 52(%rsp)
-        movl    52(%rsp), %40
-        movl    20(%rsp), %41
+        movl    %39, 56(%rsp)
+        movl    56(%rsp), %40
+        movl    24(%rsp), %41
         leal    (%40,%41), %42
-        movl    %42, 56(%rsp)
-        movl    56(%rsp), %43
-        movl    %43, 60(%rsp)
+        movl    %42, 60(%rsp)
+        movl    60(%rsp), %43
+        movl    %43, (%rsp)
 .Lcompound_44:
-        movl    60(%rsp), %45
+        movl    (%rsp), %45
         movl    %45, %eax
         ret
 
@@ -73,17 +73,17 @@ parens:  # 0 params, 16 stack bytes
 .Lparens_entry:
         movl    $2, %4
         subl    $1, %4
-        movl    %4, (%rsp)
-        movl    (%rsp), %5
+        movl    %4, 4(%rsp)
+        movl    4(%rsp), %5
         movl    $3, %6
         subl    %5, %6
-        movl    %6, 4(%rsp)
-        movl    4(%rsp), %7
+        movl    %6, 8(%rsp)
+        movl    8(%rsp), %7
         leal    (,%7,4), %8
-        movl    %8, 8(%rsp)
-        movl    8(%rsp), %9
-        movl    %9, 12(%rsp)
+        movl    %8, 12(%rsp)
+        movl    12(%rsp), %9
+        movl    %9, (%rsp)
 .Lparens_10:
-        movl    12(%rsp), %11
+        movl    (%rsp), %11
         movl    %11, %eax
         ret

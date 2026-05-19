@@ -6,14 +6,14 @@ lost_copy_problem:  # 1 params, 20 stack bytes
         movl    (%rsp), %7
         movl    %7, %8
         subl    $10, %8
-        movl    %8, 8(%rsp)
-        movl    8(%rsp), %9
+        movl    %8, 12(%rsp)
+        movl    12(%rsp), %9
         cmpl    $0, %9
         jne     .Llost_copy_problem_15
 .Llost_copy_problem_10:
 .Llost_copy_problem_11:
         movl    (%rsp), %12
-        movl    %12, 4(%rsp)
+        movl    %12, 8(%rsp)
         movl    (%rsp), %13
         movl    %13, %14
         addl    $1, %14
@@ -21,14 +21,14 @@ lost_copy_problem:  # 1 params, 20 stack bytes
         jmp     .Llost_copy_problem_6
 .Llost_copy_problem_15:
 .Llost_copy_problem_16:
-        movl    4(%rsp), %17
+        movl    8(%rsp), %17
         movl    %17, %18
         addl    $3, %18
-        movl    %18, 12(%rsp)
-        movl    12(%rsp), %19
-        movl    %19, 16(%rsp)
+        movl    %18, 16(%rsp)
+        movl    16(%rsp), %19
+        movl    %19, 4(%rsp)
 .Llost_copy_problem_20:
-        movl    16(%rsp), %21
+        movl    4(%rsp), %21
         movl    %21, %eax
         ret
 
@@ -45,10 +45,10 @@ swap_problem:  # 2 params, 20 stack bytes
 .Lswap_problem_8:
 .Lswap_problem_9:
         movl    4(%rsp), %10
-        movl    %10, 12(%rsp)
+        movl    %10, 16(%rsp)
         movl    8(%rsp), %11
         movl    %11, 4(%rsp)
-        movl    12(%rsp), %12
+        movl    16(%rsp), %12
         movl    %12, 8(%rsp)
         jmp     .Lswap_problem_7
 .Lswap_problem_13:
@@ -58,8 +58,8 @@ swap_problem:  # 2 params, 20 stack bytes
         leal    (%15,%16), %17
         movl    %17, 16(%rsp)
         movl    16(%rsp), %18
-        movl    %18, 16(%rsp)
+        movl    %18, 12(%rsp)
 .Lswap_problem_19:
-        movl    16(%rsp), %20
+        movl    12(%rsp), %20
         movl    %20, %eax
         ret

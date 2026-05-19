@@ -1,43 +1,43 @@
 lshift:  # 0 params, 24 stack bytes
 .Llshift_entry:
-        movl    $1, (%rsp)
-        movl    $4, 4(%rsp)
-        movl    (%rsp), %6
+        movl    $1, 4(%rsp)
+        movl    $4, 8(%rsp)
+        movl    4(%rsp), %6
         movl    %6, %7
         shll    $8, [%7 -> %ecx]
-        movl    %7, 12(%rsp)
-        movl    12(%rsp), %8
-        movl    %8, 8(%rsp)
-        movl    (%rsp), %9
-        movl    4(%rsp), %10
+        movl    %7, 16(%rsp)
+        movl    16(%rsp), %8
+        movl    %8, 12(%rsp)
+        movl    4(%rsp), %9
+        movl    8(%rsp), %10
         movl    %9, %11
         shll    %10, [%11 -> %ecx]
-        movl    %11, 16(%rsp)
-        movl    16(%rsp), %12
-        movl    %12, 20(%rsp)
+        movl    %11, 20(%rsp)
+        movl    20(%rsp), %12
+        movl    %12, (%rsp)
 .Llshift_13:
-        movl    20(%rsp), %14
+        movl    (%rsp), %14
         movl    %14, %eax
         ret
 
 rshift:  # 0 params, 24 stack bytes
 .Lrshift_entry:
-        movl    $16, (%rsp)
-        movl    $3, 4(%rsp)
-        movl    (%rsp), %6
+        movl    $16, 4(%rsp)
+        movl    $3, 8(%rsp)
+        movl    4(%rsp), %6
         movl    %6, %7
         sarl    $8, [%7 -> %ecx]
-        movl    %7, 12(%rsp)
-        movl    12(%rsp), %8
-        movl    %8, 8(%rsp)
-        movl    (%rsp), %9
-        movl    4(%rsp), %10
+        movl    %7, 16(%rsp)
+        movl    16(%rsp), %8
+        movl    %8, 12(%rsp)
+        movl    4(%rsp), %9
+        movl    8(%rsp), %10
         movl    %9, %11
         sarl    %10, [%11 -> %ecx]
-        movl    %11, 16(%rsp)
-        movl    16(%rsp), %12
-        movl    %12, 20(%rsp)
+        movl    %11, 20(%rsp)
+        movl    20(%rsp), %12
+        movl    %12, (%rsp)
 .Lrshift_13:
-        movl    20(%rsp), %14
+        movl    (%rsp), %14
         movl    %14, %eax
         ret

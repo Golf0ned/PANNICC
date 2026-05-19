@@ -10,14 +10,14 @@ lost_copy_problem:
         movl    (%rsp), %r11d
         movl    %r11d, %r10d
         subl    $10, %r10d
-        movl    %r10d, 8(%rsp)
-        movl    8(%rsp), %r10d
+        movl    %r10d, 12(%rsp)
+        movl    12(%rsp), %r10d
         cmpl    $0, %r10d
         jne     .Llost_copy_problem_15
 .Llost_copy_problem_10:
 .Llost_copy_problem_11:
         movl    (%rsp), %r10d
-        movl    %r10d, 4(%rsp)
+        movl    %r10d, 8(%rsp)
         movl    (%rsp), %r10d
         movl    %r10d, %r11d
         addl    $1, %r11d
@@ -25,14 +25,14 @@ lost_copy_problem:
         jmp     .Llost_copy_problem_6
 .Llost_copy_problem_15:
 .Llost_copy_problem_16:
-        movl    4(%rsp), %r10d
+        movl    8(%rsp), %r10d
         movl    %r10d, %r11d
         addl    $3, %r11d
-        movl    %r11d, 12(%rsp)
-        movl    12(%rsp), %r10d
-        movl    %r10d, 16(%rsp)
-.Llost_copy_problem_20:
+        movl    %r11d, 16(%rsp)
         movl    16(%rsp), %r10d
+        movl    %r10d, 4(%rsp)
+.Llost_copy_problem_20:
+        movl    4(%rsp), %r10d
         movl    %r10d, %eax
         addq    $20, %rsp
         ret
@@ -53,10 +53,10 @@ swap_problem:
 .Lswap_problem_8:
 .Lswap_problem_9:
         movl    4(%rsp), %r10d
-        movl    %r10d, 12(%rsp)
+        movl    %r10d, 16(%rsp)
         movl    8(%rsp), %r10d
         movl    %r10d, 4(%rsp)
-        movl    12(%rsp), %r10d
+        movl    16(%rsp), %r10d
         movl    %r10d, 8(%rsp)
         jmp     .Lswap_problem_7
 .Lswap_problem_13:
@@ -66,9 +66,9 @@ swap_problem:
         leal    (%r10d,%edi), %r11d
         movl    %r11d, 16(%rsp)
         movl    16(%rsp), %r10d
-        movl    %r10d, 16(%rsp)
+        movl    %r10d, 12(%rsp)
 .Lswap_problem_19:
-        movl    16(%rsp), %r10d
+        movl    12(%rsp), %r10d
         movl    %r10d, %eax
         addq    $20, %rsp
         ret

@@ -11,42 +11,42 @@ entry:
   %8 = alloca i32
   %9 = alloca i32
   %10 = alloca i32
-  store i32 1, ptr %0
-  %11 = load ptr %0
+  store i32 1, ptr %1
+  %11 = load ptr %1
   %12 = add i32 %11, i32 13
-  store i32 %12, ptr %2
-  %13 = load ptr %2
-  store i32 %13, ptr %1
-  %14 = load ptr %0
-  %15 = load ptr %0
+  store i32 %12, ptr %3
+  %13 = load ptr %3
+  store i32 %13, ptr %2
+  %14 = load ptr %1
+  %15 = load ptr %1
   %16 = add i32 %14, i32 %15
-  store i32 %16, ptr %4
-  %17 = load ptr %4
-  store i32 %17, ptr %3
-  %18 = load ptr %1
-  %19 = load ptr %3
+  store i32 %16, ptr %5
+  %17 = load ptr %5
+  store i32 %17, ptr %4
+  %18 = load ptr %2
+  %19 = load ptr %4
   %20 = mul i32 %18, i32 %19
-  store i32 %20, ptr %6
-  %21 = load ptr %6
-  store i32 %21, ptr %5
-  %22 = load ptr %5
-  %23 = load ptr %5
+  store i32 %20, ptr %7
+  %21 = load ptr %7
+  store i32 %21, ptr %6
+  %22 = load ptr %6
+  %23 = load ptr %6
   %24 = add i32 %22, i32 %23
-  store i32 %24, ptr %7
-  %25 = load ptr %7
-  store i32 %25, ptr %5
-  %26 = load ptr %5
-  %27 = load ptr %0
+  store i32 %24, ptr %8
+  %25 = load ptr %8
+  store i32 %25, ptr %6
+  %26 = load ptr %6
+  %27 = load ptr %1
   %28 = sub i32 %26, i32 %27
-  store i32 %28, ptr %9
-  %29 = load ptr %9
-  store i32 %29, ptr %8
-  %30 = load ptr %8
-  store i32 %30, ptr %10
+  store i32 %28, ptr %10
+  %29 = load ptr %10
+  store i32 %29, ptr %9
+  %30 = load ptr %9
+  store i32 %30, ptr %0
   br label 31
 
 31:
-  %32 = load ptr %10
+  %32 = load ptr %0
   ret i32 %32
 }
 
@@ -56,15 +56,15 @@ entry:
   %1 = alloca i32
   %2 = alloca i32
   %3 = add i32 2147483647, i32 1
-  store i32 %3, ptr %1
-  %4 = load ptr %1
-  store i32 %4, ptr %0
-  %5 = load ptr %0
-  store i32 %5, ptr %2
+  store i32 %3, ptr %2
+  %4 = load ptr %2
+  store i32 %4, ptr %1
+  %5 = load ptr %1
+  store i32 %5, ptr %0
   br label 6
 
 6:
-  %7 = load ptr %2
+  %7 = load ptr %0
   ret i32 %7
 }
 
@@ -74,14 +74,14 @@ entry:
   %1 = alloca i32
   %2 = alloca i32
   %3 = sub i32 -2147483648, i32 1
-  store i32 %3, ptr %1
-  %4 = load ptr %1
-  store i32 %4, ptr %0
-  %5 = load ptr %0
-  store i32 %5, ptr %2
+  store i32 %3, ptr %2
+  %4 = load ptr %2
+  store i32 %4, ptr %1
+  %5 = load ptr %1
+  store i32 %5, ptr %0
   br label 6
 
 6:
-  %7 = load ptr %2
+  %7 = load ptr %0
   ret i32 %7
 }
