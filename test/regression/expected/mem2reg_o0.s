@@ -34,8 +34,8 @@ mem2reg_branching:
         subq    $20, %rsp
         movl    %edi, %r10d
 .Lmem2reg_branching_entry:
-        movl    %r10d, 16(%rsp)
-        movl    16(%rsp), %r11d
+        movl    %r10d, 4(%rsp)
+        movl    4(%rsp), %r11d
         movl    %r11d, %r10d
         subl    $42, %r10d
         movl    %r10d, 8(%rsp)
@@ -44,22 +44,22 @@ mem2reg_branching:
         jne     .Lmem2reg_branching_11
 .Lmem2reg_branching_9:
 .Lmem2reg_branching_10:
-        movl    $1, 4(%rsp)
+        movl    $1, 8(%rsp)
 .Lmem2reg_branching_16:
-        movl    4(%rsp), %r10d
-        movl    %r10d, 12(%rsp)
+        movl    8(%rsp), %r10d
+        movl    %r10d, 16(%rsp)
 .Lmem2reg_branching_18:
-        movl    12(%rsp), %r10d
+        movl    16(%rsp), %r10d
         movl    %r10d, %eax
         ret
 .Lmem2reg_branching_11:
 .Lmem2reg_branching_12:
-        movl    16(%rsp), %r10d
+        movl    4(%rsp), %r10d
         movl    %r10d, %r11d
         addl    $2, %r11d
-        movl    %r11d, 8(%rsp)
-        movl    8(%rsp), %r10d
-        movl    %r10d, 4(%rsp)
+        movl    %r11d, 12(%rsp)
+        movl    12(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
         addq    $20, %rsp
         jmp     .Lmem2reg_branching_16
 .Lmem2reg_branching_end:

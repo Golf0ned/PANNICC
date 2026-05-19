@@ -1,15 +1,15 @@
 square:  # 1 params, 12 stack bytes
         movl    %edi, %0
 .Lsquare_entry:
-        movl    %0, 8(%rsp)
-        movl    8(%rsp), %4
-        movl    8(%rsp), %5
+        movl    %0, (%rsp)
+        movl    (%rsp), %4
+        movl    (%rsp), %5
         movl    %4, %6
         imull   %5, %6
-        movl    %6, (%rsp)
-        movl    (%rsp), %7
-        movl    %7, 4(%rsp)
+        movl    %6, 4(%rsp)
+        movl    4(%rsp), %7
+        movl    %7, 8(%rsp)
 .Lsquare_8:
-        movl    4(%rsp), %9
+        movl    8(%rsp), %9
         movl    %9, %eax
         ret

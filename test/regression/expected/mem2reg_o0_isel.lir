@@ -22,8 +22,8 @@ mem2reg_basic:  # 0 params, 12 stack bytes
 mem2reg_branching:  # 1 params, 20 stack bytes
         movl    %edi, %0
 .Lmem2reg_branching_entry:
-        movl    %0, 16(%rsp)
-        movl    16(%rsp), %6
+        movl    %0, 4(%rsp)
+        movl    4(%rsp), %6
         movl    %6, %7
         subl    $42, %7
         movl    %7, 8(%rsp)
@@ -32,22 +32,22 @@ mem2reg_branching:  # 1 params, 20 stack bytes
         jne     .Lmem2reg_branching_11
 .Lmem2reg_branching_9:
 .Lmem2reg_branching_10:
-        movl    $1, 4(%rsp)
+        movl    $1, 8(%rsp)
 .Lmem2reg_branching_16:
-        movl    4(%rsp), %17
-        movl    %17, 12(%rsp)
+        movl    8(%rsp), %17
+        movl    %17, 16(%rsp)
 .Lmem2reg_branching_18:
-        movl    12(%rsp), %19
+        movl    16(%rsp), %19
         movl    %19, %eax
         ret
 .Lmem2reg_branching_11:
 .Lmem2reg_branching_12:
-        movl    16(%rsp), %13
+        movl    4(%rsp), %13
         movl    %13, %14
         addl    $2, %14
-        movl    %14, 8(%rsp)
-        movl    8(%rsp), %15
-        movl    %15, 4(%rsp)
+        movl    %14, 12(%rsp)
+        movl    12(%rsp), %15
+        movl    %15, 8(%rsp)
         jmp     .Lmem2reg_branching_16
 
 mem2reg_while:  # 0 params, 24 stack bytes

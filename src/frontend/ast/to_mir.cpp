@@ -92,15 +92,13 @@ ToMIRVisitor::makeParams(std::vector<ast::Parameter> &params) {
         auto type = param_type->toMir();
         auto param = std::make_unique<mir::Value>(type);
 
-        // TODO: replace with makeAlloca
-        auto alloca = std::make_unique<mir::InstructionAlloca>(type);
+        auto alloca = makeAlloca(type);
         auto store =
-            std::make_unique<mir::InstructionStore>(param.get(), alloca.get());
+            std::make_unique<mir::InstructionStore>(param.get(), alloca);
 
-        scope_bindings.back()[param_name->getValue()] = alloca.get();
+        scope_bindings.back()[param_name->getValue()] = alloca;
         scope_binding_types.back()[param_name->getValue()] = param_type.get();
 
-        instructions.push_back(std::move(alloca));
         instructions.push_back(std::move(store));
 
         res.push_back(std::move(param));
@@ -248,6 +246,7 @@ void ToMIRVisitor::visit(ast::FunctionPrototype *f) {
     scope_bindings.pop_back();
     scope_binding_types.pop_back();
     instructions.clear();
+    allocas.clear();
 }
 
 void ToMIRVisitor::visit(ast::Instruction *i) {}
