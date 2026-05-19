@@ -237,6 +237,7 @@ void ToMIRVisitor::visit(ast::FunctionPrototype *f) {
 
     scope_bindings.pop_back();
     scope_binding_types.pop_back();
+    instructions.clear();
 }
 
 void ToMIRVisitor::visit(ast::Instruction *i) {}
