@@ -6,5 +6,5 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+enable_testing()
 add_subdirectory(regression)
-# add_subdirectory(unit)
