@@ -1,10 +1,12 @@
 #pragma once
 
-#include <cstdint>
-
 #include "middleend/mir/type.h"
 
+#include <cstdint>
+#include <unordered_map>
+
 namespace middleend::mir {
+
 class Instruction;
 
 // TODO: function params
@@ -28,4 +30,5 @@ public:
 private:
     int64_t value;
 };
+
 } // namespace middleend::mir

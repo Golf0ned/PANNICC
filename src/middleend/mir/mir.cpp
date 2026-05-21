@@ -1,12 +1,13 @@
-#include <map>
-
+#include "middleend/mir/mir.h"
 #include "middleend/analysis/number_ir.h"
 #include "middleend/mir/instruction.h"
-#include "middleend/mir/mir.h"
 #include "middleend/mir/type.h"
 #include "middleend/mir/value.h"
 
+#include <map>
+
 namespace middleend::mir {
+
 BasicBlockEdges::BasicBlockEdges() : size(0) {}
 
 const std::vector<BasicBlock *> BasicBlockEdges::getEdges() {
@@ -46,7 +47,7 @@ std::list<std::unique_ptr<Instruction>> &BasicBlock::getInstructions() {
     return body;
 }
 
-std::unique_ptr<Terminator> &BasicBlock::getTerminator() { return terminator; }
+Terminator *BasicBlock::getTerminator() { return terminator.get(); }
 
 BasicBlockEdges &BasicBlock::getPredecessors() { return predecessors; }
 
@@ -160,7 +161,7 @@ Literal *Program::getLiteral(Type type, uint64_t value) {
         return typed_map.at(value).get();
 
     auto literal = std::make_unique<Literal>(type, value);
-    auto literal_ptr = literal.get();
+    auto *literal_ptr = literal.get();
 
     typed_map[value] = std::move(literal);
     return literal_ptr;
@@ -268,7 +269,7 @@ void ToStringVisitor::visit(InstructionParallelCopy *i) {
         return nir->getNumber(a) < nir->getNumber(b);
     };
 
-    auto pairs = i->getCopies();
+    auto &pairs = i->getCopies();
     std::map<Value *, Value *, decltype(comp)> ordered(pairs.begin(),
                                                        pairs.end(), comp);
 
@@ -299,4 +300,5 @@ void ToStringVisitor::visit(TerminatorCondBranch *t) {
     std::string bb_false = std::to_string(nir->getNumber(t->getFSuccessor()));
     result = "br " + cond + ", label " + bb_true + ", label " + bb_false;
 }
+
 } // namespace middleend::mir

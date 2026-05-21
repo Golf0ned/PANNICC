@@ -1,18 +1,19 @@
 #pragma once
 
+#include "middleend/mir/instruction.h"
+#include "middleend/mir/type.h"
+
 #include <cstdint>
 #include <list>
 #include <memory>
 #include <unordered_set>
 
-#include "middleend/mir/instruction.h"
-#include "middleend/mir/type.h"
-
 namespace middleend {
-class NumberIR;
-}
 
-namespace middleend::mir {
+class NumberIR;
+
+namespace mir {
+
 using LiteralMap =
     std::unordered_map<Type,
                        std::unordered_map<uint64_t, std::unique_ptr<Literal>>>;
@@ -36,7 +37,7 @@ public:
     BasicBlock(std::list<std::unique_ptr<Instruction>> body,
                std::unique_ptr<Terminator> terminator);
     std::list<std::unique_ptr<Instruction>> &getInstructions();
-    std::unique_ptr<Terminator> &getTerminator();
+    Terminator *getTerminator();
     BasicBlockEdges &getPredecessors();
     BasicBlockEdges &getSuccessors();
     std::string toString(NumberIR *nir);
@@ -130,4 +131,7 @@ private:
     std::string result;
     NumberIR *nir;
 };
-} // namespace middleend::mir
+
+} // namespace mir
+
+} // namespace middleend

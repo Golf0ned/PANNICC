@@ -1,12 +1,13 @@
+#include "middleend/utils/traversal.h"
+#include "middleend/analysis/number_ir.h"
+#include "middleend/mir/mir.h"
+
 #include <algorithm>
 #include <deque>
 #include <ranges>
 
-#include "middleend/analysis/number_ir.h"
-#include "middleend/mir/mir.h"
-#include "middleend/utils/traversal.h"
-
 namespace middleend {
+
 std::list<mir::BasicBlock *> traversePreorder(mir::FunctionDefinition *f) {
     // TODO: implement
     std::list<mir::BasicBlock *> traversal_order;
@@ -16,7 +17,7 @@ std::list<mir::BasicBlock *> traversePreorder(mir::FunctionDefinition *f) {
 void recursePostorder(mir::BasicBlock *bb, std::list<mir::BasicBlock *> &to,
                       TraversalOrderMap &tn, uint64_t &counter) {
     tn[bb]; // Prevent loops
-    for (auto succ : bb->getSuccessors().getUniqueEdges())
+    for (auto *succ : bb->getSuccessors().getUniqueEdges())
         if (!tn.contains(succ))
             recursePostorder(succ, to, tn, counter);
     tn[bb] = counter++;
@@ -51,12 +52,12 @@ std::list<mir::BasicBlock *> traverseTraces(mir::FunctionDefinition *f) {
 
     std::list<mir::BasicBlock *> traversal_order;
 
-    auto entry = f->getEntryBlock();
+    auto *entry = f->getEntryBlock();
     std::unordered_set<mir::BasicBlock *> visited = {};
     std::deque<mir::BasicBlock *> worklist = {entry};
 
     while (!worklist.empty()) {
-        auto cur = worklist.front();
+        auto *cur = worklist.front();
         worklist.pop_front();
 
         if (visited.contains(cur))
@@ -75,7 +76,7 @@ std::list<mir::BasicBlock *> traverseTraces(mir::FunctionDefinition *f) {
             };
             std::ranges::sort(successors, cmp);
             std::ranges::reverse_view reverse_edges{successors};
-            for (auto succ : reverse_edges) {
+            for (auto &succ : reverse_edges) {
 
                 if (visited.contains(succ))
                     continue;

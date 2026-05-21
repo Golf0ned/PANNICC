@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "middleend/pass_manager.h"
 #include "middleend/transform/insert_parallel_copies.h"
 #include "middleend/transform/inst_combine.h"
@@ -7,7 +5,10 @@
 #include "middleend/transform/simplify_cfg.h"
 #include "middleend/transform/split_critical.h"
 
+#include <stdexcept>
+
 namespace middleend {
+
 void PassManager::addPass(std::unique_ptr<TransformPass> p) {
     p->registerAnalyses(analyses);
     passes.push_back(std::move(p));
@@ -41,10 +42,11 @@ std::unique_ptr<PassManager> initializeO0() {
 }
 
 std::unique_ptr<PassManager> initializeO1() {
-    auto pm = std::make_unique<PassManager>();
+    auto pm = initializeO0();
     pm->addPass(std::make_unique<middleend::Mem2Reg>());
     pm->addPass(std::make_unique<middleend::InstCombine>());
     pm->addPass(std::make_unique<middleend::SimplifyCFG>());
     return pm;
 }
+
 } // namespace middleend
