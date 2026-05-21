@@ -4,6 +4,7 @@
 #include "middleend/pass.h"
 
 namespace middleend {
+
 class PassManager {
 public:
     void addPass(std::unique_ptr<TransformPass> p);
@@ -17,4 +18,5 @@ private:
 
 std::unique_ptr<PassManager> initializeO0();
 std::unique_ptr<PassManager> initializeO1();
+
 } // namespace middleend

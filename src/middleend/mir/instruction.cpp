@@ -3,6 +3,7 @@
 #include "middleend/mir/value.h"
 
 namespace middleend::mir {
+
 void Instruction::addUse(Value *def) { def->getUses()[this]++; }
 
 void Instruction::delUse(Value *def) {
@@ -40,8 +41,8 @@ void InstructionBinaryOp::accept(InstructionVisitor *v) { v->visit(this); }
 
 InstructionCall::InstructionCall(Type type, Function *callee,
                                  std::vector<Value *> arguments)
-    : Value(type), callee(callee), arguments(arguments) {
-    for (auto val : arguments)
+    : Value(type), callee(callee), args(arguments) {
+    for (auto *val : arguments)
         addUse(val);
 }
 
@@ -49,14 +50,14 @@ Function *InstructionCall::getCallee() { return callee; }
 
 void InstructionCall::setCallee(Function *new_val) { callee = new_val; }
 
-std::vector<Value *> &InstructionCall::getArguments() { return arguments; }
+std::vector<Value *> &InstructionCall::getArguments() { return args; }
 
 void InstructionCall::accept(InstructionVisitor *v) { v->visit(this); }
 
 InstructionAlloca::InstructionAlloca(Type allocType)
-    : Value(Type::PTR), allocType(allocType) {}
+    : Value(Type::PTR), alloc_type(allocType) {}
 
-Type InstructionAlloca::getAllocType() { return allocType; }
+Type InstructionAlloca::getAllocType() { return alloc_type; }
 
 void InstructionAlloca::accept(InstructionVisitor *v) { v->visit(this); }
 
@@ -76,19 +77,19 @@ void InstructionLoad::setPtr(Value *new_val) {
 void InstructionLoad::accept(InstructionVisitor *v) { v->visit(this); }
 
 InstructionStore::InstructionStore(Value *value, Value *ptr)
-    : value(value), ptr(ptr) {
+    : val(value), ptr(ptr) {
     addUse(value);
     addUse(ptr);
 }
 
-Value *InstructionStore::getValue() { return value; }
+Value *InstructionStore::getValue() { return val; }
 
 Value *InstructionStore::getPtr() { return ptr; }
 
 void InstructionStore::setValue(Value *new_val) {
-    delUse(value);
+    delUse(val);
     addUse(new_val);
-    value = new_val;
+    val = new_val;
 }
 
 void InstructionStore::setPtr(Value *new_val) {
@@ -131,16 +132,14 @@ void InstructionParallelCopy::setCopy(InstructionPhi *phi_val,
 
 void InstructionParallelCopy::accept(InstructionVisitor *v) { v->visit(this); }
 
-TerminatorReturn::TerminatorReturn(Value *value) : value(value) {
-    addUse(value);
-}
+TerminatorReturn::TerminatorReturn(Value *value) : val(value) { addUse(value); }
 
-Value *TerminatorReturn::getValue() { return value; }
+Value *TerminatorReturn::getValue() { return val; }
 
 void TerminatorReturn::setValue(Value *new_val) {
-    delUse(value);
+    delUse(val);
     addUse(new_val);
-    value = new_val;
+    val = new_val;
 }
 
 void TerminatorReturn::accept(InstructionVisitor *v) { v->visit(this); }
@@ -150,16 +149,15 @@ TerminatorBranch::TerminatorBranch(BasicBlock *successor)
 
 BasicBlock *TerminatorBranch::getSuccessor() { return successor; }
 
-void TerminatorBranch::setSuccessor(BasicBlock *successor) {
-    this->successor = successor;
+void TerminatorBranch::setSuccessor(BasicBlock *new_succ) {
+    successor = new_succ;
 }
 
 void TerminatorBranch::accept(InstructionVisitor *v) { v->visit(this); }
 
 TerminatorCondBranch::TerminatorCondBranch(Value *cond, BasicBlock *t_successor,
                                            BasicBlock *f_successor)
-    : t_successor(t_successor), f_successor(f_successor) {
-    this->cond = cond;
+    : t_successor(t_successor), f_successor(f_successor), cond(cond) {
     addUse(cond);
 }
 
@@ -175,13 +173,14 @@ void TerminatorCondBranch::setCond(Value *new_val) {
     this->cond = new_val;
 }
 
-void TerminatorCondBranch::setTSuccessor(BasicBlock *t_successor) {
-    this->t_successor = t_successor;
+void TerminatorCondBranch::setTSuccessor(BasicBlock *new_succ) {
+    t_successor = new_succ;
 }
 
-void TerminatorCondBranch::setFSuccessor(BasicBlock *f_successor) {
-    this->f_successor = f_successor;
+void TerminatorCondBranch::setFSuccessor(BasicBlock *new_succ) {
+    f_successor = new_succ;
 }
 
 void TerminatorCondBranch::accept(InstructionVisitor *v) { v->visit(this); }
+
 } // namespace middleend::mir

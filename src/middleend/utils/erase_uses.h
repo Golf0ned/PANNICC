@@ -3,9 +3,7 @@
 #include "middleend/mir/instruction.h"
 
 namespace middleend {
-//
-// Erase visited instruction from the uses lists of its uses
-//
+
 class EraseUsesVisitor : public mir::InstructionVisitor {
 public:
     EraseUsesVisitor() = default;
@@ -22,4 +20,5 @@ public:
     void visit(mir::TerminatorBranch *t) override;
     void visit(mir::TerminatorCondBranch *t) override;
 };
+
 } // namespace middleend

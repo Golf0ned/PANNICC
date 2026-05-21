@@ -3,9 +3,7 @@
 #include "middleend/mir/instruction.h"
 
 namespace middleend {
-//
-// Replace all uses of old_value with new_value in visited instruction
-//
+
 class ReplaceUsesVisitor : public mir::InstructionVisitor {
 public:
     ReplaceUsesVisitor(mir::Value *old_value, mir::Value *new_value);
@@ -26,4 +24,5 @@ private:
     mir::Value *old_value;
     mir::Value *new_value;
 };
+
 } // namespace middleend

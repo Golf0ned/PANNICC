@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
-
 #include "middleend/mir/operator.h"
 #include "middleend/mir/value.h"
+
+#include <vector>
 
 namespace middleend::mir {
 
@@ -37,8 +37,7 @@ private:
 
 class InstructionCall : public Instruction, public Value {
 public:
-    InstructionCall(Type type, Function *callee,
-                    std::vector<Value *> arguments);
+    InstructionCall(Type type, Function *callee, std::vector<Value *> args);
     Function *getCallee();
     void setCallee(Function *new_val);
     std::vector<Value *> &getArguments();
@@ -46,17 +45,17 @@ public:
 
 private:
     Function *callee;
-    std::vector<Value *> arguments;
+    std::vector<Value *> args;
 };
 
 class InstructionAlloca : public Instruction, public Value {
 public:
-    InstructionAlloca(Type allocType);
+    InstructionAlloca(Type alloc_type);
     Type getAllocType();
     void accept(InstructionVisitor *v) override;
 
 private:
-    Type allocType;
+    Type alloc_type;
 };
 
 class InstructionLoad : public Instruction, public Value {
@@ -72,7 +71,7 @@ private:
 
 class InstructionStore : public Instruction {
 public:
-    InstructionStore(Value *value, Value *ptr);
+    InstructionStore(Value *val, Value *ptr);
     Value *getValue();
     Value *getPtr();
     void setValue(Value *new_val);
@@ -80,7 +79,7 @@ public:
     void accept(InstructionVisitor *v) override;
 
 private:
-    Value *value;
+    Value *val;
     Value *ptr;
 };
 
@@ -113,20 +112,20 @@ public:
 
 class TerminatorReturn : public Terminator {
 public:
-    TerminatorReturn(Value *value);
+    TerminatorReturn(Value *val);
     Value *getValue();
     void setValue(Value *new_val);
     void accept(InstructionVisitor *v) override;
 
 private:
-    Value *value;
+    Value *val;
 };
 
 class TerminatorBranch : public Terminator {
 public:
     TerminatorBranch(BasicBlock *successor);
     BasicBlock *getSuccessor();
-    void setSuccessor(BasicBlock *successor);
+    void setSuccessor(BasicBlock *new_succ);
     void accept(InstructionVisitor *v) override;
 
 private:
@@ -141,8 +140,8 @@ public:
     BasicBlock *getTSuccessor();
     BasicBlock *getFSuccessor();
     void setCond(Value *new_val);
-    void setTSuccessor(BasicBlock *t_successor);
-    void setFSuccessor(BasicBlock *f_successor);
+    void setTSuccessor(BasicBlock *new_succ);
+    void setFSuccessor(BasicBlock *new_succ);
     void accept(InstructionVisitor *v) override;
 
 private:
@@ -165,4 +164,5 @@ public:
     virtual void visit(TerminatorBranch *t) = 0;
     virtual void visit(TerminatorCondBranch *t) = 0;
 };
+
 } // namespace middleend::mir

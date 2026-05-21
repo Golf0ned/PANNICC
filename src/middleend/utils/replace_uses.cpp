@@ -1,8 +1,9 @@
-#include <utility>
-
 #include "middleend/utils/replace_uses.h"
 
+#include <utility>
+
 namespace middleend {
+
 ReplaceUsesVisitor::ReplaceUsesVisitor(mir::Value *old_value,
                                        mir::Value *new_value)
     : old_value(old_value), new_value(new_value) {}
@@ -17,7 +18,7 @@ void ReplaceUsesVisitor::visit(mir::InstructionBinaryOp *i) {
 void ReplaceUsesVisitor::visit(mir::InstructionCall *i) {
     auto &args = i->getArguments();
     for (auto iter = args.begin(); iter != args.end(); iter++) {
-        auto val = *iter;
+        auto *val = *iter;
         if (val == old_value) {
             i->delUse(val);
             i->addUse(new_value);
@@ -49,7 +50,7 @@ void ReplaceUsesVisitor::visit(mir::InstructionPhi *i) {
 }
 
 void ReplaceUsesVisitor::visit(mir::InstructionParallelCopy *i) {
-    for (auto [phi_val, copy_val] : i->getCopies()) {
+    for (auto &[phi_val, copy_val] : i->getCopies()) {
         if (phi_val == old_value) {
             // TODO: do this in a way that doesnt invalidate the iterator
             std::unreachable();
@@ -71,4 +72,5 @@ void ReplaceUsesVisitor::visit(mir::TerminatorCondBranch *t) {
     if (t->getCond() == old_value)
         t->setCond(new_value);
 }
+
 } // namespace middleend

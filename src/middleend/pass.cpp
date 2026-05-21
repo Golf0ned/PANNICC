@@ -1,6 +1,7 @@
 #include "middleend/pass.h"
 
 namespace middleend {
+
 void AnalysisPass::invalidate() { valid = false; }
 
 void AnalysisPass::rerunIfInvalid(mir::Program &p) {
@@ -15,4 +16,5 @@ void TransformPass::registerAnalyses(
 const std::vector<AnalysisPass *> &TransformPass::getAnalyses() {
     return required_analyses;
 }
+
 } // namespace middleend

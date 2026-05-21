@@ -3,6 +3,7 @@
 #include "middleend/mir/mir.h"
 
 namespace middleend {
+
 class Pass {
 public:
     virtual void run(mir::Program &p) = 0;
@@ -31,4 +32,5 @@ public:
 protected:
     std::vector<AnalysisPass *> required_analyses;
 };
+
 } // namespace middleend
