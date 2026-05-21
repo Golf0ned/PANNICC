@@ -1,13 +1,14 @@
 #include "middleend/analysis/number_ir.h"
 
 namespace middleend {
+
 void NumberIR::run(mir::Program &p) {
     for (auto &f : p.getFunctions())
         run(f.get());
 }
 
 void NumberIR::run(mir::Function *f) {
-    auto definition = dynamic_cast<mir::FunctionDefinition *>(f);
+    auto *definition = dynamic_cast<mir::FunctionDefinition *>(f);
     if (!definition)
         return;
 
@@ -16,17 +17,17 @@ void NumberIR::run(mir::Function *f) {
     for (auto &param : definition->getParameters())
         value_ids[param.get()] = counter++;
 
-    auto entry = definition->getEntryBlock();
+    auto *entry = definition->getEntryBlock();
     for (auto &bb : definition->getBasicBlocks()) {
         basic_block_ids[bb.get()] = bb.get() == entry ? -1 : counter++;
 
         for (auto &i : bb->getInstructions()) {
-            auto v = dynamic_cast<mir::Value *>(i.get());
+            auto *v = dynamic_cast<mir::Value *>(i.get());
             if (v)
                 value_ids[v] = counter++;
         }
 
-        auto t = dynamic_cast<mir::Value *>(bb->getTerminator().get());
+        auto *t = dynamic_cast<mir::Value *>(bb->getTerminator());
         if (t)
             value_ids[t] = counter++;
     }
@@ -43,4 +44,5 @@ uint64_t NumberIR::getNumber(mir::Value *i) {
     // that's always going to be mapped to a basic block so who cares
     return -1;
 }
+
 } // namespace middleend
