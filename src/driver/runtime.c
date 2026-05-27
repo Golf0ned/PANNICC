@@ -1,7 +1,7 @@
+#include "runtime.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "runtime.h"
 
 int *alloc(int size) { return (int *)malloc(size); }
 

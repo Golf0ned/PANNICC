@@ -32,7 +32,7 @@ void printHelp(const std::string &program_name) {
     PRINT("  --help                 Show this help message");
     PRINT("  -o <file>              Output file");
     PRINT("");
-    PRINT("  -E, --preprocess       Only run preprocessor (WIP)");
+    PRINT("  -E, --preprocess       Only run preprocessor");
     PRINT("");
     PRINT("  --emit-ast             Output AST to file");
     PRINT("");
@@ -45,8 +45,8 @@ void printHelp(const std::string &program_name) {
     PRINT("  --emit-lir-regalloc    Output LIR to file, after register "
           "allocation");
     PRINT("");
-    PRINT("  -S, --assemble         Output assembly");
-    PRINT("  -c, --compile          Output assembly (WIP)");
+    PRINT("  -c, --compile          Stop before assembling");
+    PRINT("  -S, --assemble         Stop before linking");
 }
 
 void output(const std::string &output, std::filesystem::path output_path) {
@@ -159,7 +159,6 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // TODO: preprocessor
     std::string preprocessed = frontend::preprocess(input_file);
     if (output_level == OutputLevel::PREPROCESS) {
         output(preprocessed, output_file);
