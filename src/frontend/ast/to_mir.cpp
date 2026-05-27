@@ -133,7 +133,7 @@ void ToMIRVisitor::makeReturnBB(mir::Type return_type) {
 
 void ToMIRVisitor::resolveBBEdges() {
     for (auto &bb : basic_blocks) {
-        auto *t = bb->getTerminator().get();
+        auto *t = bb->getTerminator();
 
         auto br = dynamic_cast<mir::TerminatorBranch *>(t);
         if (br) {
