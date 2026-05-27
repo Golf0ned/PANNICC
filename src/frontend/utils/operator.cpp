@@ -1,5 +1,6 @@
 #include "frontend/utils/operator.h"
 
+#include <unordered_map>
 #include <utility>
 
 namespace frontend {
