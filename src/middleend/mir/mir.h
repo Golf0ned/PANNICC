@@ -40,6 +40,7 @@ public:
     Terminator *getTerminator();
     BasicBlockEdges &getPredecessors();
     BasicBlockEdges &getSuccessors();
+    void setTerminator(std::unique_ptr<Terminator> new_terminator);
     std::string toString(NumberIR *nir);
 
 private:
