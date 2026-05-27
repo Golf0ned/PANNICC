@@ -1,10 +1,11 @@
-#include <ranges>
-
 #include "middleend/transform/inst_combine.h"
 #include "middleend/utils/erase_uses.h"
 #include "middleend/utils/replace_uses.h"
 
+#include <ranges>
+
 namespace middleend {
+
 void InstCombine::run(mir::Program &p) {
     EraseUsesVisitor euv;
     for (auto &f : p.getFunctions()) {
@@ -96,11 +97,11 @@ void InstCombine::run(mir::Program &p) {
                         return true;
                     };
 
-                    // clang-format off
-                        if (false
-                            || tryConstantFold()
-                        ) {
+                    if (false
+                        // clang-format off
+                        || tryConstantFold()
                         // clang-format on
+                    ) {
                         changed = true;
                         continue;
                     }
@@ -111,4 +112,5 @@ void InstCombine::run(mir::Program &p) {
         }
     }
 }
+
 } // namespace middleend
