@@ -142,6 +142,10 @@ void TerminatorReturn::setValue(Value *new_val) {
     val = new_val;
 }
 
+std::unique_ptr<Terminator> TerminatorReturn::clone() {
+    return std::make_unique<TerminatorReturn>(val);
+}
+
 void TerminatorReturn::accept(InstructionVisitor *v) { v->visit(this); }
 
 TerminatorBranch::TerminatorBranch(BasicBlock *successor)
@@ -151,6 +155,10 @@ BasicBlock *TerminatorBranch::getSuccessor() { return successor; }
 
 void TerminatorBranch::setSuccessor(BasicBlock *new_succ) {
     successor = new_succ;
+}
+
+std::unique_ptr<Terminator> TerminatorBranch::clone() {
+    return std::make_unique<TerminatorBranch>(successor);
 }
 
 void TerminatorBranch::accept(InstructionVisitor *v) { v->visit(this); }
@@ -179,6 +187,11 @@ void TerminatorCondBranch::setTSuccessor(BasicBlock *new_succ) {
 
 void TerminatorCondBranch::setFSuccessor(BasicBlock *new_succ) {
     f_successor = new_succ;
+}
+
+std::unique_ptr<Terminator> TerminatorCondBranch::clone() {
+    return std::make_unique<TerminatorCondBranch>(cond, t_successor,
+                                                  f_successor);
 }
 
 void TerminatorCondBranch::accept(InstructionVisitor *v) { v->visit(this); }

@@ -3,6 +3,7 @@
 #include "middleend/mir/operator.h"
 #include "middleend/mir/value.h"
 
+#include <memory>
 #include <vector>
 
 namespace middleend::mir {
@@ -107,6 +108,7 @@ private:
 class Terminator : public Instruction {
 public:
     virtual void accept(InstructionVisitor *v) = 0;
+    virtual std::unique_ptr<Terminator> clone() = 0;
     virtual ~Terminator() = default;
 };
 
@@ -115,6 +117,7 @@ public:
     TerminatorReturn(Value *val);
     Value *getValue();
     void setValue(Value *new_val);
+    std::unique_ptr<Terminator> clone() override;
     void accept(InstructionVisitor *v) override;
 
 private:
@@ -126,6 +129,7 @@ public:
     TerminatorBranch(BasicBlock *successor);
     BasicBlock *getSuccessor();
     void setSuccessor(BasicBlock *new_succ);
+    std::unique_ptr<Terminator> clone() override;
     void accept(InstructionVisitor *v) override;
 
 private:
@@ -142,6 +146,7 @@ public:
     void setCond(Value *new_val);
     void setTSuccessor(BasicBlock *new_succ);
     void setFSuccessor(BasicBlock *new_succ);
+    std::unique_ptr<Terminator> clone() override;
     void accept(InstructionVisitor *v) override;
 
 private:

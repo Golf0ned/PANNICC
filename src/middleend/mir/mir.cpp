@@ -53,6 +53,10 @@ BasicBlockEdges &BasicBlock::getPredecessors() { return predecessors; }
 
 BasicBlockEdges &BasicBlock::getSuccessors() { return successors; }
 
+void BasicBlock::setTerminator(std::unique_ptr<Terminator> new_terminator) {
+    terminator = std::move(new_terminator);
+}
+
 std::string BasicBlock::toString(NumberIR *nir) {
     uint64_t block_id = nir->getNumber(this);
     std::string name = block_id == -1 ? "entry" : std::to_string(block_id);
