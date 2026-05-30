@@ -2,6 +2,7 @@
 #include "backend/passes/legalize.h"
 
 namespace backend {
+
 void CodeGenVisitor::generateFilePreamble() { result += "    .text"; }
 
 void CodeGenVisitor::generateFilePostamble() {
@@ -49,4 +50,5 @@ std::string generateCode(lir::Program &lir) {
 
     return cgv.getResult();
 }
+
 } // namespace backend

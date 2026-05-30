@@ -6,6 +6,7 @@
 #include "backend/passes/spill.h"
 
 namespace backend {
+
 void allocateRegisters(lir::Program &lir) {
     auto om = lir.getOm();
 
@@ -37,4 +38,5 @@ void allocateRegisters(lir::Program &lir) {
         }
     }
 }
+
 } // namespace backend

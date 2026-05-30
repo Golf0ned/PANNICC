@@ -3,6 +3,7 @@
 #include "backend/lir/lir.h"
 
 namespace backend {
+
 class CodeGenVisitor : public lir::ToStringVisitor {
 public:
     void generateFilePreamble();
@@ -14,4 +15,5 @@ public:
 };
 
 std::string generateCode(lir::Program &lir);
+
 } // namespace backend
