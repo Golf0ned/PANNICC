@@ -1,10 +1,11 @@
 #pragma once
 
-#include <unordered_set>
-
 #include "backend/lir/lir.h"
 
+#include <unordered_set>
+
 namespace backend {
+
 using RegisterSet = std::unordered_set<lir::Register *>;
 
 class Liveness {
@@ -108,4 +109,5 @@ private:
     std::unordered_map<std::string, int> label_index;
     std::vector<int> successors;
 };
+
 } // namespace backend

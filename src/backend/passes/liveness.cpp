@@ -1,11 +1,12 @@
+#include "backend/passes/liveness.h"
+#include "backend/lir/lir.h"
+#include "backend/lir/operand.h"
+
 #include <array>
 #include <iostream>
 
-#include "backend/lir/lir.h"
-#include "backend/lir/operand.h"
-#include "backend/passes/liveness.h"
-
 namespace backend {
+
 Liveness::Liveness(std::vector<RegisterSet> gen, std::vector<RegisterSet> kill,
                    std::vector<RegisterSet> in, std::vector<RegisterSet> out)
     : gen(gen), kill(kill), in(in), out(out) {}
@@ -360,4 +361,5 @@ void printLiveness(lir::Function *f, Liveness &l) {
     }
     std::cout << "}" << std::endl;
 }
+
 } // namespace backend

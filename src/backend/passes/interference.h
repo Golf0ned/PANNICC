@@ -3,6 +3,7 @@
 #include "backend/passes/liveness.h"
 
 namespace backend {
+
 using Interference = std::unordered_map<lir::Register *, RegisterSet>;
 
 constexpr lir::DataSize flat_size = lir::DataSize::QUADWORD;
@@ -27,4 +28,5 @@ private:
     lir::OperandManager *om;
     Interference interference;
 };
+
 } // namespace backend

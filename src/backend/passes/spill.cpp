@@ -2,6 +2,7 @@
 #include "backend/passes/interference.h"
 
 namespace backend {
+
 static constexpr uint64_t def_weight = 5;
 static constexpr uint64_t use_weight = 10;
 static constexpr uint64_t max_weight = -1;
@@ -143,4 +144,5 @@ void spillLowestCost(lir::Function *f, const SpillCosts &sc, Liveness &l,
     auto virtual_reg = static_cast<lir::VirtualRegister *>(min_reg);
     spill(f, virtual_reg, l, om);
 }
+
 } // namespace backend

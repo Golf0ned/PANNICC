@@ -1,11 +1,12 @@
+#include "backend/passes/coloring.h"
+#include "backend/lir/operand.h"
+#include "backend/lir/register_num.h"
+
 #include <iostream>
 #include <set>
 
-#include "backend/lir/operand.h"
-#include "backend/lir/register_num.h"
-#include "backend/passes/coloring.h"
-
 namespace backend {
+
 PrecoloringVisitor::PrecoloringVisitor(lir::OperandManager *om) : om(om) {}
 
 // TODO: fill the rest of this in, im lazy rn
@@ -300,4 +301,5 @@ void printColoring(RegisterColoring &coloring) {
         std::cout << reg->toString() << ": " << lir::toString(color)
                   << std::endl;
 }
+
 } // namespace backend

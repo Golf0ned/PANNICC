@@ -1,10 +1,11 @@
-#include <algorithm>
-
-#include "backend/lir/register_num.h"
 #include "backend/passes/legalize.h"
+#include "backend/lir/register_num.h"
 #include "backend/passes/liveness.h"
 
+#include <algorithm>
+
 namespace backend {
+
 // TODO: unhardcode
 constexpr auto reg_size = lir::DataSize::QUADWORD;
 
@@ -307,5 +308,5 @@ void legalize(lir::Program &lir) {
         instructions.insert(ret_iter, std::move(deallocate));
     }
 }
+
 } // namespace backend
-;

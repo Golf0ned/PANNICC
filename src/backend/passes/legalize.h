@@ -3,6 +3,7 @@
 #include "backend/lir/lir.h"
 
 namespace backend {
+
 class ReplaceStackArgVisitor : public lir::InstructionVisitor {
 public:
     ReplaceStackArgVisitor(uint64_t stack_bytes, lir::OperandManager *om);
@@ -31,4 +32,5 @@ private:
 };
 
 void legalize(lir::Program &lir);
+
 } // namespace backend
