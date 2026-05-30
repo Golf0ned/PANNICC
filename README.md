@@ -19,9 +19,11 @@ Currently PANNICC supports the following subset of C:
 - Pointers (just int***... for now)
 - Comments
 
-Refer to the grammar in [parser.cpp](https://github.com/Golf0ned/PANNICC/blob/main/src/frontend/parser.cpp) for more specifics.
+Refer to the grammar in [the parser](https://github.com/Golf0ned/PANNICC/tree/main/src/frontend/parser) for more specifics.
 
 ## Installation/Usage
+
+This section assumes you are working in a unix environment.
 
 Clone the repo:
 
@@ -36,11 +38,20 @@ To build and run tests, run:
 make
 ```
 
+To add to path, run:
+```
+source enable
+```
+
 To view the help message, run:
 
 ```
-./build/bin/pannicc
+pannicc
 ```
+
+When writing programs for PANNICC, there are a few things to note:
+- The subset of C supported is very limited (see [Language Support](https://github.com/Golf0ned/PANNICC/tree/main#language-support))
+- Since the C standard library uses a lot of features not yet supported by PANNICC, use the [runtime library](https://github.com/Golf0ned/PANNICC/blob/main/include/runtime.h) instead.
 
 ## Contributing
 
