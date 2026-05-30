@@ -1,8 +1,9 @@
-#include <stdexcept>
-
 #include "backend/lir/operand.h"
 
+#include <stdexcept>
+
 namespace backend::lir {
+
 static uint64_t cur_id = 0;
 
 Immediate::Immediate(uint64_t value) : value(value) {}
@@ -140,4 +141,5 @@ StackArg *OperandManager::getStackArg(uint64_t arg_num) {
         stack_args.insert({arg_num, std::make_unique<StackArg>(arg_num)});
     return stack_args.at(arg_num).get();
 }
+
 } // namespace backend::lir

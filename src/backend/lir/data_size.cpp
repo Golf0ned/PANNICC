@@ -1,8 +1,9 @@
-#include <utility>
-
 #include "backend/lir/data_size.h"
 
+#include <utility>
+
 namespace backend::lir {
+
 char toChar(Extend extend) {
     switch (extend) {
     case Extend::NONE:
@@ -39,4 +40,5 @@ char toChar(DataSize size) {
     }
     std::unreachable();
 }
+
 } // namespace backend::lir

@@ -1,10 +1,11 @@
 #pragma once
 
-#include <vector>
-
 #include "backend/lir/data_size.h"
 
+#include <vector>
+
 namespace backend::lir {
+
 enum class RegisterNum {
     VIRTUAL,
 
@@ -46,9 +47,7 @@ enum class RegisterNum {
 };
 
 DataSize getSize(RegisterNum rn);
-
 RegisterNum toSized(RegisterNum rn, DataSize size);
-
 std::string toString(RegisterNum rn);
 
 const std::vector<RegisterNum> &getAllRegisters();
@@ -56,4 +55,5 @@ const std::vector<RegisterNum> &getArgRegisters();
 const std::vector<RegisterNum> &getCalleeSavedRegisters();
 const std::vector<RegisterNum> &getCallerSavedRegisters();
 const std::vector<RegisterNum> &getColoringPriority();
+
 } // namespace backend::lir

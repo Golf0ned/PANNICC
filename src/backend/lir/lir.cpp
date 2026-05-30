@@ -1,6 +1,7 @@
 #include "backend/lir/lir.h"
 
 namespace backend::lir {
+
 Function::Function(std::string name, uint64_t num_params, uint64_t stack_bytes,
                    std::list<std::unique_ptr<Instruction>> instructions)
     : name(name), num_params(num_params), stack_bytes(stack_bytes),
@@ -177,4 +178,5 @@ void ToStringVisitor::visit(InstructionUnknown *i) {
     result += "\n        ";
     result += "unknown";
 }
+
 } // namespace backend::lir

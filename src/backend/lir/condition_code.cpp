@@ -1,8 +1,9 @@
-#include <utility>
-
 #include "backend/lir/condition_code.h"
 
+#include <utility>
+
 namespace backend::lir {
+
 ConditionCode invert(ConditionCode cc) {
     switch (cc) {
     case ConditionCode::EQ:
@@ -22,4 +23,5 @@ std::string toString(ConditionCode cc) {
     }
     std::unreachable();
 }
+
 } // namespace backend::lir
