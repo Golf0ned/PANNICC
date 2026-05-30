@@ -6,6 +6,7 @@
 #include "middleend/mir/operator.h"
 
 namespace backend::lir {
+
 class InstructionVisitor;
 
 class Instruction {
@@ -97,7 +98,6 @@ enum class BinaryOp {
 };
 
 BinaryOp fromMir(middleend::mir::BinaryOp op);
-
 std::string toString(BinaryOp op);
 
 // TODO: div, inc, dec, neg, not
@@ -211,7 +211,6 @@ public:
     void accept(InstructionVisitor *v) override;
 };
 
-// TODO: remove once tiling's implemented
 class InstructionUnknown : public Instruction {
 public:
     void accept(InstructionVisitor *v) override;
@@ -235,4 +234,5 @@ public:
     virtual void visit(InstructionRet *i) = 0;
     virtual void visit(InstructionUnknown *i) = 0;
 };
+
 } // namespace backend::lir

@@ -3,6 +3,7 @@
 #include "middleend/mir/type.h"
 
 namespace backend::lir {
+
 enum class Extend {
     NONE,
     ZERO,
@@ -19,6 +20,6 @@ enum class DataSize {
 };
 
 DataSize fromMir(middleend::mir::Type type);
-
 char toChar(DataSize size);
+
 } // namespace backend::lir

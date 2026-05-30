@@ -1,8 +1,9 @@
-#include <utility>
-
 #include "backend/lir/register_num.h"
 
+#include <utility>
+
 namespace backend::lir {
+
 DataSize getSize(RegisterNum rn) {
     switch (rn) {
     case RegisterNum::RAX:
@@ -331,4 +332,5 @@ const std::vector<RegisterNum> &getColoringPriority() {
     };
     return coloring_priority;
 }
+
 } // namespace backend::lir

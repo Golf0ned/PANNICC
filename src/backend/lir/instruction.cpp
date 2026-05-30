@@ -1,8 +1,9 @@
-#include <utility>
-
 #include "backend/lir/instruction.h"
 
+#include <utility>
+
 namespace backend::lir {
+
 Label::Label(std::string name) : name(name) {}
 
 std::string Label::getName() { return name; }
@@ -206,4 +207,5 @@ void InstructionCall::accept(InstructionVisitor *v) { v->visit(this); }
 void InstructionRet::accept(InstructionVisitor *v) { v->visit(this); }
 
 void InstructionUnknown::accept(InstructionVisitor *v) { v->visit(this); }
+
 } // namespace backend::lir

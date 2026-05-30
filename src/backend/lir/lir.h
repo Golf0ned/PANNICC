@@ -1,11 +1,12 @@
 #pragma once
 
+#include "backend/lir/instruction.h"
+
 #include <list>
 #include <memory>
 
-#include "backend/lir/instruction.h"
-
 namespace backend::lir {
+
 class Function {
 public:
     Function(std::string name, uint64_t num_params, uint64_t stack_bytes,
@@ -60,4 +61,5 @@ public:
 protected:
     std::string result;
 };
+
 } // namespace backend::lir

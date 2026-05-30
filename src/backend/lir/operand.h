@@ -1,13 +1,14 @@
 #pragma once
 
+#include "backend/lir/register_num.h"
+
 #include <cstdint>
 #include <memory>
 #include <string>
 #include <unordered_map>
 
-#include "backend/lir/register_num.h"
-
 namespace backend::lir {
+
 class Operand {
 public:
     virtual std::string toString() = 0;
@@ -108,4 +109,5 @@ private:
     std::vector<std::unique_ptr<Address>> addresses;
     std::unordered_map<uint64_t, std::unique_ptr<StackArg>> stack_args;
 };
+
 } // namespace backend::lir
