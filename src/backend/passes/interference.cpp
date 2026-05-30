@@ -1,9 +1,10 @@
+#include "backend/passes/interference.h"
+#include "backend/lir/operand.h"
+
 #include <iostream>
 
-#include "backend/lir/operand.h"
-#include "backend/passes/interference.h"
-
 namespace backend {
+
 InterferenceBuilder::InterferenceBuilder(lir::OperandManager *om) : om(om) {}
 
 Interference InterferenceBuilder::getInterference() { return interference; }
@@ -96,4 +97,5 @@ void printInterference(Interference &i) {
         std::cout << "}" << std::endl;
     }
 }
+
 } // namespace backend
