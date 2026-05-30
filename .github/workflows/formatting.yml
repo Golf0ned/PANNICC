@@ -9,8 +9,16 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - name: Get updated LLVM
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 22
+
       - name: Install clang-format
-        run: sudo apt-get update && sudo apt-get install -y clang-format
+        run: |
+          sudo apt-get install -y clang-format-22
+          sudo ln -sf $(which clang-format-22) /usr/local/bin/clang-format
 
       - name: Check formatting
         run: |
