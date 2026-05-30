@@ -7,6 +7,7 @@
 #include "middleend/utils/traversal.h"
 
 namespace backend {
+
 std::tuple<std::list<lir_tree::FunctionTrees>,
            std::unique_ptr<lir_tree::TreeInfo>,
            std::vector<std::unique_ptr<lir_tree::FunctionInfo>>>
@@ -93,4 +94,5 @@ lir::Program mirToLir(middleend::mir::Program &mir) {
     lir::Program lir(std::move(functions), std::move(om));
     return std::move(lir);
 }
+
 } // namespace backend
