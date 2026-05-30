@@ -1,6 +1,7 @@
 #include "backend/lir_tree/tile_trees.h"
 
 namespace backend::lir_tree {
+
 bool matchIS(RegisterNode *node, RegisterNode **index_res,
              ImmediateNode **scale_res) {
     auto &reg_src = node->getSource();
@@ -876,4 +877,5 @@ void TreeTiler::tile(Node *tree) {
 
     assembly.splice(assembly.end(), tree_instructions);
 }
+
 } // namespace backend::lir_tree

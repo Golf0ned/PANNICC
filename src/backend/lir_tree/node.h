@@ -1,12 +1,13 @@
 #pragma once
 
-#include <list>
-#include <unordered_set>
-
 #include "backend/lir/instruction.h"
 #include "middleend/mir/operator.h"
 
+#include <list>
+#include <unordered_set>
+
 namespace backend::lir_tree {
+
 class NodeVisitor;
 
 enum class NodeType {
@@ -171,4 +172,5 @@ private:
     std::unordered_map<Node *, std::list<Node *>> tree_leaves;
     std::unordered_set<Node *> trees_with_memory_instruction;
 };
+
 } // namespace backend::lir_tree

@@ -1,10 +1,11 @@
-#include <unordered_set>
-
+#include "backend/lir_tree/gen_trees.h"
 #include "backend/lir/data_size.h"
 #include "backend/lir/operand.h"
-#include "backend/lir_tree/gen_trees.h"
+
+#include <unordered_set>
 
 namespace backend::lir_tree {
+
 TreeGenVisitor::TreeGenVisitor(middleend::mir::Program &p,
                                lir::OperandManager *om)
     : next_block(nullptr), om(om), tree_info(std::make_unique<TreeInfo>()) {
@@ -371,4 +372,5 @@ void TreeGenVisitor::visit(middleend::mir::TerminatorCondBranch *t) {
     auto assembly = std::make_unique<AsmNode>(std::move(instructions));
     function_trees.push_back(std::move(assembly));
 }
+
 } // namespace backend::lir_tree
