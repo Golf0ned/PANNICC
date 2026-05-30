@@ -1,6 +1,7 @@
 #include "backend/lir_tree/node.h"
 
 namespace backend::lir_tree {
+
 lir::DataSize Node::getSize() { return lir::DataSize::QUADWORD; }
 
 RegisterNode::RegisterNode(lir::Register *reg, std::unique_ptr<Node> source)
@@ -182,4 +183,5 @@ bool TreeInfo::hasMemInst(Node *tree) {
 void TreeInfo::setMemInst(Node *tree) {
     trees_with_memory_instruction.insert(tree);
 }
+
 } // namespace backend::lir_tree

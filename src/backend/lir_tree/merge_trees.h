@@ -3,6 +3,7 @@
 #include "backend/lir_tree/node.h"
 
 namespace backend::lir_tree {
+
 class TreeMerger {
 public:
     TreeMerger(TreeInfo *tree_info, lir::OperandManager *om);
@@ -14,4 +15,5 @@ private:
     lir::OperandManager *om;
     TreeInfo *tree_info;
 };
+
 } // namespace backend::lir_tree

@@ -49,4 +49,5 @@ private:
     std::vector<std::unique_ptr<FunctionInfo>> all_function_info;
     std::unique_ptr<TreeInfo> tree_info;
 };
+
 } // namespace backend::lir_tree

@@ -1,10 +1,11 @@
-#include <algorithm>
-#include <cassert>
-
 #include "backend/lir_tree/merge_trees.h"
 #include "backend/lir_tree/node.h"
 
+#include <algorithm>
+#include <cassert>
+
 namespace backend::lir_tree {
+
 TreeMerger::TreeMerger(TreeInfo *tree_info, lir::OperandManager *om)
     : tree_info(tree_info), om(om) {}
 
@@ -156,7 +157,6 @@ void TreeMerger::mergeTrees(FunctionTrees &trees) {
         tryMerge(context, uses);
         merged.splice(merged.end(), context);
         merged.push_back(std::move(tree));
-        // uses.clear();
     }
 
     // try merge one more time
@@ -166,4 +166,5 @@ void TreeMerger::mergeTrees(FunctionTrees &trees) {
     merged.reverse();
     trees = std::move(merged);
 }
+
 } // namespace backend::lir_tree

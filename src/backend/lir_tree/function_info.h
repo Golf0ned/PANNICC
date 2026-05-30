@@ -4,6 +4,7 @@
 #include <string>
 
 namespace backend::lir_tree {
+
 class FunctionInfo {
 public:
     FunctionInfo(std::string name, uint64_t num_params);
@@ -17,4 +18,5 @@ private:
     uint64_t num_params;
     uint64_t stack_bytes;
 };
+
 } // namespace backend::lir_tree
