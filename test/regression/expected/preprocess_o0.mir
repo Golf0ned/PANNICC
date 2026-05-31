@@ -98,35 +98,26 @@ entry:
   %2 = alloca ptr
   %3 = alloca ptr
   %4 = alloca i32
-  %5 = alloca i32
-  %6 = alloca i32
-  %7 = alloca ptr
-  %8 = alloca i32
+  %5 = alloca ptr
   store ptr %0, ptr %2
   store ptr %1, ptr %3
-  %9 = load ptr %2
-  %10 = load ptr %9
-  store i32 %10, ptr %5
-  store i32 42, ptr %5
-  %11 = load ptr %2
-  %12 = load ptr %11
-  store i32 %12, ptr %6
-  %13 = load ptr %6
-  %14 = add i32 %13, i32 42
-  store i32 %14, ptr %6
-  %15 = load ptr %3
-  %16 = load ptr %15
-  store ptr %16, ptr %7
-  %17 = load ptr %7
-  %18 = load ptr %17
-  store i32 %18, ptr %8
-  store i32 67, ptr %8
+  %6 = load ptr %2
+  store i32 42, ptr %6
+  %7 = load ptr %2
+  %8 = load ptr %7
+  %9 = add ptr %8, i32 42
+  store ptr %9, ptr %7
+  %10 = load ptr %3
+  %11 = load ptr %10
+  store ptr %11, ptr %5
+  %12 = load ptr %5
+  store i32 67, ptr %12
   store i32 0, ptr %4
-  br label 19
+  br label 13
 
-19:
-  %20 = load ptr %4
-  ret i32 %20
+13:
+  %14 = load ptr %4
+  ret i32 %14
 }
 
 define ptr @return_ptr() {

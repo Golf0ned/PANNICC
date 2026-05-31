@@ -35,11 +35,12 @@ entry:
 
 define i32 @write_to_ptr(ptr %0, ptr %1) {
 entry:
+  store i32 42, ptr %0
   %2 = load ptr %0
-  %3 = load ptr %0
-  %4 = add i32 %3, i32 42
-  %5 = load ptr %1
-  %6 = load ptr %5
+  %3 = add ptr %2, i32 42
+  store ptr %3, ptr %0
+  %4 = load ptr %1
+  store i32 67, ptr %4
   ret i32 0
 }
 

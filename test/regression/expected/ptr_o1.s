@@ -50,15 +50,16 @@ address_deref_many:
     .globl  write_to_ptr
     .type   write_to_ptr, @function
 write_to_ptr:
-        movq    %rdi, %r11
+        movq    %rdi, %rdi
         movq    %rsi, %r10
 .Lwrite_to_ptr_entry:
-        movl    (%r11), %r10d
-        movl    (%r11), %r10d
-        movl    %r10d, %r11d
+        movl    $42, (%rdi)
+        movq    (%rdi), %r10
+        movl    %r10, %r11d
         addl    $42, %r11d
+        movq    %r11, (%rdi)
         movq    (%rsp), %r10
-        movl    (%r10), %r10d
+        movl    $67, (%r10)
         movl    $0, %eax
         ret
 .Lwrite_to_ptr_end:

@@ -88,35 +88,29 @@ address_deref_many:
     .globl  write_to_ptr
     .type   write_to_ptr, @function
 write_to_ptr:
-        subq    $28, %rsp
-        movq    %rdi, %r11
+        subq    $16, %rsp
+        movq    %rdi, %rdi
         movq    %rsi, %r10
 .Lwrite_to_ptr_entry:
-        movq    %r11, 4(%rsp)
+        movq    %rdi, 4(%rsp)
         movq    %r10, 8(%rsp)
         movq    4(%rsp), %r10
-        movl    32(%rsp), %r10d
-        movl    %r10d, 16(%rsp)
-        movl    $42, 16(%rsp)
+        movl    $42, 20(%rsp)
         movq    4(%rsp), %r10
-        movl    40(%rsp), %r10d
-        movl    %r10d, 20(%rsp)
-        movl    20(%rsp), %r10d
-        movl    %r10d, %r11d
+        movq    24(%rsp), %r10
+        movl    %r10, %r11d
         addl    $42, %r11d
-        movl    %r11d, 20(%rsp)
-        movq    8(%rsp), %r11
-        movq    (%r11), %r10
-        movq    %r10, 24(%rsp)
-        movq    24(%rsp), %r11
-        movl    (%r11), %r10d
-        movl    %r10d, 28(%rsp)
-        movl    $67, 28(%rsp)
+        movq    %r11, 24(%rsp)
+        movq    8(%rsp), %r10
+        movq    36(%rsp), %r10
+        movq    %r10, 16(%rsp)
+        movq    16(%rsp), %r10
+        movl    $67, (%r10)
         movl    $0, 12(%rsp)
-.Lwrite_to_ptr_19:
+.Lwrite_to_ptr_13:
         movl    12(%rsp), %r10d
         movl    %r10d, %eax
-        addq    $28, %rsp
+        addq    $16, %rsp
         ret
 .Lwrite_to_ptr_end:
     .globl  return_ptr
@@ -148,9 +142,9 @@ use_proto:
         movl    %eax, %r10d
         movl    %r10d, 4(%rsp)
         movl    (%rsp), %r11d
-        movl    4(%rsp), %edi
-        leal    (%r11d,%edi), %r10d
-        movl    %r10d, 8(%rsp)
+        movl    4(%rsp), %r10d
+        leal    (%r11d,%r10d), %edi
+        movl    %edi, 8(%rsp)
         movl    8(%rsp), %r10d
         movl    %r10d, (%rsp)
 .Luse_proto_10:

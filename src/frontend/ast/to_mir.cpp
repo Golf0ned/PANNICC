@@ -13,7 +13,7 @@ mir::Program lower(ast::Program &ast) {
     ToMIRVisitor tmv(ast.getSymbolTable(), lm);
     for (auto &f : ast.getFunctions()) {
         f->accept(&tmv);
-        functions.push_back(tmv.getResult()); // might need to move?
+        functions.push_back(tmv.getResult());
     }
 
     tmv.resolveFunctions();
@@ -453,13 +453,22 @@ void ToMIRVisitor::visit(ast::UnaryOpExpr *e) {
 }
 
 void ToMIRVisitor::visit(ast::BinaryOpExpr *e) {
-    e->getLeft()->accept(this);
+    auto left_unop = dynamic_cast<ast::UnaryOpExpr *>(e->getLeft());
+    auto left_is_deref = left_unop && (left_unop->getOp() == UnaryOp::DEREF);
+
+    if (left_is_deref)
+        left_unop->getValue()->accept(this);
+    else
+        e->getLeft()->accept(this);
     auto *left_prev = prev_expr;
+
     e->getRight()->accept(this);
     auto *right_prev = prev_expr;
 
     // TODO: figure type inference out
-    auto type = expr_types[e->getLeft()]->toMir();
+    auto &type_source =
+        expr_types[left_is_deref ? left_unop->getValue() : e->getLeft()];
+    auto type = type_source->toMir();
 
     mir::Value *res;
     if (!isAssignment(e->getOp())) {
@@ -477,6 +486,11 @@ void ToMIRVisitor::visit(ast::BinaryOpExpr *e) {
         instructions.push_back(std::move(bin_op));
     } else if (e->getOp() != BinaryOp::ASSIGN) {
         // Op assign
+        if (left_is_deref) {
+            prev_expr = left_prev;
+            left_prev = usePrevExpr();
+        }
+
         auto load = std::make_unique<mir::InstructionLoad>(type, left_prev);
         auto *left = load.get();
         instructions.push_back(std::move(load));
@@ -491,10 +505,16 @@ void ToMIRVisitor::visit(ast::BinaryOpExpr *e) {
         instructions.push_back(std::move(bin_op));
     } else {
         // Simple assignment
+        if (left_is_deref) {
+            prev_expr = left_prev;
+            left_prev = usePrevExpr();
+        }
+
         prev_expr = right_prev;
         res = usePrevExpr();
     }
-    expr_types[e] = expr_types[e->getLeft()]->clone();
+
+    expr_types[e] = type_source->clone();
 
     auto *res_ptr = isAssignment(e->getOp()) ? left_prev : makeAlloca(type);
     prev_expr = res_ptr;
