@@ -10,6 +10,7 @@ build:
 	cmake --build $(BUILD_DIR) -j 32
 
 install: build
+	cat $(BUILD_DIR)/install_manifest.txt | xargs rm -f
 	mkdir -p $(INSTALL_DIR)
 	cmake --install $(BUILD_DIR) --prefix $(INSTALL_DIR) -j 32
 
@@ -20,6 +21,7 @@ clean:
 	cmake --build $(BUILD_DIR) --target clean
 
 distclean:
-	rm -rf $(BUILD_DIR) $(INSTALL_DIR) enable
+	cat $(BUILD_DIR)/install_manifest.txt | xargs rm -f
+	rm -rf $(BUILD_DIR) enable
 
 .PHONY: all build debug test clean distclean
