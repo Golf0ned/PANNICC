@@ -1,9 +1,9 @@
 #include "../../../include/runtime.h"
 
 int main() {
-    print(67);
-
     int *foo = alloc(4);
+    *foo = 67;
+    print(*foo);
     dealloc(foo);
 
     return 0;

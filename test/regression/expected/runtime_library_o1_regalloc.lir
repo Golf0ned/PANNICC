@@ -1,10 +1,12 @@
 main:  # 0 params, 0 stack bytes
 .Lmain_entry:
-        call    print  # ($67)
-        movl    %eax, %r10d
         call    alloc  # ($4)
-        movq    %rax, %r10
-        call    dealloc  # (%r10)
+        movq    %rax, %r11
+        movl    $67, (%r11)
+        movl    (%r11), %r10d
+        call    print  # (%r10d)
+        movl    %eax, %r10d
+        call    dealloc  # (%r11)
         movl    %eax, %r10d
         movl    $0, %eax
         ret
