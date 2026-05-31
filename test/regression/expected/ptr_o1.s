@@ -47,6 +47,21 @@ address_deref_many:
         addq    $12, %rsp
         ret
 .Laddress_deref_many_end:
+    .globl  write_to_ptr
+    .type   write_to_ptr, @function
+write_to_ptr:
+        movq    %rdi, %r11
+        movq    %rsi, %r10
+.Lwrite_to_ptr_entry:
+        movl    (%r11), %r10d
+        movl    (%r11), %r10d
+        movl    %r10d, %r11d
+        addl    $42, %r11d
+        movq    (%rsp), %r10
+        movl    (%r10), %r10d
+        movl    $0, %eax
+        ret
+.Lwrite_to_ptr_end:
     .globl  return_ptr
     .type   return_ptr, @function
 return_ptr:

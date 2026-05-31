@@ -17,6 +17,13 @@ int address_deref_many(int foo) {
     return ***qux;
 }
 
+int write_to_ptr(int *ptr, int **ptr_ptr) {
+    *ptr = 42;
+    *ptr += 42;
+    **ptr_ptr = 67;
+    return 0;
+}
+
 int *return_ptr() {
     int foo = 1;
     return &foo;

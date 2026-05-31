@@ -32,6 +32,19 @@ address_deref_many:  # 1 params, 12 stack bytes
         movl    %6, %eax
         ret
 
+write_to_ptr:  # 2 params, 0 stack bytes
+        movq    %rdi, %0
+        movq    %rsi, %1
+.Lwrite_to_ptr_entry:
+        movl    (%0), %2
+        movl    (%0), %3
+        movl    %3, %4
+        addl    $42, %4
+        movq    (%rsp), %5
+        movl    (%5), %6
+        movl    $0, %eax
+        ret
+
 return_ptr:  # 0 params, 4 stack bytes
 .Lreturn_ptr_entry:
         movl    $1, (%rsp)
