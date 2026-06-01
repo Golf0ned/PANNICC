@@ -68,9 +68,7 @@ main:
         call    sixth
         movl    %eax, %r10d
         call    first
-        movl    %eax, %r10d
-        movl    $0, %edi
-        addl    %r10d, %edi
+        movl    %eax, %edi
         subq    $16, %rsp
         movq    %rdi, 8(%rsp)
         call    second

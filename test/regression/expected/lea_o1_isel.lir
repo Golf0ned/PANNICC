@@ -9,14 +9,12 @@ leaBI:  # 2 params, 0 stack bytes
 leaIS:  # 1 params, 0 stack bytes
         movl    %edi, %0
 .LleaIS_entry:
-        movl    %0, %1
-        leal    (,%0,2), %2
-        leal    (,%0,4), %3
-        leal    (,%0,8), %4
-        movl    %0, %5
-        leal    (,%0,2), %6
-        leal    (,%0,4), %7
-        leal    (,%0,8), %8
+        leal    (,%0,2), %1
+        leal    (,%0,4), %2
+        leal    (,%0,8), %3
+        leal    (,%0,2), %4
+        leal    (,%0,4), %5
+        leal    (,%0,8), %6
         movl    $0, %eax
         ret
 

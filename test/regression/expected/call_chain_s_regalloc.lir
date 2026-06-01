@@ -53,9 +53,7 @@ main:  # 0 params, 0 stack bytes
         call    sixth  # ()
         movl    %eax, %r10d
         call    first  # ()
-        movl    %eax, %r10d
-        movl    $0, %edi
-        addl    %r10d, %edi
+        movl    %eax, %edi
         call    second  # ()
         movl    %eax, %r10d
         leal    (%edi,%r10d), %r11d

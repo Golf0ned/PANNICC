@@ -14,11 +14,9 @@ leaBI:
 leaIS:
         movl    %edi, %r10d
 .LleaIS_entry:
-        movl    %r10d, %r10d
         leal    (,%r10d,2), %r10d
         leal    (,%r10d,4), %r10d
         leal    (,%r10d,8), %r10d
-        movl    %r10d, %r10d
         leal    (,%r10d,2), %r10d
         leal    (,%r10d,4), %r10d
         leal    (,%r10d,8), %r10d

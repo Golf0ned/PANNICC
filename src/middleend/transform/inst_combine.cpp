@@ -97,9 +97,113 @@ void InstCombine::run(mir::Program &p) {
                         return true;
                     };
 
+                    auto trySimplify = [&]() {
+                        auto bin_op =
+                            dynamic_cast<mir::InstructionBinaryOp *>(i);
+                        if (!bin_op)
+                            return false;
+
+                        auto op = bin_op->getOp();
+                        auto left = bin_op->getLeft();
+                        auto right = bin_op->getRight();
+                        auto left_literal = dynamic_cast<mir::Literal *>(left);
+                        auto right_literal =
+                            dynamic_cast<mir::Literal *>(right);
+
+                        // TODO: clean everything below up
+                        if (!left_literal ^ !!right_literal)
+                            return false;
+
+                        auto constant =
+                            left_literal ? left_literal : right_literal;
+                        auto var = left_literal ? right : left;
+                        ReplaceUsesVisitor ruv(bin_op, var);
+                        auto uses_range = std::views::keys(bin_op->getUses());
+                        std::vector<mir::Instruction *> uses(uses_range.begin(),
+                                                             uses_range.end());
+
+                        if (right_literal) {
+                            switch (op) {
+                            default:
+                                break;
+                            case mir::BinaryOp::SUB:
+                                if (constant->getValue() == 0) {
+                                    for (auto &use : uses)
+                                        use->accept(&ruv);
+                                    i->accept(&euv);
+                                    to_drop.push_back(std::move(*iter));
+                                    iter = instructions.erase(iter);
+                                    return true;
+                                }
+                                break;
+                            case mir::BinaryOp::SHL:
+                            case mir::BinaryOp::ASHR:
+                                if (constant->getValue() == 0) {
+                                    for (auto &use : uses)
+                                        use->accept(&ruv);
+                                    i->accept(&euv);
+                                    to_drop.push_back(std::move(*iter));
+                                    iter = instructions.erase(iter);
+                                    return true;
+                                }
+                                // TODO: check for past var size (UB)
+                                break;
+                            case mir::BinaryOp::SDIV:
+                                if (constant->getValue() == 1) {
+                                    for (auto &use : uses)
+                                        use->accept(&ruv);
+                                    i->accept(&euv);
+                                    to_drop.push_back(std::move(*iter));
+                                    iter = instructions.erase(iter);
+                                    return true;
+                                }
+                                break;
+                            }
+                        }
+
+                        switch (op) {
+                        default:
+                            break;
+                        case mir::BinaryOp::ADD:
+                        case mir::BinaryOp::OR:
+                            if (constant->getValue() == 0) {
+                                for (auto &use : uses)
+                                    use->accept(&ruv);
+                                i->accept(&euv);
+                                to_drop.push_back(std::move(*iter));
+                                iter = instructions.erase(iter);
+                                return true;
+                            }
+                            break;
+                        case mir::BinaryOp::MUL:
+                            if (constant->getValue() == 1) {
+                                for (auto &use : uses)
+                                    use->accept(&ruv);
+                                i->accept(&euv);
+                                to_drop.push_back(std::move(*iter));
+                                iter = instructions.erase(iter);
+                                return true;
+                            }
+                            break;
+                        case mir::BinaryOp::AND:
+                            if (constant->getValue() == -1) {
+                                for (auto &use : uses)
+                                    use->accept(&ruv);
+                                i->accept(&euv);
+                                to_drop.push_back(std::move(*iter));
+                                iter = instructions.erase(iter);
+                                return true;
+                            }
+                            break;
+                        }
+
+                        return false;
+                    };
+
                     if (false
                         // clang-format off
                         || tryConstantFold()
+                        || trySimplify()
                         // clang-format on
                     ) {
                         changed = true;

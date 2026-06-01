@@ -20,29 +20,5 @@ simplify:  # 1 params, 0 stack bytes
         imull   %0, %1
         movl    %0, %2
         imull   $0, %2
-        movl    %0, %3
-        addl    $0, %3
-        movl    $0, %4
-        addl    %3, %4
-        movl    %4, %5
-        subl    $0, %5
-        movl    %5, %6
-        movl    %6, %7
-        movl    %7, %eax
-        cltd
-        idivl   $1
-        movl    %eax, %8
-        movl    $18446744073709551615, %9
-        andl    %8, %9
-        movl    %9, %10
-        andl    $18446744073709551615, %10
-        movl    $0, %11
-        orl     %10, %11
-        movl    %11, %12
-        orl     $0, %12
-        movl    %12, %13
-        shll    $0, [%13 -> %ecx]
-        movl    %13, %14
-        sarl    $0, [%14 -> %ecx]
-        movl    %14, %eax
+        movl    %0, %eax
         ret

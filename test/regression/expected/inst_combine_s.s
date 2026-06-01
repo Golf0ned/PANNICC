@@ -26,38 +26,14 @@ constant_fold_underflow:
     .globl  simplify
     .type   simplify, @function
 simplify:
-        movl    %edi, %edi
+        movl    %edi, %r11d
 .Lsimplify_entry:
         movl    $0, %r10d
-        imull   %edi, %r10d
-        movl    %edi, %r10d
+        imull   %r11d, %r10d
+        movl    %r11d, %r10d
         imull   $0, %r10d
-        movl    %edi, %r11d
-        addl    $0, %r11d
-        movl    $0, %r10d
-        addl    %r11d, %r10d
-        movl    %r10d, %r11d
-        subl    $0, %r11d
-        movl    %r11d, %r10d
-        movl    %r10d, %r11d
+.Lsimplify_3:
         movl    %r11d, %eax
-        cltd
-        idivl   $1
-        movl    %eax, %r10d
-        movl    $18446744073709551615, %r11d
-        andl    %r10d, %r11d
-        movl    %r11d, %r10d
-        andl    $18446744073709551615, %r10d
-        movl    $0, %r11d
-        orl     %r10d, %r11d
-        movl    %r11d, %r10d
-        orl     $0, %r10d
-        movl    %r10d, %ecx
-        shll    $0, %ecx
-        movl    %ecx, %ecx
-        sarl    $0, %ecx
-.Lsimplify_15:
-        movl    %ecx, %eax
         ret
 .Lsimplify_end:
     .section    .note.GNU-stack,"",@progbits
