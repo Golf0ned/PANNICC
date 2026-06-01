@@ -1,8 +1,17 @@
 #include "middleend/utils/replace_uses.h"
 
+#include <ranges>
 #include <utility>
 
 namespace middleend {
+
+void replaceUses(mir::Value *old_value, mir::Value *new_value) {
+    ReplaceUsesVisitor ruv(old_value, new_value);
+    auto uses_range = std::views::keys(old_value->getUses());
+    std::vector<mir::Instruction *> uses(uses_range.begin(), uses_range.end());
+    for (auto &use : uses)
+        use->accept(&ruv);
+}
 
 ReplaceUsesVisitor::ReplaceUsesVisitor(mir::Value *old_value,
                                        mir::Value *new_value)

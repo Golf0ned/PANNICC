@@ -4,6 +4,8 @@
 
 namespace middleend {
 
+void replaceUses(mir::Value *old_value, mir::Value *new_value);
+
 class ReplaceUsesVisitor : public mir::InstructionVisitor {
 public:
     ReplaceUsesVisitor(mir::Value *old_value, mir::Value *new_value);
