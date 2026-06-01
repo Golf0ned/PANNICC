@@ -81,5 +81,104 @@ constant_fold_underflow:
         addq    $12, %rsp
         ret
 .Lconstant_fold_underflow_end:
+    .globl  simplify
+    .type   simplify, @function
+simplify:
+        subq    $72, %rsp
+        movl    %edi, %r10d
+.Lsimplify_entry:
+        movl    %r10d, 4(%rsp)
+        movl    4(%rsp), %r11d
+        movl    $0, %r10d
+        imull   %r11d, %r10d
+        movl    %r10d, 16(%rsp)
+        movl    16(%rsp), %r10d
+        movl    %r10d, 12(%rsp)
+        movl    4(%rsp), %r11d
+        movl    %r11d, %r10d
+        imull   $0, %r10d
+        movl    %r10d, 20(%rsp)
+        movl    20(%rsp), %r10d
+        movl    %r10d, 12(%rsp)
+        movl    4(%rsp), %r11d
+        movl    %r11d, %r10d
+        addl    $0, %r10d
+        movl    %r10d, 28(%rsp)
+        movl    28(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r11d
+        movl    $0, %r10d
+        addl    %r11d, %r10d
+        movl    %r10d, 32(%rsp)
+        movl    32(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, %r11d
+        subl    $0, %r11d
+        movl    %r11d, 36(%rsp)
+        movl    36(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, %r11d
+        movl    %r11d, 40(%rsp)
+        movl    40(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, %r11d
+        movl    %r11d, 40(%rsp)
+        movl    40(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, %eax
+        cltd
+        idivl   $1
+        movl    %eax, %r10d
+        movl    %r10d, 44(%rsp)
+        movl    44(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r11d
+        movl    $18446744073709551615, %r10d
+        andl    %r11d, %r10d
+        movl    %r10d, 48(%rsp)
+        movl    48(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, %r11d
+        andl    $18446744073709551615, %r11d
+        movl    %r11d, 52(%rsp)
+        movl    52(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r11d
+        movl    $0, %r10d
+        orl     %r11d, %r10d
+        movl    %r10d, 56(%rsp)
+        movl    56(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, %r11d
+        orl     $0, %r11d
+        movl    %r11d, 60(%rsp)
+        movl    60(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, %ecx
+        shll    $0, %ecx
+        movl    %ecx, 64(%rsp)
+        movl    64(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, %ecx
+        sarl    $0, %ecx
+        movl    %ecx, 68(%rsp)
+        movl    68(%rsp), %r10d
+        movl    %r10d, 24(%rsp)
+        movl    24(%rsp), %r10d
+        movl    %r10d, 8(%rsp)
+.Lsimplify_62:
+        movl    8(%rsp), %r10d
+        movl    %r10d, %eax
+        addq    $72, %rsp
+        ret
+.Lsimplify_end:
     .section    .note.GNU-stack,"",@progbits
     .ident  "PANNICC (https://github.com/Golf0ned/PANNICC)"

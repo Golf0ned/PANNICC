@@ -67,3 +67,98 @@ constant_fold_underflow:  # 0 params, 12 stack bytes
         movl    (%rsp), %7
         movl    %7, %eax
         ret
+
+simplify:  # 1 params, 72 stack bytes
+        movl    %edi, %0
+.Lsimplify_entry:
+        movl    %0, 4(%rsp)
+        movl    4(%rsp), %19
+        movl    $0, %20
+        imull   %19, %20
+        movl    %20, 16(%rsp)
+        movl    16(%rsp), %21
+        movl    %21, 12(%rsp)
+        movl    4(%rsp), %22
+        movl    %22, %23
+        imull   $0, %23
+        movl    %23, 20(%rsp)
+        movl    20(%rsp), %24
+        movl    %24, 12(%rsp)
+        movl    4(%rsp), %25
+        movl    %25, %26
+        addl    $0, %26
+        movl    %26, 28(%rsp)
+        movl    28(%rsp), %27
+        movl    %27, 24(%rsp)
+        movl    24(%rsp), %28
+        movl    $0, %29
+        addl    %28, %29
+        movl    %29, 32(%rsp)
+        movl    32(%rsp), %30
+        movl    %30, 24(%rsp)
+        movl    24(%rsp), %31
+        movl    %31, %32
+        subl    $0, %32
+        movl    %32, 36(%rsp)
+        movl    36(%rsp), %33
+        movl    %33, 24(%rsp)
+        movl    24(%rsp), %34
+        movl    %34, %35
+        movl    %35, 40(%rsp)
+        movl    40(%rsp), %36
+        movl    %36, 24(%rsp)
+        movl    24(%rsp), %37
+        movl    %37, %38
+        movl    %38, 40(%rsp)
+        movl    40(%rsp), %39
+        movl    %39, 24(%rsp)
+        movl    24(%rsp), %40
+        movl    %40, %eax
+        cltd
+        idivl   $1
+        movl    %eax, %41
+        movl    %41, 44(%rsp)
+        movl    44(%rsp), %42
+        movl    %42, 24(%rsp)
+        movl    24(%rsp), %43
+        movl    $18446744073709551615, %44
+        andl    %43, %44
+        movl    %44, 48(%rsp)
+        movl    48(%rsp), %45
+        movl    %45, 24(%rsp)
+        movl    24(%rsp), %46
+        movl    %46, %47
+        andl    $18446744073709551615, %47
+        movl    %47, 52(%rsp)
+        movl    52(%rsp), %48
+        movl    %48, 24(%rsp)
+        movl    24(%rsp), %49
+        movl    $0, %50
+        orl     %49, %50
+        movl    %50, 56(%rsp)
+        movl    56(%rsp), %51
+        movl    %51, 24(%rsp)
+        movl    24(%rsp), %52
+        movl    %52, %53
+        orl     $0, %53
+        movl    %53, 60(%rsp)
+        movl    60(%rsp), %54
+        movl    %54, 24(%rsp)
+        movl    24(%rsp), %55
+        movl    %55, %56
+        shll    $0, [%56 -> %ecx]
+        movl    %56, 64(%rsp)
+        movl    64(%rsp), %57
+        movl    %57, 24(%rsp)
+        movl    24(%rsp), %58
+        movl    %58, %59
+        sarl    $0, [%59 -> %ecx]
+        movl    %59, 68(%rsp)
+        movl    68(%rsp), %60
+        movl    %60, 24(%rsp)
+        movl    24(%rsp), %61
+        movl    %61, 8(%rsp)
+.Lsimplify_62:
+        movl    8(%rsp), %63
+        movl    %63, %eax
+        ret

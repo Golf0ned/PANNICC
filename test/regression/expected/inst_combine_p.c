@@ -17,3 +17,22 @@ int constant_fold_underflow() {
     int underflow = -2147483648 - 1;
     return underflow;
 }
+
+int simplify(int i) {
+    int zero = 0 * i;
+    zero = i * 0;
+
+    int res = i + 0;
+    res = 0 + res;
+    res = res - 0;
+    res = res * 1;
+    res = 1 * res;
+    res = res / 1;
+    res = -1 & res;
+    res = res & -1;
+    res = 0 | res;
+    res = res | 0;
+    res = res << 0;
+    res = res >> 0;
+    return res;
+}
