@@ -14,11 +14,7 @@ constant_fold_underflow:  # 0 params, 0 stack bytes
         ret
 
 simplify:  # 1 params, 0 stack bytes
-        movl    %edi, %r11d
+        movl    %edi, %r10d
 .Lsimplify_entry:
-        movl    $0, %r10d
-        imull   %r11d, %r10d
-        movl    %r11d, %r10d
-        imull   $0, %r10d
-        movl    %r11d, %eax
+        movl    %r10d, %eax
         ret

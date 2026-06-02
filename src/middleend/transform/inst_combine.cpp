@@ -1,5 +1,4 @@
 #include "middleend/transform/inst_combine.h"
-#include "middleend/utils/erase_uses.h"
 #include "middleend/utils/replace_uses.h"
 
 #include <ranges>
@@ -7,7 +6,6 @@
 namespace middleend {
 
 void InstCombine::run(mir::Program &p) {
-    EraseUsesVisitor euv;
     for (auto &f : p.getFunctions()) {
         auto definition = dynamic_cast<mir::FunctionDefinition *>(f.get());
         if (!definition)
@@ -84,14 +82,7 @@ void InstCombine::run(mir::Program &p) {
                             static_cast<int64_t>(folded_val));
                         auto folded_literal = p.getLiteral(type, extended_val);
 
-                        ReplaceUsesVisitor ruv(bin_op, folded_literal);
-                        auto uses_range = std::views::keys(bin_op->getUses());
-                        std::vector<mir::Instruction *> uses(uses_range.begin(),
-                                                             uses_range.end());
-                        for (auto &use : uses)
-                            use->accept(&ruv);
-
-                        i->accept(&euv);
+                        replaceUses(bin_op, folded_literal);
                         to_drop.push_back(std::move(*iter));
                         iter = instructions.erase(iter);
                         return true;
@@ -117,10 +108,6 @@ void InstCombine::run(mir::Program &p) {
                         auto constant =
                             left_literal ? left_literal : right_literal;
                         auto var = left_literal ? right : left;
-                        ReplaceUsesVisitor ruv(bin_op, var);
-                        auto uses_range = std::views::keys(bin_op->getUses());
-                        std::vector<mir::Instruction *> uses(uses_range.begin(),
-                                                             uses_range.end());
 
                         if (right_literal) {
                             switch (op) {
@@ -128,9 +115,7 @@ void InstCombine::run(mir::Program &p) {
                                 break;
                             case mir::BinaryOp::SUB:
                                 if (constant->getValue() == 0) {
-                                    for (auto &use : uses)
-                                        use->accept(&ruv);
-                                    i->accept(&euv);
+                                    replaceUses(bin_op, var);
                                     to_drop.push_back(std::move(*iter));
                                     iter = instructions.erase(iter);
                                     return true;
@@ -139,9 +124,7 @@ void InstCombine::run(mir::Program &p) {
                             case mir::BinaryOp::SHL:
                             case mir::BinaryOp::ASHR:
                                 if (constant->getValue() == 0) {
-                                    for (auto &use : uses)
-                                        use->accept(&ruv);
-                                    i->accept(&euv);
+                                    replaceUses(bin_op, var);
                                     to_drop.push_back(std::move(*iter));
                                     iter = instructions.erase(iter);
                                     return true;
@@ -150,9 +133,7 @@ void InstCombine::run(mir::Program &p) {
                                 break;
                             case mir::BinaryOp::SDIV:
                                 if (constant->getValue() == 1) {
-                                    for (auto &use : uses)
-                                        use->accept(&ruv);
-                                    i->accept(&euv);
+                                    replaceUses(bin_op, var);
                                     to_drop.push_back(std::move(*iter));
                                     iter = instructions.erase(iter);
                                     return true;
@@ -167,19 +148,20 @@ void InstCombine::run(mir::Program &p) {
                         case mir::BinaryOp::ADD:
                         case mir::BinaryOp::OR:
                             if (constant->getValue() == 0) {
-                                for (auto &use : uses)
-                                    use->accept(&ruv);
-                                i->accept(&euv);
+                                replaceUses(bin_op, var);
                                 to_drop.push_back(std::move(*iter));
                                 iter = instructions.erase(iter);
                                 return true;
                             }
                             break;
                         case mir::BinaryOp::MUL:
-                            if (constant->getValue() == 1) {
-                                for (auto &use : uses)
-                                    use->accept(&ruv);
-                                i->accept(&euv);
+                            if (constant->getValue() == 0) {
+                                replaceUses(bin_op, constant);
+                                to_drop.push_back(std::move(*iter));
+                                iter = instructions.erase(iter);
+                                return true;
+                            } else if (constant->getValue() == 1) {
+                                replaceUses(bin_op, var);
                                 to_drop.push_back(std::move(*iter));
                                 iter = instructions.erase(iter);
                                 return true;
@@ -187,9 +169,7 @@ void InstCombine::run(mir::Program &p) {
                             break;
                         case mir::BinaryOp::AND:
                             if (constant->getValue() == -1) {
-                                for (auto &use : uses)
-                                    use->accept(&ruv);
-                                i->accept(&euv);
+                                replaceUses(bin_op, var);
                                 to_drop.push_back(std::move(*iter));
                                 iter = instructions.erase(iter);
                                 return true;
