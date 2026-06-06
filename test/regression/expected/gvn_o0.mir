@@ -1,0 +1,92 @@
+define i32 @basic(i32 %0) {
+entry:
+  %1 = alloca i32
+  %2 = alloca i32
+  %3 = alloca i32
+  %4 = alloca i32
+  %5 = alloca i32
+  %6 = alloca i32
+  %7 = alloca i32
+  store i32 %0, ptr %1
+  %8 = load ptr %1
+  %9 = add i32 %8, i32 1
+  store i32 %9, ptr %4
+  %10 = load ptr %4
+  store i32 %10, ptr %3
+  %11 = load ptr %1
+  %12 = add i32 %11, i32 1
+  store i32 %12, ptr %6
+  %13 = load ptr %6
+  store i32 %13, ptr %5
+  %14 = load ptr %3
+  %15 = load ptr %5
+  %16 = add i32 %14, i32 %15
+  store i32 %16, ptr %7
+  %17 = load ptr %7
+  store i32 %17, ptr %2
+  br label 18
+
+18:
+  %19 = load ptr %2
+  ret i32 %19
+}
+
+define i32 @complex(i32 %0, i32 %1) {
+entry:
+  %2 = alloca i32
+  %3 = alloca i32
+  %4 = alloca i32
+  %5 = alloca i32
+  %6 = alloca i32
+  %7 = alloca i32
+  %8 = alloca i32
+  %9 = alloca i32
+  %10 = alloca i32
+  %11 = alloca i32
+  %12 = alloca i32
+  %13 = alloca i32
+  store i32 %0, ptr %2
+  store i32 %1, ptr %3
+  %14 = load ptr %2
+  %15 = add i32 %14, i32 1
+  store i32 %15, ptr %6
+  %16 = load ptr %6
+  store i32 %16, ptr %5
+  %17 = load ptr %2
+  %18 = add i32 %17, i32 1
+  store i32 %18, ptr %8
+  %19 = load ptr %8
+  store i32 %19, ptr %7
+  %20 = load ptr %3
+  store i32 %20, ptr %2
+  %21 = load ptr %2
+  %22 = add i32 %21, i32 1
+  store i32 %22, ptr %9
+  %23 = load ptr %9
+  br i32 %23, label 24, label 25
+
+24:
+  br label 25
+
+25:
+  %26 = load ptr %2
+  %27 = add i32 %26, i32 1
+  store i32 %27, ptr %11
+  %28 = load ptr %11
+  store i32 %28, ptr %10
+  %29 = load ptr %5
+  %30 = load ptr %7
+  %31 = add i32 %29, i32 %30
+  store i32 %31, ptr %12
+  %32 = load ptr %12
+  %33 = load ptr %10
+  %34 = add i32 %32, i32 %33
+  store i32 %34, ptr %13
+  %35 = load ptr %13
+  store i32 %35, ptr %4
+  br label 36
+
+36:
+  %37 = load ptr %4
+  ret i32 %37
+}

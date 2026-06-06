@@ -1,0 +1,79 @@
+basic:  # 1 params, 28 stack bytes
+        movl    %edi, %0
+.Lbasic_entry:
+        movl    %0, (%rsp)
+        movl    (%rsp), %8
+        movl    %8, %9
+        addl    $1, %9
+        movl    %9, 12(%rsp)
+        movl    12(%rsp), %10
+        movl    %10, 8(%rsp)
+        movl    (%rsp), %11
+        movl    %11, %12
+        addl    $1, %12
+        movl    %12, 20(%rsp)
+        movl    20(%rsp), %13
+        movl    %13, 16(%rsp)
+        movl    8(%rsp), %14
+        movl    16(%rsp), %15
+        leal    (%14,%15), %16
+        movl    %16, 24(%rsp)
+        movl    24(%rsp), %17
+        movl    %17, 4(%rsp)
+.Lbasic_18:
+        movl    4(%rsp), %19
+        movl    %19, %eax
+        ret
+
+complex:  # 2 params, 48 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+.Lcomplex_entry:
+        movl    %0, 4(%rsp)
+        movl    %1, 8(%rsp)
+        movl    4(%rsp), %14
+        movl    %14, %15
+        addl    $1, %15
+        movl    %15, 20(%rsp)
+        movl    20(%rsp), %16
+        movl    %16, 16(%rsp)
+        movl    4(%rsp), %17
+        movl    %17, %18
+        addl    $1, %18
+        movl    %18, 24(%rsp)
+        movl    24(%rsp), %19
+        movl    %19, 24(%rsp)
+        movl    8(%rsp), %20
+        movl    %20, 4(%rsp)
+        movl    4(%rsp), %21
+        movl    %21, %22
+        addl    $1, %22
+        movl    %22, 28(%rsp)
+        movl    28(%rsp), %23
+        cmpl    $0, %23
+        jne     .Lcomplex_26
+.Lcomplex_24:
+.Lcomplex_25:
+.Lcomplex_27:
+        movl    4(%rsp), %28
+        movl    %28, %29
+        addl    $1, %29
+        movl    %29, 36(%rsp)
+        movl    36(%rsp), %30
+        movl    %30, 32(%rsp)
+        movl    16(%rsp), %31
+        movl    24(%rsp), %32
+        leal    (%31,%32), %33
+        movl    %33, 40(%rsp)
+        movl    40(%rsp), %34
+        movl    32(%rsp), %35
+        leal    (%34,%35), %36
+        movl    %36, 44(%rsp)
+        movl    44(%rsp), %37
+        movl    %37, 12(%rsp)
+.Lcomplex_38:
+        movl    12(%rsp), %39
+        movl    %39, %eax
+        ret
+.Lcomplex_26:
+        jmp     .Lcomplex_27

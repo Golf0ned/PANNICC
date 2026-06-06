@@ -1,0 +1,15 @@
+int basic(int i) {
+    int a = i + 1;
+    int b = i + 1;
+    return a + b;
+}
+
+int complex(int i, int j) {
+    int a = i + 1;
+    int b = i + 1;
+    i = j;
+    if (i + 1) {
+    }
+    int c = i + 1;
+    return a + b + c;
+}

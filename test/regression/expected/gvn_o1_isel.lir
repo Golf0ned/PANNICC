@@ -1,0 +1,26 @@
+basic:  # 1 params, 0 stack bytes
+        movl    %edi, %0
+.Lbasic_entry:
+        movl    %0, %2
+        addl    $1, %2
+        leal    1(%0,%2), %3
+        movl    %3, %eax
+        ret
+
+complex:  # 2 params, 0 stack bytes
+        movl    %edi, %0
+        movl    %esi, %1
+.Lcomplex_entry:
+        movl    %0, %2
+        addl    $1, %2
+        movl    %0, %3
+        addl    $1, %3
+        movl    %1, %4
+        addl    $1, %4
+        cmpl    $0, %4
+        jne     .Lcomplex_5
+.Lcomplex_5:
+        leal    (%2,%3), %7
+        leal    1(%1,%7), %8
+        movl    %8, %eax
+        ret
