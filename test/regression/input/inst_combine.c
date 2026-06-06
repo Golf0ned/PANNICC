@@ -36,3 +36,18 @@ int simplify(int i) {
     res = res >> 0;
     return res;
 }
+
+// We didn't implement copy propagation
+// because mem2reg just did it for us already
+int copy_propagation(int a) {
+    int b = a;
+    int c = 4 * b;
+
+    if (0) {
+        int d = b + 2;
+    }
+
+    int e = a + b;
+
+    return e;
+}

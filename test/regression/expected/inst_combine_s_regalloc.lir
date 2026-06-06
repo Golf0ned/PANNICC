@@ -22,3 +22,22 @@ simplify:  # 1 params, 0 stack bytes
 .Lsimplify_1:
         movl    %r10d, %eax
         ret
+
+copy_propagation:  # 1 params, 0 stack bytes
+        movl    %edi, %r11d
+.Lcopy_propagation_entry:
+        leal    (,%r11d,4), %r10d
+        movq    $0, %r10
+        cmpq    $0, %r10
+        jne     .Lcopy_propagation_5
+.Lcopy_propagation_2:
+.Lcopy_propagation_3:
+        movl    %r11d, %r10d
+        addl    $2, %r10d
+.Lcopy_propagation_6:
+        leal    (%r11d,%r11d), %r10d
+.Lcopy_propagation_8:
+        movl    %r10d, %eax
+        ret
+.Lcopy_propagation_5:
+        jmp     .Lcopy_propagation_6

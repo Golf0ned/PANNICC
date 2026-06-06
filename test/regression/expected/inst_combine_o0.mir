@@ -185,3 +185,48 @@ entry:
   %63 = load ptr %2
   ret i32 %63
 }
+
+define i32 @copy_propagation(i32 %0) {
+entry:
+  %1 = alloca i32
+  %2 = alloca i32
+  %3 = alloca i32
+  %4 = alloca i32
+  %5 = alloca i32
+  %6 = alloca i32
+  %7 = alloca i32
+  %8 = alloca i32
+  %9 = alloca i32
+  store i32 %0, ptr %1
+  %10 = load ptr %1
+  store i32 %10, ptr %3
+  %11 = load ptr %3
+  %12 = mul i32 4, i32 %11
+  store i32 %12, ptr %5
+  %13 = load ptr %5
+  store i32 %13, ptr %4
+  br i32 0, label 14, label 18
+
+14:
+  %15 = load ptr %3
+  %16 = add i32 %15, i32 2
+  store i32 %16, ptr %7
+  %17 = load ptr %7
+  store i32 %17, ptr %6
+  br label 18
+
+18:
+  %19 = load ptr %1
+  %20 = load ptr %3
+  %21 = add i32 %19, i32 %20
+  store i32 %21, ptr %9
+  %22 = load ptr %9
+  store i32 %22, ptr %8
+  %23 = load ptr %8
+  store i32 %23, ptr %2
+  br label 24
+
+24:
+  %25 = load ptr %2
+  ret i32 %25
+}
