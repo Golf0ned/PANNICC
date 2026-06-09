@@ -151,24 +151,11 @@ std::string FunctionDeclaration::toString() {
     return res;
 }
 
-Program::Program(std::list<std::unique_ptr<Function>> functions,
-                 LiteralMap literals)
-    : functions(std::move(functions)), literals(std::move(literals)) {}
+Program::Program(std::list<std::unique_ptr<Function>> functions)
+    : functions(std::move(functions)) {}
 
 std::list<std::unique_ptr<Function>> &Program::getFunctions() {
     return functions;
-}
-
-Literal *Program::getLiteral(Type type, uint64_t value) {
-    auto &typed_map = literals[type];
-    if (typed_map.contains(value))
-        return typed_map.at(value).get();
-
-    auto literal = std::make_unique<Literal>(type, value);
-    auto *literal_ptr = literal.get();
-
-    typed_map[value] = std::move(literal);
-    return literal_ptr;
 }
 
 std::string Program::toString() {

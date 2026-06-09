@@ -5,7 +5,6 @@
 
 #include <cstdint>
 #include <list>
-#include <memory>
 #include <unordered_set>
 
 namespace middleend {
@@ -13,10 +12,6 @@ namespace middleend {
 class NumberIR;
 
 namespace mir {
-
-using LiteralMap =
-    std::unordered_map<Type,
-                       std::unordered_map<uint64_t, std::unique_ptr<Literal>>>;
 
 class BasicBlockEdges {
 public:
@@ -97,15 +92,12 @@ private:
 
 class Program {
 public:
-    Program(std::list<std::unique_ptr<Function>> functions,
-            LiteralMap literals);
+    Program(std::list<std::unique_ptr<Function>> functions);
     std::list<std::unique_ptr<Function>> &getFunctions();
-    Literal *getLiteral(Type type, uint64_t value);
     std::string toString();
 
 private:
     std::list<std::unique_ptr<Function>> functions;
-    LiteralMap literals;
 };
 
 class ToStringVisitor : public InstructionVisitor {

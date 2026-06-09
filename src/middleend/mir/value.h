@@ -3,6 +3,7 @@
 #include "middleend/mir/type.h"
 
 #include <cstdint>
+#include <memory>
 #include <unordered_map>
 
 namespace middleend::mir {
@@ -29,6 +30,16 @@ public:
 
 private:
     int64_t value;
+};
+
+class LiteralMap {
+public:
+    static Literal *getLiteral(Type type, uint64_t value);
+
+private:
+    static std::unordered_map<
+        Type, std::unordered_map<uint64_t, std::unique_ptr<Literal>>>
+        literals;
 };
 
 } // namespace middleend::mir

@@ -11,14 +11,12 @@ class ToMIRVisitor : public ast::FunctionVisitor,
                      public ast::InstructionVisitor,
                      public ast::ExprVisitor {
 public:
-    ToMIRVisitor(SymbolTable &st, middleend::mir::LiteralMap &literal_map);
+    ToMIRVisitor(SymbolTable &st);
 
     std::unique_ptr<middleend::mir::Function> getResult();
 
     middleend::mir::InstructionAlloca *makeAlloca(middleend::mir::Type type);
     middleend::mir::Value *usePrevExpr();
-    middleend::mir::Literal *getLiteral(uint64_t value,
-                                        middleend::mir::Type type);
     middleend::mir::Value *getUse(uint64_t id);
     Type *getType(uint64_t id);
     std::vector<std::unique_ptr<middleend::mir::Value>>
@@ -51,7 +49,6 @@ private:
     std::unique_ptr<middleend::mir::Function> res;
 
     SymbolTable &st;
-    middleend::mir::LiteralMap &lm;
     middleend::mir::InstructionAlloca *ret_alloca;
     std::list<std::unique_ptr<middleend::mir::Instruction>> allocas;
     std::list<std::unique_ptr<middleend::mir::Instruction>> instructions;

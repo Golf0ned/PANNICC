@@ -78,7 +78,8 @@ void InstCombine::run(mir::Program &p) {
                         auto type = mir::Type::I32;
                         auto extended_val = static_cast<uint64_t>(
                             static_cast<int64_t>(folded_val));
-                        auto folded_literal = p.getLiteral(type, extended_val);
+                        auto folded_literal =
+                            mir::LiteralMap::getLiteral(type, extended_val);
 
                         replaceUses(bin_op, folded_literal);
                         to_drop.push_back(std::move(*iter));

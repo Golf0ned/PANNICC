@@ -8,9 +8,8 @@ namespace frontend {
 
 mir::Program lower(ast::Program &ast) {
     std::list<std::unique_ptr<mir::Function>> functions;
-    mir::LiteralMap lm;
 
-    ToMIRVisitor tmv(ast.getSymbolTable(), lm);
+    ToMIRVisitor tmv(ast.getSymbolTable());
     for (auto &f : ast.getFunctions()) {
         f->accept(&tmv);
         functions.push_back(tmv.getResult());
@@ -18,11 +17,11 @@ mir::Program lower(ast::Program &ast) {
 
     tmv.resolveFunctions();
 
-    return mir::Program(std::move(functions), std::move(lm));
+    return mir::Program(std::move(functions));
 }
 
-ToMIRVisitor::ToMIRVisitor(SymbolTable &st, mir::LiteralMap &lm)
-    : st(st), lm(lm), cur_scope(0), cur_bb_id(1) {};
+ToMIRVisitor::ToMIRVisitor(SymbolTable &st)
+    : st(st), cur_scope(0), cur_bb_id(1) {};
 
 std::unique_ptr<mir::Function> ToMIRVisitor::getResult() {
     return std::move(res);
@@ -47,18 +46,6 @@ mir::Value *ToMIRVisitor::usePrevExpr() {
     auto *load_ptr = load.get();
     instructions.push_back(std::move(load));
     return load_ptr;
-}
-
-mir::Literal *ToMIRVisitor::getLiteral(uint64_t value, mir::Type type) {
-    auto &typed_map = lm[type];
-
-    if (typed_map.contains(value))
-        return typed_map.at(value).get();
-
-    auto literal = std::make_unique<mir::Literal>(type, value);
-    auto *literal_ptr = literal.get();
-    typed_map[value] = std::move(literal);
-    return literal_ptr;
 }
 
 mir::Value *ToMIRVisitor::getUse(uint64_t id) {
@@ -196,7 +183,7 @@ void ToMIRVisitor::visit(ast::FunctionDefinition *f) {
         i->accept(this);
 
     if (name == "main" && (basic_blocks.size() == 0 || !instructions.empty())) {
-        auto zero = getLiteral(0, mir::Type::I32);
+        auto zero = mir::LiteralMap::getLiteral(mir::Type::I32, 0);
         auto store = std::make_unique<mir::InstructionStore>(zero, ret_alloca);
         instructions.push_back(std::move(store));
     }
@@ -357,12 +344,12 @@ void ToMIRVisitor::visit(ast::InstructionWhile *i) {
 void ToMIRVisitor::visit(ast::Expr *e) {}
 
 void ToMIRVisitor::visit(ast::TerminalExpr *e) {
+    auto val = e->getAtom()->getValue();
     if (e->getAtom()->isIdentifier()) {
-        auto val = e->getAtom()->getValue();
         prev_expr = getUse(val);
         expr_types[e] = getType(val)->clone();
     } else {
-        prev_expr = getLiteral(e->getAtom()->getValue(), mir::Type::I32);
+        prev_expr = mir::LiteralMap::getLiteral(mir::Type::I32, val);
         expr_types[e] = std::make_unique<Int>();
     }
 }
@@ -408,7 +395,7 @@ void ToMIRVisitor::visit(ast::UnaryOpExpr *e) {
         expr_types[e] = std::make_unique<Int>();
     } else if (op == UnaryOp::MINUS) {
         // Subtract from zero
-        auto *literal = getLiteral(0, mir::Type::I32);
+        auto *literal = mir::LiteralMap::getLiteral(mir::Type::I32, 0);
         auto bin_op = std::make_unique<mir::InstructionBinaryOp>(
             type, mir::BinaryOp::SUB, literal, val);
 
@@ -417,7 +404,7 @@ void ToMIRVisitor::visit(ast::UnaryOpExpr *e) {
         expr_types[e] = std::make_unique<Int>();
     } else if (op == UnaryOp::NOT) {
         // XOR with -1
-        auto *literal = getLiteral(-1, mir::Type::I32);
+        auto *literal = mir::LiteralMap::getLiteral(mir::Type::I32, -1);
         auto bin_op = std::make_unique<mir::InstructionBinaryOp>(
             type, mir::BinaryOp::XOR, val, literal);
 
