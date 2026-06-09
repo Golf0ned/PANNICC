@@ -16,7 +16,6 @@ void InstCombine::run(mir::Function *f) {
     bool changed = true;
     while (changed) {
         changed = false;
-        std::vector<std::unique_ptr<mir::Instruction>> to_drop;
         for (auto &bb : definition->getBasicBlocks()) {
             auto &instructions = bb->getInstructions();
             auto iter = instructions.begin();
@@ -84,7 +83,6 @@ void InstCombine::run(mir::Function *f) {
                         mir::LiteralMap::getLiteral(type, extended_val);
 
                     replaceUses(bin_op, folded_literal);
-                    to_drop.push_back(std::move(*iter));
                     iter = instructions.erase(iter);
                     return true;
                 };
@@ -114,7 +112,6 @@ void InstCombine::run(mir::Function *f) {
                         case mir::BinaryOp::SUB:
                             if (constant->getValue() == 0) {
                                 replaceUses(bin_op, var);
-                                to_drop.push_back(std::move(*iter));
                                 iter = instructions.erase(iter);
                                 return true;
                             }
@@ -123,7 +120,6 @@ void InstCombine::run(mir::Function *f) {
                         case mir::BinaryOp::ASHR:
                             if (constant->getValue() == 0) {
                                 replaceUses(bin_op, var);
-                                to_drop.push_back(std::move(*iter));
                                 iter = instructions.erase(iter);
                                 return true;
                             }
@@ -132,7 +128,6 @@ void InstCombine::run(mir::Function *f) {
                         case mir::BinaryOp::SDIV:
                             if (constant->getValue() == 1) {
                                 replaceUses(bin_op, var);
-                                to_drop.push_back(std::move(*iter));
                                 iter = instructions.erase(iter);
                                 return true;
                             }
@@ -147,7 +142,6 @@ void InstCombine::run(mir::Function *f) {
                     case mir::BinaryOp::OR:
                         if (constant->getValue() == 0) {
                             replaceUses(bin_op, var);
-                            to_drop.push_back(std::move(*iter));
                             iter = instructions.erase(iter);
                             return true;
                         }
@@ -155,12 +149,10 @@ void InstCombine::run(mir::Function *f) {
                     case mir::BinaryOp::MUL:
                         if (constant->getValue() == 0) {
                             replaceUses(bin_op, constant);
-                            to_drop.push_back(std::move(*iter));
                             iter = instructions.erase(iter);
                             return true;
                         } else if (constant->getValue() == 1) {
                             replaceUses(bin_op, var);
-                            to_drop.push_back(std::move(*iter));
                             iter = instructions.erase(iter);
                             return true;
                         }
@@ -168,7 +160,6 @@ void InstCombine::run(mir::Function *f) {
                     case mir::BinaryOp::AND:
                         if (constant->getValue() == -1) {
                             replaceUses(bin_op, var);
-                            to_drop.push_back(std::move(*iter));
                             iter = instructions.erase(iter);
                             return true;
                         }
