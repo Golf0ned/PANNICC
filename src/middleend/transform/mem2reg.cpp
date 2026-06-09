@@ -1,5 +1,4 @@
 #include "middleend/transform/mem2reg.h"
-#include "middleend/analysis/dominator_tree.h"
 #include "middleend/mir/instruction.h"
 #include "middleend/mir/mir.h"
 #include "middleend/utils/erase_uses.h"

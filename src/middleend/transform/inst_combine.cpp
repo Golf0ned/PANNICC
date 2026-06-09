@@ -1,8 +1,6 @@
 #include "middleend/transform/inst_combine.h"
 #include "middleend/utils/replace_uses.h"
 
-#include <ranges>
-
 namespace middleend {
 
 void InstCombine::run(mir::Program &p) {
