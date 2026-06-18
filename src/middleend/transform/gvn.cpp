@@ -1,6 +1,8 @@
 #include "middleend/transform/gvn.h"
 
 namespace middleend {
+GVN::GVN() : next_num(0) {}
+
 void GVN::run(mir::Program &p) {
     for (auto &f : p.getFunctions())
         run(f.get());
