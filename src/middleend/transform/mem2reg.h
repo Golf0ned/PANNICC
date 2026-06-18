@@ -10,6 +10,7 @@ class Mem2Reg : public TransformPass {
 public:
     void run(mir::Program &p) override;
     void run(mir::Function *f);
+
     void registerAnalyses(
         std::vector<std::unique_ptr<AnalysisPass>> &analyses) override;
 
