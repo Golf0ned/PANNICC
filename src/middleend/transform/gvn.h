@@ -8,9 +8,12 @@ namespace middleend {
 class GVN : public TransformPass {
 public:
     void run(mir::Program &p) override;
+    void run(mir::Function *f);
+
+    void dvnt(mir::BasicBlock *bb);
+
     void registerAnalyses(
         std::vector<std::unique_ptr<AnalysisPass>> &analyses) override;
-    void run(mir::Function *f);
 
 private:
     DominatorTree *dt;
