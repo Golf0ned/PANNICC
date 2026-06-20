@@ -1,16 +1,12 @@
 #pragma once
 
 #include "middleend/analysis/dominator_tree.h"
-#include "middleend/analysis/number_ir.h"
 #include "middleend/pass.h"
 
 namespace middleend {
 
-// TODO: make gvn hash
-
-class GVN : public TransformPass {
+class HashGVN : public TransformPass {
 public:
-    GVN();
     void run(mir::Program &p) override;
     void run(mir::Function *f);
 
@@ -22,10 +18,7 @@ public:
 
 private:
     DominatorTree *dt;
-    NumberIR *nir;
-    uint64_t next_num;
-    std::unordered_map<std::string, uint64_t> value_to_num;
-    std::unordered_map<uint64_t, mir::Value *> num_to_value;
+    std::unordered_map<std::string, mir::Value *> value_numberings;
 };
 
 } // namespace middleend
