@@ -284,14 +284,14 @@ void Mem2Reg::run(mir::Function *f) {
 void Mem2Reg::registerAnalyses(
     std::vector<std::unique_ptr<AnalysisPass>> &analyses) {
     for (auto &pass : analyses) {
-        auto dt = dynamic_cast<DominatorTree *>(pass.get());
+        auto *dt = dynamic_cast<DominatorTree *>(pass.get());
         if (dt) {
             this->dt = dt;
             required_analyses.push_back(dt);
             continue;
         }
 
-        auto nir = dynamic_cast<NumberIR *>(pass.get());
+        auto *nir = dynamic_cast<NumberIR *>(pass.get());
         if (nir) {
             this->nir = nir;
             required_analyses.push_back(nir);
