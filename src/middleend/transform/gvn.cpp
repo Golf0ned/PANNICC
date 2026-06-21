@@ -10,11 +10,19 @@ void HashGVN::run(mir::Program &p) {
 }
 
 void HashGVN::run(mir::Function *f) {
-    auto definition = dynamic_cast<mir::FunctionDefinition *>(f);
+    auto *definition = dynamic_cast<mir::FunctionDefinition *>(f);
     if (!definition)
         return;
 
-    // TODO: worklist?
+    // TODO: get rpo numbering and figure out back edges
+
+    worklist = {definition->getEntryBlock()};
+    while (!worklist.empty()) {
+        auto *bb = worklist.back();
+        worklist.pop_back();
+        dvnt(bb);
+    }
+
     dvnt(definition->getEntryBlock());
 
     // TODO: do pass replacing by hash
@@ -23,11 +31,13 @@ void HashGVN::run(mir::Function *f) {
 void HashGVN::dvnt(mir::BasicBlock *bb) {
     // TODO: make this out-of-order phi safe
     for (auto &i_iter : bb->getInstructions()) {
-        auto i = i_iter.get();
+        auto *i = i_iter.get();
 
-        auto phi = dynamic_cast<mir::InstructionPhi *>(i);
+        auto *phi = dynamic_cast<mir::InstructionPhi *>(i);
         if (phi) {
-            // TODO: check for back edges?
+            // TODO: skip if has incoming back edges
+            if (false)
+                continue;
 
             auto hash = gvnHash(phi);
             if (!value_numberings.contains(hash))
@@ -36,11 +46,11 @@ void HashGVN::dvnt(mir::BasicBlock *bb) {
             continue;
         }
 
-        auto bin_op = dynamic_cast<mir::InstructionBinaryOp *>(i);
+        auto *bin_op = dynamic_cast<mir::InstructionBinaryOp *>(i);
         if (bin_op) {
             // TODO: substitute left and right
-            auto left = bin_op->getLeft();
-            auto right = bin_op->getRight();
+            auto *left = bin_op->getLeft();
+            auto *right = bin_op->getRight();
             auto equivalent_op = std::make_unique<mir::InstructionBinaryOp>(
                 bin_op->getType(), bin_op->getOp(), left, right);
 
@@ -54,11 +64,11 @@ void HashGVN::dvnt(mir::BasicBlock *bb) {
 
     for (auto &succ : bb->getSuccessors().getUniqueEdges()) {
         for (auto &i_iter : succ->getInstructions()) {
-            auto i = i_iter.get();
+            auto *i = i_iter.get();
 
-            auto phi = dynamic_cast<mir::InstructionPhi *>(i);
+            auto *phi = dynamic_cast<mir::InstructionPhi *>(i);
             if (phi) {
-                auto phi_val = phi->getPredecessors().at(bb);
+                auto *phi_val = phi->getPredecessors().at(bb);
                 // TODO: replacement? do we want to do this during or after
             }
 
@@ -66,7 +76,8 @@ void HashGVN::dvnt(mir::BasicBlock *bb) {
         }
     }
 
-    for (auto c : dt->getDominees(bb))
+    // TODO: run in rpo order
+    for (auto *c : dt->getDominees(bb))
         dvnt(c);
 }
 
@@ -74,15 +85,15 @@ std::string HashGVN::gvnHash(mir::Value *v) {
     // TODO: can we not use strings
     // TODO: do we need to account for types
 
-    auto literal = dynamic_cast<mir::Literal *>(v);
+    auto *literal = dynamic_cast<mir::Literal *>(v);
     if (literal)
         return std::format("l{}", static_cast<void *>(literal));
 
-    auto bin_op = dynamic_cast<mir::InstructionBinaryOp *>(v);
+    auto *bin_op = dynamic_cast<mir::InstructionBinaryOp *>(v);
     if (bin_op) {
         auto op = bin_op->getOp();
-        auto left = bin_op->getLeft();
-        auto right = bin_op->getRight();
+        auto *left = bin_op->getLeft();
+        auto *right = bin_op->getRight();
 
         if (false
             // clang-format off
@@ -93,7 +104,7 @@ std::string HashGVN::gvnHash(mir::Value *v) {
             || op == mir::BinaryOp::XOR
             // clang-format on
         ) {
-            auto tmp = left;
+            auto *tmp = left;
             left = left < right ? left : right;
             right = tmp < right ? right : tmp;
         }
@@ -102,7 +113,7 @@ std::string HashGVN::gvnHash(mir::Value *v) {
                            gvnHash(right));
     }
 
-    auto phi = dynamic_cast<mir::InstructionPhi *>(v);
+    auto *phi = dynamic_cast<mir::InstructionPhi *>(v);
     if (phi) {
         // TODO: what
     }
@@ -113,7 +124,7 @@ std::string HashGVN::gvnHash(mir::Value *v) {
 void HashGVN::registerAnalyses(
     std::vector<std::unique_ptr<AnalysisPass>> &analyses) {
     for (auto &pass : analyses) {
-        auto dt = dynamic_cast<DominatorTree *>(pass.get());
+        auto *dt = dynamic_cast<DominatorTree *>(pass.get());
         if (dt) {
             this->dt = dt;
             required_analyses.push_back(dt);

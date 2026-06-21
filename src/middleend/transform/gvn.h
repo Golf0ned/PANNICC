@@ -18,6 +18,7 @@ public:
 
 private:
     DominatorTree *dt;
+    std::vector<mir::BasicBlock *> worklist;
     std::unordered_map<std::string, mir::Value *> value_numberings;
 };
 
